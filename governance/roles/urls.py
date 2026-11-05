@@ -13,6 +13,7 @@ from governance.roles.export import export_markdown
 
 urlpatterns = [
     path("", views.start, name="start"),
+    path("organization/", views.organization, name="organization"),
     path("roles/<int:pk>/", views.role_detail, name="role"),
     path(
         "roles/<int:pk>/assignments/",

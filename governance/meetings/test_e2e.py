@@ -283,14 +283,14 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertEqual(self.errors, [])
 
     def test_shortcuts(self):
-        """Alt with a letter: the search field, the start page, the
-        organization"""
+        """Alt with a letter: the search field, the start page (the own
+        page), the organization"""
         page = self.page
         page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
         page.keyboard.press("Alt+q")
         self.assertEqual(page.evaluate("document.activeElement.name"), "q")
         page.keyboard.press("Alt+h")
-        page.wait_for_url(f"**{self.kitchen.get_absolute_url()}")  # The start
+        page.wait_for_url(f"**{self.ada.get_absolute_url()}")  # The start
         page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
         page.keyboard.press("Alt+o")
         page.wait_for_url(f"**{self.kitchen.get_absolute_url()}")

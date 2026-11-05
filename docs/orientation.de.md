@@ -22,7 +22,7 @@ anderer.
 
 | Kürzel | |
 | --- | --- |
-| <kbd>Alt-H</kbd> | Startseite |
+| <kbd>Alt-H</kbd> | Startseite: deine Personenseite |
 | <kbd>Alt-O</kbd> | Organisation |
 | <kbd>Alt-Q</kbd> | ins Suchfeld |
 
@@ -40,7 +40,7 @@ Eine **Rolle** zeigt Purpose, Accountabilities, Domains, wer sie hat (mit
 Fokus und Amtszeit), ihre Policies, Checklisten, Kennzahlen und Links.
 Unbesetzte Rollen hat der Circle Lead, ausser dem Circle Rep.
 
-**Deine Personenseite** zeigt deine Rollen, deine Entwürfe und Spannungen,
+**Deine Personenseite**, die Startseite, zeigt deine Rollen, deine Entwürfe und Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine
 Einstellungen: Mails und Sprache (Deutsch oder Englisch).
 

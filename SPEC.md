@@ -348,6 +348,9 @@ only setting is `User.notify_all` ("everything in all circles").
   meetings, due elections, history.
 - **Role page**: purpose, accountabilities, domains, holders with focus and
   terms, its policies, metrics, checklists, links, history.
+- **Start page** (`/`, <kbd>Alt-H</kbd>): the own person page, with what
+  waits for the person; the anchor circle is `/organization/` (the
+  navigation's "Organization", <kbd>Alt-O</kbd>).
 - **Person page**: roles grouped by circle in depth-first order, earlier
   roles; one's own also drafts, proposals waiting for a response, open
   meetings, due elections, `notify_all`.

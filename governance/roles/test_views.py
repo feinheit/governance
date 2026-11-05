@@ -22,9 +22,15 @@ class ViewsTest(TestCase):
         self.user = User.objects.create_user("ada@example.com", full_name="Ada Example")
         self.client.force_login(self.user)
 
-    def test_start_without_anchor(self):
-        response = self.client.get("/")
-        self.assertContains(response, "import_glassfrog")
+    def test_start(self):
+        """The start page is the own page, the organization a link away"""
+        self.assertRedirects(self.client.get("/"), self.user.get_absolute_url())
+        response = self.client.get("/organization/")
+        self.assertContains(response, "import_glassfrog")  # No anchor yet
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        self.assertRedirects(
+            self.client.get("/organization/"), anchor.get_absolute_url()
+        )
 
     def test_person_shows_circles(self):
         anchor = Role.objects.create(name="Example Ltd", is_circle=True)
@@ -169,8 +175,6 @@ class ViewsTest(TestCase):
         )
         lead = kitchen.roles.get(core_role="lead")
         Assignment.objects.create(role=lead, user=self.user)
-
-        self.assertRedirects(self.client.get("/"), anchor.get_absolute_url())
 
         # Holders of the kitchen's role in the anchor circle: lead and rep
         bob = User.objects.create_user("bob@example.com", full_name="Bob Example")

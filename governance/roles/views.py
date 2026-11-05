@@ -80,6 +80,12 @@ def role_items(user, role):
 
 
 def start(request):
+    """The own page: roles, drafts, proposals waiting for a response,
+    meetings; the organization is a link away"""
+    return redirect(request.user)
+
+
+def organization(request):
     anchor = Role.objects.active().circles().filter(circle=None).first()
     if anchor:
         return redirect(anchor)

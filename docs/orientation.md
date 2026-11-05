@@ -21,7 +21,7 @@ active person. Everybody signed in sees everything except others' drafts.
 
 | Shortcut | |
 | --- | --- |
-| <kbd>Alt-H</kbd> | Start page |
+| <kbd>Alt-H</kbd> | Start page: your page |
 | <kbd>Alt-O</kbd> | Organization |
 | <kbd>Alt-Q</kbd> | Into the search field |
 
@@ -39,7 +39,7 @@ A **role** shows its purpose, accountabilities, domains, who holds it
 (with focus and term), its policies, checklists, metrics and links.
 Unfilled roles are held by the Circle Lead, except the Circle Rep.
 
-**Your page** shows your roles, your drafts and tensions, proposals
+**Your page**, the start page, shows your roles, your drafts and tensions, proposals
 waiting for your response, your meetings and your settings: mails and
 language (German or English).
 

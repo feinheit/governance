@@ -66,9 +66,9 @@ class AccountsTest(TestCase):
     def test_force_login(self):
         User.objects.create_user("ada@example.com")
         response = self.client.get("/accounts/login/?force_login=ada@example.com")
-        self.assertRedirects(response, "/")
+        self.assertRedirects(response, "/", fetch_redirect_response=False)
         response = self.client.get("/accounts/login/")
-        self.assertRedirects(response, "/")
+        self.assertRedirects(response, "/", fetch_redirect_response=False)
 
     def test_logout(self):
         self.client.force_login(User.objects.create_user("ada@example.com"))
