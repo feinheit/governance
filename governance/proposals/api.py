@@ -1,8 +1,9 @@
 """Proposals through the API, e.g. prepared from a tension with an LLM
 
-The same rules as the web interface: circle members create drafts, the
-proposer (or the secretary in a meeting) changes them, the server checks
-the instructions and returns the conflicts and errors it finds.
+Circle members create drafts and change and publish their own drafts,
+nothing else: the secretary amends others' proposals only in the page of a
+running meeting. The server checks the instructions and returns the
+conflicts and errors it finds.
 """
 
 from django.conf import settings
@@ -13,7 +14,6 @@ from ninja.errors import HttpError
 
 from governance.proposals import process
 from governance.proposals.describe import describe
-from governance.proposals.drafting import can_edit
 from governance.proposals.instructions import (
     ProposalError,
     names_for,
@@ -77,6 +77,12 @@ class ProblemsOut(Schema):
     problems: list[str]
 
 
+def own_draft(user, proposal):
+    """What the API changes: the user's own drafts. The secretary amends
+    proposals in a running meeting's page only, not through scripts."""
+    return proposal.status == Proposal.DRAFT and proposal.proposer_id == user.pk
+
+
 def _iso(value):
     return value.isoformat() if value else None
 
@@ -111,7 +117,7 @@ def out(request, proposal):
         "decided_at": _iso(proposal.decided_at),
         "url": settings.BASE_URL + proposal.get_absolute_url(),
         "problems": problems(proposal)
-        if can_edit(request.user, proposal) and proposal.instructions
+        if own_draft(request.user, proposal) and proposal.instructions
         else [],
     }
 
@@ -164,7 +170,7 @@ def proposal_create(request, data: ProposalIn):
 @router.patch("proposals/{int:pk}/", response=ProposalOut)
 def proposal_update(request, pk: int, data: ProposalPatch):
     proposal = get_object_or_404(Proposal.objects.visible_to(request.user), pk=pk)
-    if not can_edit(request.user, proposal):
+    if not own_draft(request.user, proposal):
         raise HttpError(403, "Only the proposer changes a draft.")
     if data.tension is not None:
         proposal.tension = data.tension.strip()

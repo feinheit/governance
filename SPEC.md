@@ -361,7 +361,9 @@ proposals/{id}/publish/`, `GET policies/` and `policies/{id}/`, `GET domains/`, 
 (the user, the token's access and their roles); objects come with the URL
 of their page. Clients send instructions only (e.g. written by an LLM from
 a tension); the server fills in names and returns `problems` with every
-draft, and the readable `changes` of the proposal's page.
+draft, and the readable `changes` of the proposal's page. The API only
+changes the user's own drafts: the secretary amends others' proposals in a
+running meeting's page, not through scripts.
 
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or

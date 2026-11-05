@@ -173,5 +173,5 @@ found and your open questions. Then ask what to do:
   agenda in the app.
 - **Leave it as a draft** to look at it in the app first.
 
-Never publish on your own, never change other people's proposals, and don't
-add changes the tension doesn't need.
+Never publish on your own, and don't add changes the tension doesn't need.
+`gov` only changes the user's own drafts.

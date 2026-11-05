@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from governance.accounts.models import APIToken, User, prune_api_tokens
+from governance.meetings.models import Meeting
 from governance.proposals.models import Proposal
 from governance.roles.models import Accountability, Assignment, Role
 
@@ -193,3 +194,29 @@ class APITest(TestCase):
             "patch", f"/api/proposals/{pk}/", {"tension": "Mine"}, secret=bob_secret
         )
         self.assertEqual(response.status_code, 403)
+
+    def test_only_proposers_change_proposals(self):
+        """The secretary amends in a running meeting's page, not through the
+        API: scripts only change their user's own drafts"""
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.GOVERNANCE,
+            started_at=timezone.now(),
+            facilitator=self.ada,
+            secretary=self.ada,
+        )
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            role=self.cook,
+            proposer=self.bob,
+            tension="Soup",
+            status=Proposal.IN_MEETING,
+            meeting=meeting,
+            created_at=timezone.now(),
+        )
+        response = self.api(
+            "patch", f"/api/proposals/{proposal.pk}/", {"tension": "Stew"}
+        )
+        self.assertEqual(response.status_code, 403)
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.tension, "Soup")
