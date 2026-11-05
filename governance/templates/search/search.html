@@ -33,11 +33,10 @@
         <ul class="list-group list-group-flush">
           {% for item in accountabilities %}
             <li class="list-group-item">
-              <div class="wb-markdown">{{ item.text|markdown }}</div>
-              <div class="wb-row-meta">
-                <a href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>{% if item.role.circle %}<span
-                  >{{ item.role.circle }}</span>{% endif %}
-              </div>
+              {# Like the other results: the page the hit leads to, the role's #}
+              <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+              {% if item.role.circle %}<div class="wb-row-meta"><span>{{ item.role.circle }}</span></div>{% endif %}
+              <div class="wb-markdown mt-1">{{ item.text|markdown }}</div>
             </li>
           {% endfor %}
         </ul>
@@ -49,11 +48,10 @@
         <ul class="list-group list-group-flush">
           {% for item in domains %}
             <li class="list-group-item">
-              <div class="wb-markdown">{{ item.text|markdown }}</div>
-              <div class="wb-row-meta">
-                <a href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>{% if item.role.circle %}<span
-                  >{{ item.role.circle }}</span>{% endif %}
-              </div>
+              {# Like the other results: the page the hit leads to, the role's #}
+              <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+              {% if item.role.circle %}<div class="wb-row-meta"><span>{{ item.role.circle }}</span></div>{% endif %}
+              <div class="wb-markdown mt-1">{{ item.text|markdown }}</div>
             </li>
           {% endfor %}
         </ul>
