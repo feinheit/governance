@@ -2,7 +2,15 @@
 
 import click
 
-from gov.core import cli, console, echo_json, link, make_table, request
+from gov.core import (
+    cli,
+    complete_circles,
+    console,
+    echo_json,
+    link,
+    make_table,
+    request,
+)
 from gov.roles import show_role
 
 
@@ -29,7 +37,7 @@ def circles(ctx, as_json):
 
 
 @circles.command("show")
-@click.argument("id", type=int)
+@click.argument("id", type=int, shell_complete=complete_circles)
 @click.option("--json", "as_json", is_flag=True)
 def show(id, as_json):
     """A circle with its purpose, accountabilities, domains, policies and

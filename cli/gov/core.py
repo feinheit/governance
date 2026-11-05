@@ -255,6 +255,86 @@ def complete_installations(ctx, param, incomplete):
     ]
 
 
+def completion(name, path, extract, *, ttl=COMPLETION_TTL):
+    """Complete IDs with the names as descriptions, fetched from the API at
+    most every ``ttl`` seconds per installation; nothing if anything fails
+
+    ``extract`` turns the response into ``(id, description)`` pairs. Typing
+    a part of the name also works, the shell replaces it with the ID."""
+
+    def values():
+        url = current_installation()
+        token = read_config()["installations"].get(url, {}).get("token")
+        if not url or not token:
+            return []
+        cache = CACHE / f"completion-{urlsplit(url).netloc}-{name}.json"
+        try:
+            if time.time() - cache.stat().st_mtime < ttl:
+                return json.loads(cache.read_text())
+        except OSError, ValueError:
+            pass
+        try:
+            response = requests.request(
+                "GET",
+                urljoin(url, f"/api/{path}"),
+                headers={
+                    "authorization": f"Bearer {token}",
+                    "x-governance-cli": VERSION,
+                },
+                timeout=5,
+            )
+            items = [[str(id), str(help)] for id, help in extract(response.json())]
+        except requests.RequestException, ValueError, KeyError, TypeError:
+            return []
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_text(json.dumps(items))
+        return items
+
+    def complete(ctx, param, incomplete):
+        text = incomplete.casefold()
+        return [
+            CompletionItem(id, help=help)
+            for id, help in values()
+            if id.startswith(incomplete) or (text and text in help.casefold())
+        ]
+
+    return complete
+
+
+def _with_circle(name, circle):
+    return f"{name} ({circle})" if circle else name
+
+
+complete_circles = completion(
+    "circles", "circles/", lambda data: [(c["id"], c["name"]) for c in data]
+)
+complete_roles = completion(
+    "roles",
+    "roles/",
+    lambda data: [(r["id"], _with_circle(r["name"], r["circle"])) for r in data],
+)
+# One's own roles change more often than the structure
+complete_my_roles = completion(
+    "my-roles",
+    "me/",
+    lambda data: [
+        (r["id"], _with_circle(r["name"], r["circle"])) for r in data["roles"]
+    ],
+    ttl=60 * 60,
+)
+complete_policies = completion(
+    "policies",
+    "policies/",
+    lambda data: [(p["id"], _with_circle(p["title"], p["role"])) for p in data],
+)
+complete_proposals = completion(
+    "proposals",
+    "proposals/",
+    lambda data: [(p["id"], f"{p['title']} ({p['status']})") for p in data],
+    ttl=5 * 60,
+)
+
+
 def _select_installation(ctx, param, value):
     global _selected_installation, _announced  # noqa: PLW0603
     _selected_installation = find_installation(value) if value else None

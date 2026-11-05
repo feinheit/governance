@@ -8,6 +8,9 @@ from rich.markdown import Markdown
 
 from gov.core import (
     cli,
+    complete_circles,
+    complete_my_roles,
+    complete_proposals,
     console,
     echo_fields,
     echo_json,
@@ -70,7 +73,9 @@ def echo_proposal(proposal):
 
 
 @cli.group(invoke_without_command=True)
-@click.option("--circle", type=int, help="ID of the circle.")
+@click.option(
+    "--circle", type=int, help="ID of the circle.", shell_complete=complete_circles
+)
 @click.option("--status", type=click.Choice(STATUSES))
 @click.option("--json", "as_json", is_flag=True)
 @click.pass_context
@@ -99,7 +104,7 @@ def proposals(ctx, circle, status, as_json):
 
 
 @proposals.command("show")
-@click.argument("id", type=int)
+@click.argument("id", type=int, shell_complete=complete_proposals)
 @click.option("--json", "as_json", is_flag=True)
 def show(id, as_json):
     """A proposal with its tension and changes (and its problems if it's
@@ -122,12 +127,19 @@ def _instructions(path):
 
 
 @proposals.command("create")
-@click.option("--circle", type=int, required=True, help="ID of the circle.")
+@click.option(
+    "--circle",
+    type=int,
+    required=True,
+    help="ID of the circle.",
+    shell_complete=complete_circles,
+)
 @click.option(
     "--role",
     type=int,
     required=True,
     help="ID of your role with the tension, see `gov me`.",
+    shell_complete=complete_my_roles,
 )
 @click.option("--tension", required=True, help="The tension, Markdown; - for stdin.")
 @click.option(
@@ -152,7 +164,7 @@ def create(circle, role, tension, instructions, as_json):
 
 
 @proposals.command("update")
-@click.argument("id", type=int)
+@click.argument("id", type=int, shell_complete=complete_proposals)
 @click.option("--tension", help="The tension, Markdown; - for stdin.")
 @click.option(
     "--instructions",
@@ -174,7 +186,7 @@ def update(id, tension, instructions, as_json):
 
 
 @proposals.command("publish")
-@click.argument("id", type=int)
+@click.argument("id", type=int, shell_complete=complete_proposals)
 def publish(id):
     """Publish your draft for the async process; the circle's members get a
     mail"""

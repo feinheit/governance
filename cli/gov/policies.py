@@ -3,11 +3,26 @@
 import click
 from rich.markdown import Markdown
 
-from gov.core import cli, console, echo_fields, echo_json, link, make_table, request
+from gov.core import (
+    cli,
+    complete_circles,
+    complete_policies,
+    console,
+    echo_fields,
+    echo_json,
+    link,
+    make_table,
+    request,
+)
 
 
 @cli.group(invoke_without_command=True)
-@click.option("--circle", type=int, help="ID of the circle, with its roles' policies.")
+@click.option(
+    "--circle",
+    type=int,
+    help="ID of the circle, with its roles' policies.",
+    shell_complete=complete_circles,
+)
 @click.option("--json", "as_json", is_flag=True)
 @click.pass_context
 def policies(ctx, circle, as_json):
@@ -37,7 +52,7 @@ def policies(ctx, circle, as_json):
 
 
 @policies.command("show")
-@click.argument("id", type=int)
+@click.argument("id", type=int, shell_complete=complete_policies)
 @click.option("--json", "as_json", is_flag=True)
 def show(id, as_json):
     """A policy with its text"""

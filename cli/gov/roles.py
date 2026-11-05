@@ -5,6 +5,7 @@ from rich.markdown import Markdown
 
 from gov.core import (
     cli,
+    complete_roles,
     console,
     echo_fields,
     echo_json,
@@ -74,7 +75,7 @@ def roles():
 
 
 @roles.command("show")
-@click.argument("id", type=int)
+@click.argument("id", type=int, shell_complete=complete_roles)
 @click.option("--json", "as_json", is_flag=True)
 def show(id, as_json):
     """A role with its purpose, accountabilities, domains, policies and

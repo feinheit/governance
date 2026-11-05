@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import gov
+from click.shell_completion import ShellComplete
 from click.testing import CliRunner
 from django.test import Client, TestCase
 from django.utils.translation import deactivate_all
@@ -40,6 +41,7 @@ class CLITest(TestCase):
             patch.object(gov.core.requests, "request", self.request),
             patch.object(gov.core, "CONFIG", self.directory / "governance.toml"),
             patch.object(gov.core, "BUG_REPORTS", self.directory / "reports"),
+            patch.object(gov.core, "CACHE", self.directory / "cache"),
             patch.object(gov.core.console, "_width", 200),
         ]:
             patcher.start()
@@ -221,3 +223,29 @@ class CLITest(TestCase):
         path = self.directory / "governance.md"
         self.gov("export", "--output", path)
         self.assertIn("Cooking soup", path.read_text())
+
+    def complete(self, args, incomplete):
+        self.gov("me")  # Stores a token
+        with patch.dict("os.environ", {"GOVERNANCE_URL": "http://testserver"}):
+            completions = ShellComplete(gov.cli, {}, "gov", "_GOV_COMPLETE")
+            return [
+                (item.value, item.help)
+                for item in completions.get_completions(args, incomplete)
+            ]
+
+    def test_completion(self):
+        """IDs are completed with their names, also from a part of the name"""
+        kitchen = (str(self.kitchen.pk), "Kitchen")
+        self.assertIn(kitchen, self.complete(["circles", "show"], ""))
+        self.assertEqual(self.complete(["circles", "show"], "kitch"), [kitchen])
+        self.assertEqual(
+            self.complete(["proposals", "create", "--role"], ""),
+            [(str(self.cook.pk), "Cook (Kitchen)")],
+        )
+        self.assertIn(
+            (str(self.cook.pk), "Cook (Kitchen)"),
+            self.complete(["roles", "show"], "co"),
+        )
+        # Cached: a renamed circle shows up the next day
+        Role.objects.filter(pk=self.kitchen.pk).update(name="Galley")
+        self.assertEqual(self.complete(["circles", "show"], "kitch"), [kitchen])

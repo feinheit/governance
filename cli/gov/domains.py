@@ -2,11 +2,24 @@
 
 import click
 
-from gov.core import cli, console, echo_json, link, make_table, request
+from gov.core import (
+    cli,
+    complete_circles,
+    console,
+    echo_json,
+    link,
+    make_table,
+    request,
+)
 
 
 @cli.command()
-@click.option("--circle", type=int, help="ID of the circle, with its roles' domains.")
+@click.option(
+    "--circle",
+    type=int,
+    help="ID of the circle, with its roles' domains.",
+    shell_complete=complete_circles,
+)
 @click.option("--json", "as_json", is_flag=True)
 def domains(circle, as_json):
     """The domains, grouped by circle and role, with their policies"""
