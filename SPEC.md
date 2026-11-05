@@ -357,6 +357,11 @@ only setting is `User.notify_all` ("everything in all circles").
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
   the handbook's links are updated at the switchover using the imported
   GlassFrog IDs.
+- **Technical URLs** on purpose (`/roles/42/`), no slugs: names repeat
+  (every circle has a Facilitator), change through governance (renames,
+  moves) and differ in the history; the ID is what stays. Not even as
+  decoration (`42-name`): links stay short and redirects don't get in the
+  way of forms and htmx.
 
 Everyone signed in reads everything except others' drafts. The Secretary
 changes the circle's settings and stands in for the Circle Lead in
