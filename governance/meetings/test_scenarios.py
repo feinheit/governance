@@ -8,7 +8,9 @@ whole meeting.
 
 import datetime as dt
 
+import time_machine
 from django.core import mail
+from django.core.management import call_command
 from django.db import connection
 from django.test import TestCase
 from django.utils import timezone
@@ -19,7 +21,7 @@ from governance.history.backfill import backfill
 from governance.history.models import Change
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
-from governance.roles.models import Assignment, Policy, Role
+from governance.roles.models import Accountability, Assignment, Policy, Role
 
 
 class GovernanceMeetingScenarioTest(TestCase):
@@ -197,3 +199,112 @@ class GovernanceMeetingScenarioTest(TestCase):
         for label in ["Pastry", "Cakes need a cook", "No more bakery"]:
             self.assertIn(f"Adopted: {label}", body)
         self.assertNotIn("Cook again", body)
+
+
+class AsyncAndMeetingScenarioTest(TestCase):
+    """An async proposal and a meeting change the same accountability: at
+    the deadline the async one goes to the meeting, the secretary merges"""
+
+    def setUp(self):
+        self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        self.bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        self.eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        self.kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        self.kitchen.create_core_roles()
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="facilitator"), user=self.ada
+        )
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="secretary"), user=self.bob
+        )
+        self.cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        Assignment.objects.create(role=self.cook, user=self.eve)
+        self.cooking = Accountability.objects.create(role=self.cook, text="Cooking")
+
+    def change_cooking(self, proposal, text):
+        response = self.client.post(
+            f"/proposals/{proposal.pk}/roles/{self.cook.pk}/",
+            {
+                "name": "Cook",
+                "purpose": "",
+                f"accountabilities-{self.cooking.pk}": text,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def meeting(self):
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        return Meeting.objects.running().get()
+
+    def test_async_after_the_meeting(self):
+        start = timezone.now()
+        # Eve publishes her change
+        self.client.force_login(self.eve)
+        self.client.post(
+            f"/roles/{self.kitchen.pk}/proposals/new/",
+            {"role": self.cook.pk, "tension": "Meals, not food"},
+        )
+        async_proposal = Proposal.objects.get()
+        self.change_cooking(async_proposal, "Cooking meals")
+        self.client.post(f"/proposals/{async_proposal.pk}/publish/")
+        async_proposal.refresh_from_db()
+        self.assertEqual(async_proposal.status, Proposal.PUBLISHED)
+
+        # Meanwhile a meeting changes the same accountability
+        meeting = self.meeting()
+        self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Food"})
+        item = AgendaItem.objects.get(label="Food")
+        self.client.post(f"/agenda/{item.pk}/process/")
+        self.client.post(f"/agenda/{item.pk}/proposal/")
+        item.refresh_from_db()
+        self.change_cooking(item.proposal, "Cooking food")
+        self.client.force_login(self.ada)
+        self.client.post(f"/agenda/{item.pk}/adopt/")
+        self.client.post(f"/meetings/{meeting.pk}/end/")
+        self.cooking.refresh_from_db()
+        self.assertEqual(self.cooking.text, "Cooking food")
+
+        # The deadline passes: the async proposal conflicts, it waits for a
+        # meeting instead of being adopted
+        with time_machine.travel(start + dt.timedelta(days=5), tick=False):
+            call_command("fairy_tasks")
+            async_proposal.refresh_from_db()
+            self.assertEqual(
+                (async_proposal.status, async_proposal.meeting),
+                (Proposal.IN_MEETING, None),
+            )
+            self.cooking.refresh_from_db()
+            self.assertEqual(self.cooking.text, "Cooking food")
+
+            # The next meeting: the secretary merges both versions
+            meeting = self.meeting()
+            self.client.post(
+                f"/meetings/{meeting.pk}/agenda/add/", {"proposal": async_proposal.pk}
+            )
+            item = AgendaItem.objects.get(proposal=async_proposal)
+            self.client.post(f"/agenda/{item.pk}/process/")
+            self.assertContains(
+                self.client.get(meeting.get_absolute_url()),
+                "has been changed since the proposal was drafted",
+            )
+            url = f"/proposals/{async_proposal.pk}/roles/{self.cook.pk}/"
+            form = self.client.get(url).context["form"]
+            name = f"accountabilities-{self.cooking.pk}"
+            self.assertEqual(
+                form[name].initial,
+                "<<<<<<< currently\nCooking food\n=======\nCooking meals\n"
+                ">>>>>>> proposal",
+            )
+            self.change_cooking(async_proposal, "Cooking food and meals")
+            self.client.force_login(self.ada)
+            response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
+            self.assertContains(response, "The proposal is adopted.")
+
+        async_proposal.refresh_from_db()
+        self.cooking.refresh_from_db()
+        self.assertEqual(
+            (async_proposal.status, async_proposal.meeting),
+            (Proposal.ADOPTED, meeting),
+        )
+        self.assertEqual(self.cooking.text, "Cooking food and meals")
