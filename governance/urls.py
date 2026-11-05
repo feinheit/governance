@@ -15,6 +15,9 @@ def favicon(request):
     return redirect(static("governance/favicon.png"), permanent=True)
 
 
+# Deleted drafts are explained to their proposer
+handler404 = "governance.not_found.page_not_found"
+
 urlpatterns = [
     path("favicon.ico", favicon),
     path("", include("governance.roles.urls")),
@@ -29,6 +32,12 @@ urlpatterns = [
     path("cli-login/", cli_login, name="cli_login"),
     path("admin/", admin.site.urls),
 ]
+
+if settings.DEBUG:  # pragma: no cover
+    from governance.not_found import page_not_found
+
+    # Django shows its own 404 page with DEBUG, this one previews ours
+    urlpatterns.append(path("404/", page_not_found, {"exception": None}))
 
 if settings.DEBUG_TOOLBAR:  # pragma: no cover
     from debug_toolbar.toolbar import debug_toolbar_urls

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% block title %}{% translate "Page not found" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <h1 class="mb-0">{% translate "Page not found" %}</h1>
+    </div>
+    {% if deleted_on %}
+      <section class="card mb-3">
+        <div class="card-body">
+          <p>
+            {% blocktranslate trimmed with date=deleted_on|date:"SHORT_DATETIME_FORMAT" %}
+              You deleted this draft on {{ date }}. Its tension was:
+            {% endblocktranslate %}
+          </p>
+          <div class="wb-markdown text-body-secondary">{{ deleted_tension|markdown }}</div>
+        </div>
+      </section>
+    {% else %}
+      <p class="text-body-secondary">
+        {% translate "This page doesn't exist, or you don't have access to it." %}
+      </p>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+      <form method="get" action="/search/" role="search" class="mb-3">
+        <input
+          type="search"
+          name="q"
+          class="form-control"
+          placeholder="{% translate 'Search' %}"
+          aria-label="{% translate 'Search' %}"
+        >
+      </form>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary" href="{% url 'start' %}">{% translate "Organization" %}</a>
+        <a class="btn btn-quiet" href="{% url 'circle_browser' %}">{% translate "Circles" %}</a>
+        <a class="btn btn-quiet" href="{% url 'proposals' %}">{% translate "Proposals" %}</a>
+        <a class="btn btn-quiet" href="{% url 'help' %}">{% translate "Help" %}</a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock content %}

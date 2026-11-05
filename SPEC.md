@@ -341,6 +341,11 @@ only setting is `User.notify_all` ("everything in all circles").
   `docs/` (German, Markdown, also readable on GitHub) and the
   constitution. It explains the tool, not Holacracy, and what the tool
   doesn't do (the constitution choices below).
+- **404**: the search and the main pages. Drafts are the only pages which
+  disappear (roles and policies are archived, people become inactive), so
+  their proposer learns from the audit log when they deleted the draft and
+  its tension; others see "not found", like for others' drafts
+  (`governance/not_found.py`).
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
   the handbook's links are updated at the switchover using the imported
   GlassFrog IDs.

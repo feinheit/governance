@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 11:26+0100\n"
+"POT-Creation-Date: 2026-11-05 14:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1383,6 +1383,45 @@ msgstr "Deutsch"
 msgid "English"
 msgstr "Englisch"
 
+#: governance/templates/404.html
+msgid "Page not found"
+msgstr "Seite nicht gefunden"
+
+#: governance/templates/404.html
+#, python-format
+msgid "You deleted this draft on %(date)s. Its tension was:"
+msgstr "Du hast diesen Entwurf am %(date)s gelöscht. Seine Spannung war:"
+
+#: governance/templates/404.html
+msgid "This page doesn't exist, or you don't have access to it."
+msgstr "Diese Seite gibt es nicht, oder du hast keinen Zugriff darauf."
+
+#: governance/templates/404.html governance/templates/base.html
+#: governance/templates/search/search.html
+msgid "Search"
+msgstr "Suchen"
+
+#: governance/templates/404.html governance/templates/base.html
+#: governance/templates/roles/person_detail.html
+msgid "Organization"
+msgstr "Organisation"
+
+#: governance/templates/404.html governance/templates/base.html
+#: governance/templates/roles/circle_browser.html
+msgid "Circles"
+msgstr "Kreise"
+
+#: governance/templates/404.html governance/templates/base.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/proposals/proposal_list.html
+msgid "Proposals"
+msgstr "Vorschläge"
+
+#: governance/templates/404.html governance/templates/base.html
+#: governance/templates/help.html
+msgid "Help"
+msgstr "Hilfe"
+
 #: governance/templates/_show_more.html
 #, python-format
 msgid "Show %(more)s more"
@@ -1485,24 +1524,9 @@ msgstr "Governance"
 msgid "Sign in with Google"
 msgstr "Mit Google anmelden"
 
-#: governance/templates/base.html governance/templates/roles/person_detail.html
-msgid "Organization"
-msgstr "Organisation"
-
-#: governance/templates/base.html
-#: governance/templates/roles/circle_browser.html
-msgid "Circles"
-msgstr "Kreise"
-
 #: governance/templates/base.html governance/templates/roles/people.html
 msgid "People"
 msgstr "Personen"
-
-#: governance/templates/base.html
-#: governance/templates/meetings/meeting_detail.html
-#: governance/templates/proposals/proposal_list.html
-msgid "Proposals"
-msgstr "Vorschläge"
 
 #: governance/templates/base.html
 #: governance/templates/history/organization_history.html
@@ -1511,14 +1535,6 @@ msgstr "Vorschläge"
 #: governance/templates/roles/role_detail.html
 msgid "History"
 msgstr "Geschichte"
-
-#: governance/templates/base.html governance/templates/search/search.html
-msgid "Search"
-msgstr "Suchen"
-
-#: governance/templates/base.html governance/templates/help.html
-msgid "Help"
-msgstr "Hilfe"
 
 #: governance/templates/base.html
 msgid "API"
