@@ -4,9 +4,9 @@
 
 {% block content %}
   <div class="wb-page-header">
+    {# One text: a line break between the parts would become a space #}
     <h1>
-      {% translate "Search" %}
-      {% if query %}: {{ query }}{% endif %}
+      {% if query %}{% blocktranslate %}Search: {{ query }}{% endblocktranslate %}{% else %}{% translate "Search" %}{% endif %}
     </h1>
   </div>
   {% if empty %}<p class="text-body-secondary">{% translate "Nothing found." %}</p>{% endif %}
