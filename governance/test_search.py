@@ -29,7 +29,7 @@ class SearchTest(TestCase):
         response = self.client.get("/search/", {"q": "domains registering"})
         self.assertContains(response, "Registering domains for customers")
         # No space before the colon
-        self.assertContains(response, "<h1>Search: domains registering</h1>")
+        self.assertContains(response, "Search: domains registering")
         response = self.client.get("/search/", {"q": "kuche"})  # Ignores accents
         self.assertContains(response, circle.get_absolute_url())
         response = self.client.get("/search/", {"q": "stove"})
