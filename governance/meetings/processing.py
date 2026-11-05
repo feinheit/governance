@@ -17,7 +17,7 @@ from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
 from governance.meetings.access import can_run
-from governance.meetings.models import STEP_CHOICES, AgendaItem, Objection
+from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting, Objection
 from governance.proposals.instructions import ProposalError, adopt
 from governance.proposals.models import Proposal
 from governance.roles.permissions import proposer_roles
@@ -129,11 +129,15 @@ def objection_add(request, pk):
 @require_POST
 def objection_update(request, pk):
     """The facilitator's test, and integrating the objection"""
-    objection = get_object_or_404(Objection.objects.select_related("meeting"), pk=pk)
-    item = objection.meeting.agenda_items.filter(proposal=objection.proposal).first()
+    objection = get_object_or_404(Objection, pk=pk)
+    # In the meeting processing the proposal now: an objection left open
+    # when a meeting ended is tested in the next one
+    item = AgendaItem.objects.filter(
+        proposal=objection.proposal, meeting__in=Meeting.objects.running()
+    ).first()
     if item is None:
         raise PermissionDenied
-    running_item(request, item.pk)
+    item = running_item(request, item.pk)
     action = request.POST.get("action")
     if action in {"valid", "invalid"}:
         objection.is_valid = action == "valid"
@@ -143,7 +147,7 @@ def objection_update(request, pk):
     if objection.is_valid and not objection.is_integrated:
         item.step = "integration"
         item.save(update_fields=["step"])
-    return redirect(objection.meeting)
+    return redirect(item.meeting)
 
 
 @require_POST

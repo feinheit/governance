@@ -135,6 +135,36 @@ class ProcessingTest(TestCase):
             self.client.post(f"/agenda/{self.item.pk}/process/").status_code, 403
         )
 
+    def test_objection_left_open(self):
+        """A meeting ends with an untested objection: the next meeting
+        processing the proposal tests it"""
+        self.client.force_login(self.ada)
+        self.client.post(f"/agenda/{self.item.pk}/process/")
+        self.client.post(
+            f"/agenda/{self.item.pk}/objections/",
+            {"objector": f"{self.eve.pk}:{self.cook.pk}", "text": "Chefs are bossy"},
+        )
+        objection = Objection.objects.get()
+        self.client.post(f"/meetings/{self.meeting.pk}/end/")
+
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.running().get()
+        self.client.post(
+            f"/meetings/{meeting.pk}/agenda/add/", {"proposal": self.proposal.pk}
+        )
+        item = AgendaItem.objects.get(meeting=meeting)
+        self.client.post(f"/agenda/{item.pk}/process/")
+        response = self.client.post(
+            f"/objections/{objection.pk}/", {"action": "invalid"}
+        )
+        self.assertRedirects(response, meeting.get_absolute_url())
+        objection.refresh_from_db()
+        self.assertFalse(objection.is_valid)
+        self.assertIsNotNone(objection.is_valid)
+        self.client.post(f"/agenda/{item.pk}/adopt/")
+        self.proposal.refresh_from_db()
+        self.assertEqual(self.proposal.status, Proposal.ADOPTED)
+
     def test_tension(self):
         item = AgendaItem.objects.create(
             meeting=self.meeting, label="Noise", owner=self.eve, position=2
