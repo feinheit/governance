@@ -335,7 +335,8 @@ only setting is `User.notify_all` ("everything in all circles").
 - **Search**: roles, accountabilities, domains and policies, all terms
   matching, ignoring case and accents; snippets as plain text.
 - **Export**: the whole governance as Markdown, `/export/governance.md`
-  (`?holders=0` without the people); no button, the CLI will offer it.
+  (`?holders=0` without the people); no button, `gov export` (`GET
+  export/`) offers it.
 - **Help** (`/help/`, `governance/help.py`): the user documentation in
   `docs/` (German, Markdown, also readable on GitHub) and the
   constitution. It explains the tool, not Holacracy, and what the tool
@@ -356,7 +357,7 @@ interface, session or personal tokens (`APIToken`, read only or read and
 write, 90 days, created on the API tokens page): `GET circles/`, `GET
 roles/{id}/`, `GET search/`, `GET proposals/` and `proposals/{id}/`, `POST
 proposals/` (a draft), `PATCH proposals/{id}/`, `POST
-proposals/{id}/publish/`, `GET policies/` and `policies/{id}/`, `GET domains/`, `GET me/`
+proposals/{id}/publish/`, `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET me/`
 (the user, the token's access and their roles); objects come with the URL
 of their page. Clients send instructions only (e.g. written by an LLM from
 a tension); the server fills in names and returns `problems` with every
@@ -364,8 +365,9 @@ draft, and the readable `changes` of the proposal's page.
 
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
-write), `gov me`, `gov circles`, `gov roles show`, `gov policies`, `gov domains`,
-`gov search` and `gov proposals` (list, show, create, update, publish).
+write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
+`gov domains`, `gov export`, `gov search` and `gov proposals` (list, show,
+create, update, publish).
 
 ## 9. Import from GlassFrog
 
@@ -420,7 +422,6 @@ Deliberately not modelled:
 - **Published interpretations** (4.2.1): the Secretary's rulings, binding
   for the circle and its sub-circles, shown on the circle page. Postponed,
   we never had the case.
-- **The Markdown export** through the API and `gov`.
 - **Django Tasks** for jobs which belong to a moment, not a schedule:
   ending a meeting when its inactivity runs out (instead of the hourly
   `end_inactive_meetings`), sending mails outside the request.

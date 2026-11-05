@@ -38,6 +38,7 @@ Several installations work like in Workbench's `wb`: `gov auth list`,
     gov policies show 78        # a policy with its text
     gov domains --circle 12     # domains with their policies
     gov search soup kitchen     # all terms, ignoring case and accents
+    gov export -o governance.md # everything as one Markdown document
     gov proposals --circle 12 --status published
     gov proposals show 56       # tension, changes, problems
 

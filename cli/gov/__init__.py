@@ -4,6 +4,7 @@ from gov import (  # noqa: F401 Register the commands
     auth,
     circles,
     domains,
+    export,
     policies,
     proposals,
     roles,

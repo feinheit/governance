@@ -211,3 +211,13 @@ class CLITest(TestCase):
         self.assertIn("Labels", result.output)
         result = self.gov("domains", "--circle", self.kitchen.pk)
         self.assertIn("The fridge", result.output)  # Also the circle's roles
+
+    def test_export(self):
+        result = self.gov("export")
+        self.assertIn("Kitchen", result.output)
+        self.assertIn("Cooking soup", result.output)
+        self.assertIn("Ada", result.output)
+        self.assertNotIn("Ada", self.gov("export", "--without-holders").output)
+        path = self.directory / "governance.md"
+        self.gov("export", "--output", path)
+        self.assertIn("Cooking soup", path.read_text())

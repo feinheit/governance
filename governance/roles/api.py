@@ -3,8 +3,10 @@
 from django.conf import settings
 from django.db.models import Prefetch, Q
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from ninja import Router, Schema
 
+from governance.roles.export import governance_markdown
 from governance.roles.models import Assignment, Domain, Policy, Role
 from governance.search import search_results
 
@@ -326,3 +328,18 @@ def domains(request, circle_id: int | None = None):
             "policies": domain.active,
         })
     return result
+
+
+class ExportOut(Schema):
+    date: str
+    markdown: str
+
+
+@router.get("export/", response=ExportOut)
+def export(request, *, holders: bool = True):
+    """The whole current governance as one Markdown document, like
+    /export/governance.md"""
+    return {
+        "date": timezone.localdate().isoformat(),
+        "markdown": governance_markdown(with_holders=holders),
+    }
