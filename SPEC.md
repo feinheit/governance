@@ -480,6 +480,12 @@ Deliberately not modelled:
 
 ## Backlog
 
+- **Simplify roles and circles**: every role's inside is a circle now
+  (proposals, governance meetings, members are its holders, 1.3.1), so
+  look for code treating the two separately without need, e.g. the
+  `is_circle` branches in `roles/views.py`, `can_start_meeting()`,
+  `members()`, `proposer_roles()`, the meeting views' lookups and the
+  role page's template.
 - **Switchover**: a final import, update the handbook's links, cancel
   GlassFrog, then stop the nightly `import_glassfrog --api`. Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
