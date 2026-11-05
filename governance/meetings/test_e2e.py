@@ -226,3 +226,20 @@ class MeetingE2ETest(LiveServerTestCase):
         page.locator(".cb-mine-list .btn", has_text="Cook").click()
         page.wait_for_selector('circle.cb-highlight[aria-label="Cook"]')
         self.assertEqual(self.errors, [])
+
+    def test_shortcuts(self):
+        """Alt with a letter: the search field, the start page, the
+        organization"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        page.keyboard.press("Alt+q")
+        self.assertEqual(page.evaluate("document.activeElement.name"), "q")
+        page.keyboard.press("Alt+h")
+        page.wait_for_url(f"**{self.kitchen.get_absolute_url()}")  # The start
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        page.keyboard.press("Alt+o")
+        page.wait_for_url(f"**{self.kitchen.get_absolute_url()}")
+        self.assertEqual(
+            page.get_attribute("[data-shortcut=o]", "aria-keyshortcuts"), "Alt+O"
+        )
+        self.assertEqual(self.errors, [])

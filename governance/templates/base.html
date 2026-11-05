@@ -26,7 +26,7 @@
   <body>
     <nav class="navbar navbar-expand wb-navbar mb-4">
       <div class="container-xl">
-        <a class="navbar-brand wb-brand" href="/" title="{% translate 'Governance' %}">
+        <a class="navbar-brand wb-brand" href="/" title="{% translate 'Governance' %}" data-shortcut="h">
           {# The favicon, colored by the theme (static/governance/favicon.svg) #}
           <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
             <circle class="wb-brand-circle" cx="16" cy="16" r="14" stroke-width="3" />
@@ -42,7 +42,7 @@
             {% url 'circle_browser' as circles_url %}
             {% url 'people' as people_url %}
             <li class="nav-item wb-nav-organization">
-              <a class="nav-link" href="{{ start_url }}">{% translate "Organization" %}</a>
+              <a class="nav-link" href="{{ start_url }}" data-shortcut="o">{% translate "Organization" %}</a>
             </li>
             <li class="nav-item wb-nav-circles">
               <a
@@ -82,6 +82,7 @@
               type="search"
               name="q"
               class="form-control form-control-sm"
+              data-shortcut="q"
               placeholder="{% translate 'Search' %}"
               value="{{ request.GET.q }}"
             >

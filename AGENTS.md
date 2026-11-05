@@ -97,7 +97,8 @@ change the latter here): Bootstrap's parts the templates use
 variants, grid breakpoints, form parts and color variants of buttons,
 alerts etc. in use: add them there when a template needs another one), the styles
 (`styles/main.css`), the theme toggle, the mentions, the meeting and htmx,
-and the circle browser (a Preact island, `circles/`, which `main.js` imports
+the keyboard shortcuts (`shortcuts.js`, `data-shortcut` on links and fields,
+listed in `docs/orientierung.md`) and the circle browser (a Preact island, `circles/`, which `main.js` imports
 only on its page: Preact and d3 are a chunk of their own). No core-js:
 SWC's usage detection adds polyfills by guessing (`Array#map` as an
 iterator helper), the browsers of browserslist's defaults have what the

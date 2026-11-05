@@ -18,6 +18,17 @@ anderer.
 - **Suchen** findet Rollen, Accountabilities, Domains und Policies, die
   alle eingegebenen Wörter enthalten.
 
+## Tastenkürzel
+
+| Kürzel | |
+| --- | --- |
+| <kbd>Alt-H</kbd> | Startseite |
+| <kbd>Alt-O</kbd> | Organisation |
+| <kbd>Alt-Q</kbd> | ins Suchfeld |
+
+Auf dem Mac <kbd>Ctrl</kbd> statt <kbd>Alt</kbd>. Fährst du mit der Maus
+über einen Link, zeigt er sein Kürzel.
+
 ## Kreise, Rollen und Personen
 
 Ein **Kreis** zeigt Purpose, Strategie, Accountabilities, Domains, seine

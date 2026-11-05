@@ -7,6 +7,7 @@ import "./styles/main.css"
 import "./theme.js"
 import "./mentions.js"
 import "./show_more.js"
+import "./shortcuts.js"
 // meeting.js first: it decides which links htmx boosts
 import "./meeting.js"
 import "htmx.org"
