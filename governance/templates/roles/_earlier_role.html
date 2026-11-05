@@ -1,0 +1,8 @@
+<li class="list-group-item{% if more %} wb-more{% endif %}">
+  <a href="{{ assignment.role.get_absolute_url }}">{{ assignment.role }}</a>
+  <div class="wb-row-meta">
+    {% if assignment.role.circle %}<span>{{ assignment.role.circle }}</span>{% endif %}
+    <span>{% if assignment.starts_on %}{{ assignment.starts_on|date:"SHORT_DATE_FORMAT" }}{% endif %} –
+      {{ assignment.ends_on|date:"SHORT_DATE_FORMAT" }}</span>
+  </div>
+</li>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Circles" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-page-header">
+    <div>
+      <h1>{% translate "Circles" %}</h1>
+      <div class="wb-meta">
+        <span>{% translate "Click a circle to zoom in, the background to zoom out, a role to open it." %}</span>
+      </div>
+    </div>
+  </div>
+  {% if tree %}
+    <div id="circle-browser" class="mb-4"></div>
+    {{ tree|json_script:"circle-tree" }}
+    {{ labels|json_script:"circle-labels" }}
+    <details class="card wb-details" open id="circle-list">
+      <summary class="card-header">{% translate "As a list" %}</summary>
+      <div class="card-body">
+        <a class="fw-semibold" href="{{ tree.url }}">{{ tree.name }}</a>
+        {% include "roles/_tree_list.html" with node=tree %}
+      </div>
+    </details>
+  {% else %}
+    <p class="text-body-secondary">{% translate "No circles yet." %}</p>
+  {% endif %}
+{% endblock content %}

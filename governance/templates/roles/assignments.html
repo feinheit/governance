@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Holders" %} – {{ role }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    {% include "roles/_breadcrumbs.html" %}
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0"><a href="{{ role.get_absolute_url }}">{{ role }}</a>: {% translate "Holders" %}</h1>
+        <div class="wb-meta">
+          <span
+          >{% translate "Circle Leads assign people to the roles of their circle directly, without a proposal." %}</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="card mb-4">
+      <ul class="list-group list-group-flush">
+        {% for assignment in assignments %}
+          <li class="list-group-item wb-row">
+            <div class="wb-row-main">
+              <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
+              <div class="wb-row-meta">
+                {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
+                {% if assignment.starts_on %}<span
+                  >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+              </div>
+            </div>
+            <div class="d-flex gap-1 flex-shrink-0 align-items-start">
+              <a
+                class="btn btn-sm btn-quiet"
+                href="{% url 'assignment_update' assignment.pk %}"
+              >{% translate "Edit focus" %}</a>
+              <form method="post" action="{% url 'assignment_end' assignment.pk %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-quiet">{% translate "Remove" %}</button>
+              </form>
+            </div>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-body-secondary">
+            {% if role.core_role == "lead" or role.core_role == "rep" %}{% translate "Nobody" %}{% else %}{% translate "Held by the Circle Lead" %}{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <h2 class="h6">{% translate "Assign somebody" %}</h2>
+    <form method="post" action="{{ request.get_full_path }}">
+      {% csrf_token %}
+      {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
+      <section class="card mb-3">
+        <div class="card-body">
+          {% for field in form.visible_fields %}{{ field.as_field_group }}{% endfor %}
+        </div>
+      </section>
+      <div class="wb-form-actions">
+        <button type="submit" class="btn btn-primary">{% translate "Assign" %}</button>
+        <a class="btn btn-quiet" href="{{ role.get_absolute_url }}">{% translate "Back to the role" %}</a>
+      </div>
+    </form>
+  </div>
+{% endblock content %}

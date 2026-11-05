@@ -1,0 +1,58 @@
+exclude: "governance/static/governance/bootstrap|governance/static/governance/htmx|conf/strings.js"
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: django-check
+        name: django check
+        entry: .venv/bin/python manage.py check
+        pass_filenames: false
+        language: system
+        always_run: true
+  - repo: https://github.com/adamchainz/django-upgrade
+    rev: 1.33.0
+    hooks:
+      - id: django-upgrade
+        args: [--target-version, "6.1"]
+  - repo: https://github.com/adamchainz/djade-pre-commit
+    rev: 1.10.0
+    hooks:
+      - id: djade
+        args: [--target-version, "6.0"]
+  - repo: https://github.com/UnknownPlatypus/djangofmt-pre-commit
+    rev: v1.1.0
+    hooks:
+      - id: djangofmt
+        types_or: [html]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+        args: [--unsafe-fixes]
+      - id: ruff-format
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: v2.30.6
+    hooks:
+      - id: pyproject-fmt
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: "v0.27"
+    hooks:
+      - id: validate-pyproject
+  - repo: https://github.com/biomejs/pre-commit
+    rev: v2.6.4
+    hooks:
+      - id: biome-check
+        args: [--unsafe]
+        types_or: [css, javascript, json]
+        verbose: true

@@ -1,0 +1,195 @@
+import datetime as dt
+
+from django.conf import settings
+from django.test import TestCase
+from django.utils import timezone
+
+from governance.accounts.models import APIToken, User, prune_api_tokens
+from governance.proposals.models import Proposal
+from governance.roles.models import Accountability, Assignment, Role
+
+
+class APITest(TestCase):
+    def setUp(self):
+        self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        self.bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        self.kitchen = Role.objects.create(
+            name="Kitchen", is_circle=True, purpose="Food"
+        )
+        self.kitchen.create_core_roles()
+        self.cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        Accountability.objects.create(role=self.cook, text="Cooking soup")
+        Assignment.objects.create(role=self.cook, user=self.ada, focus="Soup")
+        _token, self.secret = APIToken.create_for(
+            user=self.ada, title="Script", access="write"
+        )
+        _token, self.read_secret = APIToken.create_for(
+            user=self.ada, title="Reader", access="read"
+        )
+
+    def api(self, method, url, data=None, secret=None):
+        return getattr(self.client, method)(
+            url,
+            data=data,
+            content_type="application/json",
+            headers={"authorization": f"Bearer {secret or self.secret}"},
+        )
+
+    def test_tokens_page(self):
+        self.assertRedirects(
+            self.client.get("/accounts/api-tokens/"),
+            "/accounts/login/?next=/accounts/api-tokens/",
+            fetch_redirect_response=False,
+        )
+        self.client.force_login(self.bob)
+        response = self.client.post(
+            "/accounts/api-tokens/", {"title": "Mine", "access": "read"}
+        )
+        self.assertContains(response, "gov_")
+        token = self.bob.api_tokens.get()
+        self.client.post("/accounts/api-tokens/", {"delete": token.pk})
+        self.assertFalse(self.bob.api_tokens.exists())
+
+        APIToken.objects.update(expires_at=timezone.now() - dt.timedelta(days=100))
+        prune_api_tokens()
+        self.assertFalse(APIToken.objects.exists())
+
+    def test_read(self):
+        self.assertEqual(self.client.get("/api/circles/").status_code, 401)
+        self.assertEqual(
+            self.api("get", "/api/circles/", secret="nonsense").status_code, 401
+        )
+        response = self.api("get", "/api/circles/", secret=self.read_secret)
+        self.assertEqual(
+            response.json(),
+            [
+                {
+                    "id": self.kitchen.pk,
+                    "name": "Kitchen",
+                    "circle_id": None,
+                    "depth": 0,
+                    "purpose": "Food",
+                    "url": f"{settings.BASE_URL}/roles/{self.kitchen.pk}/",
+                }
+            ],
+        )
+        data = self.api("get", f"/api/roles/{self.cook.pk}/").json()
+        self.assertEqual(data["accountabilities"][0]["text"], "Cooking soup")
+        self.assertEqual(data["holders"][0]["focus"], "Soup")
+        data = self.api("get", f"/api/roles/{self.kitchen.pk}/").json()
+        self.assertEqual(len(data["roles"]), 4)
+        self.assertIn(
+            {"id": self.cook.pk, "name": "Cook", "circle": "Kitchen"},
+            self.api("get", "/api/roles/").json(),
+        )
+        data = self.api("get", "/api/search/?q=SOUP").json()
+        self.assertEqual(data["accountabilities"][0]["text"], "Cooking soup")
+
+        # The session works too
+        self.client.force_login(self.bob)
+        self.assertEqual(self.client.get("/api/circles/").status_code, 200)
+
+    def test_proposals(self):
+        # Read only tokens don't change anything
+        response = self.api(
+            "post",
+            "/api/proposals/",
+            {
+                "circle_id": self.kitchen.pk,
+                "role_id": self.cook.pk,
+                "tension": "No bread",
+            },
+            secret=self.read_secret,
+        )
+        self.assertEqual(response.status_code, 403)
+
+        response = self.api(
+            "post",
+            "/api/proposals/",
+            {
+                "circle_id": self.kitchen.pk,
+                "role_id": self.cook.pk,
+                "tension": "No bread",
+                "instructions": [
+                    {"op": "add", "path": "/roles/n1"},
+                    {"op": "add", "path": "/roles/n1/name", "value": "Baker"},
+                    {
+                        "op": "replace",
+                        "path": f"/roles/{self.cook.pk}/name",
+                        "original_value": "Cuisinier",
+                        "value": "Chef",
+                    },
+                ],
+            },
+        )
+        data = response.json()
+        self.assertEqual(data["status"], "draft")
+        self.assertEqual(
+            data["names"], {"roles/n1": "Baker", f"roles/{self.cook.pk}": "Cook"}
+        )
+        self.assertEqual(
+            data["problems"],
+            ["Cook: name has been changed since the proposal was drafted."],
+        )
+        pk = data["id"]
+        response = self.api("post", f"/api/proposals/{pk}/publish/")
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(response.json()["problems"]), 1)
+
+        response = self.api(
+            "patch",
+            f"/api/proposals/{pk}/",
+            {"instructions": [{"op": "jump", "path": "/roles/1"}]},
+        )
+        self.assertEqual(response.status_code, 400)
+        response = self.api(
+            "patch",
+            f"/api/proposals/{pk}/",
+            {
+                "tension": "No bread at all",
+                "instructions": [
+                    {"op": "add", "path": "/roles/n1"},
+                    {"op": "add", "path": "/roles/n1/name", "value": "Baker"},
+                ],
+            },
+        )
+        self.assertEqual(response.json()["problems"], [])
+        # Somebody else to ask, otherwise publishing adopts it right away
+        Assignment.objects.create(
+            role=Role.objects.create(name="Waiter", circle=self.kitchen),
+            user=User.objects.create_user("eve@example.com"),
+        )
+        data = self.api("post", f"/api/proposals/{pk}/publish/").json()
+        self.assertEqual(data["status"], "published")
+        self.assertIsNotNone(data["deadline"])
+        self.assertEqual(
+            self.api("get", f"/api/proposals/?circle_id={self.kitchen.pk}").json()[0][
+                "id"
+            ],
+            pk,
+        )
+
+        # Bob isn't a member and doesn't see Ada's drafts
+        Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            tension="Secret",
+            created_at=timezone.now(),
+        )
+        _token, bob_secret = APIToken.create_for(
+            user=self.bob, title="Bob", access="write"
+        )
+        self.assertEqual(
+            len(self.api("get", "/api/proposals/", secret=bob_secret).json()), 1
+        )
+        response = self.api(
+            "post",
+            "/api/proposals/",
+            {"circle_id": self.kitchen.pk, "role_id": self.cook.pk, "tension": "Hi"},
+            secret=bob_secret,
+        )
+        self.assertEqual(response.status_code, 403)
+        response = self.api(
+            "patch", f"/api/proposals/{pk}/", {"tension": "Mine"}, secret=bob_secret
+        )
+        self.assertEqual(response.status_code, 403)

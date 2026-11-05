@@ -1,0 +1,20 @@
+{% load governance i18n %}
+<li class="list-group-item wb-row{% if more %} wb-more{% endif %}">
+  <div class="wb-row-main">
+    <a class="wb-row-title" href="{{ proposal.get_absolute_url }}">{{ proposal }}</a>
+    <div class="wb-row-meta">
+      {% if show_circle %}<span>{{ proposal.circle }}</span>{% endif %}
+      {% if proposal.proposer %}<span>{{ proposal.proposer }}</span>{% endif %}
+      <span>{{ proposal.decided_at|default:proposal.created_at|date:"SHORT_DATE_FORMAT" }}</span>
+    </div>
+  </div>
+  <div class="wb-row-aside">
+    {# The title is the kind when there's no tension #}
+    {% if proposal.kind and proposal.kind != "governance" and proposal.tension %}<span
+        class="badge {{ proposal.kind|tone }}"
+      >{{ proposal.get_kind_display }}</span>{% endif %}
+    {% if proposal.status != "adopted" %}<span
+        class="badge {{ proposal.status|tone }}"
+      >{{ proposal.get_status_display }}</span>{% endif %}
+  </div>
+</li>

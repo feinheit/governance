@@ -1,0 +1,17 @@
+{% load i18n %}
+{% for assignment in role.current_assignments %}
+  <a href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>{% if assignment.is_rep %}
+    <span class="text-body-secondary">({% translate "Circle Rep" %})</span>{% endif %}{% if assignment.focus %}
+    <span class="text-body-secondary">({{ assignment.focus }})</span>{% endif %}{% if assignment.elected_until %}
+    <span
+      class="text-body-secondary"
+    >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% endif %}{% if not forloop.last %},
+  {% endif %}
+{% empty %}
+  {# The Circle Lead holds the unfilled roles, but isn't eligible for the Circle Rep #}
+  {% if role.core_role != "lead" and role.core_role != "rep" %}<span
+      class="text-body-secondary"
+    >{% translate "Held by the Circle Lead" %}</span>{% else %}<span
+      class="text-body-secondary"
+    >{% translate "Nobody" %}</span>{% endif %}
+{% endfor %}

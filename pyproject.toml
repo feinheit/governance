@@ -1,0 +1,110 @@
+[project]
+name = "governance"
+version = "0.0.1"
+license = "BSD-3-Clause"
+requires-python = ">=3.15"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.15",
+]
+dependencies = [
+  "coverage[toml]>=7.13.3",
+  "django>=6.0.5",
+  "django-authlib>=0.17.2",
+  "django-canonical-domain>=0.11",
+  "django-debug-toolbar>=6.2",
+  "django-ninja>=1.7.2",
+  "granian>=2.7",
+  "markdown-it-py[linkify]>=4.2",
+  "psycopg[binary]>=3.3.2",
+  "sentry-sdk<3",
+  "speckenv>=6.2",
+  "time-machine>=3.2",
+]
+
+[dependency-groups]
+# The CLI tests run the CLI, the deployment doesn't need it (UV_NO_DEV)
+dev = [
+  "governance-cli",
+  "playwright>=1.64.1",
+]
+
+[tool.uv]
+sources.governance-cli = { path = "cli", editable = true }
+
+[tool.ruff]
+target-version = "py315"
+preview = true
+fix = true
+show-fixes = true
+lint.extend-select = [
+  "ASYNC",
+  "B",
+  "C4",
+  "C90",
+  "DJ",
+  "E",
+  "F",
+  "FBT",
+  "I",
+  "INP",
+  "INT",
+  "ISC",
+  "LOG",
+  "PGH",
+  "PIE",
+  "PLC",
+  "PLE",
+  "PLW",
+  "RET",
+  "RUF005",
+  "RUF006",
+  "RUF007",
+  "RUF008",
+  "RUF009",
+  "RUF010",
+  "RUF015",
+  "RUF016",
+  "RUF017",
+  "RUF100",
+  "RUF200",
+  "SLOT",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+lint.extend-ignore = [
+  # Allow zip() without strict=
+  "B905",
+  # No line length errors
+  "E501",
+  # Deferred imports for circular import avoidance are a common Django pattern
+  "PLC0415",
+  # Mutable class attributes are fine
+  "RUF012",
+]
+lint.per-file-ignores."*/migrat*/*" = [
+  "N806",
+  "N999",
+]
+lint.per-file-ignores."scripts/*" = [
+  "INP",
+]
+lint.isort.combine-as-imports = true
+lint.isort.lines-after-imports = 2
+lint.mccabe.max-complexity = 15
+
+[tool.coverage]
+run.omit = [
+  "*migrate*",
+  "*migrations*",
+  "*venv*",
+]
+run.branch = true
+report.skip_covered = true
+report.show_missing = true
+
+[tool.djangofmt]
+indent-width = 2
+profile = "django"

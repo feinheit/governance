@@ -1,0 +1,25 @@
+{% load i18n %}
+<ul class="wb-tree">
+  {% for child in node.children %}
+    <li>
+      <a
+        href="{{ child.url }}"
+        {% if child.kind == "circle" %}
+          class="fw-semibold"
+        {% elif child.kind == "core" %}
+          class="text-body-secondary"
+        {% endif %}
+      >{{ child.name }}</a>
+      {% if child.elected %}<span class="badge wb-tone-core">{% translate "elected" %}</span>{% endif %}
+      {% if child.mine and child.kind != "circle" %}<span
+          class="badge wb-tone-primary"
+        >{% translate "your role" %}</span>{% endif %}
+      {% if child.holders %}
+        <span class="text-body-secondary small">{{ child.holders|join:", " }}</span>
+      {% elif child.kind != "circle" %}
+        <span class="text-body-secondary small">{% translate "unassigned" %}</span>
+      {% endif %}
+      {% if child.children %}{% include "roles/_tree_list.html" with node=child %}{% endif %}
+    </li>
+  {% endfor %}
+</ul>

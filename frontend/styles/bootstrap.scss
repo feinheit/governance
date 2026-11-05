@@ -1,0 +1,129 @@
+// Only the parts of Bootstrap the templates use, with its default variables:
+// main.css overrides its custom properties (light and dark mode)
+@use "sass:list";
+@use "sass:map";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/variables-dark";
+@import "~bootstrap/scss/maps";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+
+// The utilities the templates use (and all the spacing): add a group from
+// bootstrap/scss/_utilities.scss when a template needs another one
+$utilities: map-get-multiple(
+  $utilities,
+  (
+    "align-items",
+    "align-self",
+    "border",
+    "border-top",
+    "border-bottom",
+    "color",
+    "display",
+    "flex-grow",
+    "flex-shrink",
+    "flex-wrap",
+    "font-size",
+    "font-weight",
+    "gap",
+    "justify-content",
+    "margin",
+    "margin-x",
+    "margin-y",
+    "margin-top",
+    "margin-end",
+    "margin-bottom",
+    "margin-start",
+    "order",
+    "padding",
+    "padding-x",
+    "padding-y",
+    "padding-top",
+    "padding-end",
+    "padding-bottom",
+    "padding-start",
+    "position",
+    "text-decoration",
+    "user-select",
+    "visibility",
+    "white-space",
+    "width",
+  )
+);
+// Responsive variants only where templates use them (d-lg-none, order-lg-1)
+@each $name, $utility in $utilities {
+  @if not list.index(("display", "order"), $name) {
+    $utilities: map.merge(
+      $utilities,
+      (
+        $name: map.merge($utility, (responsive: false)),
+      )
+    );
+  }
+}
+
+// The color palette (--bs-blue etc.) isn't used, our own colors are in
+// main.css. The theme colors stay as custom properties, but the components
+// below only get the variants in use
+$colors: ();
+$all-theme-colors: $theme-colors;
+$all-grid-breakpoints: $grid-breakpoints;
+
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/containers";
+// .row and the columns of xs and lg (col-lg-5, g-4)
+$enable-grid-classes: false;
+@import "~bootstrap/scss/grid";
+.row {
+  @include make-row();
+
+  > * {
+    @include make-col-ready();
+  }
+}
+@include make-grid-columns(
+  $grid-columns,
+  $grid-gutter-width,
+  map-get-multiple($grid-breakpoints, ("xs", "lg"))
+);
+
+// Without form-range, floating labels and input groups
+@import "~bootstrap/scss/forms/labels";
+@import "~bootstrap/scss/forms/form-text";
+@import "~bootstrap/scss/forms/form-control";
+@import "~bootstrap/scss/forms/form-select";
+@import "~bootstrap/scss/forms/form-check";
+@import "~bootstrap/scss/forms/validation";
+$theme-colors: map-get-multiple($all-theme-colors, ("primary"));
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/nav";
+// Only .navbar-expand, without a breakpoint
+$grid-breakpoints: (
+  xs: 0,
+);
+@import "~bootstrap/scss/navbar";
+$grid-breakpoints: $all-grid-breakpoints;
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/badge";
+$theme-colors: map-get-multiple(
+  $all-theme-colors,
+  ("success", "info", "warning", "danger")
+);
+@import "~bootstrap/scss/alert";
+$theme-colors: ();
+@import "~bootstrap/scss/list-group";
+$theme-colors: $all-theme-colors;
+
+// The helpers in use, no text-bg-* (main.css has the badges' tones), no
+// link-* etc.
+@import "~bootstrap/scss/helpers/visually-hidden";
+// Responsive utilities only for the breakpoints in use (d-sm-inline-block,
+// d-lg-none, order-lg-1)
+$grid-breakpoints: map-get-multiple($all-grid-breakpoints, ("xs", "sm", "lg"));
+@import "~bootstrap/scss/utilities/api";
+$grid-breakpoints: $all-grid-breakpoints;

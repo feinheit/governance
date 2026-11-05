@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "People" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-page-header"><h1>{% translate "People" %}</h1></div>
+  <section class="card">
+    <ul class="list-group list-group-flush">
+      {% for user in users %}
+        <li class="list-group-item"><a class="wb-row-title" href="{{ user.get_absolute_url }}">{{ user }}</a></li>
+      {% empty %}
+        <li class="list-group-item text-body-secondary">{% translate "Nobody holds a role yet." %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endblock content %}

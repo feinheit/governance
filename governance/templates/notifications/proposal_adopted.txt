@@ -1,0 +1,10 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with circle=proposal.circle %}A proposal has been adopted in {{ circle }}.{% endblocktranslate %}
+
+{% translate "Tension" %}:
+{{ proposal.tension|plain }}
+
+{% translate "Changes" %}:
+{% include "notifications/_changes.txt" %}
+
+{{ url }}
+{% endautoescape %}

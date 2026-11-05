@@ -1,0 +1,6 @@
+# Only used for building
+DEBUG=False
+DATABASE_URL=postgres://localhost:5432/postgres
+SECRET_KEY=unsafe
+ALLOWED_HOSTS=["*", ".localhost"]
+LIVE=True

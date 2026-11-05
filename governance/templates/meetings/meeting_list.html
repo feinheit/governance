@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Meetings" %} – {{ circle }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  {% include "roles/_breadcrumbs.html" %}
+  <div class="wb-page-header">
+    <div>
+      <h1>{% translate "Meetings" %}</h1>
+      <div class="wb-meta">
+        <a href="?">{% translate "All" %}</a>
+        <a href="?kind=governance">{% translate "Governance Meetings" %}</a>
+        <a href="?kind=tactical">{% translate "Tactical Meetings" %}</a>
+      </div>
+    </div>
+    {% if can_start_meeting %}
+      <div class="wb-page-actions">
+        <form method="post" action="{% url 'meeting_create' circle.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-primary">{% translate "Start a governance meeting" %}</button>
+          <button type="submit" name="kind" value="tactical" class="btn btn-sm btn-quiet">
+            {% translate "Start a tactical meeting" %}
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+  <section class="card">
+    <ul class="list-group list-group-flush">
+      {% include "meetings/_meeting_rows.html" with meetings=page %}
+      {% if not page %}<li class="list-group-item text-body-secondary">{% translate "No meetings." %}</li>{% endif %}
+    </ul>
+  </section>
+  {% if page.has_other_pages %}
+    <nav class="mt-3 d-flex gap-2">
+      {% if page.has_previous %}<a
+          class="btn btn-sm btn-quiet"
+          href="?kind={{ request.GET.kind }}&page={{ page.previous_page_number }}"
+        >{% translate "Newer" %}</a>{% endif %}
+      {% if page.has_next %}<a
+          class="btn btn-sm btn-quiet"
+          href="?kind={{ request.GET.kind }}&page={{ page.next_page_number }}"
+        >{% translate "Older" %}</a>{% endif %}
+    </nav>
+  {% endif %}
+{% endblock content %}

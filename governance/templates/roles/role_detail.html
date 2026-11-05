@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% block title %}{{ role }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  {% include "roles/_breadcrumbs.html" %}
+  <div class="wb-page-header">
+    <div>
+      <h1 class="wb-title">
+        {{ role }}
+        {% if role.is_circle %}<span class="badge wb-tone-circle fs-6">{% translate "Circle" %}</span>{% endif %}
+        {% if role.archived_on %}<span
+            class="badge wb-tone-neutral fs-6"
+          >{% blocktranslate with date=role.archived_on|date:"SHORT_DATE_FORMAT" %}archived on {{ date }}{% endblocktranslate %}</span>{% endif %}
+      </h1>
+      <div class="wb-meta">
+        {% if role.is_elected_by_policy and not role.is_circle %}<span
+          >{% translate "elected by policy" %}</span>{% endif %}
+        {% if role.is_circle and role.async_acceptance_days is not None %}<span><span
+              class="wb-meta-label"
+            >{% translate "acceptance period of async proposals" %}</span>
+            {% blocktranslate count days=role.async_acceptance_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}</span>{% endif %}
+        {% if role.short_name %}<span><span class="wb-meta-label">{% translate "short name" %}</span>
+            {{ role.short_name }}</span>{% endif %}
+        {% if role.circle %}<span><span class="wb-meta-label">{% translate "held by" %}</span>
+            {% if role.current_assignments or role.core_role == "lead" or role.core_role == "rep" %}
+              {% include "roles/_holders.html" %}
+            {% else %}
+              {% translate "the Circle Lead (by default)" %}{% if lead.current_assignments %}:
+                {% include "roles/_holders.html" with role=lead %}{% endif %}
+            {% endif %}</span>{% endif %}
+      </div>
+    </div>
+    <div class="wb-page-actions">
+      {% if can_propose %}<a
+          class="btn btn-sm btn-primary"
+          href="{% url 'proposal_create' role.pk %}"
+        >{% translate "New proposal" %}</a>{% endif %}
+      {% if can_assign %}<a
+          class="btn btn-sm btn-quiet"
+          href="{% url 'role_assignments' role.pk %}"
+        >{% translate "Assign" %}</a>{% endif %}
+      {% if can_change_settings %}<a
+          class="btn btn-sm btn-quiet"
+          href="{% url 'role_settings' role.pk %}"
+        >{% translate "Settings" %}</a>{% endif %}
+      <a class="btn btn-sm btn-quiet" href="{% url 'role_history' role.pk %}">{% translate "History" %}</a>
+      {% if role.is_circle and not role.archived_on %}<a
+          class="btn btn-sm btn-quiet d-none d-sm-inline-block"
+          href="{% url 'circle_browser' %}?circle={{ role.pk }}"
+        >{% translate "Circle browser" %}</a>{% endif %}
+      {% if not role.archived_on and role.circle and not role.is_circle %}<a
+          class="btn btn-sm btn-quiet"
+          href="{% url 'tactical_call' %}?role={{ role.pk }}"
+        >{% translate "Call a tactical meeting" %}</a>{% endif %}
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <section class="card mb-4">
+        <div class="card-body">
+          <h2 class="h6 text-body-secondary">{% translate "Purpose" %}</h2>
+          <div class="wb-markdown wb-description">{{ role.display_purpose|markdown|default:"–" }}</div>
+          {% if role.is_circle and role.strategy or can_edit_strategy %}
+            <h2 class="h6 text-body-secondary mt-3 d-flex align-items-center gap-2">
+              {% translate "Strategy" %}
+              {% if can_edit_strategy %}<a
+                  class="btn btn-sm btn-quiet"
+                  href="{% url 'role_strategy' role.pk %}"
+                >{% translate "Edit" %}</a>{% endif %}
+            </h2>
+            <div class="wb-markdown wb-description">{{ role.strategy|markdown|default:"–" }}</div>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "Accountabilities" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% if role.core_role == "lead" %}
+            {# No accountabilities of its own (constitution 1.4) #}
+            <li class="list-group-item text-body-secondary">
+              {% translate "Holds the circle's Purpose and its Accountabilities as far as no role or process in the circle covers them; assigns the roles and defines priorities and strategies." %}
+              <span class="badge wb-tone-core">{% translate "constitution" %}</span>
+            </li>
+          {% endif %}
+          {% for text in role.core.accountabilities %}
+            <li class="list-group-item">
+              {{ text }} <span class="badge wb-tone-core">{% translate "constitution" %}</span>
+            </li>
+          {% endfor %}
+          {% for accountability in accountabilities %}
+            <li class="list-group-item wb-markdown">{{ accountability.text|markdown }}</li>
+          {% empty %}
+            {% if not role.core.accountabilities and role.core_role != "lead" %}<li class="list-group-item text-body-secondary">
+                {% translate "None" %}
+              </li>{% endif %}
+          {% endfor %}
+        </ul>
+      </section>
+
+      {% if domains or role.core.domains %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Domains" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for text in role.core.domains %}
+              <li class="list-group-item">
+                {{ text }} <span class="badge wb-tone-core">{% translate "constitution" %}</span>
+              </li>
+            {% endfor %}
+            {% for domain in domains %}
+              <li class="list-group-item wb-markdown">{{ domain.text|markdown }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if policies or inherited_policies or can_change_domain_policies %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Policies" %}</h2></div>
+          {% for circle, circle_policies in inherited_policies %}
+            <div class="card-body py-2 border-bottom small text-body-secondary">
+              {% blocktranslate with circle=circle.name url=circle.get_absolute_url %}From the super-circle <a href="{{ url }}">{{ circle }}</a>, they apply here too unless they say otherwise:{% endblocktranslate %}
+            </div>
+            <div class="list-group list-group-flush">
+              {% for policy in circle_policies %}
+                <details class="list-group-item wb-details">
+                  <summary><span class="wb-row-title d-inline">{{ policy }}</span></summary>
+                  <div class="wb-markdown wb-description mt-2">{{ policy.body|markdown }}</div>
+                  <a class="small" href="{{ policy.get_absolute_url }}">{% translate "Details and history" %}</a>
+                </details>
+              {% endfor %}
+            </div>
+          {% endfor %}
+          {% if inherited_policies and policies %}
+            <div class="card-body py-2 border-bottom small text-body-secondary">
+              {% translate "The circle's own policies:" %}
+            </div>
+          {% endif %}
+          <div class="list-group list-group-flush">
+            {% for policy in policies %}
+              <details class="list-group-item wb-details">
+                <summary>
+                  <span class="wb-row-title d-inline">{{ policy }}</span>
+                  {% if policy.domain %}<span class="wb-row-meta d-inline ms-2">{% translate "domain" %}:
+                      {{ policy.domain }}</span>{% endif %}
+                </summary>
+                <div class="wb-markdown wb-description mt-2">{{ policy.body|markdown }}</div>
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                  <a class="small" href="{{ policy.get_absolute_url }}">{% translate "Details and history" %}</a>
+                  {% if can_change_domain_policies %}
+                    <a
+                      class="btn btn-sm btn-quiet"
+                      href="{% url 'domain_policy' role.pk policy.pk %}"
+                    >{% translate "Change" %}</a>
+                    <form method="post" action="{% url 'domain_policy_remove' role.pk policy.pk %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-quiet">{% translate "Remove" %}</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </details>
+            {% endfor %}
+          </div>
+          {% if can_change_domain_policies %}
+            <div class="card-body border-top">
+              <a
+                class="btn btn-sm btn-quiet"
+                href="{% url 'domain_policy_add' role.pk %}"
+              >{% translate "Add a policy for its domains" %}</a>
+              <div class="form-text">
+                {% translate "The role regulates its domains itself, without a governance process. Everybody affected is informed." %}
+              </div>
+            </div>
+          {% endif %}
+        </section>
+      {% endif %}
+    </div>
+
+    <div class="col-lg-5">
+      {% if pending %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposed" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% include "proposals/_proposal_rows.html" with proposals=pending more=pending_more %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if due_elections %}{% include "meetings/_due_elections.html" %}{% endif %}
+      {% if role.is_circle and not role.archived_on %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Meetings" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% include "meetings/_meeting_rows.html" %}
+            <li class="list-group-item small d-flex flex-wrap gap-2 align-items-center">
+              <a href="{% url 'meetings' role.pk %}">{% translate "All meetings" %}</a>
+              {% if running_meeting %}
+                {# One meeting at a time per circle #}
+                <a
+                  class="btn btn-sm btn-primary ms-auto"
+                  href="{{ running_meeting.get_absolute_url }}"
+                >{% translate "Join the running meeting" %}</a>
+              {% elif can_start_meeting %}
+                <form method="post" action="{% url 'meeting_create' role.pk %}" class="ms-auto">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-quiet">
+                    {% translate "Start a governance meeting" %}
+                  </button>
+                  <button type="submit" name="kind" value="tactical" class="btn btn-sm btn-quiet">
+                    {% translate "Start a tactical meeting" %}
+                  </button>
+                </form>
+              {% endif %}
+              <a
+                class="btn btn-sm btn-quiet{% if not can_start_meeting and not running_meeting %} ms-auto{% endif %}"
+                href="{% url 'tactical_call' %}?role={{ role.pk }}"
+              >{% translate "Tactical meeting with selected roles…" %}</a>
+            </li>
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if role.is_circle %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Core roles" %}</h2></div>
+          <ul class="list-group list-group-flush">{% include "roles/_role_rows.html" with roles=core_roles %}</ul>
+        </section>
+      {% endif %}
+
+      {% if role_items or can_edit_metrics or can_edit_checklist %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Checklists and metrics" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for frequency, items in role_items %}
+              <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
+                {{ frequency|capfirst }}
+              </li>
+              {% for item in items %}
+                {% include "roles/_role_item.html" with kind=item.kind label=item.kind_label can_edit=item.editable %}
+              {% endfor %}
+            {% endfor %}
+            {% if can_edit_checklist or can_edit_metrics %}
+              <li class="list-group-item d-flex flex-wrap gap-1">
+                {% if can_edit_checklist %}<a
+                    class="btn btn-sm btn-quiet"
+                    href="{% url 'role_checklist_add' role.pk %}"
+                  >{% translate "Add a checklist item" %}</a>{% endif %}
+                {% if can_edit_metrics %}<a
+                    class="btn btn-sm btn-quiet"
+                    href="{% url 'role_metrics_add' role.pk %}"
+                  >{% translate "Add a metric" %}</a>{% endif %}
+              </li>
+            {% endif %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if links or can_edit_links %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Links" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for link in links %}
+              <li class="list-group-item wb-row">
+                <div class="wb-row-main">
+                  <a class="wb-row-title" href="{{ link.url }}" rel="noopener">{{ link }}</a>
+                  {% if link.description %}<div class="wb-row-meta"><span>{{ link.description }}</span></div>{% endif %}
+                </div>
+                {% if can_edit_links %}
+                  <div class="d-flex gap-1 flex-shrink-0">
+                    <a
+                      class="btn btn-sm btn-quiet"
+                      href="{% url 'role_item' 'links' link.pk %}"
+                    >{% translate "Edit" %}</a>
+                    <form method="post" action="{% url 'role_item_delete' 'links' link.pk %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-quiet">{% translate "Delete" %}</button>
+                    </form>
+                  </div>
+                {% endif %}
+              </li>
+            {% empty %}
+              <li class="list-group-item text-body-secondary">
+                {% translate "E.g. where the projects and actions are managed." %}
+              </li>
+            {% endfor %}
+            {% if can_edit_links %}
+              <li class="list-group-item">
+                <a
+                  class="btn btn-sm btn-quiet"
+                  href="{% url 'role_links_add' role.pk %}"
+                >{% translate "Add a link" %}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </section>
+      {% endif %}
+
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "History" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% include "proposals/_proposal_rows.html" with proposals=history more=history_more %}
+          {% if not history %}<li class="list-group-item text-body-secondary">
+              {% translate "No proposals changed this role." %}
+            </li>{% endif %}
+          <li class="list-group-item small">
+            <a href="{% url 'role_history' role.pk %}">{% translate "Complete history" %}</a> ·
+            <a href="{% url 'proposals' %}?role={{ role.pk }}">{% translate "All proposals changing this role" %}</a>
+            {% if role.is_circle %}
+              · <a
+                href="{% url 'proposals' %}?circle={{ role.pk }}"
+              >{% translate "All proposals of this circle" %}</a>{% endif %}
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+  {% if role.is_circle %}
+    {# Below both columns, the circle's roles are many #}
+    <section class="card">
+      <div class="card-header"><h2 class="h6 mb-0">{% translate "Roles" %}</h2></div>
+      <ul class="list-group list-group-flush wb-columns">
+        {% include "roles/_role_rows.html" with roles=roles %}
+        {% if not roles %}<li class="list-group-item text-body-secondary">{% translate "None" %}</li>{% endif %}
+      </ul>
+    </section>
+  {% endif %}
+{% endblock content %}

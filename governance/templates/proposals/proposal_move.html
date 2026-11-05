@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Move roles and policies" %} – {{ proposal }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0">
+          <a href="{{ proposal.get_absolute_url }}">{{ proposal }}</a>: {% translate "Move roles and policies" %}
+        </h1>
+        <div class="wb-meta">
+          <span
+          >{% blocktranslate %}{{ circle }} moves its roles and policies into its sub-circles and out of them.{% endblocktranslate %}</span>
+        </div>
+      </div>
+    </div>
+
+    {% if targets|length > 1 %}
+      <section class="card mb-4">
+        <div class="card-header">
+          <h2 class="h6 mb-0">{% blocktranslate %}From {{ circle }} into a sub-circle{% endblocktranslate %}</h2>
+          <div class="small text-body-secondary">{% translate "Roles moved into a role make it a circle." %}</div>
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for obj in roles %}
+            {% include "proposals/_move_into.html" with kind="roles" options=targets %}
+          {% endfor %}
+          {% if sub_circles %}
+            {% for obj in policies %}
+              {% include "proposals/_move_into.html" with kind="policies" options=sub_circles %}
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </section>
+
+      {% for sub in sub_circles %}
+        {% if sub.movable_roles or sub.movable_policies %}
+          <section class="card mb-4">
+            <div class="card-header">
+              <h2 class="h6 mb-0">
+                {% blocktranslate with sub=sub %}From {{ sub }} into {{ circle }}{% endblocktranslate %}
+              </h2>
+            </div>
+            <ul class="list-group list-group-flush">
+              {% for obj in sub.movable_roles %}
+                {% include "proposals/_move_out.html" with kind="roles" %}
+              {% endfor %}
+              {% for obj in sub.movable_policies %}
+                {% include "proposals/_move_out.html" with kind="policies" %}
+              {% endfor %}
+            </ul>
+          </section>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="text-body-secondary">{% blocktranslate %}{{ circle }} has no sub-circles.{% endblocktranslate %}</p>
+    {% endif %}
+    <a class="btn btn-quiet" href="{{ proposal.get_absolute_url }}">{% translate "Back to the proposal" %}</a>
+  </div>
+{% endblock content %}

@@ -1,0 +1,5 @@
+{% load governance i18n %}{% for change in changes %}
+* {{ change.label }} {% if change.action == "added" %}{% translate "added" %}{% elif change.action == "removed" %}{% translate "removed" %}{% elif change.action == "moved" %}{% translate "moved" %}{% elif change.action == "elected" %}{% translate "elected" %}{% else %}{% translate "changed" %}{% endif %}{% if change.subject %}: {{ change.subject }}{% endif %}{% if change.action == "moved" %}{% if change.old %} {% translate "from" %} {{ change.old }}{% endif %}{% if change.new %} {% translate "into" %} {{ change.new }}{% endif %}{% else %}{% if change.old %}
+  - {{ change.old|plain }}{% endif %}{% if change.new %}
+  + {{ change.new|plain }}{% endif %}{% endif %}{% for label, text in change.details %}
+  {{ label }}: {{ text|plain }}{% endfor %}{% endfor %}

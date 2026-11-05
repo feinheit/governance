@@ -1,0 +1,63 @@
+{% load i18n %}
+<div class="card-header"><h2 class="h6 mb-0">{% translate "Agenda" %}</h2></div>
+<ul class="list-group list-group-flush">
+  {% for item in agenda %}
+    <li class="list-group-item wb-row{% if item.pk == meeting.current_item_id %} wb-current{% endif %}">
+      <div class="wb-row-main">
+        <span class="wb-row-title">
+          {% if item.proposal %}<a
+              href="{{ item.proposal.get_absolute_url }}"
+            >{{ item }}</a>{% else %}{{ item }}{% endif %}
+        </span>
+        <div class="wb-row-meta">
+          {% if item.owner %}<span>{{ item.owner }}</span>{% endif %}
+          {% if item.proposal %}<span>{{ item.proposal.get_status_display }}</span>{% endif %}
+          {% if item.is_completed %}<span>{% translate "completed" %}</span>{% endif %}
+        </div>
+        {% if item.outcome %}<div class="small mt-1">{{ item.outcome|linebreaksbr }}</div>{% endif %}
+        {% if item.link %}<a class="small" href="{{ item.link }}">{{ item.link|truncatechars:60 }}</a>{% endif %}
+      </div>
+      {% if not meeting.ended_at %}
+        <div class="d-flex gap-1 flex-shrink-0">
+          {% if can_run and meeting.is_running and not item.is_completed and item.pk != meeting.current_item_id %}
+            <form method="post" action="{% url 'item_process' item.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Process" %}</button>
+            </form>
+          {% endif %}
+          {% if can_run %}
+            <form method="post" action="{% url 'agenda_move' item.pk %}">
+              {% csrf_token %}
+              <button
+                type="submit"
+                name="direction"
+                value="up"
+                class="btn btn-sm btn-quiet"
+                title="{% translate 'Move up' %}"
+              >
+                ↑
+              </button>
+              <button
+                type="submit"
+                name="direction"
+                value="down"
+                class="btn btn-sm btn-quiet"
+                title="{% translate 'Move down' %}"
+              >
+                ↓
+              </button>
+            </form>
+          {% endif %}
+          {% if item.can_remove %}
+            <form method="post" action="{% url 'agenda_remove' item.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Remove" %}</button>
+            </form>
+          {% endif %}
+        </div>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li class="list-group-item text-body-secondary">{% translate "Nothing on the agenda." %}</li>
+  {% endfor %}
+</ul>

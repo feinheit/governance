@@ -1,0 +1,15 @@
+{% load governance i18n %}
+{% for meeting in meetings %}
+  <li class="list-group-item wb-row">
+    <div class="wb-row-main">
+      <a
+        class="wb-row-title"
+        href="{{ meeting.get_absolute_url }}"
+      >{% if meeting.started_at %}{{ meeting.started_at|date:"SHORT_DATE_FORMAT" }}{% else %}{% translate "not started yet" %}{% endif %}</a>
+    </div>
+    <div class="wb-row-aside">
+      <span class="badge {{ meeting.kind|tone }}">{{ meeting.get_kind_display }}</span>
+      {% if meeting.is_running %}<span class="badge wb-tone-success">{% translate "running" %}</span>{% endif %}
+    </div>
+  </li>
+{% endfor %}

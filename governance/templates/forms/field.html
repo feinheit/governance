@@ -1,0 +1,27 @@
+{% if field.widget_type == "checkbox" %}
+  <div class="form-check mb-3">
+    {{ field }}
+    <label class="form-check-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
+    {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+  </div>
+{% elif field.widget_type == "radioselect" or field.widget_type == "checkboxselectmultiple" %}
+  <fieldset class="mb-3">
+    <legend class="form-label fs-6">{{ field.label }}</legend>
+    {% for choice in field %}
+      <div class="form-check">
+        {{ choice.tag }}
+        <label class="form-check-label" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+      </div>
+    {% endfor %}
+    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
+    {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+  </fieldset>
+{% else %}
+  <div class="mb-3">
+    {% if field.label %}<label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{% endif %}
+    {{ field }}
+    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
+    {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+  </div>
+{% endif %}

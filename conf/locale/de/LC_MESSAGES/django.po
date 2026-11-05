@@ -1,0 +1,2521 @@
+# German translations of Governance.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-05 11:26+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: governance/accounts/api_auth.py
+msgid "This API token only allows reading, not changes."
+msgstr "Dieses API-Token erlaubt nur Lesen, keine Änderungen."
+
+#: governance/accounts/apps.py
+msgid "accounts"
+msgstr "Konten"
+
+#: governance/accounts/models.py
+msgid "email"
+msgstr "E-Mail"
+
+#: governance/accounts/models.py
+msgid "full name"
+msgstr "Name"
+
+#: governance/accounts/models.py governance/roles/models.py
+#: governance/templates/roles/role_detail.html
+msgid "short name"
+msgstr "Kurzname"
+
+#: governance/accounts/models.py
+msgid "language"
+msgstr "Sprache"
+
+#: governance/accounts/models.py
+msgid "is active"
+msgstr "ist aktiv"
+
+#: governance/accounts/models.py
+msgid "is admin"
+msgstr "ist Admin"
+
+#: governance/accounts/models.py
+msgid "inform me about everything in all circles"
+msgstr "über alles in allen Kreisen informieren"
+
+#: governance/accounts/models.py
+msgid "By default mails are about the circles one is a member of."
+msgstr "Standardmässig gehen Mails nur zu den Kreisen, in denen man Mitglied ist."
+
+#: governance/accounts/models.py governance/meetings/models.py
+#: governance/proposals/models.py governance/roles/models.py
+msgid "GlassFrog ID"
+msgstr "GlassFrog-ID"
+
+#: governance/accounts/models.py governance/proposals/models.py
+#: governance/roles/models.py
+msgid "user"
+msgstr "Person"
+
+#: governance/accounts/models.py
+msgid "users"
+msgstr "Personen"
+
+#: governance/accounts/models.py
+msgid "read only"
+msgstr "nur lesen"
+
+#: governance/accounts/models.py
+msgid "read and write"
+msgstr "lesen und schreiben"
+
+#: governance/accounts/models.py governance/roles/models.py
+#: governance/templates/accounts/api_tokens.html
+msgid "title"
+msgstr "Titel"
+
+#: governance/accounts/models.py governance/templates/accounts/api_tokens.html
+#: governance/templates/accounts/cli_login.html
+msgid "access"
+msgstr "Zugriff"
+
+#: governance/accounts/models.py
+msgid "key hash"
+msgstr "Schlüssel-Hash"
+
+#: governance/accounts/models.py governance/meetings/models.py
+#: governance/proposals/models.py
+msgid "created at"
+msgstr "erstellt"
+
+#: governance/accounts/models.py governance/templates/accounts/api_tokens.html
+msgid "last used at"
+msgstr "zuletzt verwendet"
+
+#: governance/accounts/models.py governance/templates/accounts/api_tokens.html
+msgid "expires at"
+msgstr "läuft ab"
+
+#: governance/accounts/models.py
+msgid "API token"
+msgstr "API-Token"
+
+#: governance/accounts/models.py governance/templates/accounts/api_tokens.html
+msgid "API tokens"
+msgstr "API-Tokens"
+
+#: governance/accounts/views.py
+msgid "Error while fetching user data. Please try again."
+msgstr "Fehler beim Abrufen der Kontodaten. Bitte nochmals versuchen."
+
+#: governance/accounts/views.py
+#, python-format
+msgid "The user with email address %s is inactive."
+msgstr "Die Person mit der E-Mail-Adresse %s ist inaktiv."
+
+#: governance/accounts/views.py
+#, python-format
+msgid "No user with email address %s found."
+msgstr "Keine Person mit der E-Mail-Adresse %s gefunden."
+
+#: governance/accounts/views.py
+msgid "You have been signed out."
+msgstr "Du wurdest abgemeldet."
+
+#: governance/accounts/views.py
+msgid "The API token has been deleted."
+msgstr "Das API-Token wurde gelöscht."
+
+#: governance/audit/apps.py
+msgid "audit log"
+msgstr "Änderungsprotokoll"
+
+#: governance/audit/models.py
+msgid "logged action"
+msgstr "protokollierte Änderung"
+
+#: governance/audit/models.py
+msgid "logged actions"
+msgstr "protokollierte Änderungen"
+
+#: governance/cli_version.py
+#, python-format
+msgid "Your gov is too old, please upgrade it: %(command)s"
+msgstr "Dein gov ist zu alt, bitte aktualisiere es: %(command)s"
+
+#: governance/forms.py
+msgid "- Select an option -"
+msgstr "- Bitte auswählen -"
+
+#: governance/history/apps.py
+msgid "history"
+msgstr "Geschichte"
+
+#: governance/history/models.py
+msgid "date"
+msgstr "Datum"
+
+#: governance/history/models.py
+msgid "data"
+msgstr "Daten"
+
+#: governance/history/models.py
+msgid "snapshot"
+msgstr "Stand"
+
+#: governance/history/models.py
+msgid "snapshots"
+msgstr "Stände"
+
+#: governance/history/models.py governance/meetings/models.py
+#: governance/roles/models.py governance/templates/roles/policy_detail.html
+msgid "role"
+msgstr "Rolle"
+
+#: governance/history/models.py governance/roles/models.py
+msgid "policy"
+msgstr "Policy"
+
+#: governance/history/models.py governance/meetings/models.py
+#: governance/proposals/models.py
+msgid "kind"
+msgstr "Art"
+
+#: governance/history/models.py
+msgid "old"
+msgstr "alt"
+
+#: governance/history/models.py
+msgid "new"
+msgstr "neu"
+
+#: governance/history/models.py
+msgid "change"
+msgstr "Änderung"
+
+#: governance/history/models.py
+msgid "changes"
+msgstr "Änderungen"
+
+#: governance/history/views.py
+msgid "Role added"
+msgstr "Rolle hinzugefügt"
+
+#: governance/history/views.py
+msgid "Role removed"
+msgstr "Rolle entfernt"
+
+#: governance/history/views.py
+msgid "Renamed"
+msgstr "Umbenannt"
+
+#: governance/history/views.py
+msgid "Purpose changed"
+msgstr "Purpose geändert"
+
+#: governance/history/views.py
+msgid "Strategy changed"
+msgstr "Strategie geändert"
+
+#: governance/history/views.py
+msgid "Moved to another circle"
+msgstr "In einen anderen Kreis verschoben"
+
+#: governance/history/views.py governance/proposals/describe.py
+msgid "Turned into a circle"
+msgstr "Zum Kreis gemacht"
+
+#: governance/history/views.py governance/proposals/describe.py
+msgid "Turned back into a role"
+msgstr "Wieder zur Rolle gemacht"
+
+#: governance/history/views.py
+msgid "Accountability added"
+msgstr "Accountability hinzugefügt"
+
+#: governance/history/views.py
+msgid "Accountability removed"
+msgstr "Accountability entfernt"
+
+#: governance/history/views.py
+msgid "Accountabilities changed (texts not recorded)"
+msgstr "Accountabilities geändert (Texte nicht erfasst)"
+
+#: governance/history/views.py
+msgid "Domain added"
+msgstr "Domain hinzugefügt"
+
+#: governance/history/views.py
+msgid "Domain removed"
+msgstr "Domain entfernt"
+
+#: governance/history/views.py
+msgid "Domains changed (texts not recorded)"
+msgstr "Domains geändert (Texte nicht erfasst)"
+
+#: governance/history/views.py governance/roles/browser.py
+msgid "Assigned"
+msgstr "Zugewiesen"
+
+#: governance/history/views.py
+msgid "No longer assigned"
+msgstr "Nicht mehr zugewiesen"
+
+#: governance/history/views.py
+msgid "Policy added"
+msgstr "Policy hinzugefügt"
+
+#: governance/history/views.py
+msgid "Policy removed"
+msgstr "Policy entfernt"
+
+#: governance/history/views.py
+msgid "Policy renamed"
+msgstr "Policy umbenannt"
+
+#: governance/history/views.py
+msgid "Policy text changed"
+msgstr "Policy-Text geändert"
+
+#: governance/history/views.py
+msgid "Policy moved"
+msgstr "Policy verschoben"
+
+#: governance/meetings/apps.py governance/meetings/models.py
+msgid "meetings"
+msgstr "Meetings"
+
+#: governance/meetings/elections.py
+msgid "The day the term ends."
+msgstr "Der letzte Tag der Amtszeit."
+
+#: governance/meetings/elections.py
+msgid "The Circle Lead can't be the Circle Rep."
+msgstr "Der Circle Lead kann nicht Circle Rep sein."
+
+#: governance/meetings/elections.py
+#, python-format
+msgid "%(user)s has been elected as %(role)s."
+msgstr "%(user)s wurde als %(role)s gewählt."
+
+#: governance/meetings/models.py
+msgid "Check-in round"
+msgstr "Check-in-Runde"
+
+#: governance/meetings/models.py
+#: governance/templates/meetings/meeting_detail.html
+msgid "Checklist review"
+msgstr "Checklisten"
+
+#: governance/meetings/models.py
+#: governance/templates/meetings/meeting_detail.html
+msgid "Metrics review"
+msgstr "Metrics"
+
+#: governance/meetings/models.py
+msgid "Progress updates"
+msgstr "Fortschritte"
+
+#: governance/meetings/models.py
+msgid "Agenda building"
+msgstr "Traktanden sammeln"
+
+#: governance/meetings/models.py
+msgid "Triage issues"
+msgstr "Spannungen bearbeiten"
+
+#: governance/meetings/models.py
+msgid "Closing round"
+msgstr "Abschlussrunde"
+
+#: governance/meetings/models.py
+msgid "Agenda building and processing"
+msgstr "Agenda erstellen und verarbeiten"
+
+#: governance/meetings/models.py
+msgid "governance meeting"
+msgstr "Governance Meeting"
+
+#: governance/meetings/models.py
+msgid "tactical meeting"
+msgstr "Tactical Meeting"
+
+#: governance/meetings/models.py governance/proposals/models.py
+#: governance/roles/models.py governance/templates/meetings/meeting_detail.html
+#: governance/templates/proposals/proposal_detail.html
+#: governance/templates/roles/policy_detail.html
+msgid "circle"
+msgstr "Kreis"
+
+#: governance/meetings/models.py
+msgid "Unknown for some meetings imported from GlassFrog."
+msgstr "Bei manchen aus GlassFrog importierten Meetings unbekannt."
+
+#: governance/meetings/models.py
+msgid "started at"
+msgstr "begonnen"
+
+#: governance/meetings/models.py
+msgid "ended at"
+msgstr "beendet"
+
+#: governance/meetings/models.py
+msgid "last active at"
+msgstr "zuletzt aktiv am"
+
+#: governance/meetings/models.py
+msgid "minutes"
+msgstr "Protokoll"
+
+#: governance/meetings/models.py
+#: governance/templates/meetings/meeting_detail.html
+msgid "facilitator"
+msgstr "Facilitator"
+
+#: governance/meetings/models.py
+#: governance/templates/meetings/meeting_detail.html
+msgid "secretary"
+msgstr "Secretary"
+
+#: governance/meetings/models.py
+#: governance/templates/meetings/meeting_detail.html
+msgid "called by"
+msgstr "einberufen von"
+
+#: governance/meetings/models.py
+msgid "invited roles"
+msgstr "eingeladene Rollen"
+
+#: governance/meetings/models.py
+msgid "Tactical meetings: the roles which are invited."
+msgstr "Tactical Meetings: die eingeladenen Rollen."
+
+#: governance/meetings/models.py
+msgid "step"
+msgstr "Schritt"
+
+#: governance/meetings/models.py
+msgid "attendees"
+msgstr "Teilnehmende"
+
+#: governance/meetings/models.py
+msgid "By default the circle's members; others may be invited."
+msgstr "Standardmässig die Mitglieder des Kreises; weitere können eingeladen werden."
+
+#: governance/meetings/models.py
+msgid "current agenda item"
+msgstr "aktuelles Traktandum"
+
+#: governance/meetings/models.py governance/proposals/models.py
+#: governance/templates/proposals/proposal_detail.html
+msgid "meeting"
+msgstr "Meeting"
+
+#: governance/meetings/models.py
+msgid "Present proposal"
+msgstr "Vorschlag präsentieren"
+
+#: governance/meetings/models.py
+msgid "Clarifying questions"
+msgstr "Verständnisfragen"
+
+#: governance/meetings/models.py
+msgid "Reaction round"
+msgstr "Reaktionsrunde"
+
+#: governance/meetings/models.py
+msgid "Amend and clarify"
+msgstr "Ergänzen und klären"
+
+#: governance/meetings/models.py
+msgid "Objection round"
+msgstr "Einwandrunde"
+
+#: governance/meetings/models.py
+msgid "Integration"
+msgstr "Integration"
+
+#: governance/meetings/models.py governance/roles/models.py
+msgid "position"
+msgstr "Reihenfolge"
+
+#: governance/meetings/models.py
+msgid "label"
+msgstr "Bezeichnung"
+
+#: governance/meetings/models.py
+msgid "owner"
+msgstr "eingebracht von"
+
+#: governance/meetings/models.py governance/proposals/models.py
+msgid "proposal"
+msgstr "Vorschlag"
+
+#: governance/meetings/models.py
+msgid "is completed"
+msgstr "ist erledigt"
+
+#: governance/meetings/models.py
+msgid "outcome"
+msgstr "Ergebnis"
+
+#: governance/meetings/models.py
+msgid "Tactical meetings: what was decided or requested."
+msgstr "Tactical Meetings: was entschieden oder verlangt wurde."
+
+#: governance/meetings/models.py governance/roles/models.py
+msgid "link"
+msgstr "Link"
+
+#: governance/meetings/models.py
+msgid "E.g. the task created for it."
+msgstr "Z.B. die dafür erstellte Aufgabe."
+
+#: governance/meetings/models.py
+msgid "agenda item"
+msgstr "Agendapunkt"
+
+#: governance/meetings/models.py
+msgid "agenda items"
+msgstr "Agendapunkte"
+
+#: governance/meetings/models.py governance/templates/meetings/_current.html
+msgid "raised by"
+msgstr "erhoben von"
+
+#: governance/meetings/models.py
+msgid "role of the objector"
+msgstr "Rolle der einwendenden Person"
+
+#: governance/meetings/models.py
+msgid "An objection is raised for a role the objector represents in the circle (constitution 5.3)."
+msgstr "Ein Einwand wird für eine Rolle erhoben, welche die einwendende Person im Kreis vertritt (Verfassung 5.3)."
+
+#: governance/meetings/models.py
+msgid "reason"
+msgstr "Begründung"
+
+#: governance/meetings/models.py
+msgid "is valid"
+msgstr "gültig"
+
+#: governance/meetings/models.py
+msgid "The facilitator's test, empty until tested."
+msgstr "Die Prüfung durch den Facilitator, leer bis geprüft."
+
+#: governance/meetings/models.py
+msgid "is integrated"
+msgstr "integriert"
+
+#: governance/meetings/models.py governance/templates/meetings/_current.html
+msgid "raised async"
+msgstr "asynchron erhoben"
+
+#: governance/meetings/models.py
+msgid "The async response the objection comes from."
+msgstr "Die asynchrone Antwort, aus der der Einwand stammt."
+
+#: governance/meetings/models.py governance/proposals/models.py
+msgid "objection"
+msgstr "Einwand"
+
+#: governance/meetings/models.py
+msgid "objections"
+msgstr "Einwände"
+
+#: governance/meetings/models.py governance/roles/browser.py
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+#: governance/templates/roles/_tree_list.html
+msgid "elected"
+msgstr "gewählt"
+
+#: governance/meetings/models.py
+msgid "term ends on"
+msgstr "Amtszeit endet am"
+
+#: governance/meetings/models.py
+msgid "election"
+msgstr "Wahl"
+
+#: governance/meetings/models.py
+msgid "elections"
+msgstr "Wahlen"
+
+#: governance/meetings/processing.py
+msgid "Who objects, and why?"
+msgstr "Wer hat einen Einwand, und weshalb?"
+
+#: governance/meetings/processing.py
+msgid "Test every objection first and integrate the valid ones."
+msgstr "Zuerst alle Einwände prüfen und die gültigen integrieren."
+
+#: governance/meetings/processing.py
+msgid "The proposal is adopted."
+msgstr "Der Vorschlag ist angenommen."
+
+#: governance/meetings/processing.py
+msgid "The link has to start with https://."
+msgstr "Der Link muss mit https:// beginnen."
+
+#: governance/meetings/views.py
+msgid "Any partner may call a tactical meeting and invite the roles they need. Hold Ctrl or Cmd to select several."
+msgstr "Alle Partner:innen dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen. Mit Ctrl oder Cmd mehrere auswählen."
+
+#: governance/meetings/views.py governance/templates/roles/role_detail.html
+msgid "Call a tactical meeting"
+msgstr "Tactical Meeting einberufen"
+
+#: governance/meetings/views.py
+#, python-format
+msgid "Edit %(meeting)s"
+msgstr "%(meeting)s bearbeiten"
+
+#: governance/notifications/apps.py
+msgid "notifications"
+msgstr "Benachrichtigungen"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Proposal in %(circle)s: %(proposal)s"
+msgstr "Vorschlag in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Back to the draft in %(circle)s: %(proposal)s"
+msgstr "Zurück zum Entwurf in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Adopted in %(circle)s: %(proposal)s"
+msgstr "Angenommen in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Policy of %(role)s changed: %(policy)s"
+msgstr "Policy von %(role)s geändert: %(policy)s"
+
+#: governance/notifications/mails.py
+#: governance/templates/meetings/_due_elections.html
+msgid "Elections due"
+msgstr "Fällige Wahlen"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Outputs of the %(meeting)s"
+msgstr "Ergebnisse: %(meeting)s"
+
+#: governance/proposals/apps.py governance/proposals/models.py
+msgid "proposals"
+msgstr "Vorschläge"
+
+#: governance/proposals/describe.py governance/proposals/drafting.py
+msgid "Name"
+msgstr "Name"
+
+#: governance/proposals/describe.py governance/proposals/drafting.py
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/governance.txt
+#: governance/templates/roles/role_detail.html
+msgid "Purpose"
+msgstr "Purpose"
+
+#: governance/proposals/describe.py governance/proposals/drafting.py
+msgid "Title"
+msgstr "Titel"
+
+#: governance/proposals/describe.py governance/proposals/drafting.py
+#: governance/proposals/views.py
+msgid "Text"
+msgstr "Text"
+
+#: governance/proposals/describe.py
+msgid "unknown"
+msgstr "unbekannt"
+
+#: governance/proposals/describe.py
+#: governance/templates/proposals/_move_into.html
+#: governance/templates/proposals/_move_out.html
+msgid "Role"
+msgstr "Rolle"
+
+#: governance/proposals/describe.py
+#: governance/templates/proposals/_move_into.html
+#: governance/templates/proposals/_move_out.html
+#: governance/templates/roles/governance.txt
+msgid "Policy"
+msgstr "Policy"
+
+#: governance/proposals/describe.py
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/_role_rows.html
+#: governance/templates/roles/person_detail.html
+#: governance/templates/roles/role_detail.html
+msgid "Circle"
+msgstr "Kreis"
+
+#: governance/proposals/describe.py
+msgid "yes"
+msgstr "ja"
+
+#: governance/proposals/describe.py governance/proposals/drafting.py
+msgid "Accountability"
+msgstr "Accountability"
+
+#: governance/proposals/describe.py governance/proposals/drafting.py
+msgid "Domain"
+msgstr "Domain"
+
+#: governance/proposals/describe.py governance/templates/meetings/_outputs.html
+msgid "Election"
+msgstr "Wahl"
+
+#: governance/proposals/describe.py
+msgid "until"
+msgstr "bis"
+
+#: governance/proposals/drafting.py
+msgid "New accountabilities"
+msgstr "Neue Accountabilities"
+
+#: governance/proposals/drafting.py
+msgid "New domains"
+msgstr "Neue Domains"
+
+#: governance/proposals/drafting.py
+msgid "The tension from the point of view of the role"
+msgstr "Die Spannung aus Sicht der Rolle"
+
+#: governance/proposals/drafting.py
+msgid "An example of a past or current situation"
+msgstr "Ein Beispiel einer vergangenen oder aktuellen Situation"
+
+#: governance/proposals/drafting.py
+msgid "How the proposal addresses the tension in the example"
+msgstr "Wie der Vorschlag die Spannung im Beispiel adressiert"
+
+#: governance/proposals/drafting.py
+msgid "From my role"
+msgstr "Aus meiner Rolle"
+
+#: governance/proposals/drafting.py
+msgid "What is the gap between what is and what could be? Without changes the draft stays a tension, visible only to you."
+msgstr "Was fehlt zwischen dem, was ist, und dem, was sein könnte? Ohne Änderungen bleibt der Entwurf eine Spannung, die nur du siehst."
+
+#: governance/proposals/drafting.py
+msgid "Empty to remove."
+msgstr "Leer lassen, um zu entfernen."
+
+#: governance/proposals/drafting.py
+msgid "One per line."
+msgstr "Eine pro Zeile."
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "New proposal in %(circle)s"
+msgstr "Neuer Vorschlag in %(circle)s"
+
+#: governance/proposals/drafting.py
+#: governance/templates/accounts/cli_login_redirect.html
+msgid "Continue"
+msgstr "Weiter"
+
+#: governance/proposals/drafting.py
+#: governance/templates/proposals/_drafting.html
+#: governance/templates/proposals/proposal_detail.html
+msgid "Edit the tension"
+msgstr "Spannung bearbeiten"
+
+#: governance/proposals/drafting.py
+msgid "The draft has been deleted."
+msgstr "Der Entwurf wurde gelöscht."
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "Change %(role)s"
+msgstr "%(role)s ändern"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "New role in %(circle)s"
+msgstr "Neue Rolle in %(circle)s"
+
+#: governance/proposals/drafting.py governance/roles/domain_policies.py
+#, python-format
+msgid "Change %(policy)s"
+msgstr "%(policy)s ändern"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "New policy in %(circle)s"
+msgstr "Neue Policy in %(circle)s"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "Roles to move to %(circle)s"
+msgstr "Rollen, die nach %(circle)s verschoben werden"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "Policies to move to %(circle)s"
+msgstr "Policies, die nach %(circle)s verschoben werden"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "Remove %(circle)s"
+msgstr "%(circle)s entfernen"
+
+#: governance/proposals/drafting.py
+msgid "Remove the circle"
+msgstr "Kreis entfernen"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "The selected roles and policies move to %(circle)s. Everything else is removed with the circle, also its sub-circles, and their assignments end."
+msgstr "Die ausgewählten Rollen und Policies werden nach %(circle)s verschoben. Alles andere wird mit dem Kreis entfernt, auch seine Sub-Kreise, und ihre Zuweisungen enden."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "The proposal refers to %(key)s before adding it."
+msgstr "Der Vorschlag verwendet %(key)s, bevor er es hinzufügt."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(object)s doesn't exist anymore."
+msgstr "%(object)s existiert nicht mehr."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(object)s isn't governed by %(circle)s."
+msgstr "%(object)s gehört nicht zur Governance von %(circle)s."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(label)s has been changed since the proposal was drafted."
+msgstr "%(label)s wurde seit dem Entwurf des Vorschlags geändert."
+
+#: governance/proposals/instructions.py
+msgid "A new role or policy needs a name."
+msgstr "Eine neue Rolle oder Policy braucht einen Namen."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "The constitution defines %(role)s."
+msgstr "Die Verfassung definiert %(role)s."
+
+#: governance/proposals/instructions.py
+msgid "The Circle Lead gets no accountabilities or domains."
+msgstr "Der Circle Lead erhält keine Accountabilities oder Domains."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(text)s doesn't exist anymore."
+msgstr "%(text)s existiert nicht mehr."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(role)s isn't a circle."
+msgstr "%(role)s ist kein Kreis."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(role)s can't be moved."
+msgstr "%(role)s kann nicht verschoben werden."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(policy)s can't be moved."
+msgstr "%(policy)s kann nicht verschoben werden."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "The app can't apply %(path)s yet."
+msgstr "Die App kann %(path)s noch nicht anwenden."
+
+#: governance/proposals/instructions.py
+msgid "The anchor circle can't be removed."
+msgstr "Der Anker-Kreis kann nicht entfernt werden."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(role)s can't be turned into a circle or back."
+msgstr "%(role)s kann nicht zum Kreis oder zurück zur Rolle gemacht werden."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(circle)s still has roles, they have to go first."
+msgstr "%(circle)s hat noch Rollen, diese müssen zuerst weg."
+
+#: governance/proposals/instructions.py
+msgid "The proposal has already been adopted."
+msgstr "Der Vorschlag wurde bereits angenommen."
+
+#: governance/proposals/instructions.py
+msgid "The instructions have to be a list."
+msgstr "Die Instruktionen müssen eine Liste sein."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "Instruction %(number)s needs an op (%(ops)s) and a path."
+msgstr "Instruktion %(number)s braucht eine Operation (%(ops)s) und einen Pfad."
+
+#: governance/proposals/models.py
+msgid "governance"
+msgstr "Governance"
+
+#: governance/proposals/models.py
+msgid "spelling correction"
+msgstr "Rechtschreibkorrektur"
+
+#: governance/proposals/models.py
+msgid "policy of a domain"
+msgstr "Policy einer Domain"
+
+#: governance/proposals/models.py
+msgid "draft"
+msgstr "Entwurf"
+
+#: governance/proposals/models.py
+msgid "published"
+msgstr "veröffentlicht"
+
+#: governance/proposals/models.py
+msgid "waiting for a meeting"
+msgstr "wartet auf ein Meeting"
+
+#: governance/proposals/models.py
+#: governance/templates/proposals/proposal_detail.html
+msgid "adopted"
+msgstr "angenommen"
+
+#: governance/proposals/models.py
+msgid "withdrawn"
+msgstr "zurückgezogen"
+
+#: governance/proposals/models.py
+#: governance/templates/proposals/proposal_detail.html
+msgid "proposer"
+msgstr "vorgeschlagen von"
+
+#: governance/proposals/models.py
+msgid "role of the proposer"
+msgstr "Rolle der vorschlagenden Person"
+
+#: governance/proposals/models.py
+msgid "The proposal addresses a tension of one of the proposer's roles. Unknown for proposals imported from GlassFrog."
+msgstr "Der Vorschlag verarbeitet eine Spannung einer Rolle der vorschlagenden Person. Bei aus GlassFrog importierten Vorschlägen unbekannt."
+
+#: governance/proposals/models.py
+msgid "tension"
+msgstr "Spannung"
+
+#: governance/proposals/models.py
+msgid "instructions"
+msgstr "Anweisungen"
+
+#: governance/proposals/models.py
+msgid "names"
+msgstr "Namen"
+
+#: governance/proposals/models.py
+#: governance/templates/proposals/proposal_detail.html
+msgid "status"
+msgstr "Status"
+
+#: governance/proposals/models.py
+msgid "published at"
+msgstr "veröffentlicht"
+
+#: governance/proposals/models.py
+msgid "deadline"
+msgstr "Frist"
+
+#: governance/proposals/models.py
+msgid "decided at"
+msgstr "entschieden"
+
+#: governance/proposals/models.py
+msgid "affected roles"
+msgstr "betroffene Rollen"
+
+#: governance/proposals/models.py
+msgid "affected policies"
+msgstr "betroffene Policies"
+
+#: governance/proposals/models.py
+msgid "GlassFrog tension ID"
+msgstr "GlassFrog-ID der Spannung"
+
+#: governance/proposals/models.py governance/templates/history/_timeline.html
+msgid "(no tension)"
+msgstr "(ohne Spannung)"
+
+#: governance/proposals/models.py
+msgid "question or comment"
+msgstr "Frage oder Kommentar"
+
+#: governance/proposals/models.py
+#: governance/templates/proposals/proposal_detail.html
+msgid "no objection"
+msgstr "kein Einwand"
+
+#: governance/proposals/models.py
+msgid "discuss in a meeting"
+msgstr "im Meeting besprechen"
+
+#: governance/proposals/models.py governance/roles/models.py
+msgid "text"
+msgstr "Text"
+
+#: governance/proposals/models.py
+msgid "response"
+msgstr "Antwort"
+
+#: governance/proposals/models.py
+msgid "responses"
+msgstr "Antworten"
+
+#: governance/proposals/process.py
+msgid "Only drafts with changes can be published."
+msgstr "Nur Entwürfe mit Änderungen können veröffentlicht werden."
+
+#: governance/proposals/process.py
+msgid "The proposal isn't open for responses anymore."
+msgstr "Der Vorschlag ist nicht mehr offen für Antworten."
+
+#: governance/proposals/process.py
+msgid "Request a meeting to object."
+msgstr "Verlange ein Meeting, um einen Einwand zu erheben."
+
+#: governance/proposals/process.py
+msgid "You don't respond to your own proposal."
+msgstr "Auf den eigenen Vorschlag reagierst du nicht."
+
+#: governance/proposals/process.py
+msgid "Only published proposals go back to their draft."
+msgstr "Nur veröffentlichte Vorschläge können zurück zum Entwurf."
+
+#: governance/proposals/views.py
+msgid "Response"
+msgstr "Antwort"
+
+#: governance/proposals/views.py
+msgid "Required for questions. When requesting a meeting: the concern to discuss, optional."
+msgstr "Nötig für Fragen. Wenn du ein Meeting verlangst: das Bedenken, das besprochen werden soll, freiwillig."
+
+#: governance/proposals/views.py
+msgid "Please explain."
+msgstr "Bitte begründen."
+
+#: governance/proposals/views.py
+#, python-format
+msgid "The proposal has been published. It is adopted on %(date)s unless somebody requests a meeting to discuss it."
+msgstr "Der Vorschlag ist veröffentlicht. Er wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen."
+
+#: governance/proposals/views.py
+msgid "The proposal is a draft again. Publish it again when it's ready, the circle starts over then."
+msgstr "Der Vorschlag ist wieder ein Entwurf. Veröffentliche ihn erneut, wenn er bereit ist; der Kreis beginnt dann von vorne."
+
+#: governance/proposals/views.py
+msgid "The proposal has been withdrawn."
+msgstr "Der Vorschlag wurde zurückgezogen."
+
+#: governance/proposals/views.py
+msgid "Everybody consented, the proposal is adopted."
+msgstr "Alle sind einverstanden, der Vorschlag ist angenommen."
+
+#: governance/proposals/views.py
+msgid "The proposal goes to the next governance meeting."
+msgstr "Der Vorschlag kommt ins nächste Governance Meeting."
+
+#: governance/roles/apps.py governance/roles/browser.py
+#: governance/roles/models.py
+msgid "roles"
+msgstr "Rollen"
+
+#: governance/roles/assignments.py
+msgid "Optional, e.g. a customer or a topic the person takes care of."
+msgstr "Optional, z.B. ein Kundenprojekt oder ein Thema, um das sich die Person kümmert."
+
+#: governance/roles/assignments.py
+#, python-format
+msgid "%(user)s already holds this role with this focus."
+msgstr "%(user)s besetzt diese Rolle bereits mit diesem Fokus."
+
+#: governance/roles/assignments.py
+#, python-format
+msgid "%(user)s now holds %(role)s."
+msgstr "%(user)s besetzt jetzt %(role)s."
+
+#: governance/roles/assignments.py
+#, python-format
+msgid "Edit the focus of %(user)s in %(role)s"
+msgstr "Fokus von %(user)s in %(role)s bearbeiten"
+
+#: governance/roles/assignments.py
+#, python-format
+msgid "%(user)s doesn't hold %(role)s anymore."
+msgstr "%(user)s besetzt %(role)s nicht mehr."
+
+#: governance/roles/browser.py
+msgid "Path"
+msgstr "Pfad"
+
+#: governance/roles/browser.py
+msgid "Open the circle's page"
+msgstr "Seite des Kreises öffnen"
+
+#: governance/roles/browser.py governance/templates/roles/_holders.html
+#: governance/templates/roles/assignments.html
+msgid "Held by the Circle Lead"
+msgstr "Vom Circle Lead besetzt"
+
+#: governance/roles/browser.py
+msgid "Core roles and elected roles"
+msgstr "Kernrollen und gewählte Rollen"
+
+#: governance/roles/browser.py
+msgid "Unassigned (held by the Circle Lead)"
+msgstr "Nicht besetzt (beim Circle Lead)"
+
+#: governance/roles/browser.py governance/roles/constitution.py
+msgid "Circle Lead"
+msgstr ""
+
+#: governance/roles/browser.py
+msgid "Your roles"
+msgstr "Deine Rollen"
+
+#: governance/roles/browser.py
+msgid "My roles"
+msgstr "Meine Rollen"
+
+#: governance/roles/browser.py
+msgid "You hold no roles."
+msgstr "Du hast keine Rollen."
+
+#: governance/roles/constitution.py
+msgid "Facilitator"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Circle governance and operational practices aligned with the Constitution."
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Facilitating the Circle’s Governance Process"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Facilitating the Circle’s regular Tactical Meetings"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Auditing a Sub-Circle’s meetings and records on request and declaring a Process Breakdown if one is discovered"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Triggering new elections for the Circle’s elected Roles after each election term expires"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Secretary"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Stabilize the Circle’s constitutionally-required records and meetings."
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Scheduling Governance Meetings for the Circle"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Scheduling regular Tactical Meetings for the Circle"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Capturing and publishing the outputs of the Circle’s Governance Process"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Capturing and publishing Tactical Meeting outputs"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Interpreting the Constitution and anything under its authority upon request"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "All governance records of the Circle"
+msgstr ""
+
+#: governance/roles/constitution.py governance/templates/roles/_holders.html
+msgid "Circle Rep"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Tensions relevant to process in a broader Circle channeled out and resolved."
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Seeking to understand Tensions conveyed by Role Leads within the Circle"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Discerning Tensions appropriate to process within a broader Circle that holds the Circle"
+msgstr ""
+
+#: governance/roles/constitution.py
+msgid "Processing Tensions within a broader Circle to remove constraints on the Circle"
+msgstr ""
+
+#: governance/roles/domain_policies.py
+#, python-format
+msgid "New policy of %(role)s"
+msgstr "Neue Policy von %(role)s"
+
+#: governance/roles/domain_policies.py
+#, python-format
+msgid "The role regulates its domains with its own policies, without a governance process (constitution 1.3.2). Everybody in %(circle)s and its sub-circles is informed."
+msgstr "Die Rolle regelt ihre Domains mit eigenen Policies, ohne Governance-Prozess (Verfassung 1.3.2). Alle in %(circle)s und seinen Sub-Kreisen werden informiert."
+
+#: governance/roles/editing.py
+#, python-format
+msgid "Strategy of %(circle)s"
+msgstr "Strategie von %(circle)s"
+
+#: governance/roles/editing.py
+msgid "The Circle Lead sets the strategy outside governance."
+msgstr "Der Circle Lead legt die Strategie ausserhalb der Governance fest."
+
+#: governance/roles/editing.py
+#, python-format
+msgid "Metric of %(role)s"
+msgstr "Metric von %(role)s"
+
+#: governance/roles/editing.py
+#, python-format
+msgid "Checklist item of %(role)s"
+msgstr "Checklisten-Punkt von %(role)s"
+
+#: governance/roles/editing.py
+#, python-format
+msgid "Link of %(role)s"
+msgstr "Link von %(role)s"
+
+#: governance/roles/models.py
+msgid "name"
+msgstr "Name"
+
+#: governance/roles/models.py
+msgid "purpose"
+msgstr "Purpose"
+
+#: governance/roles/models.py
+msgid "core role"
+msgstr "Kernrolle"
+
+#: governance/roles/models.py
+msgid "is a circle"
+msgstr "ist ein Kreis"
+
+#: governance/roles/models.py
+msgid "strategy"
+msgstr "Strategie"
+
+#: governance/roles/models.py governance/templates/roles/role_detail.html
+msgid "acceptance period of async proposals"
+msgstr "Frist für asynchrone Vorschläge"
+
+#: governance/roles/models.py
+msgid "In calendar days. Inherited from the super-circle if empty."
+msgstr "In Kalendertagen. Leer: vom Super-Kreis übernommen."
+
+#: governance/roles/models.py governance/templates/roles/role_detail.html
+msgid "elected by policy"
+msgstr "durch Policy gewählt"
+
+#: governance/roles/models.py
+msgid "A policy makes the role elected; the policy stays the explanation."
+msgstr "Eine Policy macht die Rolle zu einer gewählten; die Policy bleibt die Erklärung."
+
+#: governance/roles/models.py
+msgid "archived on"
+msgstr "archiviert am"
+
+#: governance/roles/models.py
+msgid "other names"
+msgstr "weitere Namen"
+
+#: governance/roles/models.py
+msgid "Earlier names and short names, texts may still mention them."
+msgstr "Frühere Namen und Kurznamen, Texte erwähnen sie vielleicht noch."
+
+#: governance/roles/models.py
+msgid "GlassFrog circle ID"
+msgstr "GlassFrog-ID des Kreises"
+
+#: governance/roles/models.py
+msgid "accountability"
+msgstr "Accountability"
+
+#: governance/roles/models.py
+msgid "accountabilities"
+msgstr "Accountabilities"
+
+#: governance/roles/models.py governance/templates/roles/policy_detail.html
+#: governance/templates/roles/role_detail.html
+msgid "domain"
+msgstr "Domain"
+
+#: governance/roles/models.py
+msgid "domains"
+msgstr "Domains"
+
+#: governance/roles/models.py
+msgid "body"
+msgstr "Text"
+
+#: governance/roles/models.py
+msgid "policies"
+msgstr "Policies"
+
+#: governance/roles/models.py
+msgid "focus"
+msgstr "Fokus"
+
+#: governance/roles/models.py
+msgid "elected until"
+msgstr "gewählt bis"
+
+#: governance/roles/models.py
+msgid "starts on"
+msgstr "beginnt am"
+
+#: governance/roles/models.py
+msgid "ends on"
+msgstr "endet am"
+
+#: governance/roles/models.py
+msgid "assignment"
+msgstr "Zuweisung"
+
+#: governance/roles/models.py
+msgid "assignments"
+msgstr "Zuweisungen"
+
+#: governance/roles/models.py
+msgid "weekly"
+msgstr "wöchentlich"
+
+#: governance/roles/models.py
+msgid "monthly"
+msgstr "monatlich"
+
+#: governance/roles/models.py
+msgid "quarterly"
+msgstr "quartalsweise"
+
+#: governance/roles/models.py
+msgid "yearly"
+msgstr "jährlich"
+
+#: governance/roles/models.py
+msgid "without frequency"
+msgstr "ohne Häufigkeit"
+
+#: governance/roles/models.py
+msgid "description"
+msgstr "Beschreibung"
+
+#: governance/roles/models.py
+msgid "frequency"
+msgstr "Häufigkeit"
+
+#: governance/roles/models.py governance/roles/views.py
+msgid "metric"
+msgstr "Kennzahl"
+
+#: governance/roles/models.py
+msgid "metrics"
+msgstr "Kennzahlen"
+
+#: governance/roles/models.py
+msgid "checklist item"
+msgstr "Checklistenpunkt"
+
+#: governance/roles/models.py
+msgid "checklist items"
+msgstr "Checklistenpunkte"
+
+#: governance/roles/models.py
+msgid "URL"
+msgstr "URL"
+
+#: governance/roles/models.py
+msgid "links"
+msgstr "Links"
+
+#: governance/roles/settings_views.py
+#, python-format
+msgid "Settings of %(role)s"
+msgstr "Einstellungen von %(role)s"
+
+#: governance/roles/settings_views.py
+msgid "Policies explain the settings, the app uses them. Change both together."
+msgstr "Policies erklären die Einstellungen, die App verwendet sie. Ändere beide zusammen."
+
+#: governance/roles/views.py
+msgid "checklist"
+msgstr "Checkliste"
+
+#: governance/settings.py
+msgid "German"
+msgstr "Deutsch"
+
+#: governance/settings.py
+msgid "English"
+msgstr "Englisch"
+
+#: governance/templates/_show_more.html
+#, python-format
+msgid "Show %(more)s more"
+msgid_plural "Show %(more)s more"
+msgstr[0] "Noch %(more)s anzeigen"
+msgstr[1] "Noch %(more)s anzeigen"
+
+#: governance/templates/_theme_toggle.html
+msgid "Theme: Auto"
+msgstr "Darstellung: automatisch"
+
+#: governance/templates/_theme_toggle.html
+msgid "Theme: Light"
+msgstr "Darstellung: hell"
+
+#: governance/templates/_theme_toggle.html
+msgid "Theme: Dark"
+msgstr "Darstellung: dunkel"
+
+#: governance/templates/_theme_toggle.html
+msgid "Cycle theme"
+msgstr "Darstellung wechseln"
+
+#: governance/templates/accounts/api_tokens.html
+#, python-format
+msgid "API tokens give scripts access to the governance in your name, e.g. to prepare proposals. Send them as bearer token. They expire after %(days)s days."
+msgstr "API-Tokens geben Skripten in deinem Namen Zugriff auf die Governance, z.B. um Vorschläge vorzubereiten. Sende sie als Bearer-Token. Sie laufen nach %(days)s Tagen ab."
+
+#: governance/templates/accounts/api_tokens.html
+msgid "API documentation"
+msgstr "API-Dokumentation"
+
+#: governance/templates/accounts/api_tokens.html
+msgid "The <code>gov</code> command line interface uses the API, it asks for its token itself:"
+msgstr "Das Kommandozeilen-Tool <code>gov</code> nutzt die API und holt sich sein Token selbst:"
+
+#: governance/templates/accounts/api_tokens.html
+msgid "or"
+msgstr "oder"
+
+#: governance/templates/accounts/api_tokens.html
+msgid "Copy the token now, it will not be shown again:"
+msgstr "Kopiere das Token jetzt, es wird nicht mehr angezeigt:"
+
+#: governance/templates/accounts/api_tokens.html
+#: governance/templates/roles/_role_item.html
+#: governance/templates/roles/role_detail.html
+msgid "Delete"
+msgstr "Löschen"
+
+#: governance/templates/accounts/api_tokens.html
+msgid "No API tokens."
+msgstr "Keine API-Tokens."
+
+#: governance/templates/accounts/api_tokens.html
+msgid "Create a token"
+msgstr "Token erstellen"
+
+#: governance/templates/accounts/cli_login.html
+#: governance/templates/accounts/cli_login_redirect.html
+msgid "Authorize gov"
+msgstr "gov berechtigen"
+
+#: governance/templates/accounts/cli_login.html
+#, python-format
+msgid "The <code>gov</code> command line interface on <strong>%(name)s</strong> wants to access the governance in your name."
+msgstr "Das Kommandozeilen-Tool <code>gov</code> auf <strong>%(name)s</strong> möchte in deinem Namen auf die Governance zugreifen."
+
+#: governance/templates/accounts/cli_login.html
+msgid "The <code>gov</code> command line interface wants to access the governance in your name."
+msgstr "Das Kommandozeilen-Tool <code>gov</code> möchte in deinem Namen auf die Governance zugreifen."
+
+#: governance/templates/accounts/cli_login.html
+#, python-format
+msgid "The access expires after %(days)s days, <code>gov</code> will ask you to authorize it again."
+msgstr "Der Zugriff läuft nach %(days)s Tagen ab, <code>gov</code> bittet dich dann, es erneut zu berechtigen."
+
+#: governance/templates/accounts/cli_login.html
+msgid "gov can create, change and publish proposals in your name."
+msgstr "gov kann in deinem Namen Vorschläge erstellen, ändern und veröffentlichen."
+
+#: governance/templates/accounts/cli_login.html
+msgid "Only continue if you just started gov yourself."
+msgstr "Fahre nur weiter, wenn du gov gerade selbst gestartet hast."
+
+#: governance/templates/accounts/cli_login.html
+msgid "Authorize"
+msgstr "Berechtigen"
+
+#: governance/templates/accounts/cli_login_redirect.html
+msgid "Handing the access over to gov…"
+msgstr "Der Zugriff wird an gov übergeben…"
+
+#: governance/templates/accounts/login.html governance/templates/base.html
+#: governance/templates/roles/governance.txt governance/templates/start.html
+msgid "Governance"
+msgstr "Governance"
+
+#: governance/templates/accounts/login.html
+msgid "Sign in with Google"
+msgstr "Mit Google anmelden"
+
+#: governance/templates/base.html governance/templates/roles/person_detail.html
+msgid "Organization"
+msgstr "Organisation"
+
+#: governance/templates/base.html
+#: governance/templates/roles/circle_browser.html
+msgid "Circles"
+msgstr "Kreise"
+
+#: governance/templates/base.html governance/templates/roles/people.html
+msgid "People"
+msgstr "Personen"
+
+#: governance/templates/base.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/proposals/proposal_list.html
+msgid "Proposals"
+msgstr "Vorschläge"
+
+#: governance/templates/base.html
+#: governance/templates/history/organization_history.html
+#: governance/templates/history/role_as_of.html
+#: governance/templates/history/role_history.html
+#: governance/templates/roles/role_detail.html
+msgid "History"
+msgstr "Geschichte"
+
+#: governance/templates/base.html governance/templates/search/search.html
+msgid "Search"
+msgstr "Suchen"
+
+#: governance/templates/base.html governance/templates/help.html
+msgid "Help"
+msgstr "Hilfe"
+
+#: governance/templates/base.html
+msgid "API"
+msgstr "API"
+
+#: governance/templates/base.html
+msgid "Sign out"
+msgstr "Abmelden"
+
+#: governance/templates/generic/object_form.html
+msgid "Save"
+msgstr "Speichern"
+
+#: governance/templates/generic/object_form.html
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: governance/templates/history/_timeline.html
+#: governance/templates/meetings/meeting_detail.html
+msgid "Proposal"
+msgstr "Vorschlag"
+
+#: governance/templates/history/_timeline.html
+msgid "Show"
+msgstr "Anzeigen"
+
+#: governance/templates/history/_timeline.html
+msgid "No changes."
+msgstr "Keine Änderungen."
+
+#: governance/templates/history/organization_history.html
+#: governance/templates/history/role_history.html
+msgid "Without assignments"
+msgstr "Ohne Zuweisungen"
+
+#: governance/templates/history/organization_history.html
+#: governance/templates/history/role_history.html
+msgid "With assignments"
+msgstr "Mit Zuweisungen"
+
+#: governance/templates/history/organization_history.html
+#: governance/templates/meetings/meeting_list.html
+#: governance/templates/proposals/proposal_list.html
+msgid "Newer"
+msgstr "Neuere"
+
+#: governance/templates/history/organization_history.html
+#: governance/templates/meetings/meeting_list.html
+#: governance/templates/proposals/proposal_list.html
+msgid "Older"
+msgstr "Ältere"
+
+#: governance/templates/history/role_as_of.html
+#, python-format
+msgid "As of %(day)s, from the snapshot of %(since)s."
+msgstr "Stand %(day)s, aus der Aufzeichnung vom %(since)s."
+
+#: governance/templates/history/role_as_of.html
+msgid "Today"
+msgstr "Heute"
+
+#: governance/templates/history/role_as_of.html
+msgid "This role didn't exist on that day."
+msgstr "Diese Rolle gab es an diesem Tag nicht."
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/role_detail.html
+msgid "held by"
+msgstr "besetzt durch"
+
+#: governance/templates/history/role_as_of.html
+#, python-format
+msgid "elected until %(elected_until)s"
+msgstr "gewählt bis %(elected_until)s"
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/history/role_history.html
+msgid "Show as of"
+msgstr "Stand anzeigen"
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/governance.txt
+#: governance/templates/roles/role_detail.html
+msgid "Strategy"
+msgstr "Strategie"
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/_governance_lists.txt
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
+msgid "Accountabilities"
+msgstr "Accountabilities"
+
+#: governance/templates/history/role_as_of.html
+#, python-format
+msgid "%(counter)s accountability (text not recorded)"
+msgid_plural "%(counter)s accountabilities (texts not recorded)"
+msgstr[0] "%(counter)s Accountability (Text nicht erfasst)"
+msgstr[1] "%(counter)s Accountabilities (Texte nicht erfasst)"
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/_governance_lists.txt
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
+msgid "Domains"
+msgstr "Domains"
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/governance.txt
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
+msgid "Policies"
+msgstr "Policies"
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
+msgid "Roles"
+msgstr "Rollen"
+
+#: governance/templates/meetings/_agenda.html
+msgid "Agenda"
+msgstr "Traktanden"
+
+#: governance/templates/meetings/_agenda.html
+msgid "completed"
+msgstr "erledigt"
+
+#: governance/templates/meetings/_agenda.html
+msgid "Process"
+msgstr "Behandeln"
+
+#: governance/templates/meetings/_agenda.html
+msgid "Move up"
+msgstr "Nach oben"
+
+#: governance/templates/meetings/_agenda.html
+msgid "Move down"
+msgstr "Nach unten"
+
+#: governance/templates/meetings/_agenda.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/proposals/_drafting.html
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/role_detail.html
+msgid "Remove"
+msgstr "Entfernen"
+
+#: governance/templates/meetings/_agenda.html
+msgid "Nothing on the agenda."
+msgstr "Keine Traktanden."
+
+#: governance/templates/meetings/_current.html
+msgid "Now"
+msgstr "Jetzt"
+
+#: governance/templates/meetings/_current.html
+msgid "Done"
+msgstr "Erledigt"
+
+#: governance/templates/meetings/_current.html
+msgid "Outcome"
+msgstr "Ergebnis"
+
+#: governance/templates/meetings/_current.html
+msgid "What was decided or requested, e.g. a next action or a project."
+msgstr "Was entschieden oder verlangt wurde, z.B. eine nächste Aktion oder ein Projekt."
+
+#: governance/templates/meetings/_current.html
+msgid "Link"
+msgstr "Link"
+
+#: governance/templates/meetings/_current.html
+msgid "Optional, e.g. the task created for it."
+msgstr "Optional, z.B. die dafür erstellte Aufgabe."
+
+#: governance/templates/meetings/_current.html
+msgid "Save and done"
+msgstr "Speichern und erledigt"
+
+#: governance/templates/meetings/_current.html
+msgid "The secretary captures the outcome."
+msgstr "Der Secretary hält das Ergebnis fest."
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/meetings/meeting_detail.html
+msgid "Steps"
+msgstr "Schritte"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/proposals/proposal_detail.html
+#, python-format
+msgid "%(circle)s loses its last roles: adopting the proposal turns it back into a role, its Facilitator, Secretary and Circle Rep and their terms end."
+msgstr "%(circle)s verliert seine letzten Rollen: Wird der Vorschlag angenommen, wird der Kreis wieder zu einer Rolle, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/proposals/proposal_detail.html
+#: governance/templates/roles/_role_item.html
+#: governance/templates/roles/role_detail.html
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/proposals/proposal_detail.html
+msgid "Undo"
+msgstr "Rückgängig"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/proposals/proposal_detail.html
+msgid "No changes yet."
+msgstr "Noch keine Änderungen."
+
+#: governance/templates/meetings/_current.html
+msgid "Adopt"
+msgstr "Annehmen"
+
+#: governance/templates/meetings/_current.html
+msgid "Concerns from the async process"
+msgstr "Bedenken aus dem asynchronen Prozess"
+
+#: governance/templates/meetings/_current.html
+msgid "Objections are raised in the objection round, then tested."
+msgstr "Einwände werden in der Einwandrunde erhoben und dann getestet."
+
+#: governance/templates/meetings/_current.html
+msgid "Objections"
+msgstr "Einwände"
+
+#: governance/templates/meetings/_current.html
+msgid "not tested, doesn't block if the objector isn't there"
+msgstr "nicht geprüft, blockiert nicht, wenn die Person nicht dabei ist"
+
+#: governance/templates/meetings/_current.html
+msgid "not tested yet"
+msgstr "noch nicht geprüft"
+
+#: governance/templates/meetings/_current.html
+msgid "integrated"
+msgstr "integriert"
+
+#: governance/templates/meetings/_current.html
+msgid "valid, to integrate"
+msgstr "gültig, zu integrieren"
+
+#: governance/templates/meetings/_current.html
+msgid "not valid"
+msgstr "nicht gültig"
+
+#: governance/templates/meetings/_current.html
+msgid "Valid"
+msgstr "Gültig"
+
+#: governance/templates/meetings/_current.html
+msgid "Not valid"
+msgstr "Nicht gültig"
+
+#: governance/templates/meetings/_current.html
+msgid "Integrated"
+msgstr "Integriert"
+
+#: governance/templates/meetings/_current.html
+msgid "No objections."
+msgstr "Keine Einwände."
+
+#: governance/templates/meetings/_current.html
+msgid "Reason"
+msgstr "Begründung"
+
+#: governance/templates/meetings/_current.html
+msgid "Record objection"
+msgstr "Einwand festhalten"
+
+#: governance/templates/meetings/_current.html
+msgid "A tension without a proposal yet: the secretary captures the proposal, or the item is done."
+msgstr "Eine Spannung noch ohne Vorschlag: der Secretary hält den Vorschlag fest, oder das Traktandum ist erledigt."
+
+#: governance/templates/meetings/_current.html
+msgid "Capture a proposal"
+msgstr "Vorschlag festhalten"
+
+#: governance/templates/meetings/_due_elections.html
+#, python-format
+msgid "term ends on %(date)s"
+msgstr "Amtszeit endet am %(date)s"
+
+#: governance/templates/meetings/_due_elections.html
+#: governance/templates/notifications/elections_due.txt
+msgid "nobody elected"
+msgstr "niemand gewählt"
+
+#: governance/templates/meetings/_meeting_rows.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/proposals/proposal_detail.html
+#: governance/templates/roles/person_detail.html
+msgid "not started yet"
+msgstr "noch nicht begonnen"
+
+#: governance/templates/meetings/_meeting_rows.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/roles/person_detail.html
+msgid "running"
+msgstr "läuft"
+
+#: governance/templates/meetings/_outputs.html
+msgid "Outputs"
+msgstr "Ergebnisse"
+
+#: governance/templates/meetings/_outputs.html
+#: governance/templates/notifications/meeting_ended.txt
+msgid "Adopted"
+msgstr "Angenommen"
+
+#: governance/templates/meetings/_outputs.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/notifications/meeting_ended.txt
+#, python-format
+msgid "until %(date)s"
+msgstr "bis %(date)s"
+
+#: governance/templates/meetings/_outputs.html
+msgid "No proposals adopted, no elections, no outcomes."
+msgstr "Keine angenommenen Vorschläge, keine Wahlen, keine Ergebnisse."
+
+#: governance/templates/meetings/_running.html
+msgid "Running now:"
+msgstr "Läuft gerade:"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "started"
+msgstr "begonnen"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "ended"
+msgstr "beendet"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "End the meeting"
+msgstr "Meeting beenden"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "The invited roles have no checklist items."
+msgstr "Die eingeladenen Rollen haben keine Checklisten-Punkte."
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "The invited roles have no metrics."
+msgstr "Die eingeladenen Rollen haben keine Kennzahlen."
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "A tension, in one or two words"
+msgstr "Eine Spannung, in ein bis zwei Wörtern"
+
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/notifications/proposal_adopted.txt
+#: governance/templates/notifications/proposal_back_to_draft.txt
+#: governance/templates/notifications/proposal_published.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "Tension"
+msgstr "Spannung"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Add proposal"
+msgstr "Vorschlag hinzufügen"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Invited roles"
+msgstr "Eingeladene Rollen"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Not recorded."
+msgstr "Nicht erfasst."
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Attendees"
+msgstr "Teilnehmende"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Invite"
+msgstr "Einladen"
+
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/notifications/meeting_ended.txt
+msgid "Elections"
+msgstr "Wahlen"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Record the election"
+msgstr "Wahl festhalten"
+
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/notifications/meeting_ended.txt
+msgid "Minutes"
+msgstr "Protokoll"
+
+#: governance/templates/meetings/meeting_list.html
+#: governance/templates/roles/role_detail.html
+msgid "Meetings"
+msgstr "Meetings"
+
+#: governance/templates/meetings/meeting_list.html
+msgid "All"
+msgstr "Alle"
+
+#: governance/templates/meetings/meeting_list.html
+msgid "Governance Meetings"
+msgstr "Governance Meetings"
+
+#: governance/templates/meetings/meeting_list.html
+msgid "Tactical Meetings"
+msgstr "Tactical Meetings"
+
+#: governance/templates/meetings/meeting_list.html
+#: governance/templates/roles/role_detail.html
+msgid "Start a governance meeting"
+msgstr "Governance Meeting starten"
+
+#: governance/templates/meetings/meeting_list.html
+#: governance/templates/roles/role_detail.html
+msgid "Start a tactical meeting"
+msgstr "Tactical Meeting starten"
+
+#: governance/templates/meetings/meeting_list.html
+msgid "No meetings."
+msgstr "Keine Meetings."
+
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "added"
+msgstr "hinzugefügt"
+
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "removed"
+msgstr "entfernt"
+
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "moved"
+msgstr "verschoben"
+
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "changed"
+msgstr "geändert"
+
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "from"
+msgstr "aus"
+
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "into"
+msgstr "nach"
+
+#: governance/templates/notifications/domain_policy_changed.txt
+#, python-format
+msgid "%(role)s in %(circle)s changed a policy for its domains, without a governance process (constitution 1.3.2)."
+msgstr "%(role)s in %(circle)s hat eine Policy für ihre Domains geändert, ohne Governance-Prozess (Verfassung 1.3.2)."
+
+#: governance/templates/notifications/domain_policy_changed.txt
+#: governance/templates/notifications/proposal_adopted.txt
+#: governance/templates/notifications/proposal_published.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "Changes"
+msgstr "Änderungen"
+
+#: governance/templates/notifications/elections_due.txt
+msgid "These elected roles need an election in a governance meeting soon:"
+msgstr "Diese gewählten Rollen brauchen bald eine Wahl in einem Governance Meeting:"
+
+#: governance/templates/notifications/elections_due.txt
+#, python-format
+msgid "%(user)s, term ends on %(date)s"
+msgstr "%(user)s, Amtszeit endet am %(date)s"
+
+#: governance/templates/notifications/meeting_ended.txt
+#, python-format
+msgid "The %(meeting)s of %(date)s has ended."
+msgstr "Das %(meeting)s vom %(date)s ist beendet."
+
+#: governance/templates/notifications/proposal_adopted.txt
+#, python-format
+msgid "A proposal has been adopted in %(circle)s."
+msgstr "In %(circle)s wurde ein Vorschlag angenommen."
+
+#: governance/templates/notifications/proposal_back_to_draft.txt
+#, python-format
+msgid "%(proposer)s has taken the proposal in %(circle)s back to the draft to change it. It's not open for responses anymore; when it's published again, the circle starts over."
+msgstr "%(proposer)s hat den Vorschlag in %(circle)s zurück zum Entwurf genommen, um ihn zu ändern. Er ist nicht mehr offen für Antworten; wird er wieder veröffentlicht, beginnt der Kreis von vorne."
+
+#: governance/templates/notifications/proposal_published.txt
+#, python-format
+msgid "%(proposer)s proposes a change in %(circle)s."
+msgstr "%(proposer)s schlägt eine Änderung in %(circle)s vor."
+
+#: governance/templates/notifications/proposal_published.txt
+#, python-format
+msgid "The proposal is adopted on %(date)s unless somebody requests a meeting to discuss it. Questions and requests:"
+msgstr "Der Vorschlag wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen. Fragen und Meetings:"
+
+#: governance/templates/proposals/_drafting.html
+msgid "Propose changes"
+msgstr "Änderungen vorschlagen"
+
+#: governance/templates/proposals/_drafting.html
+msgid "Add a role"
+msgstr "Rolle hinzufügen"
+
+#: governance/templates/proposals/_drafting.html
+msgid "Add a policy"
+msgstr "Policy hinzufügen"
+
+#: governance/templates/proposals/_drafting.html
+#: governance/templates/proposals/proposal_move.html
+msgid "Move roles and policies"
+msgstr "Rollen und Policies verschieben"
+
+#: governance/templates/proposals/_drafting.html
+msgid "Change or remove a role"
+msgstr "Rolle ändern oder entfernen"
+
+#: governance/templates/proposals/_drafting.html
+#: governance/templates/roles/role_detail.html
+msgid "Change"
+msgstr "Ändern"
+
+#: governance/templates/proposals/_drafting.html
+msgid "Turn back into a role"
+msgstr "Wieder zur Rolle machen"
+
+#: governance/templates/proposals/_drafting.html
+msgid "Turn into a circle"
+msgstr "Zum Kreis machen"
+
+#: governance/templates/proposals/_drafting.html
+msgid "Change or remove a policy"
+msgstr "Policy ändern oder entfernen"
+
+#: governance/templates/proposals/_move_into.html
+msgid "Sub-circle"
+msgstr "Sub-Kreis"
+
+#: governance/templates/proposals/_move_into.html
+msgid "Move"
+msgstr "Verschieben"
+
+#: governance/templates/proposals/_move_out.html
+#, python-format
+msgid "Move into %(circle)s"
+msgstr "Nach %(circle)s verschieben"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "from the role"
+msgstr "aus der Rolle"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "to be adopted on"
+msgstr "wird angenommen am"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "published (async)"
+msgstr "veröffentlicht (asynchron)"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Publish (async)"
+msgstr "Veröffentlichen (asynchron)"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Delete the draft"
+msgstr "Entwurf löschen"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Back to the draft"
+msgstr "Zurück zum Entwurf"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Withdraw"
+msgstr "Zurückziehen"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "The proposal can't be adopted like this:"
+msgstr "So kann der Vorschlag nicht angenommen werden:"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Responses"
+msgstr "Antworten"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "No responses yet."
+msgstr "Noch keine Antworten."
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Respond"
+msgstr "Antworten"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Circle members"
+msgstr "Mitglieder des Kreises"
+
+#: governance/templates/proposals/proposal_detail.html
+#, python-format
+msgid "%(consents)s of %(others)s"
+msgstr "%(consents)s von %(others)s"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "meeting requested"
+msgstr "Meeting verlangt"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Who responded and who didn't isn't shown. Questions and objections show their author."
+msgstr "Wer reagiert hat und wer nicht, wird nicht angezeigt. Fragen und Einwände zeigen, von wem sie sind."
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Adopted when everybody consented, or at the deadline unless somebody requested a meeting. Objections are raised and tested in the meeting."
+msgstr "Angenommen, wenn alle einverstanden sind, oder bei Fristablauf, wenn niemand ein Meeting verlangt hat. Einwände werden im Meeting erhoben und getestet."
+
+#: governance/templates/proposals/proposal_list.html
+msgid "all"
+msgstr "alle"
+
+#: governance/templates/proposals/proposal_list.html
+msgid "No proposals."
+msgstr "Keine Vorschläge."
+
+#: governance/templates/proposals/proposal_move.html
+#, python-format
+msgid "%(circle)s moves its roles and policies into its sub-circles and out of them."
+msgstr "%(circle)s verschiebt seine Rollen und Policies in seine Sub-Kreise und aus ihnen heraus."
+
+#: governance/templates/proposals/proposal_move.html
+#, python-format
+msgid "From %(circle)s into a sub-circle"
+msgstr "Von %(circle)s in einen Sub-Kreis"
+
+#: governance/templates/proposals/proposal_move.html
+msgid "Roles moved into a role make it a circle."
+msgstr "Rollen, die in eine Rolle verschoben werden, machen sie zu einem Kreis."
+
+#: governance/templates/proposals/proposal_move.html
+#, python-format
+msgid "From %(sub)s into %(circle)s"
+msgstr "Von %(sub)s nach %(circle)s"
+
+#: governance/templates/proposals/proposal_move.html
+#, python-format
+msgid "%(circle)s has no sub-circles."
+msgstr "%(circle)s hat keine Sub-Kreise."
+
+#: governance/templates/proposals/proposal_move.html
+msgid "Back to the proposal"
+msgstr "Zurück zum Vorschlag"
+
+#: governance/templates/roles/_holders.html
+#: governance/templates/roles/person_detail.html
+#, python-format
+msgid "elected until %(date)s"
+msgstr "gewählt bis %(date)s"
+
+#: governance/templates/roles/_holders.html
+#: governance/templates/roles/assignments.html
+msgid "Nobody"
+msgstr "Niemand"
+
+#: governance/templates/roles/_tree_list.html
+msgid "your role"
+msgstr "deine Rolle"
+
+#: governance/templates/roles/_tree_list.html
+msgid "unassigned"
+msgstr "nicht besetzt"
+
+#: governance/templates/roles/assignments.html
+msgid "Holders"
+msgstr "Besetzung"
+
+#: governance/templates/roles/assignments.html
+msgid "Circle Leads assign people to the roles of their circle directly, without a proposal."
+msgstr "Circle Leads besetzen die Rollen ihres Kreises direkt, ohne Vorschlag."
+
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/person_detail.html
+#, python-format
+msgid "since %(date)s"
+msgstr "seit %(date)s"
+
+#: governance/templates/roles/assignments.html
+msgid "Edit focus"
+msgstr "Fokus bearbeiten"
+
+#: governance/templates/roles/assignments.html
+msgid "Assign somebody"
+msgstr "Jemanden zuweisen"
+
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/role_detail.html
+msgid "Assign"
+msgstr "Zuweisen"
+
+#: governance/templates/roles/assignments.html
+msgid "Back to the role"
+msgstr "Zurück zur Rolle"
+
+#: governance/templates/roles/circle_browser.html
+msgid "Click a circle to zoom in, the background to zoom out, a role to open it."
+msgstr "Ein Kreis vergrössert, der Hintergrund verkleinert, eine Rolle öffnet ihre Seite."
+
+#: governance/templates/roles/circle_browser.html
+msgid "As a list"
+msgstr "Als Liste"
+
+#: governance/templates/roles/circle_browser.html
+msgid "No circles yet."
+msgstr "Noch keine Kreise."
+
+#: governance/templates/roles/governance.txt
+#, python-format
+msgid "As of %(date)s."
+msgstr "Stand %(date)s."
+
+#: governance/templates/roles/governance.txt
+msgid "Held by"
+msgstr "Besetzt durch"
+
+#: governance/templates/roles/governance.txt
+msgid "the Circle Lead"
+msgstr "Circle Lead"
+
+#: governance/templates/roles/people.html
+msgid "Nobody holds a role yet."
+msgstr "Noch niemand hat eine Rolle."
+
+#: governance/templates/roles/person_detail.html
+msgid "inactive"
+msgstr "inaktiv"
+
+#: governance/templates/roles/person_detail.html
+msgid "No roles at the moment."
+msgstr "Zurzeit keine Rollen."
+
+#: governance/templates/roles/person_detail.html
+msgid "Mails"
+msgstr "Mails"
+
+#: governance/templates/roles/person_detail.html
+msgid "You get mails about everything in all circles."
+msgstr "Du erhältst Mails zu allem in allen Kreisen."
+
+#: governance/templates/roles/person_detail.html
+msgid "You get mails about the circles you're a member of."
+msgstr "Du erhältst Mails zu den Kreisen, in denen du Mitglied bist."
+
+#: governance/templates/roles/person_detail.html
+msgid "Only my circles"
+msgstr "Nur meine Kreise"
+
+#: governance/templates/roles/person_detail.html
+msgid "Inform me about everything in all circles"
+msgstr "Über alles in allen Kreisen informieren"
+
+#: governance/templates/roles/person_detail.html
+msgid "Your meetings"
+msgstr "Deine Meetings"
+
+#: governance/templates/roles/person_detail.html
+msgid "Waiting for your response"
+msgstr "Warten auf deine Antwort"
+
+#: governance/templates/roles/person_detail.html
+msgid "Your drafts and tensions"
+msgstr "Deine Entwürfe und Spannungen"
+
+#: governance/templates/roles/person_detail.html
+msgid "Earlier roles"
+msgstr "Frühere Rollen"
+
+#: governance/templates/roles/policy_detail.html
+#: governance/templates/roles/role_detail.html
+#, python-format
+msgid "archived on %(date)s"
+msgstr "archiviert am %(date)s"
+
+#: governance/templates/roles/policy_detail.html
+#: governance/templates/roles/role_detail.html
+msgid "Proposed"
+msgstr "Vorgeschlagen"
+
+#: governance/templates/roles/role_detail.html
+#, python-format
+msgid "%(days)s day"
+msgid_plural "%(days)s days"
+msgstr[0] "%(days)s Tag"
+msgstr[1] "%(days)s Tage"
+
+#: governance/templates/roles/role_detail.html
+msgid "the Circle Lead (by default)"
+msgstr "Circle Lead (standardmässig)"
+
+#: governance/templates/roles/role_detail.html
+msgid "New proposal"
+msgstr "Neuer Vorschlag"
+
+#: governance/templates/roles/role_detail.html
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: governance/templates/roles/role_detail.html
+msgid "Circle browser"
+msgstr "Kreis-Browser"
+
+#: governance/templates/roles/role_detail.html
+msgid "Holds the circle's Purpose and its Accountabilities as far as no role or process in the circle covers them; assigns the roles and defines priorities and strategies."
+msgstr "Hält den Purpose des Kreises und seine Accountabilities, soweit keine Rolle und kein Prozess im Kreis sie abdeckt; weist die Rollen zu und definiert Prioritäten und Strategien."
+
+#: governance/templates/roles/role_detail.html
+msgid "constitution"
+msgstr "Verfassung"
+
+#: governance/templates/roles/role_detail.html
+msgid "None"
+msgstr "Keine"
+
+#: governance/templates/roles/role_detail.html
+#, python-format
+msgid "From the super-circle <a href=\"%(url)s\">%(circle)s</a>, they apply here too unless they say otherwise:"
+msgstr "Aus dem Super-Kreis <a href=\"%(url)s\">%(circle)s</a>, sie gelten auch hier, ausser sie sagen etwas anderes:"
+
+#: governance/templates/roles/role_detail.html
+msgid "Details and history"
+msgstr "Details und Geschichte"
+
+#: governance/templates/roles/role_detail.html
+msgid "The circle's own policies:"
+msgstr "Die eigenen Policies des Kreises:"
+
+#: governance/templates/roles/role_detail.html
+msgid "Add a policy for its domains"
+msgstr "Policy für die Domains hinzufügen"
+
+#: governance/templates/roles/role_detail.html
+msgid "The role regulates its domains itself, without a governance process. Everybody affected is informed."
+msgstr "Die Rolle regelt ihre Domains selbst, ohne Governance-Prozess. Alle Betroffenen werden informiert."
+
+#: governance/templates/roles/role_detail.html
+msgid "All meetings"
+msgstr "Alle Meetings"
+
+#: governance/templates/roles/role_detail.html
+msgid "Join the running meeting"
+msgstr "Zum laufenden Meeting"
+
+#: governance/templates/roles/role_detail.html
+msgid "Tactical meeting with selected roles…"
+msgstr "Tactical Meeting mit ausgewählten Rollen…"
+
+#: governance/templates/roles/role_detail.html
+msgid "Core roles"
+msgstr "Kernrollen"
+
+#: governance/templates/roles/role_detail.html
+msgid "Checklists and metrics"
+msgstr "Checklisten und Kennzahlen"
+
+#: governance/templates/roles/role_detail.html
+msgid "Add a checklist item"
+msgstr "Checklisten-Punkt hinzufügen"
+
+#: governance/templates/roles/role_detail.html
+msgid "Add a metric"
+msgstr "Metric hinzufügen"
+
+#: governance/templates/roles/role_detail.html
+msgid "Links"
+msgstr "Links"
+
+#: governance/templates/roles/role_detail.html
+msgid "E.g. where the projects and actions are managed."
+msgstr "Z.B. wo die Projekte und Aktionen verwaltet werden."
+
+#: governance/templates/roles/role_detail.html
+msgid "Add a link"
+msgstr "Link hinzufügen"
+
+#: governance/templates/roles/role_detail.html
+msgid "No proposals changed this role."
+msgstr "Noch kein Vorschlag hat diese Rolle geändert."
+
+#: governance/templates/roles/role_detail.html
+msgid "Complete history"
+msgstr "Ganze Geschichte"
+
+#: governance/templates/roles/role_detail.html
+msgid "All proposals changing this role"
+msgstr "Alle Vorschläge zu dieser Rolle"
+
+#: governance/templates/roles/role_detail.html
+msgid "All proposals of this circle"
+msgstr "Alle Vorschläge dieses Kreises"
+
+#: governance/templates/search/search.html
+msgid "Nothing found."
+msgstr "Nichts gefunden."
+
+#: governance/templates/start.html
+msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
+msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+
+#~ msgid "Export (Markdown)"
+#~ msgstr "Export (Markdown)"
+
+#~ msgid "Sub-circles"
+#~ msgstr "Sub-Kreise"
+
+#~ msgid "Checklists"
+#~ msgstr "Checklisten"
+
+#~ msgid "Metrics"
+#~ msgstr "Metrics"
+
+#~ msgid "Amend the proposal"
+#~ msgstr "Vorschlag ergänzen"
+
+#~ msgid "The spelling correction was saved."
+#~ msgstr "Die Rechtschreibkorrektur wurde gespeichert."
+
+#~ msgid "Nothing changed."
+#~ msgstr "Nichts geändert."
+
+#, python-format
+#~ msgid "Correct the spelling of %(object)s"
+#~ msgstr "Rechtschreibung von %(object)s korrigieren"
+
+#~ msgid "Secretaries may correct spelling outside governance. Other changes need a proposal. The correction is recorded in the history."
+#~ msgstr "Secretaries dürfen die Rechtschreibung ausserhalb der Governance korrigieren. Andere Änderungen brauchen einen Vorschlag. Die Korrektur erscheint in der Geschichte."
+
+#~ msgid "Correct spelling"
+#~ msgstr "Rechtschreibung korrigieren"
+
+#~ msgid "New governance meeting"
+#~ msgstr "Neues Governance Meeting"
+
+#~ msgid "New tactical meeting"
+#~ msgstr "Neues Tactical Meeting"
+
+#~ msgid "Start the meeting"
+#~ msgstr "Meeting beginnen"
+
+#, python-format
+#~ msgid "The proposal has been published, the circle has time until %(date)s."
+#~ msgstr "Der Vorschlag wurde veröffentlicht, der Kreis hat Zeit bis %(date)s."
+
+#~ msgid "no response yet"
+#~ msgstr "noch keine Antwort"
+
+#~ msgid "is subscribed"
+#~ msgstr "abonniert"
+
+#~ msgid "with sub-circles"
+#~ msgstr "mit Sub-Kreisen"
+
+#~ msgid "subscription"
+#~ msgstr "Abonnement"
+
+#~ msgid "subscriptions"
+#~ msgstr "Abonnemente"
+
+#~ msgid "You don't get mails about this circle anymore."
+#~ msgstr "Du erhältst keine Mails mehr zu diesem Kreis."
+
+#~ msgid "You get mails about changes in this circle and its sub-circles."
+#~ msgstr "Du erhältst Mails zu Änderungen in diesem Kreis und seinen Sub-Kreisen."
+
+#~ msgid "You get mails about changes in this circle."
+#~ msgstr "Du erhältst Mails zu Änderungen in diesem Kreis."
+
+#, python-format
+#~ msgid "You get mails about changes in this circle through %(circle)s."
+#~ msgstr "Du erhältst Mails zu Änderungen in diesem Kreis über %(circle)s."
+
+#~ msgid "You don't get mails about changes in this circle."
+#~ msgstr "Du erhältst keine Mails zu Änderungen in diesem Kreis."
+
+#~ msgid "Mails about async proposals still go to all members."
+#~ msgstr "Mails zu asynchronen Vorschlägen gehen trotzdem an alle Mitglieder."
+
+#~ msgid "Unsubscribe"
+#~ msgstr "Abbestellen"
+
+#~ msgid "Subscribe"
+#~ msgstr "Abonnieren"
+
+#~ msgid "Subscribe with sub-circles"
+#~ msgstr "Mit Sub-Kreisen abonnieren"
+
+#~ msgid "Elected"
+#~ msgstr "Gewählt"

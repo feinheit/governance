@@ -1,0 +1,17 @@
+{% load i18n %}
+<li class="list-group-item wb-row">
+  <div class="wb-row-main">
+    <span class="wb-row-title">{{ obj }}</span>
+    <div class="wb-row-meta">
+      <span>{% if kind == "roles" %}{% translate "Role" %}{% else %}{% translate "Policy" %}{% endif %}</span>
+    </div>
+  </div>
+  <form method="post" action="{{ request.get_full_path }}" class="flex-shrink-0">
+    {% csrf_token %}
+    <input type="hidden" name="kind" value="{{ kind }}">
+    <input type="hidden" name="key" value="{{ obj.pk }}">
+    <button type="submit" class="btn btn-sm btn-quiet">
+      {% blocktranslate %}Move into {{ circle }}{% endblocktranslate %}
+    </button>
+  </form>
+</li>

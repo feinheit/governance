@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- A circle with its roles, like the circle browser -->
+  <style>
+    .circle { fill: #e9f1fb; stroke: #2a78d6; }
+    .role { fill: #1baf7a; }
+    .core { fill: #6250d6; }
+    @media (prefers-color-scheme: dark) {
+      .circle { fill: #15181d; stroke: #3987e5; }
+      .role { fill: #199e70; }
+      .core { fill: #9085e9; }
+    }
+  </style>
+  <circle class="circle" cx="16" cy="16" r="14" stroke-width="3" />
+  <circle class="role" cx="11.2" cy="13" r="5.2" />
+  <circle class="core" cx="20.4" cy="12.4" r="4" />
+  <circle class="role" cx="17.5" cy="21.5" r="4.4" />
+</svg>

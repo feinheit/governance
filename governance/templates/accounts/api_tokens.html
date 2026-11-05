@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "API tokens" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-1">{% translate "API tokens" %}</h1>
+        <p class="wb-description mb-0">
+          {% blocktranslate trimmed %}
+            API tokens give scripts access to the governance in your name, e.g. to prepare proposals. Send them as
+            bearer token. They expire after {{ days }} days.
+          {% endblocktranslate %}
+          <a href="{{ api_url }}docs">{% translate "API documentation" %}</a>
+        </p>
+        <p class="wb-description mb-0 mt-2">
+          {% blocktranslate trimmed %}
+            The <code>gov</code> command line interface uses the API, it asks for its token itself:
+          {% endblocktranslate %}
+          <code class="user-select-all">uv tool install "{{ cli_install }}"</code>,
+          <code class="user-select-all">gov login {{ base_url }} --read</code>
+          {% translate "or" %}
+          <code>--write</code>.
+        </p>
+      </div>
+    </div>
+
+    {% if secret %}
+      <div class="alert alert-success">
+        <p>{% translate "Copy the token now, it will not be shown again:" %}</p>
+        <code class="user-select-all">{{ secret }}</code>
+      </div>
+    {% endif %}
+
+    <section class="card mb-3">
+      <ul class="list-group list-group-flush">
+        {% for token in tokens %}
+          <li class="list-group-item wb-row">
+            <div class="wb-row-main">
+              <span class="wb-row-title">{{ token.title }}</span>
+              <div class="wb-row-meta">
+                <span>{{ token.get_access_display }}</span>
+                <span>{% translate "last used at" %}
+                  {{ token.last_used_at|date:"SHORT_DATETIME_FORMAT"|default:"–" }}</span>
+                <span>{% translate "expires at" %} {{ token.expires_at|date:"SHORT_DATETIME_FORMAT" }}</span>
+              </div>
+            </div>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-quiet" name="delete" value="{{ token.pk }}">
+                {% translate "Delete" %}
+              </button>
+            </form>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-body-secondary">{% translate "No API tokens." %}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <form method="post" class="card">
+      {% csrf_token %}
+      <div class="card-body d-flex flex-wrap gap-2 align-items-end">
+        <div class="flex-grow-1">
+          <label class="form-label" for="token-title">{% translate "title" %}</label>
+          <input id="token-title" class="form-control" name="title" maxlength="100" required>
+        </div>
+        <div>
+          <label class="form-label" for="token-access">{% translate "access" %}</label>
+          <select id="token-access" class="form-select" name="access" required>
+            <option value="">–</option>
+            {% for value, label in access_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">{% translate "Create a token" %}</button>
+      </div>
+    </form>
+  </div>
+{% endblock content %}

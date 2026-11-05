@@ -1,0 +1,20 @@
+{% load i18n %}
+<li class="list-group-item wb-row">
+  <div class="wb-row-main">
+    <div>{% if item.link %}<a href="{{ item.link }}">{{ item }}</a>{% else %}{{ item }}{% endif %}</div>
+    <div class="wb-row-meta">
+      <span>{{ label }}</span>{% if item.other_role %}<a
+          href="{{ item.other_role.get_absolute_url }}"
+        >{{ item.other_role }}</a>{% endif %}
+    </div>
+  </div>
+  {% if can_edit %}
+    <div class="d-flex gap-1 flex-shrink-0">
+      <a class="btn btn-sm btn-quiet" href="{% url 'role_item' kind item.pk %}">{% translate "Edit" %}</a>
+      <form method="post" action="{% url 'role_item_delete' kind item.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-quiet">{% translate "Delete" %}</button>
+      </form>
+    </div>
+  {% endif %}
+</li>

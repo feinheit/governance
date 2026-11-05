@@ -1,0 +1,118 @@
+"""Who may do what outside the governance process, see section 3 of SPEC.md
+
+Circle Leads assign people to the roles of their circle (and the Circle
+Lead of a sub-circle). Admins may do it everywhere, e.g. assign the anchor
+circle's Circle Lead. Everything else changes through governance, also
+spelling.
+"""
+
+from django.db.models import Q
+
+from governance.roles.constitution import LEAD, REP, SECRETARY
+from governance.roles.models import Assignment, Role
+
+
+def holds_core_role(user, circle, core_role):
+    return (
+        circle is not None
+        and Assignment.objects
+        .current()
+        .filter(
+            user=user,
+            role__circle=circle,
+            role__core_role=core_role,
+            role__archived_on=None,
+        )
+        .exists()
+    )
+
+
+def can_lead(user, circle):
+    """What the circle's Circle Lead may do in the app
+
+    The Secretary stands in, although the constitution doesn't give them
+    these rights.
+    """
+    return circle is not None and (
+        user.is_admin
+        or holds_core_role(user, circle, LEAD)
+        or holds_core_role(user, circle, SECRETARY)
+    )
+
+
+def can_assign(user, role):
+    """Circle Leads assign the roles of their circle, except elected ones
+
+    The super-circle's Circle Lead assigns a sub-circle's Circle Lead.
+    """
+    if role.archived_on or role.is_circle or role.is_elected or not role.circle:
+        return False
+    circle = role.circle.circle if role.core_role == LEAD else role.circle
+    return user.is_admin or can_lead(user, circle)
+
+
+def members(circle):
+    """Members of a circle hold one of its roles (also of its sub-circles,
+    whose Circle Leads and Circle Reps hold the sub-circle's role)"""
+    from governance.accounts.models import User
+
+    if not circle.is_circle:
+        # A role's inner circle, before it has roles (constitution 1.3.1):
+        # its holders
+        return User.objects.active().filter(
+            pk__in=Assignment.objects.current().filter(role=circle).values("user")
+        )
+    return User.objects.active().filter(
+        pk__in=Assignment.objects
+        .current()
+        .filter(role__circle=circle, role__archived_on=None)
+        .values("user")
+    )
+
+
+def is_member(user, circle):
+    return members(circle).filter(pk=user.pk).exists()
+
+
+def proposer_roles(user, circle):
+    """The roles a person may propose from in a circle
+
+    A proposal addresses a tension of one of the proposer's roles
+    (constitution 5.3.1): the roles they hold in the circle (also the roles
+    of sub-circles, held by their Circle Leads and Circle Reps), and as
+    Circle Lead also the roles nobody holds (1.4.2), except the Circle Rep:
+    the Circle Lead isn't eligible for it.
+    """
+    if not circle.is_circle:
+        # Adding roles inside the role: its holders, for the role itself
+        return Role.objects.active().filter(
+            pk=circle.pk,
+            pk__in=Assignment.objects.current().filter(user=user).values("role"),
+        )
+    roles = Role.objects.active().filter(circle=circle)
+    held = Assignment.objects.current().filter(user=user).values("role")
+    condition = Q(pk__in=held)
+    if holds_core_role(user, circle, LEAD):
+        condition |= ~Q(pk__in=Assignment.objects.current().values("role")) & ~Q(
+            core_role=REP
+        )
+    return roles.filter(condition).order_by("position", "name")
+
+
+def can_start_meeting(user, circle):
+    """Who starts and runs the circle's meetings
+
+    Usually the Facilitator and the Secretary, but anybody may stand in for
+    them: the other one of them, the Circle Lead, and finally the first
+    circle member who declares to stand in (constitution 5.3.6).
+    """
+    return user.is_admin or is_member(user, circle)
+
+
+def can_change_settings(user, role):
+    """The Secretary changes a circle's settings (acceptance period) and
+    whether a policy makes a role of the circle elected"""
+    if role.archived_on or role.core_role:
+        return False
+    circle = role if role.is_circle else role.circle
+    return user.is_admin or holds_core_role(user, circle, SECRETARY)

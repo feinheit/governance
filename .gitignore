@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+/media/
+/static/
+/glassfrog/
+id_rsa
+id_rsa.pub
+.coverage
+.ruff_cache/
+/tmp/
+node_modules/
+*.egg-info/
+/cli/build/

@@ -1,0 +1,17 @@
+{% load i18n %}
+<section class="card mb-4">
+  <div class="card-header"><h2 class="h6 mb-0">{% translate "Elections due" %}</h2></div>
+  <ul class="list-group list-group-flush">
+    {% for role, assignment in due_elections %}
+      <li class="list-group-item">
+        <a href="{{ role.get_absolute_url }}">{{ role }}</a>{% if show_circle %}
+          <span class="text-body-secondary">({{ role.circle }})</span>{% endif %}
+        <div class="wb-row-meta">
+          {% if assignment %}<span>{{ assignment.user }}</span><span
+            >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}term ends on {{ date }}{% endblocktranslate %}</span>{% else %}<span
+            >{% translate "nobody elected" %}</span>{% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

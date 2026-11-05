@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Authorize gov" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <h1 class="mb-0">{% translate "Authorize gov" %}</h1>
+    </div>
+    <section class="card mb-3">
+      <div class="card-body">
+        {# Posted, not redirected: the token doesn't end up in the browser's history #}
+        <form method="post" action="{{ action }}" id="cli-login">
+          <input type="hidden" name="token" value="{{ token }}">
+          <input type="hidden" name="state" value="{{ state }}">
+          <p>{% translate "Handing the access over to gov…" %}</p>
+          <button type="submit" class="btn btn-primary">{% translate "Continue" %}</button>
+        </form>
+        <script>
+          document.getElementById("cli-login").submit()
+        </script>
+      </div>
+    </section>
+  </div>
+{% endblock content %}

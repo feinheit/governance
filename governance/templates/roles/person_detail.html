@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ person }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-page-header">
+    <div>
+      <h1 class="wb-title">
+        {{ person }}{% if not person.is_active %}
+          <span class="badge wb-tone-neutral fs-6">{% translate "inactive" %}</span>{% endif %}
+      </h1>
+      <div class="wb-meta"><span>{{ person.email }}</span></div>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      {% for circle, assignments in by_circle.items %}
+        <section class="card mb-4">
+          <div class="card-header">
+            <h2 class="h6 mb-0">
+              {% if circle %}<a
+                  href="{{ circle.get_absolute_url }}"
+                >{{ circle }}</a>{% else %}{% translate "Organization" %}{% endif %}
+            </h2>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for assignment in assignments %}
+              <li class="list-group-item wb-row">
+                <div class="wb-row-main">
+                  <div class="wb-row-heading">
+                    <a class="wb-row-title" href="{{ assignment.role.get_absolute_url }}">{{ assignment.role }}</a>
+                    {% if assignment.role.is_circle %}<span
+                        class="badge wb-tone-circle"
+                      >{% translate "Circle" %}</span>{% endif %}
+                  </div>
+                  <div class="wb-row-meta">
+                    {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
+                    {% if assignment.elected_until %}<span
+                      >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% endif %}
+                    {% if assignment.starts_on %}<span
+                      >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% empty %}
+        <p class="text-body-secondary">{% translate "No roles at the moment." %}</p>
+      {% endfor %}
+    </div>
+    <div class="col-lg-5">
+      {% if due_elections %}{% include "meetings/_due_elections.html" with show_circle=True %}{% endif %}
+      {% if person == request.user %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Mails" %}</h2></div>
+          <div class="card-body">
+            <p class="mb-2">
+              {% if person.notify_all %}
+                {% translate "You get mails about everything in all circles." %}
+              {% else %}
+                {% translate "You get mails about the circles you're a member of." %}
+              {% endif %}
+            </p>
+            <form method="post" action="{% url 'notifications' %}">
+              {% csrf_token %}
+              {% if person.notify_all %}
+                <button type="submit" name="notify_all" value="0" class="btn btn-sm btn-quiet">
+                  {% translate "Only my circles" %}
+                </button>
+              {% else %}
+                <button type="submit" name="notify_all" value="1" class="btn btn-sm btn-quiet">
+                  {% translate "Inform me about everything in all circles" %}
+                </button>
+              {% endif %}
+            </form>
+          </div>
+        </section>
+      {% endif %}
+      {% if meetings %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your meetings" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for meeting in meetings %}
+              <li class="list-group-item">
+                <a href="{{ meeting.get_absolute_url }}">{{ meeting }}</a>
+                <div class="wb-row-meta">
+                  <span
+                  >{% if meeting.is_running %}{% translate "running" %}{% else %}{% translate "not started yet" %}{% endif %}</span>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+      {% if waiting %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Waiting for your response" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% include "proposals/_proposal_rows.html" with proposals=waiting more=waiting_more show_circle=True %}
+          </ul>
+        </section>
+      {% endif %}
+      {% if drafts %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your drafts and tensions" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% include "proposals/_proposal_rows.html" with proposals=drafts more=drafts_more show_circle=True %}
+          </ul>
+        </section>
+      {% endif %}
+      {% if past %}
+        <section class="card">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Earlier roles" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for assignment in past %}
+              {% include "roles/_earlier_role.html" %}
+            {% endfor %}
+            {% include "_show_more.html" with more=past_more %}
+            {% for assignment in past_more %}
+              {% include "roles/_earlier_role.html" with more=True %}
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}

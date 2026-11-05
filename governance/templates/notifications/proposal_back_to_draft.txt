@@ -1,0 +1,5 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with proposer=proposal.proposer circle=proposal.circle %}{{ proposer }} has taken the proposal in {{ circle }} back to the draft to change it. It's not open for responses anymore; when it's published again, the circle starts over.{% endblocktranslate %}
+
+{% translate "Tension" %}:
+{{ proposal.tension|plain }}
+{% endautoescape %}

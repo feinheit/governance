@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% comment %}
+  Page layout of forms like in Workbench: the heading in the page header,
+  the fields in a card, the save button below.
+{% endcomment %}
+{% block title %}{{ title }} – {% if object %}{{ object }} – {% endif %}{{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0">{{ title }}</h1>
+        {% block meta %}
+          {% if help %}<div class="wb-meta"><span>{{ help }}</span></div>{% endif %}
+        {% endblock meta %}
+      </div>
+    </div>
+    {% block before_form %}{% endblock %}
+    <form method="post" action="{{ request.get_full_path }}">
+      {% csrf_token %}
+      {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
+      {% block fields %}
+        <section class="card mb-3">
+          <div class="card-body">
+            {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+            {% for field in form.visible_fields %}{{ field.as_field_group }}{% endfor %}
+          </div>
+        </section>
+      {% endblock fields %}
+      <div class="wb-form-actions">
+        <button type="submit" class="btn btn-primary">
+          {% block submit_label %}{{ submit_label|default:_("Save") }}{% endblock %}
+        </button>
+        {# In a meeting's panel cancelling closes the panel (meeting.js) #}
+        {% if cancel_url %}<a
+            class="btn btn-quiet"
+            href="{{ cancel_url }}"
+            data-in-meeting
+          >{% translate "Cancel" %}</a>{% endif %}
+      </div>
+    </form>
+    {% block after_form %}{% endblock %}
+  </div>
+{% endblock content %}

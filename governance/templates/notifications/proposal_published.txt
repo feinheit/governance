@@ -1,0 +1,11 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with proposer=proposal.proposer circle=proposal.circle %}{{ proposer }} proposes a change in {{ circle }}.{% endblocktranslate %}
+
+{% translate "Tension" %}:
+{{ proposal.tension|plain }}
+
+{% translate "Changes" %}:
+{% include "notifications/_changes.txt" %}
+
+{% blocktranslate with date=proposal.adopted_on|date:"SHORT_DATE_FORMAT" %}The proposal is adopted on {{ date }} unless somebody requests a meeting to discuss it. Questions and requests:{% endblocktranslate %}
+{{ url }}
+{% endautoescape %}

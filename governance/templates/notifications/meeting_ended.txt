@@ -1,0 +1,17 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with meeting=meeting date=meeting.started_at|date:"SHORT_DATE_FORMAT" %}The {{ meeting }} of {{ date }} has ended.{% endblocktranslate %}
+{% for entry in proposals %}
+{% translate "Adopted" %}: {{ entry.proposal }}
+{% include "notifications/_changes.txt" with changes=entry.changes %}
+{% endfor %}{% for item in outcomes %}
+* {{ item }}{% if item.owner %} ({{ item.owner }}){% endif %}{% if item.outcome %}
+  {{ item.outcome }}{% endif %}{% if item.link %}
+  {{ item.link }}{% endif %}{% endfor %}{% if outcomes %}
+{% endif %}{% if elections %}
+{% translate "Elections" %}:{% for election in elections %}
+* {{ election.role }}: {{ election.user }} ({% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}){% endfor %}
+{% endif %}{% if meeting.minutes %}
+{% translate "Minutes" %}:
+{{ meeting.minutes }}
+{% endif %}
+{{ url }}
+{% endautoescape %}

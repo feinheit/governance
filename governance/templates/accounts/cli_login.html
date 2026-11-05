@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Authorize gov" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <h1 class="mb-0">{% translate "Authorize gov" %}</h1>
+    </div>
+    <section class="card mb-3">
+      <div class="card-body">
+        <p>
+          {% if name %}
+            {% blocktranslate trimmed %}
+              The <code>gov</code> command line interface on <strong>{{ name }}</strong> wants to access the governance
+              in your name.
+            {% endblocktranslate %}
+          {% else %}
+            {% blocktranslate trimmed %}
+              The <code>gov</code> command line interface wants to access the governance in your name.
+            {% endblocktranslate %}
+          {% endif %}
+          {% blocktranslate trimmed %}
+            The access expires after {{ days }} days, <code>gov</code> will ask you to authorize it again.
+          {% endblocktranslate %}
+        </p>
+        <p>
+          {% translate "access"|capfirst %}: <strong>{{ access.label }}</strong>
+          {% if access == "write" %}
+            ({% translate "gov can create, change and publish proposals in your name." %})
+          {% endif %}
+        </p>
+        <p class="text-body-secondary">{% translate "Only continue if you just started gov yourself." %}</p>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">{% translate "Authorize" %}</button>
+        </form>
+      </div>
+    </section>
+  </div>
+{% endblock content %}

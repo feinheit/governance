@@ -1,0 +1,8 @@
+{# The proposals, and those shown on request (more, see _show_more.html) #}
+{% for proposal in proposals %}
+  {% include "proposals/_proposal_row.html" with more=False %}
+{% endfor %}
+{% include "_show_more.html" %}
+{% for proposal in more %}
+  {% include "proposals/_proposal_row.html" with more=True %}
+{% endfor %}

@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% block title %}{{ meeting }} – {{ block.super }}{% endblock %}
+
+{% block messages %}{% endblock %}
+
+{% block content %}
+  {# The meeting's region: its buttons and forms replace only it (htmx, #}
+  {# meeting.js), links to other pages navigate as usual. Without #}
+  {# JavaScript the page works the same, reloading. #}
+  <div
+    id="meeting"
+    hx-boost:inherited="true"
+    hx-target:inherited="#meeting"
+    hx-select:inherited="#meeting"
+    hx-swap:inherited="outerHTML show:none"
+  >
+    {% include "_messages.html" %}
+    {% include "roles/_breadcrumbs.html" %}
+    <div class="wb-page-header">
+      <div>
+        <h1 class="wb-title">
+          {{ meeting.get_kind_display }}
+          {% if meeting.is_running %}<span
+              class="badge wb-tone-success fs-6"
+            >{% translate "running" %}</span>{% endif %}
+        </h1>
+        <div class="wb-meta">
+          {% if meeting.circle %}<span><span class="wb-meta-label">{% translate "circle" %}</span>
+              <a href="{{ meeting.circle.get_absolute_url }}">{{ meeting.circle }}</a></span>{% endif %}
+          <span><span class="wb-meta-label">{% translate "started" %}</span>
+            {{ meeting.started_at|date:"SHORT_DATETIME_FORMAT"|default:_("not started yet") }}</span>
+          {% if meeting.ended_at %}<span><span class="wb-meta-label">{% translate "ended" %}</span>
+              {{ meeting.ended_at|date:"SHORT_DATETIME_FORMAT" }}</span>{% endif %}
+          {% if meeting.called_by %}<span><span class="wb-meta-label">{% translate "called by" %}</span>
+              {{ meeting.called_by }}</span>{% endif %}
+          {% if meeting.facilitator %}<span><span class="wb-meta-label">{% translate "facilitator" %}</span>
+              {{ meeting.facilitator }}</span>{% endif %}
+          {% if meeting.secretary %}<span><span class="wb-meta-label">{% translate "secretary" %}</span>
+              {{ meeting.secretary }}</span>{% endif %}
+        </div>
+      </div>
+      {% if can_run and not meeting.ended_at %}
+        <div class="wb-page-actions">
+          <form method="post" action="{% url 'meeting_end' meeting.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-quiet">{% translate "End the meeting" %}</button>
+          </form>
+          <a class="btn btn-sm btn-quiet" href="{% url 'meeting_update' meeting.pk %}">{% translate "Edit" %}</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-8 order-lg-2">
+        {% block main %}
+          {% if meeting.is_running %}
+            <nav class="d-flex flex-wrap gap-1 mb-3" aria-label="{% translate 'Steps' %}">
+              {% for key, label in meeting.steps %}
+                {% if can_run %}
+                  <form method="post" action="{% url 'meeting_step' meeting.pk %}">
+                    {% csrf_token %}
+                    <button
+                      type="submit"
+                      name="step"
+                      value="{{ key }}"
+                      class="btn btn-sm {% if key == meeting.step %}btn-primary{% else %}btn-quiet{% endif %}"
+                    >
+                      {{ forloop.counter }}. {{ label }}
+                    </button>
+                  </form>
+                {% else %}
+                  <span
+                    class="badge {% if key == meeting.step %}wb-tone-primary{% else %}wb-tone-neutral{% endif %}"
+                  >{{ forloop.counter }}. {{ label }}</span>
+                {% endif %}
+              {% endfor %}
+            </nav>
+          {% endif %}
+          {# The step's entries of the invited roles: checklists, metrics #}
+          {% if meeting.is_running and meeting.step == "checklists" %}
+            {% translate "Checklist review" as title %}
+            {% include "meetings/_review.html" with items=checklist_items empty=_("The invited roles have no checklist items.") %}
+          {% elif meeting.is_running and meeting.step == "metrics" %}
+            {% translate "Metrics review" as title %}
+            {% include "meetings/_review.html" with items=metrics empty=_("The invited roles have no metrics.") %}
+          {% endif %}
+          {% if current %}{% include "meetings/_current.html" %}{% endif %}
+          {% if outputs %}{% include "meetings/_outputs.html" %}{% endif %}
+        {% endblock main %}
+      </div>
+      <div class="col-lg-4 order-lg-1">
+        {# The agenda beside the item being processed #}
+        <section class="card mb-4" id="agenda">
+          {% include "meetings/_agenda.html" %}
+          {% if can_add_items %}
+            {# Adding items: the agenda's last line #}
+            <div class="card-body border-top">
+              <form method="post" action="{% url 'agenda_add' meeting.pk %}" class="d-flex gap-1 mb-2">
+                {% csrf_token %}
+                <input
+                  type="text"
+                  name="label"
+                  class="form-control form-control-sm"
+                  placeholder="{% translate 'A tension, in one or two words' %}"
+                  aria-label="{% translate 'Tension' %}"
+                  required
+                >
+                <button type="submit" class="btn btn-sm btn-primary text-nowrap">{% translate "Add" %}</button>
+              </form>
+              {% if addable_proposals %}
+                <form method="post" action="{% url 'agenda_add' meeting.pk %}" class="d-flex gap-1">
+                  {% csrf_token %}
+                  <select name="proposal" class="form-select form-select-sm" aria-label="{% translate 'Proposal' %}">
+                    {% for proposal in addable_proposals %}
+                      <option value="{{ proposal.pk }}">{{ proposal }} ({{ proposal.get_status_display }})</option>
+                    {% endfor %}
+                  </select>
+                  <button type="submit" class="btn btn-sm btn-quiet text-nowrap">
+                    {% translate "Add proposal" %}
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          {% endif %}
+        </section>
+
+        {% if tactical_steps %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Invited roles" %}</h2></div>
+            <ul class="list-group list-group-flush">
+              {% for role in invited_roles %}
+                <li class="list-group-item">
+                  <a href="{{ role.get_absolute_url }}">{{ role }}</a> <span
+                    class="text-body-secondary small"
+                  >{{ role.circle }}</span>
+                </li>
+              {% empty %}
+                <li class="list-group-item text-body-secondary">{% translate "Not recorded." %}</li>
+              {% endfor %}
+            </ul>
+          </section>
+        {% endif %}
+        {% if attendees or can_run and not meeting.ended_at %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Attendees" %}</h2></div>
+            <ul class="list-group list-group-flush">
+              {% for attendee in attendees %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <a href="{{ attendee.get_absolute_url }}">{{ attendee }}</a>
+                  {% if can_run and not meeting.ended_at %}
+                    <form method="post" action="{% url 'meeting_attendees' meeting.pk %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="user" value="{{ attendee.pk }}">
+                      <button type="submit" name="action" value="remove" class="btn btn-sm btn-quiet">
+                        {% translate "Remove" %}
+                      </button>
+                    </form>
+                  {% endif %}
+                </li>
+              {% endfor %}
+              {% if can_run and not meeting.ended_at and invitable %}
+                <li class="list-group-item">
+                  <form method="post" action="{% url 'meeting_attendees' meeting.pk %}" class="d-flex gap-1">
+                    {% csrf_token %}
+                    <select name="user" class="form-select form-select-sm" aria-label="{% translate 'Invite' %}">
+                      {% for user in invitable %}<option value="{{ user.pk }}">{{ user }}</option>{% endfor %}
+                    </select>
+                    <button type="submit" name="action" value="add" class="btn btn-sm btn-quiet">
+                      {% translate "Invite" %}
+                    </button>
+                  </form>
+                </li>
+              {% endif %}
+            </ul>
+          </section>
+        {% endif %}
+        {% if elections or election_form %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Elections" %}</h2></div>
+            <ul class="list-group list-group-flush">
+              {% for election in elections %}
+                <li class="list-group-item">
+                  <a href="{{ election.role.get_absolute_url }}">{{ election.role }}</a>: {{ election.user }}
+                  <div class="wb-row-meta">
+                    <span
+                    >{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
+                  </div>
+                </li>
+              {% endfor %}
+              {% if election_form %}
+                <li class="list-group-item">
+                  <form method="post" action="{% url 'election_add' meeting.pk %}">
+                    {% csrf_token %}
+                    {% for field in election_form.visible_fields %}{{ field.as_field_group }}{% endfor %}
+                    <button type="submit" class="btn btn-sm btn-primary">{% translate "Record the election" %}</button>
+                  </form>
+                </li>
+              {% endif %}
+            </ul>
+          </section>
+        {% endif %}
+        {% if proposals %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposals" %}</h2></div>
+            <ul class="list-group list-group-flush">{% include "proposals/_proposal_rows.html" %}</ul>
+          </section>
+        {% endif %}
+        {% if meeting.minutes %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Minutes" %}</h2></div>
+            <div class="card-body wb-markdown">{{ meeting.minutes|markdown }}</div>
+          </section>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% if meeting.is_running %}
+    {# Others change the meeting from their devices: merging keeps focus, #}
+    {# scroll and what's being typed; paused while somebody has a form #}
+    {# or a collapsible section open #}
+    <div
+      hidden
+      hx-get="{{ meeting.get_absolute_url }}"
+      hx-trigger="every 5s[meetingIsIdle()]"
+      hx-target="#meeting"
+      hx-select="#meeting"
+      hx-swap="outerMorph show:none"
+      hx-push-url="false"
+    >
+    </div>
+  {% endif %}
+{% endblock content %}
+
+{% block scripts %}
+  {# Read when htmx starts, the bundle's scripts are deferred #}
+  <meta name="htmx-config" content='{"noSwap": [204, 304, "4xx", "5xx"]}'>
+{% endblock scripts %}

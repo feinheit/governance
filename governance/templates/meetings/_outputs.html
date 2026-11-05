@@ -1,0 +1,53 @@
+{% load governance i18n %}
+{# The summary of an ended meeting, like its mail (meetings/outputs.py) #}
+<section class="card mb-4">
+  <div class="card-header"><h2 class="h6 mb-0">{% translate "Outputs" %}</h2></div>
+  <ul class="list-group list-group-flush">
+    {% for entry in outputs.proposals %}
+      <li class="list-group-item">
+        <div>
+          <span class="badge wb-tone-success">{% translate "Adopted" %}</span>
+          <a class="fw-semibold" href="{{ entry.proposal.get_absolute_url }}">{{ entry.proposal }}</a>
+        </div>
+        <ul class="list-unstyled mt-2 mb-0">
+          {% for change in entry.changes %}
+            <li class="mb-1">
+              <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
+              {% if change.subject %}<span class="fw-semibold">{{ change.subject }}</span>{% endif %}
+              {% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
+                  {{ change.old|markdown }}
+                </div>{% endif %}
+              {% if change.new %}<div class="wb-markdown">{{ change.new|markdown }}</div>{% endif %}
+              {% for label, text in change.details %}<div class="small">
+                  <span class="text-body-secondary">{{ label }}:</span> {{ text|plain }}
+                </div>{% endfor %}
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+    {% for election in outputs.elections %}
+      <li class="list-group-item">
+        <span class="badge wb-tone-core">{% translate "Election" %}</span>
+        <a href="{{ election.role.get_absolute_url }}">{{ election.role }}</a>: {{ election.user }}
+        <span
+          class="text-body-secondary small"
+        >{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
+      </li>
+    {% endfor %}
+    {% for item in outputs.outcomes %}
+      <li class="list-group-item">
+        <div class="fw-semibold">
+          {{ item }}{% if item.owner %} <span class="fw-normal text-body-secondary">({{ item.owner }})</span>{% endif %}
+        </div>
+        {% if item.outcome %}<div class="wb-markdown">{{ item.outcome|markdown }}</div>{% endif %}
+        {% if item.link %}<a href="{{ item.link }}" rel="noopener">{{ item.link }}</a>{% endif %}
+      </li>
+    {% endfor %}
+    {% if not outputs.proposals and not outputs.elections and not outputs.outcomes %}
+      <li class="list-group-item text-body-secondary">
+        {% translate "No proposals adopted, no elections, no outcomes." %}
+      </li>
+    {% endif %}
+  </ul>
+</section>

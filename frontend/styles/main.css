@@ -1,0 +1,939 @@
+/* Layout classes from Workbench (workbench/static/workbench/main.scss),
+   written against Bootstrap's CSS custom properties instead of Sass. */
+
+:root,
+[data-bs-theme="light"] {
+  --bs-body-font-family:
+    "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bs-body-font-size: 0.9rem;
+  --bs-body-line-height: 1.55;
+  --bs-body-bg: #e9ecf0;
+  --bs-body-color: #1d2127;
+  --bs-border-color: #e1e4e9;
+  --bs-secondary-color: rgba(29, 33, 39, 0.62);
+  --bs-primary: #4257c8;
+  --bs-primary-rgb: 66, 87, 200;
+  --bs-link-color: #4257c8;
+  --bs-link-color-rgb: 66, 87, 200;
+  --bs-link-hover-color: #2f3f99;
+  --bs-link-hover-color-rgb: 47, 63, 153;
+  --bs-border-radius: 0.5rem;
+  --wb-surface: #fff;
+  --wb-surface-border: #e1e4e9;
+  --wb-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #0b0d10;
+  --bs-body-color: #dfe2e7;
+  --bs-border-color: #2b2f37;
+  --bs-secondary-color: rgba(223, 226, 231, 0.62);
+  --bs-link-color: #8f9ef0;
+  --bs-link-color-rgb: 143, 158, 240;
+  --bs-link-hover-color: #b5bff5;
+  --bs-link-hover-color-rgb: 181, 191, 245;
+  --wb-surface: #15181d;
+  --wb-surface-border: #2b2f37;
+  --wb-shadow: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Headings with badges: centered on the heading, not on the x-height */
+.wb-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+h1,
+.h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+h2,
+.h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+h3,
+.h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: #3546a8;
+  --bs-btn-hover-border-color: #3546a8;
+}
+
+.card {
+  --bs-card-bg: var(--wb-surface);
+  --bs-card-border-color: var(--wb-surface-border);
+  --bs-card-cap-bg: transparent;
+  box-shadow: var(--wb-shadow);
+}
+
+.list-group {
+  --bs-list-group-bg: var(--wb-surface);
+  --bs-list-group-border-color: var(--wb-surface-border);
+}
+
+.wb-navbar {
+  background: var(--wb-surface);
+  border-bottom: 1px solid var(--wb-surface-border);
+}
+
+/* The icons touch the edges of their box, antialiasing needs a little more */
+[data-theme-toggle] svg {
+  display: block;
+  overflow: visible;
+}
+
+.wb-brand {
+  display: flex;
+  align-items: center;
+  padding-block: 0;
+}
+
+.wb-brand-circle {
+  fill: var(--cb-fill);
+  stroke: var(--cb-3);
+}
+
+.wb-brand-role {
+  fill: var(--cb-assigned);
+}
+
+.wb-brand-core {
+  fill: var(--cb-core);
+}
+
+/* Small screens without Bootstrap's JavaScript: the brand and the user's
+   links on the first row, the navigation as a swipeable row, the search */
+@media (max-width: 991.98px) {
+  .wb-navbar .container-xl {
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+  }
+
+  .wb-nav-user {
+    order: 1;
+    margin-inline-start: auto;
+  }
+
+  .wb-navbar .wb-nav-links {
+    order: 2;
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    scrollbar-width: none;
+    /* Compact, so that all links fit on common phones; the first one's
+       text aligns with the brand */
+    margin-inline-start: -0.3rem;
+    font-size: 0.85rem;
+  }
+
+  .wb-navbar .wb-nav-links .nav-link {
+    padding-inline: 0.3rem;
+  }
+}
+
+/* Phones: the brand leads to the organization like the first link */
+@media (max-width: 575.98px) {
+  /* The circle browser needs more room than phones have */
+  .wb-nav-links .wb-nav-organization,
+  .wb-nav-links .wb-nav-circles {
+    display: none;
+  }
+
+  .wb-nav-search {
+    order: 3;
+    width: 100%;
+    margin: 0 0 0.25rem !important;
+  }
+}
+
+.btn-quiet {
+  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-bg: var(--wb-surface);
+  --bs-btn-border-color: var(--bs-border-color);
+  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-hover-bg: var(--bs-tertiary-bg);
+  --bs-btn-hover-border-color: var(--bs-border-color);
+  --bs-btn-active-bg: var(--bs-secondary-bg);
+}
+
+.wb-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.wb-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.wb-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+
+.wb-meta-label,
+.wb-stat-label {
+  color: var(--bs-secondary-color);
+  font-size: 0.8rem;
+}
+
+.wb-description {
+  max-width: 70ch;
+}
+
+.wb-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.75rem;
+}
+
+.wb-stat {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--wb-surface-border);
+  border-radius: var(--bs-border-radius);
+  background: var(--wb-surface);
+  box-shadow: var(--wb-shadow);
+}
+
+.wb-stat-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.wb-fields {
+  display: grid;
+  grid-template-columns: minmax(6rem, max-content) minmax(0, 1fr);
+  gap: 0.4rem 1rem;
+  margin: 0;
+}
+
+.wb-fields dt {
+  color: var(--bs-secondary-color);
+  font-size: 0.8rem;
+  font-weight: 400;
+  padding-top: 0.1rem;
+}
+
+.wb-fields dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.wb-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
+.wb-row-main {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+a.wb-row-title,
+.wb-row-title {
+  display: block;
+  color: var(--bs-body-color);
+  font-weight: 600;
+}
+
+/* The running meetings one attends (meetings/_running.html) */
+.wb-running {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--wb-surface-border);
+  border-radius: var(--bs-border-radius);
+  background: var(--wb-surface);
+  box-shadow: var(--wb-shadow);
+  font-size: 0.875rem;
+}
+
+.wb-running a {
+  font-weight: 600;
+}
+
+.wb-running-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--bs-success);
+}
+
+/* Long lists: a pill on the bottom edge of the last entry shown opens the
+   others (_show_more.html, show_more.js); without JavaScript they're all
+   shown (base.html sets .js) */
+.wb-show-more {
+  position: relative;
+  z-index: 3;
+  height: 0;
+  list-style: none;
+}
+
+.wb-show-more .btn {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0.05rem 0.6rem;
+  border: 1px solid var(--wb-surface-border);
+  border-radius: 999px;
+  background: var(--wb-surface);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.12);
+  color: var(--bs-link-color);
+  font-size: 0.75rem;
+}
+
+.wb-show-more .btn:hover {
+  color: var(--bs-link-hover-color);
+}
+
+html:not(.js) .wb-show-more,
+.js .wb-more {
+  display: none;
+}
+
+/* The pill hangs below the card while its last entries are hidden, rows
+   after them (e.g. links) make room for it */
+.card:has(> .list-group > .wb-more:last-child) {
+  margin-bottom: 1.75rem !important;
+}
+
+.wb-show-more ~ .list-group-item:not(.wb-more) {
+  padding-top: 1rem;
+}
+
+/* Long lists in columns (a circle's roles) */
+.list-group.wb-columns {
+  display: block;
+  columns: 20rem 3;
+  /* No rule between the columns, the rows' borders separate the roles */
+  column-gap: 1rem;
+}
+
+.wb-columns > .list-group-item {
+  break-inside: avoid;
+}
+
+/* The title with badges after it, on one line */
+.wb-row-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.5rem;
+}
+
+a.wb-row-title:hover {
+  color: var(--bs-link-hover-color);
+}
+
+.wb-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.75rem;
+  color: var(--bs-secondary-color);
+  font-size: 0.85rem;
+}
+
+.wb-row-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  text-align: end;
+}
+
+.wb-table-card > .table {
+  margin: 0;
+  --bs-table-bg: transparent;
+}
+
+/* Collapsible list items, e.g. policies */
+.wb-details > summary {
+  cursor: pointer;
+}
+
+.wb-details > summary::marker {
+  color: var(--bs-secondary-color);
+}
+
+/* Markdown texts: purposes, accountabilities, policies */
+.wb-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.wb-markdown p {
+  margin-bottom: 0.5rem;
+}
+
+.wb-markdown ul,
+.wb-markdown ol {
+  padding-inline-start: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .wb-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wb-row {
+    flex-direction: column;
+  }
+
+  .wb-row-aside {
+    align-items: flex-start;
+    text-align: start;
+  }
+}
+
+.wb-form-page {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.wb-form-page .card-body > .mb-3:last-child {
+  margin-bottom: 0 !important;
+}
+
+.wb-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Some room below the content, more than Bootstrap's pb-5 */
+.wb-main {
+  padding-bottom: 4.5rem;
+}
+
+.wb-current {
+  border-inline-start: 3px solid var(--bs-primary);
+}
+
+/* Help pages (docs/, governance/help.py): readable line length */
+.wb-help {
+  max-width: 48rem;
+}
+.wb-help h2 {
+  font-size: 1.1rem;
+  margin-top: 1.5rem;
+}
+.wb-help h3,
+.wb-help h4 {
+  font-size: 1rem;
+  margin-top: 1.25rem;
+}
+.wb-help li {
+  margin-bottom: 0.25rem;
+}
+.wb-help table {
+  margin-bottom: 1rem;
+}
+.wb-help th,
+.wb-help td {
+  padding: 0.35rem 1rem 0.35rem 0;
+  border-bottom: 1px solid var(--bs-border-color);
+  vertical-align: top;
+}
+
+/* Badges in tones: a tinted background with ink of the same hue (AA on
+   it), for states and kinds (the tone filter); the circle, core and
+   assigned tones are the circle browser's */
+:root,
+[data-bs-theme="light"] {
+  --wb-neutral-bg: #eceef2;
+  --wb-neutral-ink: #4a525c;
+  --wb-primary-bg: #e5e8f8;
+  --wb-primary-ink: #2f3f99;
+  --wb-circle-bg: #e1edfb;
+  --wb-circle-ink: #1a58a6;
+  --wb-info-bg: #d9f1f4;
+  --wb-info-ink: #0b6470;
+  --wb-success-bg: #dcf3e9;
+  --wb-success-ink: #0f6e4b;
+  --wb-warning-bg: #fbefd2;
+  --wb-warning-ink: #855600;
+  --wb-danger-bg: #fce3e2;
+  --wb-danger-ink: #b02a1f;
+  --wb-core-bg: #ebe8fb;
+  --wb-core-ink: #4a3ab5;
+}
+
+[data-bs-theme="dark"] {
+  --wb-neutral-bg: #262a31;
+  --wb-neutral-ink: #c3c8d0;
+  --wb-primary-bg: #1f2547;
+  --wb-primary-ink: #aab5f5;
+  --wb-circle-bg: #132a46;
+  --wb-circle-ink: #8fbcf2;
+  --wb-info-bg: #0e3338;
+  --wb-info-ink: #7fd3de;
+  --wb-success-bg: #0f3326;
+  --wb-success-ink: #6fd6a8;
+  --wb-warning-bg: #3a2c0c;
+  --wb-warning-ink: #f0c060;
+  --wb-danger-bg: #3d1818;
+  --wb-danger-ink: #f59a92;
+  --wb-core-bg: #262046;
+  --wb-core-ink: #b4abf2;
+}
+
+.badge[class*="wb-tone-"] {
+  background: var(--wb-tone-bg);
+  color: var(--wb-tone-ink);
+  font-weight: 600;
+}
+.wb-tone-neutral {
+  --wb-tone-bg: var(--wb-neutral-bg);
+  --wb-tone-ink: var(--wb-neutral-ink);
+}
+.wb-tone-primary {
+  --wb-tone-bg: var(--wb-primary-bg);
+  --wb-tone-ink: var(--wb-primary-ink);
+}
+.wb-tone-circle {
+  --wb-tone-bg: var(--wb-circle-bg);
+  --wb-tone-ink: var(--wb-circle-ink);
+}
+.wb-tone-info {
+  --wb-tone-bg: var(--wb-info-bg);
+  --wb-tone-ink: var(--wb-info-ink);
+}
+.wb-tone-success {
+  --wb-tone-bg: var(--wb-success-bg);
+  --wb-tone-ink: var(--wb-success-ink);
+}
+.wb-tone-warning {
+  --wb-tone-bg: var(--wb-warning-bg);
+  --wb-tone-ink: var(--wb-warning-ink);
+}
+.wb-tone-danger {
+  --wb-tone-bg: var(--wb-danger-bg);
+  --wb-tone-ink: var(--wb-danger-ink);
+}
+.wb-tone-core {
+  --wb-tone-bg: var(--wb-core-bg);
+  --wb-tone-ink: var(--wb-core-ink);
+}
+
+/* Circle browser (frontend/circles): one blue ramp by depth, validated
+   for both surfaces; labels in text ink with a surface halo */
+:root,
+[data-bs-theme="light"] {
+  --cb-1: #86b6ef;
+  --cb-2: #5598e7;
+  --cb-3: #2a78d6;
+  --cb-4: #1c5cab;
+  --cb-fill: rgba(42, 120, 214, 0.07);
+  --cb-role: #8b939c;
+  /* Roles: two categorical slots validated all-pairs (aqua is below 3:1 on
+     the light surface: the legend, labels and the list give relief) */
+  --cb-assigned: #1baf7a;
+  --cb-core: #6250d6;
+  --cb-core-ink: #fff;
+}
+
+[data-bs-theme="dark"] {
+  --cb-1: #184f95;
+  --cb-2: #256abf;
+  --cb-3: #3987e5;
+  --cb-4: #6da7ec;
+  --cb-fill: rgba(57, 135, 229, 0.1);
+  --cb-role: #6b737c;
+  --cb-assigned: #199e70;
+  --cb-core: #9085e9;
+  --cb-core-ink: #101418;
+}
+
+.cb-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.cb-path [aria-current] {
+  font-weight: 600;
+}
+
+/* The whole width, limited height: the circle centers, the legend and
+   one's roles use the space beside it on wide screens */
+.cb-canvas {
+  --cb-height: min(72vh, 48rem);
+  position: relative;
+}
+
+.cb-canvas > svg {
+  display: block;
+  width: 100%;
+  height: var(--cb-height);
+  cursor: zoom-out;
+}
+
+.cb-side {
+  margin-bottom: 0.5rem;
+}
+
+/* Narrow screens: the circle is as wide as the screen, keep it square */
+@media (max-width: 1199.98px) {
+  .cb-canvas > svg {
+    height: auto;
+    aspect-ratio: 1;
+    max-height: var(--cb-height);
+  }
+}
+
+/* Large screens: wider than the page's container, as high as the screen
+   allows while the legend and one's roles keep their space beside it */
+@media (min-width: 1600px) {
+  .cb {
+    --cb-width: min(100vw - 4rem, 2600px);
+    width: var(--cb-width);
+    margin-inline: calc((100% - var(--cb-width)) / 2);
+  }
+
+  .cb-canvas {
+    --cb-height: min(80vh, var(--cb-width) - 36rem);
+  }
+}
+
+@media (min-width: 1200px) {
+  .cb-side {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    width: calc((100% - var(--cb-height)) / 2 - 0.5rem);
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  /* Over the canvas: clicks go through to the circles beneath, except on
+     the buttons of one's roles */
+  .cb-side {
+    pointer-events: none;
+  }
+
+  .cb-side .btn {
+    pointer-events: auto;
+  }
+
+  .cb-side-start {
+    left: 0;
+  }
+
+  .cb-side-end {
+    right: 0;
+  }
+
+  .cb-side .cb-legend {
+    flex-direction: column;
+  }
+}
+
+.cb-node {
+  stroke-width: 2px;
+  cursor: pointer;
+}
+
+.cb-circle {
+  fill: var(--cb-fill);
+  cursor: zoom-in;
+}
+
+/* The circle zoomed into opens its page, the ones around it zoom out */
+.cb-circle.cb-current {
+  cursor: pointer;
+}
+
+.cb-circle.cb-outer {
+  cursor: zoom-out;
+}
+
+.cb-depth-0 {
+  stroke: var(--cb-1);
+}
+.cb-depth-1 {
+  stroke: var(--cb-1);
+}
+.cb-depth-2 {
+  stroke: var(--cb-2);
+}
+.cb-depth-3 {
+  stroke: var(--cb-3);
+}
+.cb-depth-4 {
+  stroke: var(--cb-4);
+}
+
+/* Roles touch each other: a 2px surface ring separates them */
+.cb-assigned,
+.cb-core {
+  stroke: var(--wb-surface);
+}
+
+.cb-assigned {
+  fill: var(--cb-assigned);
+}
+
+.cb-core {
+  fill: var(--cb-core);
+}
+
+.cb-unassigned,
+.cb-vacant {
+  fill: var(--wb-surface);
+  stroke: var(--cb-role);
+  stroke-width: 1px;
+}
+
+.cb-vacant {
+  stroke: var(--cb-core);
+  stroke-width: 2px;
+}
+
+/* The Circle Lead: an inner ring in the surface color */
+.cb-lead-ring {
+  fill: none;
+  stroke: var(--wb-surface);
+  stroke-width: 2px;
+  pointer-events: none;
+}
+
+/* One's own roles: an outline in text ink, not color alone */
+.cb-node.cb-mine {
+  stroke: var(--bs-body-color);
+  stroke-width: 3px;
+}
+
+/* The role chosen in "My roles": pulses soon, while the zoom ends */
+.cb-node.cb-highlight {
+  stroke: var(--bs-body-color);
+  stroke-width: 4px;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cb-pulse 0.35s ease-in-out 0.15s 2;
+}
+
+@keyframes cb-pulse {
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb-node.cb-highlight {
+    animation: none;
+  }
+}
+
+.cb-dimmed {
+  opacity: 0.15;
+}
+
+.cb-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding: 0;
+  margin: 0 0 0.5rem;
+  list-style: none;
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+}
+
+.cb-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.cb-swatch {
+  stroke-width: 1px;
+}
+
+.cb-swatch.cb-mine {
+  stroke: var(--bs-body-color);
+  stroke-width: 2.5px;
+}
+
+.cb-mine-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.25rem;
+}
+
+.cb-mine-list .btn {
+  text-align: start;
+}
+
+/* The circles of one's roles, the roles follow */
+.cb-mine-circle {
+  flex-basis: 100%;
+  margin-top: 0.25rem;
+  color: var(--bs-secondary-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.cb-mine-circle:first-child {
+  margin-top: 0;
+}
+
+.cb-node {
+  transition: stroke 0.2s;
+}
+
+.cb-node:hover,
+.cb-node:focus-visible {
+  stroke: var(--bs-body-color);
+  outline: none;
+}
+
+/* The gaps between the roles belong to the circles around them: their
+   border waits a moment before appearing and stays a moment after leaving,
+   moving across the roles doesn't flash it */
+.cb-current,
+.cb-outer {
+  transition-delay: 0.2s;
+}
+
+.cb-current:hover,
+.cb-outer:hover {
+  transition-delay: 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb-node {
+    transition: none;
+  }
+}
+
+.cb-label {
+  font-size: 16px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* Circles and unassigned roles: text ink with a surface halo */
+.cb-label-circle,
+.cb-label-unassigned,
+.cb-label-vacant {
+  fill: var(--bs-body-color);
+  stroke: var(--wb-surface);
+  stroke-width: 3px;
+  paint-order: stroke;
+}
+
+.cb-label-circle {
+  font-size: 19px;
+}
+
+/* Dark ink on aqua in both modes; on violet white in the light mode,
+   dark ink in the dark mode (both above 5:1) */
+.cb-label-assigned {
+  fill: #101418;
+}
+
+.cb-label-core {
+  fill: var(--cb-core-ink);
+}
+
+.cb-label-holders {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.cb-label-unassigned .cb-label-holders,
+.cb-label-vacant .cb-label-holders {
+  fill: var(--bs-secondary-color);
+}
+
+.cb-tooltip {
+  position: absolute;
+  z-index: 10;
+  max-width: 18rem;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid var(--wb-surface-border);
+  border-radius: var(--bs-border-radius);
+  background: var(--wb-surface);
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.12);
+  pointer-events: none;
+}
+
+.wb-tree {
+  list-style: none;
+  padding-inline-start: 1.25rem;
+  margin: 0;
+}
+
+/* Autocompleting @mentions (mentions.js) */
+.wb-mentions {
+  --bs-list-group-action-color: var(--bs-body-color);
+  --bs-list-group-active-bg: var(--bs-primary);
+  --bs-list-group-active-border-color: var(--bs-primary);
+  /* Below the "@" being typed, mentions.js places it */
+  position: absolute;
+  z-index: 20;
+  width: max-content;
+  min-width: 14rem;
+  max-width: min(28rem, 100%);
+  margin-top: 0.25rem;
+  box-shadow: 0 4px 12px rgba(16, 24, 40, 0.12);
+}
+
+.wb-mentions .list-group-item {
+  cursor: pointer;
+  padding-block: 0.375rem;
+}
+
+.wb-mentions-circle {
+  color: var(--bs-secondary-color);
+}
+
+.wb-mentions .active .wb-mentions-circle {
+  color: inherit;
+  opacity: 0.8;
+}
+
+/* A form opened in a meeting's panel (amending a proposal) */
+.wb-amend .wb-form-page {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.wb-amend .wb-form-page h1 {
+  font-size: 1.1rem;
+}
+
+/* Group headings inside list groups, e.g. checklists by their frequency */
+.list-group-item.wb-group-heading {
+  background: var(--bs-tertiary-bg);
+}

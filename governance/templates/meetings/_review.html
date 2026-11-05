@@ -1,0 +1,20 @@
+{% load governance i18n %}
+{# The checklist or metrics review of a tactical meeting (constitution 3.2) #}
+<section class="card mb-4 wb-current">
+  <div class="card-header"><h2 class="h6 mb-0">{{ title }}</h2></div>
+  <ul class="list-group list-group-flush">
+    {% for frequency, group in items|by_frequency %}
+      <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
+        {{ frequency|capfirst }}
+      </li>
+      {% for item in group %}
+        <li class="list-group-item">
+          {% if item.link %}<a href="{{ item.link }}" rel="noopener">{{ item }}</a>{% else %}{{ item }}{% endif %}
+          <div class="wb-row-meta"><a href="{{ item.role.get_absolute_url }}">{{ item.role }}</a></div>
+        </li>
+      {% endfor %}
+    {% empty %}
+      <li class="list-group-item text-body-secondary">{{ empty }}</li>
+    {% endfor %}
+  </ul>
+</section>

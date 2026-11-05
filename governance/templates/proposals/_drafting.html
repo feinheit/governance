@@ -1,0 +1,111 @@
+{% load i18n %}
+{% comment %}
+  The controls changing a draft, on the proposal page and for the secretary
+  amending it in a meeting (next_query brings the forms back there, the
+  links marked data-in-meeting open in the meeting's panel).
+{% endcomment %}
+<section class="card mt-4">
+  <div class="card-header"><h2 class="h6 mb-0">{% translate "Propose changes" %}</h2></div>
+  <div class="card-body">
+    <div class="d-flex flex-wrap gap-1 mb-3">
+      {% if in_meeting %}<a
+          data-in-meeting
+          class="btn btn-sm btn-quiet"
+          href="{% url 'proposal_update' proposal.pk %}{{ next_query }}"
+        >{% translate "Edit the tension" %}</a>{% endif %}
+      <a
+        data-in-meeting
+        class="btn btn-sm btn-primary"
+        href="{% url 'proposal_role_add' proposal.pk %}{{ next_query }}"
+      >{% translate "Add a role" %}</a>
+      <a
+        data-in-meeting
+        class="btn btn-sm btn-primary"
+        href="{% url 'proposal_policy_add' proposal.pk %}{{ next_query }}"
+      >{% translate "Add a policy" %}</a>
+      <a
+        data-in-meeting
+        class="btn btn-sm btn-quiet"
+        href="{% url 'proposal_move' proposal.pk %}{{ next_query }}"
+      >{% translate "Move roles and policies" %}</a>
+    </div>
+    <details class="wb-details mb-2">
+      <summary>{% translate "Change or remove a role" %}</summary>
+      <ul class="list-group list-group-flush mt-2">
+        {% for role in circle_roles %}
+          <li class="list-group-item wb-row">
+            <div class="wb-row-main">
+              <a
+                data-in-meeting
+                class="wb-row-title"
+                href="{% url 'proposal_role' proposal.pk role.pk %}{{ next_query }}"
+              >{{ role }}</a>
+            </div>
+            <div class="d-flex flex-wrap gap-1 flex-shrink-0 justify-content-end">
+              <a
+                data-in-meeting
+                class="btn btn-sm btn-quiet"
+                href="{% url 'proposal_role' proposal.pk role.pk %}{{ next_query }}"
+              >{% translate "Change" %}</a>
+              {% if not role.core_role and role.circle %}
+                <form method="post" action="{% url 'proposal_role_convert' proposal.pk role.pk %}{{ next_query }}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-quiet">
+                    {% if role.is_circle %}{% translate "Turn back into a role" %}{% else %}{% translate "Turn into a circle" %}{% endif %}
+                  </button>
+                </form>
+                {% if role.is_circle %}
+                  <a
+                    data-in-meeting
+                    class="btn btn-sm btn-quiet"
+                    href="{% url 'proposal_circle_remove' proposal.pk role.pk %}{{ next_query }}"
+                  >{% translate "Remove" %}…</a>
+                {% else %}
+                  <form
+                    method="post"
+                    action="{% url 'proposal_subject_remove' proposal.pk 'roles' role.pk %}{{ next_query }}"
+                  >
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-quiet">{% translate "Remove" %}</button>
+                  </form>
+                {% endif %}
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% if circle_policies %}
+      <details class="wb-details">
+        <summary>{% translate "Change or remove a policy" %}</summary>
+        <ul class="list-group list-group-flush mt-2">
+          {% for policy in circle_policies %}
+            <li class="list-group-item wb-row">
+              <div class="wb-row-main">
+                <a
+                  data-in-meeting
+                  class="wb-row-title"
+                  href="{% url 'proposal_policy' proposal.pk policy.pk %}{{ next_query }}"
+                >{{ policy }}</a>
+              </div>
+              <div class="d-flex flex-wrap gap-1 flex-shrink-0 justify-content-end">
+                <a
+                  data-in-meeting
+                  class="btn btn-sm btn-quiet"
+                  href="{% url 'proposal_policy' proposal.pk policy.pk %}{{ next_query }}"
+                >{% translate "Change" %}</a>
+                <form
+                  method="post"
+                  action="{% url 'proposal_subject_remove' proposal.pk 'policies' policy.pk %}{{ next_query }}"
+                >
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-quiet">{% translate "Remove" %}</button>
+                </form>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </details>
+    {% endif %}
+  </div>
+</section>

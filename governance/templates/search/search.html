@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% block title %}{% translate "Search" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-page-header">
+    <h1>
+      {% translate "Search" %}
+      {% if query %}: {{ query }}{% endif %}
+    </h1>
+  </div>
+  {% if empty %}<p class="text-body-secondary">{% translate "Nothing found." %}</p>{% endif %}
+  {% with roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies %}
+    {% if roles %}
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "Roles" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% for role in roles %}
+            <li class="list-group-item">
+              <a class="wb-row-title" href="{{ role.get_absolute_url }}">{{ role }}</a>
+              <div class="wb-row-meta">
+                {% if role.circle %}<span>{{ role.circle }}</span>{% endif %}<span
+                >{{ role.purpose|plain|truncatechars:160 }}</span>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+    {% if accountabilities %}
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "Accountabilities" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% for item in accountabilities %}
+            <li class="list-group-item">
+              <div class="wb-markdown">{{ item.text|markdown }}</div>
+              <div class="wb-row-meta">
+                <a href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>{% if item.role.circle %}<span
+                  >{{ item.role.circle }}</span>{% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+    {% if domains %}
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "Domains" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% for item in domains %}
+            <li class="list-group-item">
+              <div class="wb-markdown">{{ item.text|markdown }}</div>
+              <div class="wb-row-meta">
+                <a href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>{% if item.role.circle %}<span
+                  >{{ item.role.circle }}</span>{% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+    {% if policies %}
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "Policies" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% for policy in policies %}
+            <li class="list-group-item">
+              <a class="wb-row-title" href="{{ policy.get_absolute_url }}">{{ policy }}</a>
+              <div class="wb-row-meta">
+                <span>{{ policy.role }}</span><span>{{ policy.body|plain|truncatechars:160 }}</span>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+  {% endwith %}
+{% endblock content %}

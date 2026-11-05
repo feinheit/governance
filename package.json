@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "dependencies": {
+    "@rspack/cli": "^2.3.0",
+    "@rspack/core": "^2.3.0",
+    "@rspack/dev-server": "^2.2.2",
+    "@swc/helpers": "^0.5.23",
+    "autoprefixer": "^10.6.2",
+    "bootstrap": "^5.3.8",
+    "css-loader": "^7.1.5",
+    "d3-hierarchy": "^3.1.2",
+    "htmx.org": "^4.0.1",
+    "postcss": "^8.5.32",
+    "postcss-loader": "^8.2.1",
+    "preact": "^11.1.1",
+    "sass-embedded": "^1.107.1",
+    "sass-loader": "^17.1.0"
+  },
+  "prettier": {
+    "semi": false
+  }
+}

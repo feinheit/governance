@@ -1,0 +1,33 @@
+{% load i18n %}{% autoescape off %}# {% translate "Governance" %}
+
+{% blocktranslate with date=now|date:"DATE_FORMAT" %}As of {{ date }}.{% endblocktranslate %}
+{% for circle in circles %}
+{{ circle.heading }} {{ circle.name }}
+
+{% if with_holders and circle.export_holders %}*{% translate "Held by" %}: {% for assignment in circle.export_holders %}{{ assignment.user }}{% if not forloop.last %}, {% endif %}{% endfor %}*
+
+{% endif %}{% if circle.display_purpose %}**{% translate "Purpose" %}**
+
+{{ circle.display_purpose }}
+
+{% endif %}{% if circle.strategy %}**{% translate "Strategy" %}**
+
+{{ circle.strategy }}
+
+{% endif %}{% include "roles/_governance_lists.txt" with role=circle %}{% for policy in circle.export_policies %}{% if forloop.first %}**{% translate "Policies" %}**
+
+{% endif %}*{{ policy.title }}*
+
+{{ policy.body }}
+
+{% endfor %}{% for role in circle.export_roles %}{{ circle.subheading }} {{ role.name }}
+
+{% if with_holders %}*{% translate "Held by" %}: {% for assignment in role.export_holders %}{{ assignment.user }}{% if assignment.focus %} ({{ assignment.focus }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}{% translate "the Circle Lead" %}{% endfor %}*
+
+{% endif %}{% if role.display_purpose %}{{ role.display_purpose }}
+
+{% endif %}{% include "roles/_governance_lists.txt" %}{% for policy in role.export_role_policies %}*{% translate "Policy" %}: {{ policy.title }}*
+
+{{ policy.body }}
+
+{% endfor %}{% endfor %}{% endfor %}{% endautoescape %}

@@ -1,0 +1,10 @@
+.env
+.git
+.tox
+media
+node_modules
+**/__pycache__
+.ruff_cache
+tmp
+venv
+.venv

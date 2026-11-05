@@ -1,0 +1,128 @@
+{% load i18n rspack_assets running_meetings static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% translate "Governance" %}{% endblock %}</title>
+    <script>
+      // Set the theme immediately to prevent a flash of the wrong theme, see theme.js
+      (function () {
+        // With JavaScript, e.g. long lists show the other entries on request
+        document.documentElement.classList.add("js")
+        const stored = window.localStorage.getItem("theme")
+        document.documentElement.dataset.bsTheme =
+          stored === "light" || stored === "dark"
+            ? stored
+            : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+      })()
+    </script>
+    <link rel="icon" href="{% static 'governance/favicon.svg' %}" type="image/svg+xml">
+    <link rel="icon" href="{% static 'governance/favicon.png' %}" type="image/png">
+    <link rel="apple-touch-icon" href="{% static 'governance/apple-touch-icon.png' %}">
+    {# Styles and scripts of all pages, frontend/main.js #}
+    {% rspack_assets "main" %}
+  </head>
+  <body>
+    <nav class="navbar navbar-expand wb-navbar mb-4">
+      <div class="container-xl">
+        <a class="navbar-brand wb-brand" href="/" title="{% translate 'Governance' %}">
+          {# The favicon, colored by the theme (static/governance/favicon.svg) #}
+          <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+            <circle class="wb-brand-circle" cx="16" cy="16" r="14" stroke-width="3" />
+            <circle class="wb-brand-role" cx="11.2" cy="13" r="5.2" />
+            <circle class="wb-brand-core" cx="20.4" cy="12.4" r="4" />
+            <circle class="wb-brand-role" cx="17.5" cy="21.5" r="4.4" />
+          </svg>
+          <span class="visually-hidden">{% translate "Governance" %}</span>
+        </a>
+        {% if request.user.is_authenticated %}
+          <ul class="navbar-nav me-auto wb-nav-links">
+            {% url 'start' as start_url %}
+            {% url 'circle_browser' as circles_url %}
+            {% url 'people' as people_url %}
+            <li class="nav-item wb-nav-organization">
+              <a class="nav-link" href="{{ start_url }}">{% translate "Organization" %}</a>
+            </li>
+            <li class="nav-item wb-nav-circles">
+              <a
+                class="nav-link{% if request.path == circles_url %} active{% endif %}"
+                href="{{ circles_url }}"
+              >{% translate "Circles" %}</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link{% if request.path == people_url %} active{% endif %}"
+                href="{{ people_url }}"
+              >{% translate "People" %}</a>
+            </li>
+            {% url 'proposals' as proposals_url %}
+            <li class="nav-item">
+              <a
+                class="nav-link{% if request.path == proposals_url %} active{% endif %}"
+                href="{{ proposals_url }}"
+              >{% translate "Proposals" %}</a>
+            </li>
+            {% url 'history' as history_url %}
+            <li class="nav-item">
+              <a
+                class="nav-link{% if request.path == history_url %} active{% endif %}"
+                href="{{ history_url }}"
+              >{% translate "History" %}</a>
+            </li>
+            {% block navigation %}{% endblock %}
+          </ul>
+          <form
+            method="get"
+            action="{% block search_url %}/search/{% endblock %}"
+            class="me-3 wb-nav-search"
+            role="search"
+          >
+            <input
+              type="search"
+              name="q"
+              class="form-control form-control-sm"
+              placeholder="{% translate 'Search' %}"
+              value="{{ request.GET.q }}"
+            >
+          </form>
+          <div class="wb-nav-user d-flex align-items-center">
+            {% include "_theme_toggle.html" %}
+            <a class="navbar-text me-3" href="{{ request.user.get_absolute_url }}">{{ request.user.get_short_name }}</a>
+            <a class="navbar-text me-3" href="{% url 'help' %}">{% translate "Help" %}</a>
+            <a class="navbar-text me-3 d-none d-lg-inline" href="{% url 'api_tokens' %}">{% translate "API" %}</a>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="btn btn-sm btn-quiet"
+                title="{% translate 'Sign out' %}"
+                aria-label="{% translate 'Sign out' %}"
+              >
+                <span class="d-none d-lg-inline">{% translate "Sign out" %}</span>
+                <svg
+                  class="d-lg-none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                  <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    </nav>
+    <main class="container-xl wb-main">
+      {% running_meetings %}
+      {% block messages %}{% include "_messages.html" %}{% endblock %}
+      {% block content %}{% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

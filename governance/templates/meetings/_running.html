@@ -1,0 +1,10 @@
+{% load i18n %}
+{% if meetings %}
+  <div class="wb-running">
+    <span class="wb-running-dot" aria-hidden="true"></span>
+    {% translate "Running now:" %}
+    {% for meeting in meetings %}
+      <a href="{{ meeting.get_absolute_url }}">{{ meeting }}</a>{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

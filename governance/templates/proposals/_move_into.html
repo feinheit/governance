@@ -1,0 +1,20 @@
+{% load i18n %}
+<li class="list-group-item wb-row">
+  <div class="wb-row-main">
+    <span class="wb-row-title">{{ obj }}</span>
+    <div class="wb-row-meta">
+      <span>{% if kind == "roles" %}{% translate "Role" %}{% else %}{% translate "Policy" %}{% endif %}</span>
+    </div>
+  </div>
+  <form method="post" action="{{ request.get_full_path }}" class="d-flex gap-1 flex-shrink-0">
+    {% csrf_token %}
+    <input type="hidden" name="kind" value="{{ kind }}">
+    <input type="hidden" name="key" value="{{ obj.pk }}">
+    <select name="target" class="form-select form-select-sm" aria-label="{% translate 'Sub-circle' %}">
+      {% for sub in options %}{% if sub != obj %}<option value="{{ sub.pk }}">
+            {{ sub }}
+          </option>{% endif %}{% endfor %}
+    </select>
+    <button type="submit" class="btn btn-sm btn-quiet">{% translate "Move" %}</button>
+  </form>
+</li>

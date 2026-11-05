@@ -1,0 +1,49 @@
+{% load governance i18n %}
+{% for day, entries in timeline %}
+  <section class="card mb-3">
+    <div class="card-header"><h2 class="h6 mb-0">{{ day|date:"DATE_FORMAT" }}</h2></div>
+    <ul class="list-group list-group-flush">
+      {% for kind, obj in entries %}
+        {% if kind == "proposal" %}
+          <li class="list-group-item">
+            <span class="badge wb-tone-primary">{% translate "Proposal" %}</span>
+            <a class="fw-semibold" href="{{ obj.get_absolute_url }}">{{ obj|default:_("(no tension)") }}</a>
+            <span class="small text-body-secondary">{% if show_role %}{{ obj.circle }} ·
+              {% endif %}{{ obj.proposer|default:"" }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item">
+            <span class="badge {{ obj.kind|tone }}">{{ obj.label }}</span>
+            {% if show_role %}
+              {% if obj.policy %}<a href="{{ obj.policy.get_absolute_url }}">{{ obj.policy }}</a>{% elif obj.role %}<a
+                  href="{{ obj.role.get_absolute_url }}"
+                >{{ obj.role }}</a>{% endif %}
+            {% elif obj.policy %}<a href="{{ obj.policy.get_absolute_url }}">{{ obj.policy }}</a>{% endif %}
+            {% if obj.user %}<a href="{{ obj.user.get_absolute_url }}">{{ obj.user }}</a>{% endif %}
+            {% if obj.old_role or obj.new_role %}<span class="small text-body-secondary">{{ obj.old_role|default:"–" }}
+                → {{ obj.new_role|default:"–" }}</span>{% endif %}
+            {% if obj.kind == "name" or obj.kind == "policy-title" %}
+              <span class="small">{% if obj.old_text %}<span
+                    class="text-decoration-line-through text-body-secondary"
+                  >{{ obj.old_text }}</span>{% endif %} {{ obj.new_text }}</span>
+            {% elif obj.kind == "added" or obj.kind == "removed" or obj.kind == "policy-added" or obj.kind == "policy-removed" %}
+              {% if not show_role and not obj.policy %}<span
+                  class="small"
+                >{{ obj.old_text|default:obj.new_text }}</span>{% endif %}
+            {% elif obj.old_text or obj.new_text %}
+              <details class="wb-details small mt-1">
+                <summary class="text-body-secondary">{% translate "Show" %}</summary>
+                {% if obj.old_text %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
+                    {{ obj.old_text|markdown }}
+                  </div>{% endif %}
+                {% if obj.new_text %}<div class="wb-markdown">{{ obj.new_text|markdown }}</div>{% endif %}
+              </details>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </section>
+{% empty %}
+  <p class="text-body-secondary">{% translate "No changes." %}</p>
+{% endfor %}

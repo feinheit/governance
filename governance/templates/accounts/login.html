@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+  <div class="card mx-auto mt-5" style="max-width: 24rem">
+    <div class="card-body">
+      <h1 class="h4 mb-3">{% translate "Governance" %}</h1>
+      <a href="{% url 'accounts_oauth2' %}" class="btn btn-primary">{% translate "Sign in with Google" %}</a>
+    </div>
+  </div>
+{% endblock content %}

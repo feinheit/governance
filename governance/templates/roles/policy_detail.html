@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% block title %}{{ policy }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  {% include "roles/_breadcrumbs.html" %}
+  <div class="wb-page-header">
+    <div>
+      <h1 class="wb-title">
+        {{ policy }}
+        {% if policy.archived_on %}<span
+            class="badge wb-tone-neutral fs-6"
+          >{% blocktranslate with date=policy.archived_on|date:"SHORT_DATE_FORMAT" %}archived on {{ date }}{% endblocktranslate %}</span>{% endif %}
+      </h1>
+      <div class="wb-meta">
+        <span><span
+            class="wb-meta-label"
+          >{% if policy.role.is_circle %}{% translate "circle" %}{% else %}{% translate "role" %}{% endif %}</span> <a
+            href="{{ policy.role.get_absolute_url }}"
+          >{{ policy.role }}</a></span>
+        {% if policy.domain %}<span><span class="wb-meta-label">{% translate "domain" %}</span>
+            {{ policy.domain }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+  <section class="card mb-4">
+    <div class="card-body wb-markdown wb-description">{{ policy.body|markdown }}</div>
+  </section>
+  {% if pending %}
+    <section class="card mb-4">
+      <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposed" %}</h2></div>
+      <ul class="list-group list-group-flush">
+        {% include "proposals/_proposal_rows.html" with proposals=pending %}
+      </ul>
+    </section>
+  {% endif %}
+{% endblock content %}

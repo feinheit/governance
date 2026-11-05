@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% block title %}{{ role }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="alert alert-info">
+    {% blocktranslate with day=day|date:"DATE_FORMAT" since=snapshot.date|date:"DATE_FORMAT" %}As of {{ day }}, from the snapshot of {{ since }}.{% endblocktranslate %}
+    <a href="{{ role.get_absolute_url }}">{% translate "Today" %}</a> · <a
+      href="{% url 'role_history' role.pk %}"
+    >{% translate "History" %}</a>
+  </div>
+  {% if not entry %}
+    <h1>{{ role }}</h1>
+    <p class="text-body-secondary">{% translate "This role didn't exist on that day." %}</p>
+  {% else %}
+    <div class="wb-page-header">
+      <div>
+        <h1 class="wb-title">
+          {{ entry.name }}{% if entry.is_circle %}
+            <span class="badge wb-tone-circle fs-6">{% translate "Circle" %}</span>{% endif %}
+        </h1>
+        <div class="wb-meta">
+          <span><span class="wb-meta-label">{% translate "held by" %}</span>
+            {% for user, elected_until in entry.holders %}{{ user|default:"?" }}{% if elected_until %}
+                ({% blocktranslate %}elected until {{ elected_until }}{% endblocktranslate %}){% endif %}{% if not forloop.last %},
+              {% endif %}{% empty %}–{% endfor %}
+          </span>
+        </div>
+      </div>
+      <form class="wb-page-actions flex-nowrap" method="get">
+        <input type="date" name="date" value="{{ day|date:'Y-m-d' }}" class="form-control form-control-sm" required>
+        <button class="btn btn-sm btn-quiet">{% translate "Show as of" %}</button>
+      </form>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <section class="card mb-4">
+          <div class="card-body">
+            <h2 class="h6 text-body-secondary">{% translate "Purpose" %}</h2>
+            <div class="wb-markdown wb-description">{{ entry.purpose|markdown|default:"–" }}</div>
+            {% if entry.strategy %}
+              <h2 class="h6 text-body-secondary mt-3">{% translate "Strategy" %}</h2>
+              <div class="wb-markdown wb-description">{{ entry.strategy|markdown }}</div>
+            {% endif %}
+          </div>
+        </section>
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Accountabilities" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for text in entry.accountabilities %}{% if text is not None %}<li class="list-group-item wb-markdown">
+                  {{ text|markdown }}
+                </li>{% endif %}{% endfor %}
+            {% if unrecorded %}<li class="list-group-item text-body-secondary">
+                {% blocktranslate count counter=unrecorded %}{{ counter }} accountability (text not recorded){% plural %}{{ counter }} accountabilities (texts not recorded){% endblocktranslate %}
+              </li>{% endif %}
+            {% if not entry.accountabilities %}<li class="list-group-item text-body-secondary">–</li>{% endif %}
+          </ul>
+        </section>
+        {% if entry.domains %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Domains" %}</h2></div>
+            <ul class="list-group list-group-flush">
+              {% for text in entry.domains %}<li class="list-group-item wb-markdown">
+                  {{ text|markdown }}
+                </li>{% endfor %}
+            </ul>
+          </section>
+        {% endif %}
+        {% if policies %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Policies" %}</h2></div>
+            <div class="list-group list-group-flush">
+              {% for policy in policies %}
+                <details class="list-group-item wb-details">
+                  <summary><span class="wb-row-title d-inline">{{ policy.title }}</span></summary>
+                  <div class="wb-markdown wb-description mt-2">{{ policy.body|markdown }}</div>
+                </details>
+              {% endfor %}
+            </div>
+          </section>
+        {% endif %}
+      </div>
+      <div class="col-lg-5">
+        {% if children %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Roles" %}</h2></div>
+            <ul class="list-group list-group-flush">
+              {% for child in children %}
+                <li class="list-group-item">
+                  <div class="wb-row-heading">
+                    <a
+                      class="wb-row-title"
+                      href="{% url 'role_as_of' child.pk %}?date={{ day|date:'Y-m-d' }}"
+                    >{{ child.name }}</a>
+                    {% if child.is_circle %}<span
+                        class="badge wb-tone-circle"
+                      >{% translate "Circle" %}</span>{% endif %}
+                  </div>
+                  <div class="wb-row-meta">
+                    <span>{% for user, elected_until in child.holders %}{{ user|default:"?" }}{% if not forloop.last %},
+                        {% endif %}{% empty %}–{% endfor %}</span>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </section>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock content %}

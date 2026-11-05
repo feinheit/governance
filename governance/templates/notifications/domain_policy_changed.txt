@@ -1,0 +1,7 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with role=proposal.role circle=proposal.circle %}{{ role }} in {{ circle }} changed a policy for its domains, without a governance process (constitution 1.3.2).{% endblocktranslate %}
+
+{% translate "Changes" %}:
+{% include "notifications/_changes.txt" %}
+
+{{ url }}
+{% endautoescape %}
