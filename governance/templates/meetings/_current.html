@@ -85,10 +85,16 @@
             <li class="mb-2">
               <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
               {% if change.subject %}<span class="fw-semibold">{{ change.subject }}</span>{% endif %}
-              {% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
-                  {{ change.old|markdown }}
-                </div>{% endif %}
-              {% if change.new %}<div class="wb-markdown">{{ change.new|markdown }}</div>{% endif %}
+              {% if change.action == "moved" %}<span
+                  class="text-body-secondary"
+                >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
+                  {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>
+              {% else %}
+                {% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
+                    {{ change.old|markdown }}
+                  </div>{% endif %}
+                {% if change.new %}<div class="wb-markdown">{{ change.new|markdown }}</div>{% endif %}
+              {% endif %}
               {% for label, text in change.details %}<div class="small">
                   <span class="text-body-secondary">{{ label }}:</span> {{ text|plain }}
                 </div>{% endfor %}

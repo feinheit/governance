@@ -17,7 +17,7 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
-from governance.roles.models import Assignment, Role
+from governance.roles.models import Assignment, Policy, Role
 
 
 try:
@@ -165,6 +165,61 @@ class MeetingE2ETest(LiveServerTestCase):
         ).first.click()
         page.wait_for_url(f"**{self.kitchen.get_absolute_url()}")
         self.assertIsNone(page.evaluate("window.marker"))
+        self.assertEqual(self.errors, [])
+
+    def test_remove_circle(self):
+        """Moving out of a circle and removing it, in the meeting's panel"""
+        bakery = Role.objects.create(name="Bakery", circle=self.kitchen, is_circle=True)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        cleaner = Role.objects.create(name="Cleaner", circle=bakery)
+        noise = Policy.objects.create(role=bakery, title="Noise")
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            tension="No more bakery",
+            status=Proposal.IN_MEETING,
+            meeting=self.meeting,
+            created_at=timezone.now(),
+        )
+        AgendaItem.objects.create(
+            meeting=self.meeting, proposal=proposal, label="No more bakery"
+        )
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        page.evaluate("window.marker = 1")
+        page.locator("#agenda form[action$='/process/'] button").click()
+        page.wait_for_selector(".wb-amend-area")
+
+        # Moving the policy out of the bakery
+        page.locator(".wb-amend-area a[href*='/move/']").click()
+        page.locator("#amend li", has_text="Noise").locator("button").click()
+        page.wait_for_selector("#amend form", state="detached")
+        self.assertIn(
+            "from Bakery", page.locator("#meeting ul.list-unstyled").inner_text()
+        )
+
+        # Removing the bakery: the policy moves out already, Baker too
+        page.locator(".wb-amend-area summary", has_text="role").click()
+        page.locator(".wb-amend-area a[href*='/remove-circle/']").click()
+        page.wait_for_selector("#amend form")
+        self.assertTrue(
+            page.is_checked(f"#amend input[name=policies][value='{noise.pk}']")
+        )
+        page.check(f"#amend input[name=roles][value='{baker.pk}']")
+        page.locator("#amend button[type=submit]").click()
+        page.wait_for_selector("#amend form", state="detached")
+        self.assertSamePage()
+
+        page.locator("form[action$='/adopt/'] button").click()
+        page.wait_for_selector("#meeting .wb-amend-area", state="detached")
+        for obj in [bakery, baker, cleaner, noise]:
+            obj.refresh_from_db()
+        self.assertEqual((baker.circle, baker.archived_on), (self.kitchen, None))
+        self.assertEqual((noise.role, noise.archived_on), (self.kitchen, None))
+        self.assertIsNotNone(bakery.archived_on)
+        self.assertIsNotNone(cleaner.archived_on)
+        self.assertSamePage()
         self.assertEqual(self.errors, [])
 
     def test_mentions(self):
