@@ -75,7 +75,9 @@ def describe(instructions, names):  # noqa: C901
             continue
 
         if match := re.fullmatch(
-            r"/roles/(\d+)/supporting_circle/(roles|policies)/(\d+)", path
+            # Also into a circle the proposal creates (n1)
+            r"/roles/(\d+|n\d+)/supporting_circle/(roles|policies)/(\d+)",
+            path,
         ):
             key = f"{match[2]}/{match[3]}"
             changes.append(

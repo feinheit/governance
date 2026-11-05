@@ -80,3 +80,27 @@ class ProblemsTest(TestCase):
             ],
         )
         self.assertEqual(problems(proposal), [])
+
+
+class DescribeTest(TestCase):
+    def test_moving_into_a_new_circle(self):
+        """Roles moved into a circle the proposal creates read like moves"""
+        from governance.proposals.describe import describe
+
+        changes = describe(
+            [
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Pantry"},
+                {"op": "add", "path": "/roles/n1/supporting_circle"},
+                {
+                    "op": "move",
+                    "from": "/roles/5",
+                    "path": "/roles/n1/supporting_circle/roles/5",
+                },
+            ],
+            {"roles/5": "Cook", "roles/n1": "Pantry"},
+        )
+        moved = [c for c in changes if c.action == "moved"]
+        self.assertEqual(
+            [(c.label, c.subject, c.new) for c in moved], [("Role", "Cook", "Pantry")]
+        )
