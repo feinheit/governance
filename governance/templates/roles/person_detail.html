@@ -51,6 +51,52 @@
     </div>
     <div class="col-lg-5">
       {% if due_elections %}{% include "meetings/_due_elections.html" with show_circle=True %}{% endif %}
+      {% if meetings %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your meetings" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for meeting in meetings %}
+              <li class="list-group-item">
+                <a href="{{ meeting.get_absolute_url }}">{{ meeting }}</a>
+                <div class="wb-row-meta">
+                  <span
+                  >{% if meeting.is_running %}{% translate "running" %}{% else %}{% translate "not started yet" %}{% endif %}</span>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+      {% if waiting %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Waiting for your response" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% include "proposals/_proposal_rows.html" with proposals=waiting more=waiting_more show_circle=True %}
+          </ul>
+        </section>
+      {% endif %}
+      {% if drafts %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your drafts and tensions" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% include "proposals/_proposal_rows.html" with proposals=drafts more=drafts_more show_circle=True %}
+          </ul>
+        </section>
+      {% endif %}
+      {% if past %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Earlier roles" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for assignment in past %}
+              {% include "roles/_earlier_role.html" %}
+            {% endfor %}
+            {% include "_show_more.html" with more=past_more %}
+            {% for assignment in past_more %}
+              {% include "roles/_earlier_role.html" with more=True %}
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
       {% if person == request.user %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Settings" %}</h2></div>
@@ -91,52 +137,6 @@
               <button type="submit" class="btn btn-sm btn-quiet">{% translate "Save" %}</button>
             </form>
           </div>
-        </section>
-      {% endif %}
-      {% if meetings %}
-        <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your meetings" %}</h2></div>
-          <ul class="list-group list-group-flush">
-            {% for meeting in meetings %}
-              <li class="list-group-item">
-                <a href="{{ meeting.get_absolute_url }}">{{ meeting }}</a>
-                <div class="wb-row-meta">
-                  <span
-                  >{% if meeting.is_running %}{% translate "running" %}{% else %}{% translate "not started yet" %}{% endif %}</span>
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        </section>
-      {% endif %}
-      {% if waiting %}
-        <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Waiting for your response" %}</h2></div>
-          <ul class="list-group list-group-flush">
-            {% include "proposals/_proposal_rows.html" with proposals=waiting more=waiting_more show_circle=True %}
-          </ul>
-        </section>
-      {% endif %}
-      {% if drafts %}
-        <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your drafts and tensions" %}</h2></div>
-          <ul class="list-group list-group-flush">
-            {% include "proposals/_proposal_rows.html" with proposals=drafts more=drafts_more show_circle=True %}
-          </ul>
-        </section>
-      {% endif %}
-      {% if past %}
-        <section class="card">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Earlier roles" %}</h2></div>
-          <ul class="list-group list-group-flush">
-            {% for assignment in past %}
-              {% include "roles/_earlier_role.html" %}
-            {% endfor %}
-            {% include "_show_more.html" with more=past_more %}
-            {% for assignment in past_more %}
-              {% include "roles/_earlier_role.html" with more=True %}
-            {% endfor %}
-          </ul>
         </section>
       {% endif %}
     </div>
