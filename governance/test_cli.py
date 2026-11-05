@@ -1,3 +1,4 @@
+import json
 import tempfile
 import urllib.parse
 from pathlib import Path
@@ -231,6 +232,21 @@ class CLITest(TestCase):
         )
         proposal.refresh_from_db()
         self.assertEqual(proposal.status, Proposal.PUBLISHED)
+        # The proposer sees the question to answer, the consents counted
+        output = self.gov("proposals", "show", proposal.pk).output
+        self.assertIn("Which stew?", output)
+        self.assertIn("Eve", output)
+        self.assertIn("1 of 2", output)
+        self.assertNotIn("Bob", output)
+        data = json.loads(self.gov("proposals", "show", proposal.pk, "--json").output)
+        self.assertEqual(
+            {key: data["responses"][key] for key in ["consents", "others"]},
+            {"consents": 1, "others": 2},
+        )
+        self.assertEqual(
+            [(r["user"], r["kind"], r["text"]) for r in data["responses"]["entries"]],
+            [("Eve", "comment", "Which stew?")],
+        )
 
         mail.outbox = []
         with (

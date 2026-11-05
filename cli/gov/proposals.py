@@ -66,6 +66,20 @@ def echo_proposal(proposal):
                 console.print(f"    + {change['new']}", style="green")
             for label, text in change["details"]:
                 console.print(f"    {label}: {text}")
+    if responses := proposal.get("responses"):
+        console.print("\nResponses", style="bold")
+        summary = f"no objection: {responses['consents']} of {responses['others']}"
+        if responses["meeting_requests"]:
+            summary += f", meeting requested: {responses['meeting_requests']}"
+        console.print(summary)
+        for response in responses["entries"]:
+            console.print(
+                f"\n{response['user']} ({response['label']},"
+                f" {_day(response['created_at'])})",
+                style="bold",
+            )
+            if response["text"]:
+                console.print(Markdown(response["text"]))
     if proposal["problems"]:
         console.print("\nProblems", style="bold yellow")
         for problem in proposal["problems"]:

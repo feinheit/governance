@@ -52,6 +52,24 @@ class ChangeOut(Schema):
     details: list[tuple[str, str]]
 
 
+class ResponseOut(Schema):
+    user: str
+    kind: str
+    label: str
+    text: str
+    created_at: str
+
+
+class ResponsesOut(Schema):
+    """Like the proposal page: consents and meeting requests only counted,
+    questions and concerns with their author"""
+
+    consents: int
+    meeting_requests: int
+    others: int
+    entries: list[ResponseOut]
+
+
 class ProposalOut(Schema):
     id: int
     circle_id: int
@@ -71,6 +89,7 @@ class ProposalOut(Schema):
     decided_at: str | None
     url: str
     problems: list[str]
+    responses: ResponsesOut | None
 
 
 class ProblemsOut(Schema):
@@ -119,6 +138,28 @@ def out(request, proposal):
         "problems": problems(proposal)
         if own_draft(request.user, proposal) and proposal.instructions
         else [],
+        "responses": responses_out(proposal),
+    }
+
+
+def responses_out(proposal):
+    if proposal.status not in {Proposal.PUBLISHED, Proposal.IN_MEETING}:
+        return None
+    summary = process.response_summary(proposal)
+    return {
+        "consents": summary["consents"],
+        "meeting_requests": summary["meeting_requests"],
+        "others": summary["others"],
+        "entries": [
+            {
+                "user": str(response.user),
+                "kind": response.kind,
+                "label": str(response.get_kind_display()),
+                "text": response.text,
+                "created_at": response.created_at.isoformat(),
+            }
+            for response in summary["responses"]
+        ],
     }
 
 

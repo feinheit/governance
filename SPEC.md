@@ -407,7 +407,10 @@ proposals/{id}/publish/`, `GET policies/` and `policies/{id}/`, `GET domains/`, 
 (the user, the token's access and their roles); objects come with the URL
 of their page. Clients send instructions only (e.g. written by an LLM from
 a tension); the server fills in names and returns `problems` with every
-draft, and the readable `changes` of the proposal's page. The API only
+draft, the readable `changes` of the proposal's page, and for published
+proposals and those waiting for a meeting the `responses` like the page
+(consents and meeting requests counted, questions and concerns with their
+author, `process.response_summary()`). The API only
 changes the user's own drafts: the secretary amends others' proposals in a
 running meeting's page, not through scripts.
 

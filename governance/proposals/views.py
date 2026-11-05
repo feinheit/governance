@@ -154,24 +154,7 @@ def proposal_detail(request, pk):
         context |= drafting_context(proposal)
     if proposal.status in {Proposal.PUBLISHED, Proposal.IN_MEETING}:
         members = circle_members(proposal.circle)
-        positions = process.positions(proposal).values()
-        context |= {
-            "show_responses": True,
-            # Who consented, requested a meeting or didn't respond yet isn't
-            # shown: questions and objections have their author, because
-            # they are answered and integrated with them
-            "responses": process
-            .current_responses(proposal)
-            .filter(
-                Q(kind=Response.COMMENT)
-                # Concerns, and objections raised async before
-                | Q(kind__in=[Response.MEETING, Response.OBJECTION]) & ~Q(text="")
-            )
-            .select_related("user"),
-            "consents": sum(1 for r in positions if r.kind == Response.CONSENT),
-            "meeting_requests": sum(1 for r in positions if r.kind == Response.MEETING),
-            "others": members.exclude(pk=proposal.proposer_id).count(),
-        }
+        context |= {"show_responses": True} | process.response_summary(proposal)
         if request.user.is_admin or members.filter(pk=request.user.pk).exists():
             context["response_form"] = ResponseForm(
                 is_open=proposal.status == Proposal.PUBLISHED,

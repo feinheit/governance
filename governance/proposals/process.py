@@ -10,6 +10,7 @@ import datetime as dt
 import re
 
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -63,6 +64,26 @@ def current_responses(proposal):
     if proposal.published_at:
         responses = responses.filter(created_at__gte=proposal.published_at)
     return responses
+
+
+def response_summary(proposal):
+    """What the proposal page and the API show of the responses: who
+    consented, requested a meeting or didn't respond yet isn't shown, only
+    counted; questions and concerns have their author, because they are
+    answered and integrated with them"""
+    found = positions(proposal).values()
+    return {
+        "responses": current_responses(proposal)
+        .filter(
+            Q(kind=Response.COMMENT)
+            # Concerns, and objections raised async before
+            | Q(kind__in=[Response.MEETING, Response.OBJECTION]) & ~Q(text="")
+        )
+        .select_related("user"),
+        "consents": sum(1 for r in found if r.kind == Response.CONSENT),
+        "meeting_requests": sum(1 for r in found if r.kind == Response.MEETING),
+        "others": members(proposal.circle).exclude(pk=proposal.proposer_id).count(),
+    }
 
 
 def positions(proposal):
