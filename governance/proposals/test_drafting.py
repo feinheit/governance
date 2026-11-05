@@ -321,10 +321,16 @@ class DraftingTest(TestCase):
             {"title": "Tea", "body": "Often"},
         )
         proposal.refresh_from_db()
+        url = f"/proposals/{proposal.pk}/policies/{self.tea.pk}/"
+        self.assertContains(self.client.get(url), "Often")
+        self.assertNotContains(self.client.get(url), "Changed in the meantime")
+        # Changed in the meantime: the form shows the current text
+        Policy.objects.filter(pk=self.tea.pk).update(body="<b>Never</b>")
         self.assertContains(
-            self.client.get(f"/proposals/{proposal.pk}/policies/{self.tea.pk}/"),
-            "Often",
+            self.client.get(url),
+            "Changed in the meantime, currently: &lt;b&gt;Never&lt;/b&gt;",
         )
+        Policy.objects.filter(pk=self.tea.pk).update(body=self.tea.body)
         adopt(proposal)
         self.tea.refresh_from_db()
         self.assertEqual(self.tea.body, "Often")

@@ -4,7 +4,7 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting, Objection
 from governance.proposals.models import Proposal
-from governance.roles.models import Assignment, Role
+from governance.roles.models import Accountability, Assignment, Role
 
 
 class ProcessingTest(TestCase):
@@ -167,8 +167,16 @@ class ProcessingTest(TestCase):
 
     def test_same_role_twice(self):
         """A proposal adopted earlier in the meeting changed the role: the
-        meeting shows the conflict before adopting, saving the role in the
-        proposal once takes over the current values"""
+        meeting shows the conflict before adopting, the role's form in the
+        proposal shows the current texts, saving it once takes them over"""
+        cooking = Accountability.objects.create(role=self.cook, text="Cooking")
+        self.proposal.instructions.append({
+            "op": "replace",
+            "path": f"/roles/{self.cook.pk}/accountabilities/{cooking.pk}/description",
+            "original_value": "Cooking",
+            "value": "Cooking food",
+        })
+        self.proposal.save()
         second = Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.eve,
@@ -185,9 +193,13 @@ class ProcessingTest(TestCase):
                     "value": "Head cook",
                 },
                 {
-                    "op": "add",
-                    "path": f"/roles/{self.cook.pk}/accountabilities/n1/description",
-                    "value": "Tasting",
+                    "op": "replace",
+                    "path": (
+                        f"/roles/{self.cook.pk}/accountabilities/{cooking.pk}"
+                        "/description"
+                    ),
+                    "original_value": "Cooking",
+                    "value": "Cooking meals",
                 },
             ],
             names={f"roles/{self.cook.pk}": "Cook"},
@@ -207,13 +219,19 @@ class ProcessingTest(TestCase):
             "Chef: name has been changed since the proposal was drafted.",
         )
 
-        # The secretary saves the role's form as it is
+        # The secretary merges both in the role's form and saves it
         self.client.force_login(self.bob)
         url = f"/proposals/{second.pk}/roles/{self.cook.pk}/"
         form = self.client.get(url).context["form"]
-        self.client.post(
-            url, {name: field.initial for name, field in form.fields.items()}
-        )
+        self.assertEqual(form["name"].initial, "Head cook")
+        self.assertIn("currently: Chef", form["name"].help_text)
+        field = form[f"accountabilities-{cooking.pk}"]
+        self.assertEqual(field.initial, "Cooking meals")
+        self.assertIn("currently: Cooking food", field.help_text)
+        self.assertNotIn("currently", form["purpose"].help_text)
+        data = {name: field.initial for name, field in form.fields.items()}
+        data[f"accountabilities-{cooking.pk}"] = "Cooking food and meals"
+        self.client.post(url, data)
         self.assertNotContains(
             self.client.get(self.meeting.get_absolute_url()), "has been changed since"
         )
@@ -224,7 +242,7 @@ class ProcessingTest(TestCase):
         self.assertEqual(self.cook.name, "Head cook")
         self.assertEqual(
             list(self.cook.accountabilities.values_list("text", flat=True)),
-            ["Tasting"],
+            ["Cooking food and meals"],
         )
 
     def test_outputs_mail(self):

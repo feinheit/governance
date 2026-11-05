@@ -151,8 +151,9 @@ The meeting shows the `problems()` of the item being processed to
 everybody, e.g. a role the proposal changes which a proposal adopted
 earlier in the meeting changed too. Adopting stays blocked; the secretary
 saves the role's (or policy's) form in the proposal once, which starts
-from the proposal's values and rebuilds the instructions against the
-current ones (an accountability removed in the meantime drops the
+from the proposal's values, shows the current text below each field
+changed in the meantime (to merge both), and rebuilds the instructions
+against the current values (an accountability removed in the meantime drops the
 proposal's change of it).
 
 States: `draft` → `published` (async) → `adopted`, or → `in_meeting` →

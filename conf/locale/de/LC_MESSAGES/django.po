@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 21:54+0100\n"
+"POT-Creation-Date: 2026-11-05 21:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -695,6 +695,10 @@ msgstr "Aus meiner Rolle"
 #: governance/proposals/drafting.py
 msgid "What is the gap between what is and what could be? Without changes the draft stays a tension, visible only to you."
 msgstr "Was fehlt zwischen dem, was ist, und dem, was sein könnte? Ohne Änderungen bleibt der Entwurf eine Spannung, die nur du siehst."
+
+#: governance/proposals/drafting.py
+msgid "Changed in the meantime, currently:"
+msgstr "Inzwischen geändert, aktuell:"
 
 #: governance/proposals/drafting.py
 msgid "Empty to remove."
@@ -1725,8 +1729,8 @@ msgid "The proposal can't be adopted like this:"
 msgstr "So kann der Vorschlag nicht angenommen werden:"
 
 #: governance/templates/meetings/_current.html
-msgid "When a role or policy has been changed in the meantime, the secretary edits it in the proposal and saves it: the proposal then starts from the current texts and keeps its own changes."
-msgstr "Wurde eine Rolle oder Policy inzwischen geändert, bearbeitet der Secretary sie im Vorschlag und speichert sie: der Vorschlag geht dann vom aktuellen Stand aus und behält seine eigenen Änderungen."
+msgid "When a role or policy has been changed in the meantime, the secretary edits it in the proposal, where the form shows the current texts, and saves it."
+msgstr "Wurde eine Rolle oder Policy inzwischen geändert, bearbeitet der Secretary sie im Vorschlag, wo das Formular den aktuellen Text zeigt, und speichert sie."
 
 #: governance/templates/meetings/_current.html
 #: governance/templates/meetings/meeting_detail.html

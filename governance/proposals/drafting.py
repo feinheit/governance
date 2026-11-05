@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.http import require_POST
@@ -236,6 +237,29 @@ class TensionForm(ModelForm):
         )
 
 
+def changed_meanwhile(pending, paths, current):
+    """A note when the field changed since the proposal was drafted, e.g.
+    by a proposal adopted earlier in the meeting: the secretary merges both
+    (help texts aren't escaped)"""
+    for instruction in pending:
+        original = instruction.get("original_value")
+        if (
+            instruction["path"] in paths
+            and original is not None
+            and original != (current or "")
+        ):
+            return format_html(
+                "{} {}",
+                _("Changed in the meantime, currently:"),
+                current or "–",
+            )
+    return ""
+
+
+def with_note(help_text, note):
+    return format_html("{} {}", help_text, note) if note else help_text
+
+
 def text_field(label, initial, *, required=False, rows=2, help_text=""):
     return forms.CharField(
         label=label,
@@ -267,6 +291,11 @@ class RoleForm(Form):
                 label=_("Name"), initial=values["name"], max_length=200
             )
             self.fields["purpose"] = text_field(_("Purpose"), values["purpose"])
+            if role is not None:
+                for field, path in [("name", "name"), ("purpose", "aim")]:
+                    self.fields[field].help_text = changed_meanwhile(
+                        pending, {f"/roles/{key}/{path}"}, getattr(role, field)
+                    )
         for kind, label, new_label in TEXT_KINDS:
             existing = getattr(role, kind).all() if role is not None else []
             for obj in existing:
@@ -277,8 +306,17 @@ class RoleForm(Form):
                         f"/roles/{key}/{kind}/{obj.pk}/description",
                     }:
                         text = "" if i["op"] == "remove" else i.get("value") or ""
+                paths = {
+                    f"/roles/{key}/{kind}/{obj.pk}",
+                    f"/roles/{key}/{kind}/{obj.pk}/description",
+                }
                 self.fields[f"{kind}-{obj.pk}"] = text_field(
-                    label, text, help_text=_("Empty to remove.")
+                    label,
+                    text,
+                    help_text=with_note(
+                        _("Empty to remove."),
+                        changed_meanwhile(pending, paths, obj.text),
+                    ),
                 )
             self.fields[f"new_{kind}"] = text_field(
                 new_label,
@@ -464,6 +502,12 @@ def policy_edit(request, pk, key=None):
         proposal, f"policies/{key}", policy, [("title", "title"), ("body", "body")]
     )
     form = PolicyForm(request.POST or None, initial=values)
+    if policy is not None:
+        pending = instructions_of(proposal, f"policies/{key}")
+        for field in ["title", "body"]:
+            form.fields[field].help_text = changed_meanwhile(
+                pending, {f"/policies/{key}/{field}"}, getattr(policy, field)
+            )
     if form.is_valid():
         replace_subject(
             proposal,
