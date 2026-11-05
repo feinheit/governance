@@ -86,7 +86,8 @@ class Applier:
         # they turn back into roles (finish())
         self.shrunk = set()
         self.reverted = []
-        self.removed = []  # Circles, also those inside removed circles
+        # Roles and circles removed, also those inside removed circles
+        self.removed = []
         self.made_circles = []  # Automatically, by adding roles inside
 
     def problem(self, message, **kwargs):
@@ -145,6 +146,10 @@ class Applier:
         return True
 
     def apply(self, instructions):
+        if self.circle.archived_on:
+            # Removed since: its proposals are withdrawn with it
+            self.problem(_("%(object)s doesn't exist anymore."), object=self.circle)
+            raise ProposalError(self.problems)
         for instruction in instructions:
             self.apply_one(instruction)
         for kind, obj in self.created.items():
@@ -339,8 +344,7 @@ class Applier:
         role.archived_on = self.day
         role.save(update_fields=["archived_on"])
         role.policies.active().update(archived_on=self.day)
-        if role.is_circle:
-            self.removed.append(role)
+        self.removed.append(role)
 
     def make_circle(self, role):
         """Turns the role into a circle if needed, once"""
@@ -462,8 +466,9 @@ def adopt(proposal):
 
 
 def close_circles(circles, adopted):
-    """Circles removed or turned back into roles: their open proposals are
-    withdrawn, their running meetings end"""
+    """Circles and roles removed, circles turned back into roles: their open
+    proposals (also those for inside a role) are withdrawn, their running
+    meetings end"""
     from governance.meetings.activity import end_meeting
     from governance.meetings.models import Meeting
     from governance.proposals.process import withdraw

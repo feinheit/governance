@@ -559,6 +559,41 @@ class DraftingTest(TestCase):
         self.assertIsNotNone(meeting.ended_at)
         self.assertIsNone(other.ended_at)
 
+    def test_removed_role_inside(self):
+        """Proposals for inside a role (its holders' own governance) close
+        with the role; one left over isn't adopted into the archived role"""
+        inside = Proposal.objects.create(
+            circle=self.cook,
+            proposer=self.ada,
+            tension="Help",
+            status=Proposal.PUBLISHED,
+            created_at=dt.datetime(2026, 11, 1, tzinfo=dt.UTC),
+            instructions=[
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Sous"},
+            ],
+        )
+        leftover = Proposal.objects.create(
+            circle=self.cook,
+            proposer=self.ada,
+            tension="Help",
+            status=Proposal.ADOPTED,
+            created_at=dt.datetime(2026, 11, 1, tzinfo=dt.UTC),
+            instructions=inside.instructions,
+        )
+        proposal = self.draft()
+        proposal.instructions = [{"op": "remove", "path": f"/roles/{self.cook.pk}"}]
+        proposal.save()
+        adopt(proposal)
+        inside.refresh_from_db()
+        self.assertEqual(inside.status, Proposal.WITHDRAWN)
+
+        leftover.status = Proposal.PUBLISHED  # E.g. from before the fix
+        self.assertEqual(problems(leftover), ["Cook doesn't exist anymore."])
+        with self.assertRaises(ProposalError):
+            adopt(leftover)
+        self.assertFalse(Role.objects.filter(name="Sous").exists())
+
     def test_circle_without_roles_turns_back(self):
         """Moving or removing a circle's last role turns it back into a role"""
         bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)

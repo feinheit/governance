@@ -20,7 +20,8 @@ was das Annehmen bewirken würde oder weshalb es so nicht geht.
 Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; ihre Inhaber:innen
 schlagen das selbst vor. Ein Kreis ohne eigene Rollen wird beim Annehmen
 wieder zur Rolle. Wird ein Kreis entfernt oder wieder zur Rolle, werden
-seine offenen Vorschläge zurückgezogen, sein laufendes Meeting endet.
+seine offenen Vorschläge zurückgezogen, sein laufendes Meeting endet;
+ebenso bei einer entfernten Rolle die Vorschläge für ihr Inneres.
 
 Entwürfe sind privat, bis du sie veröffentlichst oder in ein Meeting
 bringst.
