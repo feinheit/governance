@@ -486,6 +486,9 @@ Deliberately not modelled:
   `is_circle` branches in `roles/views.py`, `can_start_meeting()`,
   `members()`, `proposer_roles()`, the meeting views' lookups and the
   role page's template.
+- **Non-core members of a role** (later, not yet): people taking part in
+  a role's inner circle (its proposals and governance meetings) without
+  holding the role; today its members are only its holders (`members()`).
 - **Switchover**: a final import, update the handbook's links, cancel
   GlassFrog, then stop the nightly `import_glassfrog --api`. Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
