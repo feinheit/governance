@@ -28,3 +28,8 @@ class HelpTest(TestCase):
             self.client.get("/help/verfassung/"), "Holacracy Verfassung"
         )
         self.assertEqual(self.client.get("/help/missing/").status_code, 404)
+
+    def test_html(self):
+        """The docs are ours, HTML like the keys of the shortcuts works"""
+        response = self.client.get("/help/orientierung/")
+        self.assertContains(response, "<kbd>Alt-H</kbd>")

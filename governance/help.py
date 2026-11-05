@@ -25,7 +25,8 @@ PAGES = {
 }
 FILES = {file: page for page, file in PAGES.items()}
 
-_markdown = MarkdownIt("commonmark", {"html": False}).enable("table")
+# The docs come from the repository, not from users: HTML like <kbd> is fine
+_markdown = MarkdownIt("commonmark", {"html": True}).enable("table")
 _link = re.compile(r'href="([^":#]+\.md)(#[^"]*)?"')
 
 
