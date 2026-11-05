@@ -111,6 +111,28 @@ class TacticalTest(TestCase):
         self.assertIn("Bob buys new knives", mail.outbox[0].body)
         self.assertIn("tasks.example.com", mail.outbox[0].body)
 
+    def test_no_proposals(self):
+        """Tactical meetings don't process proposals, not even crafted"""
+        from governance.proposals.models import Proposal
+
+        self.client.force_login(self.ada)
+        self.client.post(
+            f"/roles/{self.kitchen.pk}/meetings/new/", {"kind": "tactical"}
+        )
+        meeting = Meeting.objects.get()
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            tension="Knives",
+            status=Proposal.PUBLISHED,
+            created_at=meeting.started_at,
+        )
+        response = self.client.post(
+            f"/meetings/{meeting.pk}/agenda/add/", {"proposal": proposal.pk}
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(meeting.agenda_items.exists())
+
     def test_ad_hoc(self):
         """Any partner calls one and invites roles of any circle"""
         self.client.force_login(self.eve)

@@ -358,6 +358,8 @@ def agenda_add(request, pk):
         raise PermissionDenied
     position = max((item.position for item in context["agenda"]), default=0) + 1
     if proposal_id := request.POST.get("proposal"):
+        if "addable_proposals" not in context:
+            raise PermissionDenied  # Tactical meetings don't process proposals
         proposal = get_object_or_404(context["addable_proposals"], pk=proposal_id)
         if proposal.status in {Proposal.DRAFT, Proposal.PUBLISHED}:
             # Brought into the meeting: a draft isn't private anymore, an
