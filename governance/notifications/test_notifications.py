@@ -97,3 +97,30 @@ class NotificationsTest(TestCase):
         self.client.post("/accounts/notifications/", {"notify_all": "0"})
         self.zoe.refresh_from_db()
         self.assertFalse(self.zoe.notify_all)
+
+
+class AffectedTest(TestCase):
+    def test_holders_of_removed_roles(self):
+        """Who loses a role with the proposal is told, though not a member
+        anymore when the mail goes out"""
+        from governance.proposals.instructions import adopt
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        dishwasher = Role.objects.create(name="Dishwasher", circle=kitchen)
+        Assignment.objects.create(role=cook, user=ada)
+        Assignment.objects.create(role=dishwasher, user=eve)
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="Machines",
+            created_at=timezone.now(),
+            instructions=[{"op": "remove", "path": f"/roles/{dishwasher.pk}"}],
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(proposal)
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox), ["ada@example.com", "eve@example.com"]
+        )

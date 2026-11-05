@@ -69,9 +69,11 @@ def proposal_back_to_draft(proposal):
     )
 
 
-def proposal_adopted(proposal):
+def proposal_adopted(proposal, members_before=()):
+    """``members_before``: the members when adopting began, e.g. the holders
+    of roles the proposal removed or moved away"""
     return send(
-        everybody(proposal),
+        everybody(proposal) | User.objects.active().filter(pk__in=members_before),
         lambda: (
             _("Adopted in %(circle)s: %(proposal)s")
             % {"circle": proposal.circle, "proposal": proposal}

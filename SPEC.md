@@ -322,7 +322,8 @@ Open meetings are listed on the attendees' person pages.
 Plain text mails per recipient in their language, after the transaction
 commits (`notifications/mails.py`), to the circle's members: published
 async proposals, those taken back, adopted ones with the diff (also to
-the proposer), domain policy changes (section 3), and when a meeting ends
+the proposer, and to the members before adopting, e.g. the holders of
+roles the proposal removes or moves away), domain policy changes (section 3), and when a meeting ends
 its outputs (adopted proposals, elections, minutes, tactical outcomes;
 also to the attendees). Not configurable, people filter their mails; the
 only setting is `User.notify_all` ("everything in all circles").

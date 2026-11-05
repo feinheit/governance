@@ -23,6 +23,7 @@ from governance.proposals.models import Proposal
 from governance.roles.assignments import end_assignment, sync_circle_holders
 from governance.roles.constitution import CORE_ROLES, LEAD
 from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
+from governance.roles.permissions import members
 
 
 KEY = r"(\d+|n\d+)"
@@ -442,6 +443,8 @@ def adopt(proposal):
     """Applies the proposal and marks it as adopted"""
     if proposal.glassfrog_id or proposal.status == Proposal.ADOPTED:
         raise ProposalError([_("The proposal has already been adopted.")])
+    # Who is affected, before roles are removed or moved away
+    before = list(members(proposal.circle).values_list("pk", flat=True))
     applier = Applier(proposal)
     applier.apply(proposal.instructions)
     applier.finish()
@@ -467,7 +470,7 @@ def adopt(proposal):
     update_changes(since=timezone.localdate())
     if not (proposal.meeting and proposal.meeting.is_running):
         # The meeting mails its outputs together when it ends
-        transaction.on_commit(lambda: proposal_adopted(proposal))
+        transaction.on_commit(lambda: proposal_adopted(proposal, before))
     return proposal
 
 
