@@ -18,6 +18,7 @@ from django.utils.translation import gettext
 from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
+from governance.history.update import update_today
 from governance.proposals.models import Proposal
 from governance.roles.models import Assignment, Domain, Policy, Role
 from governance.roles.permissions import can_lead
@@ -74,6 +75,7 @@ def record(user, role, policy, instructions):
     proposal.roles.add(role)
     proposal.policies.add(policy)
     transaction.on_commit(lambda: domain_policy_changed(proposal))
+    update_today()
     return proposal
 
 

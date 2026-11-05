@@ -13,6 +13,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
+from governance.history.update import update_today
 from governance.meetings.access import can_run
 from governance.meetings.models import Election, Meeting
 from governance.roles.assignments import end_assignment, sync_circle_holders
@@ -58,6 +59,7 @@ def record_election(meeting, role, user, term_ends_on):
         )
     if role.core_role == REP:
         sync_circle_holders(role.circle, day)
+    update_today()
     return Election.objects.create(
         meeting=meeting, role=role, user=user, term_ends_on=term_ends_on
     )

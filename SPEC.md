@@ -348,7 +348,8 @@ only setting is `User.notify_all` ("everything in all circles").
 - **`history.Change`**: the differences from day to day, computed by
   replaying the audit log (`update_changes()`, also "changed outside
   governance" in the GlassFrog period); a cache for the history pages,
-  updated by `fairy_tasks` for yesterday and today and after adopting.
+  updated by `fairy_tasks` for yesterday and today, after adopting and
+  after assignments, elections and domain policies (`update_today()`).
 - **Assignments** have `starts_on`/`ends_on`, reconstructed from GlassFrog's
   history; they are the holders of the history too. A circle's role has its
   Circle Leads and Reps as holders, GlassFrog's data missed some of them.
@@ -478,9 +479,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (open findings of the last round, see `AGENTS.md`):
-  - The history's changes right after assignments, elections, domain
-    policies and deactivations, not only after the nightly
-    `fairy_tasks` (`update_changes()` is only called by `adopt()`).
   - A test: a circle removing its own last role in its own running
     meeting (works, `close_circles()` ends the meeting `item_adopt` holds).
   - `test` or `replace` on `/roles/X/supporting_circle` (e.g. from the

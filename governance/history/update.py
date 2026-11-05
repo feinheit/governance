@@ -122,3 +122,9 @@ def update_changes(*, since=None):
         previous = current
     Change.objects.bulk_create(new, batch_size=1000)
     return len(new)
+
+
+def update_today():
+    """For changes outside ``adopt()`` (assignments, elections, domain
+    policies): today's changes after the transaction, not only nightly"""
+    transaction.on_commit(lambda: update_changes(since=timezone.localdate()))

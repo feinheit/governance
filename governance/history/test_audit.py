@@ -177,3 +177,64 @@ class BusyDayTest(AuditTestCase):
             ],
             [(dishwasher, "name", "Dishwasher", "Washer")],
         )
+
+
+class ChangesRightAwayTest(AuditTestCase):
+    def test_outside_proposals(self):
+        """Assignments, domain policies, elections and deactivations show in
+        the history right away, not only after the nightly job"""
+        from django.urls import reverse
+
+        from governance.history.backfill import backfill
+        from governance.history.models import Change
+        from governance.meetings.elections import record_election
+        from governance.meetings.models import Meeting
+
+        root = User.objects.create_superuser("root@example.com", full_name="Root")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        fridge = Domain.objects.create(role=cook, text="The fridge")
+        today = timezone.localdate()
+        yesterday = today - dt.timedelta(days=1)
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM audit_logged_actions")
+        backfill([(yesterday, structure_from_database(yesterday))])
+
+        def kinds():
+            return {
+                (change.policy or change.role, change.kind)
+                for change in Change.objects.filter(date=today)
+            }
+
+        self.client.force_login(root)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/roles/{cook.pk}/assignments/", {"user": eve.pk})
+        self.assertIn((cook, "assigned"), kinds())
+
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/roles/{cook.pk}/domain-policies/new/",
+                {"title": "Labels", "body": "Always", "domain": fridge.pk},
+            )
+        self.assertIn((Policy.objects.get(title="Labels"), "policy-added"), kinds())
+
+        facilitator = kitchen.roles.get(core_role="facilitator")
+        meeting = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            record_election(meeting, facilitator, eve, today + dt.timedelta(days=365))
+        self.assertIn((facilitator, "assigned"), kinds())
+
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                reverse("admin:accounts_user_change", args=[eve.pk]),
+                {"email": eve.email, "full_name": eve.full_name},
+            )
+        eve.refresh_from_db()
+        self.assertFalse(eve.is_active)
+        # Assigned and unassigned the same day: neither shows
+        self.assertNotIn((cook, "assigned"), kinds())
+        self.assertNotIn((facilitator, "assigned"), kinds())

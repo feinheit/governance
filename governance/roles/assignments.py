@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
 from governance.forms import ModelForm
+from governance.history.update import update_today
 from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Assignment, Role
 from governance.roles.permissions import can_assign
@@ -59,6 +60,7 @@ def end_assignments_of(user, day):
 def after_change(role, day):
     if role.core_role == LEAD:
         sync_circle_holders(role.circle, day)
+    update_today()
 
 
 class AssignmentForm(ModelForm):
