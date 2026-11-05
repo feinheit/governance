@@ -151,9 +151,13 @@ The meeting shows the `problems()` of the item being processed to
 everybody, e.g. a role the proposal changes which a proposal adopted
 earlier in the meeting changed too. Adopting stays blocked; the secretary
 saves the role's (or policy's) form in the proposal once, which starts
-from the proposal's values, shows the current text below each field
-changed in the meantime (to merge both), and rebuilds the instructions
-against the current values (an accountability removed in the meantime drops the
+from the proposal's values and rebuilds the instructions against the
+current ones. Fields changed in the meantime which the proposal changes
+differently are merged (`drafting.MergeMixin`): text areas start with
+both versions between Git's conflict markers, single-line fields (name,
+title) show the current value and need a confirmation. Texts with
+conflict markers are rejected, by the forms and when applying
+instructions (also from the API) (an accountability removed in the meantime drops the
 proposal's change of it).
 
 States: `draft` → `published` (async) → `adopted`, or → `in_meeting` →

@@ -225,12 +225,19 @@ class ProcessingTest(TestCase):
         form = self.client.get(url).context["form"]
         self.assertEqual(form["name"].initial, "Head cook")
         self.assertIn("currently: Chef", form["name"].help_text)
-        field = form[f"accountabilities-{cooking.pk}"]
-        self.assertEqual(field.initial, "Cooking meals")
-        self.assertIn("currently: Cooking food", field.help_text)
-        self.assertNotIn("currently", form["purpose"].help_text)
-        data = {name: field.initial for name, field in form.fields.items()}
-        data[f"accountabilities-{cooking.pk}"] = "Cooking food and meals"
+        self.assertIn("name_merged", form.fields)
+        name = f"accountabilities-{cooking.pk}"
+        self.assertEqual(
+            form[name].initial,
+            "<<<<<<< currently\nCooking food\n=======\nCooking meals\n>>>>>>> proposal",
+        )
+        self.assertNotIn("purpose_merged", form.fields)
+        data = {field.name: field.initial for field in form}
+        del data["name_merged"]
+        # Neither confirmed nor merged
+        form = self.client.post(url, data).context["form"]
+        self.assertEqual(set(form.errors), {"name_merged", name})
+        data |= {"name_merged": "on", name: "Cooking food and meals"}
         self.client.post(url, data)
         self.assertNotContains(
             self.client.get(self.meeting.get_absolute_url()), "has been changed since"

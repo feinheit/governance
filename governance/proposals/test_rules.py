@@ -56,6 +56,30 @@ class ProblemsTest(TestCase):
         )
         self.assertEqual(problems(proposal), ["Baker doesn't exist anymore."])
 
+    def test_conflict_markers(self):
+        """Texts with conflict markers aren't adopted, e.g. from the API"""
+        from governance.proposals.instructions import problems
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        proposal = Proposal(
+            circle=kitchen,
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{cook.pk}/aim",
+                    "original_value": "",
+                    "value": "<<<<<<< currently\nSoup\n=======\nStew\n>>>>>>> proposal",
+                },
+            ],
+        )
+        self.assertEqual(
+            problems(proposal), ["Cook: purpose still contains conflict markers."]
+        )
+        # Equals signs elsewhere are fine
+        proposal.instructions[0]["value"] = "a ======= b"
+        self.assertEqual(problems(proposal), [])
+
     def test_new_circle_like_glassfrog(self):
         """GlassFrog turns a new role into a circle twice, before and after
         moving roles into it"""

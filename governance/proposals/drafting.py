@@ -22,7 +22,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from governance.forms import Form, ModelForm
-from governance.proposals.instructions import NEW_KEY, new_key, subject_of
+from governance.proposals.instructions import MARKERS, NEW_KEY, new_key, subject_of
 from governance.proposals.models import Proposal
 from governance.roles.constitution import CORE_ROLES, LEAD
 from governance.roles.models import Policy, Role
@@ -238,27 +238,69 @@ class TensionForm(ModelForm):
         )
 
 
-def changed_meanwhile(pending, paths, current):
-    """A note when the field changed since the proposal was drafted, e.g.
-    by a proposal adopted earlier in the meeting: the secretary merges both
-    (help texts aren't escaped)"""
-    for instruction in pending:
-        original = instruction.get("original_value")
-        if (
-            instruction["path"] in paths
-            and original is not None
-            and original != (current or "")
-        ):
-            return format_html(
-                "{} {}",
-                _("Changed in the meantime, currently:"),
-                current or "–",
+def changed_meanwhile(pending, paths, current, proposed):
+    """Whether the field changed since the proposal was drafted (e.g. by a
+    proposal adopted earlier in the meeting) and the proposal changes it
+    differently: the secretary merges both"""
+    current = current or ""
+    return any(
+        instruction["path"] in paths
+        and instruction.get("original_value") is not None
+        and instruction["original_value"] != current
+        and (proposed or "") != current
+        for instruction in pending
+    )
+
+
+class MergeMixin:
+    """Fields changed in the meantime: text areas start with both versions
+    between conflict markers, which have to go before saving; single-line
+    fields show the current value and need a confirmation"""
+
+    def merge(self, name, current, proposed):
+        field = self.fields[name]
+        if isinstance(field.widget, forms.Textarea):
+            self.initial[name] = "\n".join([
+                f"<<<<<<< {gettext('currently')}",
+                *([current] if current else []),
+                "=======",
+                *([proposed] if proposed else []),
+                f">>>>>>> {gettext('proposal')}",
+            ])
+            note = _(
+                "Changed in the meantime: merge the current text and the"
+                " proposal's, and remove the lines with <<<<<<<, ======= and"
+                " >>>>>>>."
             )
-    return ""
+        else:
+            note = _("Changed in the meantime, currently: %(value)s") % {
+                "value": current or "–"
+            }
+            fields = list(self.fields.items())
+            fields.insert(
+                [key for key, _field in fields].index(name) + 1,
+                (
+                    f"{name}_merged",
+                    forms.BooleanField(
+                        label=_("I've merged it with the current value."),
+                        required=True,
+                    ),
+                ),
+            )
+            self.fields = dict(fields)
+        # Help texts aren't escaped
+        field.help_text = (
+            format_html("{} {}", field.help_text, note)
+            if field.help_text
+            else format_html("{}", note)
+        )
 
-
-def with_note(help_text, note):
-    return format_html("{} {}", help_text, note) if note else help_text
+    def check_markers(self, data):
+        for name, value in list(data.items()):
+            if isinstance(value, str) and MARKERS.search(value):
+                self.add_error(
+                    name, _("Merge both versions and remove the conflict markers.")
+                )
 
 
 def text_field(label, initial, *, required=False, rows=2, help_text=""):
@@ -271,7 +313,7 @@ def text_field(label, initial, *, required=False, rows=2, help_text=""):
     )
 
 
-class RoleForm(Form):
+class RoleForm(MergeMixin, Form):
     def __init__(self, *args, proposal, key, role, **kwargs):
         super().__init__(*args, **kwargs)
         self.role = role
@@ -294,9 +336,11 @@ class RoleForm(Form):
             self.fields["purpose"] = text_field(_("Purpose"), values["purpose"])
             if role is not None:
                 for field, path in [("name", "name"), ("purpose", "aim")]:
-                    self.fields[field].help_text = changed_meanwhile(
-                        pending, {f"/roles/{key}/{path}"}, getattr(role, field)
-                    )
+                    current = getattr(role, field)
+                    if changed_meanwhile(
+                        pending, {f"/roles/{key}/{path}"}, current, values[field]
+                    ):
+                        self.merge(field, current, values[field])
         for kind, label, new_label in TEXT_KINDS:
             existing = getattr(role, kind).all() if role is not None else []
             for obj in existing:
@@ -312,13 +356,10 @@ class RoleForm(Form):
                     f"/roles/{key}/{kind}/{obj.pk}/description",
                 }
                 self.fields[f"{kind}-{obj.pk}"] = text_field(
-                    label,
-                    text,
-                    help_text=with_note(
-                        _("Empty to remove."),
-                        changed_meanwhile(pending, paths, obj.text),
-                    ),
+                    label, text, help_text=_("Empty to remove.")
                 )
+                if changed_meanwhile(pending, paths, obj.text, text):
+                    self.merge(f"{kind}-{obj.pk}", obj.text, text)
             self.fields[f"new_{kind}"] = text_field(
                 new_label,
                 "\n".join(
@@ -336,10 +377,11 @@ class RoleForm(Form):
         for name, value in list(data.items()):
             if isinstance(value, str):
                 data[name] = value.replace("\r\n", "\n").strip()
+        self.check_markers(data)
         return data
 
 
-class PolicyForm(Form):
+class PolicyForm(MergeMixin, Form):
     title = forms.CharField(label=_("Title"), max_length=200)
     body = forms.CharField(
         label=_("Text"), widget=forms.Textarea(attrs={"rows": 8}), required=False
@@ -348,6 +390,7 @@ class PolicyForm(Form):
     def clean(self):
         data = super().clean()
         data["body"] = data.get("body", "").replace("\r\n", "\n").strip()
+        self.check_markers(data)
         return data
 
 
@@ -506,9 +549,11 @@ def policy_edit(request, pk, key=None):
     if policy is not None:
         pending = instructions_of(proposal, f"policies/{key}")
         for field in ["title", "body"]:
-            form.fields[field].help_text = changed_meanwhile(
-                pending, {f"/policies/{key}/{field}"}, getattr(policy, field)
-            )
+            current = getattr(policy, field)
+            if changed_meanwhile(
+                pending, {f"/policies/{key}/{field}"}, current, values[field]
+            ):
+                form.merge(field, current, values[field])
     if form.is_valid():
         replace_subject(
             proposal,

@@ -26,6 +26,8 @@ from governance.roles.models import Accountability, Assignment, Domain, Policy, 
 
 
 KEY = r"(\d+|n\d+)"
+# Left from merging texts changed in the meantime (``drafting.MergeMixin``)
+MARKERS = re.compile(r"^(<{7}|>{7})( .*)?$|^={7}$", re.MULTILINE)
 NEW_KEY = re.compile(r"n(\d+)")
 ROLE_FIELDS = {"name": "name", "aim": "purpose"}
 POLICY_FIELDS = {"title": "title", "body": "body"}
@@ -125,6 +127,12 @@ class Applier:
         (self.roles if kind == "roles" else self.policies).add(obj)
         return obj
 
+    def check_value(self, label, value):
+        if isinstance(value, str) and MARKERS.search(value):
+            self.problem(_("%(label)s still contains conflict markers."), label=label)
+            return False
+        return True
+
     def check_original(self, label, current, instruction):
         original = instruction.get("original_value")
         if original is not None and (current or "") != (original or ""):
@@ -183,8 +191,9 @@ class Applier:
                 self.problem(_("The constitution defines %(role)s."), role=role)
                 return
             field = ROLE_FIELDS[match[2]]
-            if self.check_original(
-                f"{role}: {field}", getattr(role, field), instruction
+            label = f"{role}: {field}"
+            if self.check_value(label, value) and self.check_original(
+                label, getattr(role, field), instruction
             ):
                 setattr(role, field, value or "")
                 role.save(update_fields=[field])
@@ -195,8 +204,9 @@ class Applier:
             if policy is None:
                 return
             field = POLICY_FIELDS[match[2]]
-            if self.check_original(
-                f"{policy}: {field}", getattr(policy, field), instruction
+            label = f"{policy}: {field}"
+            if self.check_value(label, value) and self.check_original(
+                label, getattr(policy, field), instruction
             ):
                 setattr(policy, field, value or "")
                 policy.save(update_fields=[field])
@@ -215,6 +225,8 @@ class Applier:
                 self.problem(_("The Circle Lead gets no accountabilities or domains."))
                 return
             model = TEXTS[match[2]]
+            if not self.check_value(str(role), value):
+                return
             if op == "add":
                 obj = model.objects.create(
                     role=role,

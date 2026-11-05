@@ -324,12 +324,11 @@ class DraftingTest(TestCase):
         url = f"/proposals/{proposal.pk}/policies/{self.tea.pk}/"
         self.assertContains(self.client.get(url), "Often")
         self.assertNotContains(self.client.get(url), "Changed in the meantime")
-        # Changed in the meantime: the form shows the current text
+        # Changed in the meantime: both versions, the title needs no merging
         Policy.objects.filter(pk=self.tea.pk).update(body="<b>Never</b>")
-        self.assertContains(
-            self.client.get(url),
-            "Changed in the meantime, currently: &lt;b&gt;Never&lt;/b&gt;",
-        )
+        response = self.client.get(url)
+        self.assertContains(response, "&lt;b&gt;Never&lt;/b&gt;\n=======\nOften")
+        self.assertNotIn("title_merged", response.context["form"].fields)
         Policy.objects.filter(pk=self.tea.pk).update(body=self.tea.body)
         adopt(proposal)
         self.tea.refresh_from_db()
