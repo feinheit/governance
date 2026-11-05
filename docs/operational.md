@@ -19,4 +19,5 @@ Some things change without governance:
 - The settings implement what the circle's policies define.
 - The tool records all these changes.
 
-The admins add new people and deactivate people who leave.
+The admins add new people and deactivate people who leave: their roles
+end, their proposals stay.

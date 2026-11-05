@@ -21,4 +21,4 @@ Einiges ändert sich ohne Governance:
 - Das Tool hält alle diese Änderungen fest.
 
 Neue Personen erfassen und Personen deaktivieren, die gehen, machen die
-Admins.
+Admins: ihre Rollen enden, ihre Vorschläge bleiben.

@@ -70,3 +70,55 @@ class AdminTest(TestCase):
 
         ours = {m for m in apps.get_models() if m.__module__.startswith("governance.")}
         self.assertEqual(ours - set(admin.site._registry), set())
+
+
+class DeactivateTest(TestCase):
+    def test_deactivating_ends_the_assignments(self):
+        """People leaving don't keep their roles; their proposals stay"""
+        import datetime as dt
+
+        from governance.roles.assignments import sync_circle_holders
+
+        admin_user = User.objects.create_superuser("root@example.com")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        since = dt.date(2026, 1, 1)
+        Assignment.objects.create(role=cook, user=eve, starts_on=since)
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="lead"), user=eve, starts_on=since
+        )
+        sync_circle_holders(bakery, since)
+        self.assertTrue(Assignment.objects.current().filter(role=bakery).exists())
+        published = Proposal.objects.create(
+            circle=kitchen,
+            proposer=eve,
+            tension="Soup",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+        )
+
+        self.client.force_login(admin_user)
+        response = self.client.post(
+            reverse("admin:accounts_user_change", args=[eve.pk]),
+            {
+                "email": eve.email,
+                "full_name": eve.full_name,
+                "short_name": "",
+                "language": "",
+                "notify_all": "",
+                "is_admin": "",
+                "glassfrog_id": "",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        eve.refresh_from_db()
+        self.assertFalse(eve.is_active)
+        self.assertFalse(Assignment.objects.current().filter(user=eve).exists())
+        # Leading the bakery made her hold the bakery's role in the kitchen
+        self.assertFalse(Assignment.objects.current().filter(role=bakery).exists())
+        published.refresh_from_db()
+        self.assertEqual(published.status, Proposal.PUBLISHED)

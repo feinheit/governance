@@ -127,7 +127,10 @@ accountability texts are known where proposals or `roles.json` have them.
   without circle and role belong to the anchor.
 - **`Link`**: `role`, `title`, `url`, `description`; anybody edits them.
 - **Users**: everybody named in GlassFrog's data, matched by email,
-  people who left as inactive users. Afterwards admins add people.
+  people who left as inactive users. Afterwards admins add people, and
+  deactivate those who leave in the Django admin, which ends their
+  assignments (`roles.assignments.end_assignments_of()`, a Circle Lead's
+  role in the super-circle too); their proposals stay.
 
 **Mentions**: texts store `@[Name](role:ID)` and render the current name
 as a link; textareas autocomplete "@" (`mentions.js`, `GET /api/roles/`).

@@ -48,6 +48,14 @@ def end_assignment(assignment, day):
         assignment.save(update_fields=["ends_on"])
 
 
+def end_assignments_of(user, day):
+    """Somebody leaves (deactivated): their roles end, like removing them
+    one by one, a Circle Lead's role in the super-circle too"""
+    for assignment in Assignment.objects.current().filter(user=user):
+        end_assignment(assignment, day)
+        after_change(assignment.role, day)
+
+
 def after_change(role, day):
     if role.core_role == LEAD:
         sync_circle_holders(role.circle, day)

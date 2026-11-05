@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.utils import timezone
 
 from governance.accounts.models import APIToken, User
+from governance.roles.assignments import end_assignments_of
 
 
 @admin.register(User)
@@ -9,6 +11,12 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ["is_active", "is_admin"]
     search_fields = ["full_name", "short_name", "email"]
     exclude = ["password", "last_login"]
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        if change and "is_active" in form.changed_data and not obj.is_active:
+            # People leaving don't keep their roles
+            end_assignments_of(obj, timezone.localdate())
 
 
 @admin.register(APIToken)
