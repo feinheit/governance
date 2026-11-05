@@ -1,4 +1,4 @@
-exclude: "governance/static/governance/bootstrap|governance/static/governance/htmx|conf/strings.js"
+exclude: "governance/static/governance/bootstrap|governance/static/governance/htmx|conf/strings.js|docs/constitution/(Holacracy-|LICENSE|LIZENZ)"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
