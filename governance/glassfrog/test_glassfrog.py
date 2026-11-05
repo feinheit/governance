@@ -254,6 +254,12 @@ def current_files():
                             "path": "/roles/102/accountabilities/999",
                             "value": "Asking [@Kitchen](/organizations/1/orgnav/roles/102)",
                         },
+                        # GlassFrog adds accountabilities with /description too
+                        {
+                            "op": "add",
+                            "path": "/roles/102/accountabilities/998/description",
+                            "value": "Washing up",
+                        },
                     ],
                     "links": {"circle": 10, "tension": None, "person": 1},
                 },
@@ -656,6 +662,7 @@ class ImportTest(TestCase):
                 f"/roles/{kitchen.pk}",
                 f"/roles/{kitchen.pk}/domains/{fridge.pk}",
                 f"/roles/{kitchen.pk}/accountabilities/n1",
+                f"/roles/{kitchen.pk}/accountabilities/n2/description",
             ],
         )
         # Mentions like in the current texts, not GlassFrog's links

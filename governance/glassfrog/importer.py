@@ -63,7 +63,8 @@ def to_app_ids(instructions, names, ids):
     for instruction in instructions:
         if instruction["op"] == "add" and (
             match := re.search(
-                r"/(roles|policies|accountabilities|domains)/(\d+)$",
+                # New accountabilities and domains also with /description
+                r"/(roles|policies|accountabilities|domains)/(\d+)(?:/description)?$",
                 instruction["path"],
             )
         ):
