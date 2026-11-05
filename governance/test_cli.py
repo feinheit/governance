@@ -172,6 +172,82 @@ class CLITest(TestCase):
         self.assertIn(proposal.status, {Proposal.PUBLISHED, Proposal.ADOPTED})
         self.assertIn(proposal.get_absolute_url(), result.output)
 
+    def test_async_round_trip(self):
+        """Drafted and published with gov, answered in the browser, adopted
+        at the deadline by the daily task, read back with gov"""
+        import datetime as dt
+
+        import time_machine
+        from django.core import mail
+        from django.core.management import call_command
+
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="secretary"), user=bob
+        )
+        Assignment.objects.create(
+            role=Role.objects.create(name="Waiter", circle=self.kitchen), user=eve
+        )
+        soup = Accountability.objects.get(role=self.cook)
+        instructions = self.directory / "instructions.yaml"
+        instructions.write_text(
+            "- op: replace\n"
+            f"  path: /roles/{self.cook.pk}/accountabilities/{soup.pk}/description\n"
+            "  original_value: Cooking soup\n"
+            "  value: Cooking soup and stew\n"
+        )
+        result = self.gov(
+            "proposals",
+            "create",
+            "--circle",
+            self.kitchen.pk,
+            "--role",
+            self.cook.pk,
+            "--tension",
+            "Stew too",
+            "--instructions",
+            instructions,
+        )
+        self.assertEqual(result.exit_code, 0, result.output)
+        proposal = Proposal.objects.get()
+        with self.captureOnCommitCallbacks(execute=True):
+            result = self.gov("proposals", "publish", proposal.pk)
+        self.assertEqual(result.exit_code, 0, result.output)
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.PUBLISHED)
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox),
+            ["ada@example.com", "bob@example.com", "eve@example.com"],
+        )
+
+        # Bob consents, Eve only asks: no decision before the deadline
+        self.client.force_login(bob)
+        self.client.post(f"/proposals/{proposal.pk}/respond/", {"kind": "consent"})
+        self.client.force_login(eve)
+        self.client.post(
+            f"/proposals/{proposal.pk}/respond/",
+            {"kind": "comment", "text": "Which stew?"},
+        )
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.PUBLISHED)
+
+        mail.outbox = []
+        with (
+            time_machine.travel(proposal.deadline + dt.timedelta(minutes=1)),
+            self.captureOnCommitCallbacks(execute=True),
+        ):
+            call_command("fairy_tasks")
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.ADOPTED)
+        self.assertIn("eve@example.com", [m.to[0] for m in mail.outbox])
+
+        self.assertIn("adopted", self.gov("proposals", "show", proposal.pk).output)
+        self.assertIn(
+            "Cooking soup and stew", self.gov("roles", "show", self.cook.pk).output
+        )
+        self.assertIn("Stew too", self.gov("proposals", "--status", "adopted").output)
+
     def test_versions(self):
         """Older CLIs are told to upgrade, too old ones are rejected"""
         with patch.object(gov.core, "VERSION", "0.0.1"):
