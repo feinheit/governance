@@ -381,10 +381,12 @@ the user's decision.
 1. Users (see section 2); `settings.ADMINS` become superusers.
 2. The current structure of live circles from the newest files.
    Circles with only core roles become roles (`normalize()`).
-3. Proposals, tensions and meetings. Instructions stay as they are, with
-   GlassFrog IDs (`Proposal.glassfrog_id` tells them apart); names are
-   resolved against the last snapshot before `accepted_at` or the
-   proposal's own `add` instructions.
+3. Proposals, tensions and meetings. Adopted proposals keep their
+   instructions with GlassFrog IDs (`Proposal.glassfrog_id` tells them
+   apart), they are history; names are resolved against the last snapshot
+   before `accepted_at` or the proposal's own `add` instructions. Open
+   proposals (drafts, published, waiting for a meeting) get the app's IDs
+   (`to_app_ids()`), objects they add keys like `n1`: the app adopts them.
 4. Assignment history, `Snapshot`s (one per date, oldest first, skipping
    empty ones) and `Change`s from the git history of `glassfrog.json`.
    The newest snapshot is the database's state (`build_snapshot()`), so

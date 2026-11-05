@@ -14,6 +14,7 @@ from governance.glassfrog.normalize import normalize
 from governance.history.models import Change, Snapshot
 from governance.history.snapshots import build_snapshot, canonical
 from governance.meetings.models import Meeting
+from governance.proposals.instructions import problems
 from governance.proposals.models import Proposal
 from governance.roles.models import (
     Accountability,
@@ -234,6 +235,21 @@ def current_files():
                     "status": "escalated",
                     "proposed_at": "2025-12-01T10:00:00Z",
                     "instructions": [],
+                    "links": {"circle": 10, "tension": None, "person": 1},
+                },
+                # A draft, its instructions with GlassFrog's IDs
+                {
+                    "id": 705,
+                    "status": "draft",
+                    "proposed_at": "2026-02-25T10:00:00Z",
+                    "instructions": [
+                        {"op": "test", "path": "/roles/102"},
+                        {
+                            "op": "remove",
+                            "path": "/roles/102/domains/802",
+                            "original_value": "The fridge",
+                        },
+                    ],
                     "links": {"circle": 10, "tension": None, "person": 1},
                 },
                 {
@@ -621,6 +637,20 @@ class ImportTest(TestCase):
         import_glassfrog(self.path, log=lambda message: None)
         old.refresh_from_db()
         self.assertEqual(old.status, Proposal.IN_MEETING)
+
+    def test_open_proposals_with_the_apps_ids(self):
+        """Proposals which aren't adopted yet will be adopted here: the import
+        translates GlassFrog's IDs in their instructions to the app's"""
+        import_glassfrog(self.path, log=lambda message: None)
+        draft = Proposal.objects.get(glassfrog_id=705)
+        kitchen = Role.objects.get(glassfrog_id=102)
+        fridge = Domain.objects.get(glassfrog_id=802)
+        self.assertEqual(
+            [i["path"] for i in draft.instructions],
+            [f"/roles/{kitchen.pk}", f"/roles/{kitchen.pk}/domains/{fridge.pk}"],
+        )
+        self.assertEqual(draft.names[f"roles/{kitchen.pk}"], "Kitchen")
+        self.assertEqual(problems(draft), [])
 
     def test_incremental_import(self):
         """Today's state from the API, added to the history in the database"""

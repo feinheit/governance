@@ -87,7 +87,9 @@ class Applier:
         self.made_circles = []  # Automatically, by adding roles inside
 
     def problem(self, message, **kwargs):
-        self.problems.append(message % kwargs)
+        # Once, even if several instructions refer to the missing role
+        if (problem := message % kwargs) not in self.problems:
+            self.problems.append(problem)
 
     def get(self, kind, key, *, allow_archived=False, circle=None):
         """The role or policy of a path, checked against the circle"""

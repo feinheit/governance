@@ -38,3 +38,20 @@ class CanEditTest(TestCase):
         draft.status = Proposal.IN_MEETING
         meeting.ended_at = timezone.now()
         self.assertFalse(can_edit(ada, draft))  # Not after the meeting
+
+
+class ProblemsTest(TestCase):
+    def test_each_problem_once(self):
+        """Several instructions about a missing role report it once"""
+        from governance.proposals.instructions import problems
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        proposal = Proposal(
+            circle=kitchen,
+            instructions=[
+                {"op": "test", "path": "/roles/999999"},
+                {"op": "remove", "path": "/roles/999999/domains/1"},
+            ],
+            names={"roles/999999": "Baker"},
+        )
+        self.assertEqual(problems(proposal), ["Baker doesn't exist anymore."])

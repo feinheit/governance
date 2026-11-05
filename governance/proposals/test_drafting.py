@@ -373,7 +373,7 @@ class DraftingTest(TestCase):
         self.assertEqual(
             problems(proposal),
             [
-                "The constitution defines Circle Lead.",
+                # Once, although two instructions change the Circle Lead
                 "The constitution defines Circle Lead.",
                 f"The app can't apply /roles/{self.cook.pk} yet.",
                 "A new role or policy needs a name.",

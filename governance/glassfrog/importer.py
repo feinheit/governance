@@ -52,6 +52,42 @@ ESCALATED_STALE_AFTER = dt.timedelta(days=60)
 PATH_OBJECTS = re.compile(r"(roles|circles|policies|accountabilities|domains)/(\d+)")
 
 
+def to_app_ids(instructions, names, ids):
+    """Instructions and names of a proposal with the app's IDs instead of
+    GlassFrog's, for proposals the app will adopt
+
+    ``ids`` maps ``(kind, glassfrog_id)`` to the app's ID (circles to their
+    role's). Objects the proposal adds get keys like ``n1`` like in the app,
+    unknown ones stay, the app reports them as missing."""
+    added = {}
+    for instruction in instructions:
+        if instruction["op"] == "add" and (
+            match := re.search(
+                r"/(roles|policies|accountabilities|domains)/(\d+)$",
+                instruction["path"],
+            )
+        ):
+            key = (match[1], int(match[2]))
+            if key not in ids and key not in added:
+                added[key] = f"n{len(added) + 1}"
+
+    def translate(text):
+        def object_id(match):
+            key = (match[1], int(match[2]))
+            new = ids.get(key) or added.get(key) or match[2]
+            return f"{match[1]}/{new}"
+
+        return PATH_OBJECTS.sub(object_id, text)
+
+    translated = []
+    for instruction in instructions:
+        new = {**instruction, "path": translate(instruction["path"])}
+        if "from" in new:
+            new["from"] = translate(new["from"])
+        translated.append(new)
+    return translated, {translate(key): name for key, name in names.items()}
+
+
 def parse(value):
     return parse_datetime(value) if value else None
 
@@ -671,6 +707,19 @@ class Importer:
             .values_list("glassfrog_id", flat=True)
         )
         last_day = self.history.days[-1] if self.history.days else None
+        # GlassFrog's IDs of the current objects, for open proposals
+        ids = {}
+        for kind, model, field in [
+            ("roles", Role, "glassfrog_id"),
+            ("circles", Role, "glassfrog_circle_id"),
+            ("accountabilities", Accountability, "glassfrog_id"),
+            ("domains", Domain, "glassfrog_id"),
+            ("policies", Policy, "glassfrog_id"),
+        ]:
+            for glassfrog_id, pk in model.objects.exclude(**{field: None}).values_list(
+                field, "pk"
+            ):
+                ids[kind, glassfrog_id] = pk
         for proposal in data.get("proposals", []):
             links = proposal["links"]
             circle = self.circle(links.get("circle"), circles)
@@ -694,15 +743,22 @@ class Importer:
                 < last_day - ESCALATED_STALE_AFTER
             ):
                 status = Proposal.DRAFT
+            instructions = proposal.get("instructions") or []
+            names = self.names(instructions, day) | earlier.get(proposal["id"], {})
+            if status != Proposal.ADOPTED:
+                # The app adopts them: its own IDs. Adopted ones keep
+                # GlassFrog's, their history stays as it was.
+                app_instructions, names = to_app_ids(instructions, names, ids)
+            else:
+                app_instructions = instructions
             obj, _created = Proposal.objects.update_or_create(
                 glassfrog_id=proposal["id"],
                 defaults={
                     "circle": circle,
                     "proposer": self.users.get(links.get("person")),
                     "tension": tension.get("body") or tension.get("label") or "",
-                    "instructions": proposal.get("instructions") or [],
-                    "names": self.names(proposal.get("instructions") or [], day)
-                    | earlier.get(proposal["id"], {}),
+                    "instructions": app_instructions,
+                    "names": names,
                     "status": status,
                     "created_at": created_at,
                     "published_at": published_at,
@@ -711,18 +767,19 @@ class Importer:
                     "glassfrog_tension_id": tension.get("id"),
                 },
             )
-            self.set_affected(obj)
+            self.set_affected(obj, instructions)
             self.stats["proposals"] += 1
 
-    def set_affected(self, proposal):
-        """The roles and policies the proposal changes, for their history"""
+    def set_affected(self, proposal, instructions):
+        """The roles and policies the proposal changes, for their history
+        (from the instructions with GlassFrog's IDs)"""
         roles, policies = set(), set()
         circles = {
             role.glassfrog_circle_id: role
             for role in self.roles.values()
             if role.glassfrog_circle_id
         }
-        for instruction in proposal.instructions:
+        for instruction in instructions:
             text = f"{instruction['path']} {instruction.get('from', '')}"
             for kind, value in PATH_OBJECTS.findall(text):
                 glassfrog_id = int(value)
