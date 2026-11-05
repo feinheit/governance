@@ -252,6 +252,23 @@ def changed_meanwhile(pending, paths, current, proposed):
     )
 
 
+MERGE_NOTE = _(
+    "Changed in the meantime: merge the current text and the proposal's,"
+    " and remove the lines with <<<<<<<, ======= and >>>>>>>."
+)
+
+
+def conflict(label, current, proposed):
+    """Both versions between Git's conflict markers"""
+    return "\n".join([
+        f"<<<<<<< {label}",
+        *([current] if current else []),
+        "=======",
+        *([proposed] if proposed else []),
+        f">>>>>>> {gettext('proposal')}",
+    ])
+
+
 class MergeMixin:
     """Fields changed in the meantime: text areas start with both versions
     between conflict markers, which have to go before saving; single-line
@@ -260,18 +277,8 @@ class MergeMixin:
     def merge(self, name, current, proposed):
         field = self.fields[name]
         if isinstance(field.widget, forms.Textarea):
-            self.initial[name] = "\n".join([
-                f"<<<<<<< {gettext('currently')}",
-                *([current] if current else []),
-                "=======",
-                *([proposed] if proposed else []),
-                f">>>>>>> {gettext('proposal')}",
-            ])
-            note = _(
-                "Changed in the meantime: merge the current text and the"
-                " proposal's, and remove the lines with <<<<<<<, ======= and"
-                " >>>>>>>."
-            )
+            self.initial[name] = conflict(gettext("currently"), current, proposed)
+            note = MERGE_NOTE
         else:
             note = _("Changed in the meantime, currently: %(value)s") % {
                 "value": current or "–"
@@ -288,6 +295,19 @@ class MergeMixin:
                 ),
             )
             self.fields = dict(fields)
+        self.add_note(field, note)
+
+    def orphaned(self, name, texts):
+        """The proposal changes texts removed in the meantime: they're
+        offered as new ones, kept or dropped by removing the markers"""
+        field = self.fields[name]
+        self.initial[name] = "\n".join([
+            *([field.initial] if field.initial else []),
+            *(conflict(gettext("removed in the meantime"), "", text) for text in texts),
+        ])
+        self.add_note(field, MERGE_NOTE)
+
+    def add_note(self, field, note):
         # Help texts aren't escaped
         field.help_text = (
             format_html("{} {}", field.help_text, note)
@@ -371,6 +391,21 @@ class RoleForm(MergeMixin, Form):
                 rows=3,
                 help_text=_("One per line."),
             )
+            # Changes of texts removed in the meantime (removing them again
+            # needs nothing)
+            known = {str(obj.pk) for obj in existing}
+            if orphans := [
+                i.get("value") or ""
+                for i in pending
+                if i["op"] == "replace"
+                and (
+                    match := re.fullmatch(
+                        rf"/roles/{key}/{kind}/(\d+)(?:/description)?", i["path"]
+                    )
+                )
+                and match[1] not in known
+            ]:
+                self.orphaned(f"new_{kind}", orphans)
 
     def clean(self):
         data = super().clean()

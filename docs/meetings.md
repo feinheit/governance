@@ -35,8 +35,10 @@ Mitglied. Ablauf: Check-in, Agenda, Abschluss.
   im Vorschlag ("Bearbeiten") und führt beide Fassungen zusammen: in
   Textfeldern stehen beide zwischen Markierungen (`<<<<<<<`, `=======`,
   `>>>>>>>`), die vor dem Speichern weg müssen; unter Name und Titel
-  steht der aktuelle Wert, ein Häkchen bestätigt das Zusammenführen. Der
-  Vorschlag geht dann vom aktuellen Stand aus.
+  steht der aktuelle Wert, ein Häkchen bestätigt das Zusammenführen.
+  Ändert der Vorschlag eine inzwischen entfernte Accountability oder
+  Domain, steht ihr Text zwischen Markierungen bei den neuen: behalten
+  oder löschen. Der Vorschlag geht dann vom aktuellen Stand aus.
 - **Wahlen**: der Facilitator führt die Wahl durch, "Wahl festhalten"
   speichert Person und Ende der Amtszeit (Facilitator, Secretary, Circle
   Rep und durch Policy gewählte Rollen). Anstehende Wahlen stehen auf der

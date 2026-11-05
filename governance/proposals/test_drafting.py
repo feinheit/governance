@@ -282,6 +282,44 @@ class DraftingTest(TestCase):
             ["Cooking food", "Tasting"],
         )
 
+    def test_removed_meanwhile(self):
+        """The proposal changes an accountability removed in the meantime:
+        the form offers its text as a new one between conflict markers, the
+        secretary keeps it or drops it, it doesn't disappear unnoticed"""
+        proposal = self.draft()
+        url = f"/proposals/{proposal.pk}/roles/{self.cook.pk}/"
+        self.client.post(
+            url,
+            {
+                "name": "Chef",
+                f"accountabilities-{self.cooking.pk}": "Cooking meals",
+                f"accountabilities-{self.frying.pk}": "Frying",
+                "new_accountabilities": "Tasting",
+            },
+        )
+        self.cooking.delete()  # E.g. by a proposal adopted in the meeting
+
+        form = self.client.get(url).context["form"]
+        self.assertEqual(
+            form["new_accountabilities"].initial,
+            "Tasting\n<<<<<<< removed in the meantime\n=======\nCooking meals\n"
+            ">>>>>>> proposal",
+        )
+        self.assertIn("Changed in the meantime", form["new_accountabilities"].help_text)
+        data = {field.name: field.initial for field in form}
+        form = self.client.post(url, data).context["form"]
+        self.assertEqual(set(form.errors), {"new_accountabilities"})
+
+        data["new_accountabilities"] = "Tasting\nCooking meals"  # Kept
+        self.client.post(url, data)
+        proposal.refresh_from_db()
+        self.assertEqual(problems(proposal), [])
+        adopt(proposal)
+        self.assertEqual(
+            list(self.cook.accountabilities.values_list("text", flat=True)),
+            ["Frying", "Tasting", "Cooking meals"],
+        )
+
     def test_undo_and_remove(self):
         proposal = self.draft()
         self.client.post(

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 22:05+0100\n"
+"POT-Creation-Date: 2026-11-05 22:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -698,12 +698,12 @@ msgid "What is the gap between what is and what could be? Without changes the dr
 msgstr "Was fehlt zwischen dem, was ist, und dem, was sein könnte? Ohne Änderungen bleibt der Entwurf eine Spannung, die nur du siehst."
 
 #: governance/proposals/drafting.py
-msgid "currently"
-msgstr "aktuell"
-
-#: governance/proposals/drafting.py
 msgid "Changed in the meantime: merge the current text and the proposal's, and remove the lines with <<<<<<<, ======= and >>>>>>>."
 msgstr "Inzwischen geändert: führe den aktuellen Text und den des Vorschlags zusammen und entferne die Zeilen mit <<<<<<<, ======= und >>>>>>>."
+
+#: governance/proposals/drafting.py
+msgid "currently"
+msgstr "aktuell"
 
 #: governance/proposals/drafting.py
 #, python-format
@@ -713,6 +713,10 @@ msgstr "Inzwischen geändert, aktuell: %(value)s"
 #: governance/proposals/drafting.py
 msgid "I've merged it with the current value."
 msgstr "Ich habe es mit dem aktuellen Wert zusammengeführt."
+
+#: governance/proposals/drafting.py
+msgid "removed in the meantime"
+msgstr "inzwischen entfernt"
 
 #: governance/proposals/drafting.py
 msgid "Merge both versions and remove the conflict markers."

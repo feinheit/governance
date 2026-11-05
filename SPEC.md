@@ -155,7 +155,10 @@ from the proposal's values and rebuilds the instructions against the
 current ones. Fields changed in the meantime which the proposal changes
 differently are merged (`drafting.MergeMixin`): text areas start with
 both versions between Git's conflict markers, single-line fields (name,
-title) show the current value and need a confirmation. Texts with
+title) show the current value and need a confirmation. The proposal's
+changes of accountabilities and domains removed in the meantime are
+offered as new ones between markers (kept or dropped, not lost
+unnoticed). Texts with
 conflict markers are rejected, by the forms and when applying
 instructions (also from the API) (an accountability removed in the meantime drops the
 proposal's change of it).
