@@ -12,12 +12,15 @@ from collections import defaultdict
 from contextlib import contextmanager
 
 from django.conf import settings
-from django.db import transaction
+from django.db import connection, transaction
 from django.utils.dateparse import parse_datetime
 
+from governance.accounts.middleware import set_user_name
 from governance.accounts.models import User
 from governance.glassfrog.export import Export, without_empty
 from governance.glassfrog.normalize import normalize
+from governance.history.audit import TABLES as AUDIT_TABLES
+from governance.history.backfill import USER_NAME as BACKFILL_USER, Backfill
 from governance.history.models import Snapshot
 from governance.history.snapshots import build_snapshot
 from governance.history.update import update_changes
@@ -199,6 +202,14 @@ class Importer:
 
     def run(self):
         start = time.monotonic()
+        # The audit log names the import; its own rows of a full import are
+        # replaced by the backfilled history (import_snapshots())
+        set_user_name("GlassFrog import")
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT coalesce(max(event_id), 0) FROM audit_logged_actions"
+            )
+            self.first_event = cursor.fetchone()[0]
         with self.step("Reading the snapshots"):
             for day, data in self.export.snapshots():
                 self.history.add(day, normalize(data))
@@ -946,6 +957,7 @@ class Importer:
         roles = {role_id: role.pk for role_id, role in self.roles.items()}
         policies = {policy_id: policy.pk for policy_id, policy in self.policies.items()}
         known = unknown = 0
+        history = None if self.incremental else Backfill()
         for day, data in self.export.snapshots():
             snapshot = normalize(data)
             result = {"roles": {}, "policies": {}}
@@ -992,6 +1004,21 @@ class Importer:
                 result = build_snapshot(day)
             Snapshot.objects.update_or_create(date=day, defaults={"data": result})
             self.stats["snapshots"] += 1
+            if history is not None:
+                history.day(day, result)
+        if history is not None:
+            # The history as audit rows instead of this import's rows and an
+            # earlier import's history
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    DELETE FROM audit_logged_actions
+                    WHERE table_name = ANY(%s)
+                        AND (event_id > %s OR user_name = %s)
+                    """,
+                    [list(AUDIT_TABLES), self.first_event, BACKFILL_USER],
+                )
+            self.stats["history audit rows"] = history.save()
         del resolver.unresolved[unresolved:]
         total = known + unknown
         if total:

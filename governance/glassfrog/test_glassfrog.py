@@ -649,6 +649,39 @@ class ImportTest(TestCase):
         old.refresh_from_db()
         self.assertEqual(old.status, Proposal.IN_MEETING)
 
+    def test_history_in_the_audit_log(self):
+        """The audit log has the whole history: every day of GlassFrog's
+        history is the same as its snapshot"""
+        from django.db import connection
+
+        from governance.history.audit import structure_on
+        from governance.history.snapshots import canonical
+
+        def comparable(data):
+            """Without the assignments (the database's are the history now)
+            and the core roles' constitutional texts (from the code)"""
+            data = canonical(data)
+            for entry in data["roles"].values():
+                entry.pop("assignments")
+                if entry["core_role"]:
+                    entry["accountabilities"] = entry["domains"] = []
+            return data
+
+        with connection.cursor() as cursor:
+            # Rows committed by other tests, the audit table isn't flushed
+            cursor.execute("DELETE FROM audit_logged_actions")
+        import_glassfrog(self.path, log=lambda message: None)
+        for snapshot in Snapshot.objects.order_by("date"):
+            with self.subTest(day=snapshot.date):
+                self.assertEqual(
+                    comparable(structure_on(snapshot.date)),
+                    comparable(snapshot.data),
+                )
+        # Importing again replaces the history, it isn't doubled
+        import_glassfrog(self.path, log=lambda message: None)
+        last = Snapshot.objects.latest("date")
+        self.assertEqual(comparable(structure_on(last.date)), comparable(last.data))
+
     def test_open_proposals_with_the_apps_ids(self):
         """Proposals which aren't adopted yet will be adopted here: the import
         translates GlassFrog's IDs in their instructions to the app's"""

@@ -14,7 +14,8 @@ written, so that the audit log is the whole history
   domains which exist at the end get the IDs of their rows, the others
   negative IDs, so they never collide with real ones;
 - the core roles' constitutional texts of 5.0 aren't rows, they come from
-  the code (``audit.constitutional()``).
+  the code (``audit.constitutional()``), also those GlassFrog didn't
+  record; the texts of 4.1 before are rows.
 
 The rows are dated at the start of their day and belong to "GlassFrog".
 """
@@ -25,6 +26,7 @@ from collections import Counter
 from django.db import connection
 from django.utils import timezone
 
+from governance.history.audit import CONSTITUTION_5
 from governance.roles.constitution import constitutional_texts
 from governance.roles.models import Accountability, Domain
 
@@ -95,13 +97,13 @@ class Backfill:
                 state[pk] = old | {"archived_on": day.isoformat()}
                 self.emit(table, at, "U", old, {"archived_on": day.isoformat()})
 
-    def texts_of(self, at, roles):
+    def texts_of(self, at, day, roles):
         for kind, table in TEXTS.items():
             for role, entry in roles.items():
                 texts = [
                     text
                     for text in entry[kind]
-                    if not (entry["core_role"] and text in self.constitutional)
+                    if not (entry["core_role"] and self.from_code(text, day))
                 ]
                 current = self.texts[kind].setdefault(role, [])
                 old, new = Counter(t for _id, t in current), Counter(texts)
@@ -113,6 +115,11 @@ class Backfill:
                     current.append([self.next_id, text])
                     self.emit(table, at, "I", self.text_row(self.next_id, role, text))
                     self.next_id -= 1
+
+    def from_code(self, text, day):
+        """A core role's text the code knows: constitutional, or from 5.0 on
+        not recorded (GlassFrog only had the IDs of the constitutional ones)"""
+        return text in self.constitutional or (text is None and day >= CONSTITUTION_5)
 
     @staticmethod
     def text_row(pk, role, text):
@@ -137,7 +144,7 @@ class Backfill:
             },
         )
         # Archived roles keep their texts, like in the app
-        self.texts_of(at, roles)
+        self.texts_of(at, day, roles)
 
     def real_ids(self):
         """The IDs of the rows of the accountabilities and domains which
