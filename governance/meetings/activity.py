@@ -50,6 +50,14 @@ def connect():
     post_save.connect(proposal_changed, sender=Proposal)
 
 
+def end_meeting(meeting, at=None):
+    """Ends the meeting, its outputs go out by mail"""
+    meeting.ended_at = at or timezone.now()
+    meeting.current_item = None
+    meeting.save(update_fields=["ended_at", "current_item"])
+    transaction.on_commit(lambda: meeting_ended(meeting))
+
+
 def end_inactive_meetings(meetings=None):
     """Ends the meetings inactive for hours with their last activity"""
     cutoff = timezone.now() - INACTIVITY
@@ -60,9 +68,6 @@ def end_inactive_meetings(meetings=None):
     )
     count = 0
     for meeting in inactive:
-        meeting.ended_at = meeting.active_at or meeting.started_at
-        meeting.current_item = None
-        meeting.save(update_fields=["ended_at", "current_item"])
-        transaction.on_commit(lambda meeting=meeting: meeting_ended(meeting))
+        end_meeting(meeting, meeting.active_at or meeting.started_at)
         count += 1
     return count

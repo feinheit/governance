@@ -86,6 +86,7 @@ class Applier:
         # they turn back into roles (finish())
         self.shrunk = set()
         self.reverted = []
+        self.removed = []  # Circles, also those inside removed circles
         self.made_circles = []  # Automatically, by adding roles inside
 
     def problem(self, message, **kwargs):
@@ -333,6 +334,8 @@ class Applier:
         role.archived_on = self.day
         role.save(update_fields=["archived_on"])
         role.policies.active().update(archived_on=self.day)
+        if role.is_circle:
+            self.removed.append(role)
 
     def make_circle(self, role):
         """Turns the role into a circle if needed, once"""
@@ -445,11 +448,32 @@ def adopt(proposal):
     proposal.save()
     proposal.roles.add(*applier.roles)
     proposal.policies.add(*applier.policies)
+    close_circles([*applier.removed, *applier.reverted], proposal)
     update_changes(since=timezone.localdate())
     if not (proposal.meeting and proposal.meeting.is_running):
         # The meeting mails its outputs together when it ends
         transaction.on_commit(lambda: proposal_adopted(proposal))
     return proposal
+
+
+def close_circles(circles, adopted):
+    """Circles removed or turned back into roles: their open proposals are
+    withdrawn, their running meetings end"""
+    from governance.meetings.activity import end_meeting
+    from governance.meetings.models import Meeting
+    from governance.proposals.process import withdraw
+
+    if not circles:
+        return
+    for proposal in (
+        Proposal.objects
+        .filter(circle__in=circles)
+        .exclude(status__in=[Proposal.ADOPTED, Proposal.WITHDRAWN])
+        .exclude(pk=adopted.pk)
+    ):
+        withdraw(proposal)
+    for meeting in Meeting.objects.filter(circle__in=circles).running():
+        end_meeting(meeting)
 
 
 def consequences(proposal):

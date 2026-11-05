@@ -190,7 +190,9 @@ it if needed.
 **What drafts change**: add, change, remove and move roles and policies of
 the circle, convert roles and circles. Removing a circle moves the
 selected roles and policies to the super-circle and archives the rest
-(like GlassFrog). The anchor circle changes its own purpose,
+(like GlassFrog). Circles removed (also inside a removed one) or turned
+back into roles close: their open proposals (drafts too) are withdrawn,
+their running meetings end (`instructions.close_circles()`). The anchor circle changes its own purpose,
 accountabilities and domains through its own governance (1.3.3).
 
 **Roles and circles convert automatically** (like GlassFrog 5):

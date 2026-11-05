@@ -497,6 +497,68 @@ class DraftingTest(TestCase):
             (form["roles"].initial, form["policies"].initial), ([baker.pk], [noise.pk])
         )
 
+    def test_removed_circles_business(self):
+        """Removing a circle, or turning it back into a role, withdraws its
+        open proposals and ends its running meeting"""
+        from governance.meetings.models import Meeting
+
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        pastry = Role.objects.create(name="Pastry", is_circle=True, circle=self.kitchen)
+        pastry.create_core_roles()
+        icing = Role.objects.create(name="Icing", circle=pastry)
+
+        def open_proposal(circle, status):
+            return Proposal.objects.create(
+                circle=circle,
+                proposer=self.bob,
+                tension=status,
+                status=status,
+                created_at=dt.datetime(2026, 11, 1, tzinfo=dt.UTC),
+            )
+
+        opened = [
+            open_proposal(bakery, status)
+            for status in [Proposal.DRAFT, Proposal.PUBLISHED, Proposal.IN_MEETING]
+        ] + [open_proposal(pastry, Proposal.PUBLISHED)]
+        adopted = open_proposal(bakery, Proposal.ADOPTED)
+        meeting = Meeting.objects.create(
+            circle=bakery,
+            kind=Meeting.GOVERNANCE,
+            started_at=dt.datetime(2026, 12, 1, 11, tzinfo=dt.UTC),
+        )
+        other = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=dt.datetime(2026, 12, 1, 11, tzinfo=dt.UTC),
+        )
+
+        proposal = self.draft()
+        proposal.instructions = [
+            {"op": "remove", "path": f"/roles/{bakery.pk}"},
+            {
+                "op": "move",
+                "path": f"/roles/{icing.pk}",
+                "from": f"/circles/{pastry.pk}/roles/{icing.pk}",
+            },
+        ]
+        proposal.save()
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(proposal)
+
+        for obj in [*opened, adopted, meeting, other, proposal]:
+            obj.refresh_from_db()
+        self.assertEqual(
+            {p.status for p in opened},
+            {Proposal.WITHDRAWN},
+            [p.tension for p in opened],
+        )
+        self.assertEqual(adopted.status, Proposal.ADOPTED)
+        self.assertEqual(proposal.status, Proposal.ADOPTED)
+        self.assertIsNotNone(meeting.ended_at)
+        self.assertIsNone(other.ended_at)
+
     def test_circle_without_roles_turns_back(self):
         """Moving or removing a circle's last role turns it back into a role"""
         bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)

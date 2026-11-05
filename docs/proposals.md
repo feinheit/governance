@@ -18,7 +18,9 @@ would cause or why it can't be adopted like this.
 
 Adding roles inside a role makes it a circle; its holders propose that
 themselves. A circle without roles of its own turns back into a role when
-the proposal is adopted.
+the proposal is adopted. A circle removed or turned back into a role
+takes its open proposals with it (they're withdrawn), its running meeting
+ends.
 
 Drafts are private until you publish them or bring them to a meeting.
 

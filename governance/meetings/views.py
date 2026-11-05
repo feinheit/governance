@@ -2,7 +2,6 @@ from urllib.parse import urlencode
 
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -13,7 +12,7 @@ from django.views.decorators.http import require_POST
 from governance.accounts.models import User
 from governance.forms import ModelForm
 from governance.meetings.access import can_add_items, can_run
-from governance.meetings.activity import end_inactive_meetings
+from governance.meetings.activity import end_inactive_meetings, end_meeting
 from governance.meetings.elections import ElectionForm
 from governance.meetings.models import (
     STEP_CHOICES,
@@ -22,7 +21,6 @@ from governance.meetings.models import (
     Meeting,
 )
 from governance.meetings.outputs import meeting_outputs
-from governance.notifications.mails import meeting_ended
 from governance.proposals.drafting import can_edit
 from governance.proposals.instructions import problems
 from governance.proposals.models import Proposal, Response
@@ -311,10 +309,7 @@ def meeting_update(request, pk):
 def meeting_end(request, pk):
     meeting = runnable_meeting(request, pk)
     if meeting.is_running:
-        meeting.ended_at = timezone.now()
-        meeting.current_item = None
-        meeting.save(update_fields=["ended_at", "current_item"])
-        transaction.on_commit(lambda: meeting_ended(meeting))
+        end_meeting(meeting)
     return redirect(meeting)
 
 
