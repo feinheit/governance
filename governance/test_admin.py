@@ -1,0 +1,72 @@
+from django.contrib import admin
+from django.test import TestCase
+from django.urls import reverse
+from django.utils import timezone
+
+from governance.accounts.models import APIToken, User
+from governance.meetings.models import AgendaItem, Election, Meeting, Objection
+from governance.proposals.models import Proposal, Response
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    ChecklistItem,
+    Domain,
+    Link,
+    Metric,
+    Policy,
+    Role,
+)
+
+
+class AdminTest(TestCase):
+    def test_all_models(self):
+        """Every model is in the admin, its pages work"""
+        ada = User.objects.create_superuser("ada@example.com", full_name="Ada")
+        self.client.force_login(ada)
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        Accountability.objects.create(role=cook, text="Cooking")
+        Domain.objects.create(role=cook, text="The fridge")
+        Assignment.objects.create(role=cook, user=ada)
+        Policy.objects.create(role=kitchen, title="Clean up")
+        Metric.objects.create(role=cook, description="Soups")
+        ChecklistItem.objects.create(role=cook, description="Stove off")
+        Link.objects.create(role=cook, title="Tasks", url="https://example.com")
+        APIToken.create_for(user=ada, title="gov", access="read")
+        proposal = Proposal.objects.create(
+            circle=kitchen, proposer=ada, tension="Soup", created_at=timezone.now()
+        )
+        response = Response.objects.create(proposal=proposal, user=ada, kind="comment")
+        meeting = Meeting.objects.create(circle=kitchen, kind=Meeting.GOVERNANCE)
+        AgendaItem.objects.create(meeting=meeting, position=1, label="Bread")
+        Objection.objects.create(
+            proposal=proposal, meeting=meeting, user=ada, response=response
+        )
+        Election.objects.create(
+            meeting=meeting, role=cook, user=ada, term_ends_on=timezone.localdate()
+        )
+
+        for model, model_admin in admin.site._registry.items():
+            opts = model._meta
+            with self.subTest(model=opts.label):
+                url = reverse(f"admin:{opts.app_label}_{opts.model_name}_changelist")
+                self.assertEqual(self.client.get(url).status_code, 200)
+                if model_admin.search_fields:
+                    response = self.client.get(url, {"q": "a"})
+                    self.assertEqual(response.status_code, 200)
+                if model_admin.has_add_permission(self.client.request().wsgi_request):
+                    add = reverse(f"admin:{opts.app_label}_{opts.model_name}_add")
+                    self.assertEqual(self.client.get(add).status_code, 200)
+                obj = model.objects.first()
+                if obj is not None:
+                    change = reverse(
+                        f"admin:{opts.app_label}_{opts.model_name}_change",
+                        args=[obj.pk],
+                    )
+                    self.assertEqual(self.client.get(change).status_code, 200)
+
+        # All models of the project are registered
+        from django.apps import apps
+
+        ours = {m for m in apps.get_models() if m.__module__.startswith("governance.")}
+        self.assertEqual(ours - set(admin.site._registry), set())

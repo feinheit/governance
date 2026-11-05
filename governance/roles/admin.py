@@ -40,3 +40,25 @@ class PolicyAdmin(admin.ModelAdmin):
 class RoleItemAdmin(admin.ModelAdmin):
     list_display = ["description", "role", "frequency"]
     raw_id_fields = ["role"]
+
+
+@admin.register(models.Accountability, models.Domain)
+class TextAdmin(admin.ModelAdmin):
+    list_display = ["text", "role", "position"]
+    search_fields = ["text", "role__name"]
+    raw_id_fields = ["role"]
+
+
+@admin.register(models.Assignment)
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = ["user", "role", "focus", "starts_on", "ends_on", "elected_until"]
+    list_filter = ["ends_on"]
+    search_fields = ["user__full_name", "user__email", "role__name", "focus"]
+    raw_id_fields = ["role", "user"]
+
+
+@admin.register(models.Link)
+class LinkAdmin(admin.ModelAdmin):
+    list_display = ["title", "role", "url"]
+    search_fields = ["title", "url", "description"]
+    raw_id_fields = ["role"]
