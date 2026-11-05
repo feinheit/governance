@@ -258,7 +258,9 @@ removed; its corrections stay in the history.
 `called_by`, `invited_roles` (tactical), attendees, minutes, current item
 and step. Starting is calling: there is no prepared state, scheduling and
 announcing happen in the calendar. Any circle member (and admins) starts
-one (`can_start_meeting()`); facilitator and secretary default to the
+one (`can_start_meeting()`), the holders of a role a governance meeting
+inside it (1.3.1: its inner circle, adding roles makes it a circle; no
+tactical meetings in a role); facilitator and secretary default to the
 holders, else the stand-ins of 5.3.6. Members run it as stand-ins, and
 facilitator and secretary can change while it runs (`can_run()`, e.g. a
 late secretary). Attendees are the members when it starts; facilitator

@@ -164,13 +164,19 @@ def role_detail(request, pk):
         # Roles nobody holds are held by the Circle Lead
         lead = next((r for r in roles if r.core_role == "lead"), None)
         context["lead"] = lead
+        context["due_elections"] = due_elections([role])
+    if not role.core_role and not role.archived_on:
+        # Circles, and roles whose holders break them down in their inner
+        # circle (1.3.1, governance meetings only)
         context["meetings"] = role.meetings.filter(
             Q(ended_at=None) | Q(pk__in=role.meetings.order_by("-started_at")[:3])
         ).order_by("-started_at", "-pk")[:6]
         context["can_start_meeting"] = can_start_meeting(request.user, role)
         context["running_meeting"] = role.meetings.running().first()
-        context["due_elections"] = due_elections([role])
-    elif role.circle_id:
+        context["show_meetings"] = role.is_circle or bool(
+            context["meetings"] or context["can_start_meeting"]
+        )
+    if not role.is_circle and role.circle_id:
         context["lead"] = (
             role.circle.roles
             .active()

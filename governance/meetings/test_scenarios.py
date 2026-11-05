@@ -365,3 +365,80 @@ class CircleEndsItselfScenarioTest(TestCase):
         self.assertEqual(
             sorted(m.to[0] for m in outputs), ["ada@example.com", "bob@example.com"]
         )
+
+
+class RoleMeetingScenarioTest(TestCase):
+    def test_holders_break_down_their_role(self):
+        """The inside of every role is a circle (1.3.1): its holders hold
+        governance meetings there, adding roles makes it a circle"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        for user in [ada, bob]:
+            Assignment.objects.create(role=cook, user=user)
+        Assignment.objects.create(
+            role=Role.objects.create(name="Waiter", circle=kitchen), user=eve
+        )
+
+        # Not for others, and no tactical meetings in a role
+        self.client.force_login(eve)
+        self.assertNotContains(
+            self.client.get(cook.get_absolute_url()), "Start a governance meeting"
+        )
+        self.assertEqual(
+            self.client.post(f"/roles/{cook.pk}/meetings/new/").status_code, 403
+        )
+        self.client.force_login(ada)
+        self.assertContains(
+            self.client.get(cook.get_absolute_url()), "Start a governance meeting"
+        )
+        self.assertEqual(
+            self.client.post(
+                f"/roles/{cook.pk}/meetings/new/", {"kind": "tactical"}
+            ).status_code,
+            403,
+        )
+
+        self.client.post(f"/roles/{cook.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        self.assertEqual(
+            (meeting.circle, meeting.kind, set(meeting.attendees.all())),
+            (cook, Meeting.GOVERNANCE, {ada, bob}),
+        )
+        self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Help"})
+        item = AgendaItem.objects.get()
+        self.client.post(f"/agenda/{item.pk}/process/")
+        self.client.post(f"/agenda/{item.pk}/proposal/")
+        item.refresh_from_db()
+        self.assertEqual(item.proposal.role, cook)
+        self.client.post(
+            f"/proposals/{item.proposal.pk}/roles/new/",
+            {"name": "Sous", "purpose": "", "new_accountabilities": "Chopping"},
+        )
+        response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
+        self.assertContains(response, "The proposal is adopted.")
+
+        cook.refresh_from_db()
+        self.assertTrue(cook.is_circle)
+        self.assertEqual(Role.objects.get(name="Sous").circle, cook)
+        lead = cook.roles.get(core_role="lead")
+        self.assertEqual(
+            set(
+                Assignment.objects
+                .current()
+                .filter(role=lead)
+                .values_list("user", flat=True)
+            ),
+            {ada.pk, bob.pk},
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/meetings/{meeting.pk}/end/")
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox), ["ada@example.com", "bob@example.com"]
+        )
+        self.assertEqual(
+            self.client.get(f"/roles/{cook.pk}/meetings/").status_code, 200
+        )

@@ -17,7 +17,9 @@ items from their own device; the page updates by itself.
 ## Governance meeting
 
 "Start a governance meeting" on the circle's page, every member may do
-that. Steps: check-in, agenda, closing.
+that. Steps: check-in, agenda, closing. The holders of a role start one
+on the role's page to break it down into roles: adopting the first role
+makes it a circle, with them as its Circle Leads.
 
 - **Agenda**: a tension in one or two words, or a proposal (waiting,
   published async, your drafts).

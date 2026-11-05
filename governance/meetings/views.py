@@ -43,7 +43,8 @@ def holder(circle, core_role):
 
 
 def meeting_list(request, pk):
-    circle = get_object_or_404(Role.objects.circles(), pk=pk)
+    # Circles, and roles with governance meetings inside them (1.3.1)
+    circle = get_object_or_404(Role.objects.filter(core_role=""), pk=pk)
     meetings = circle.meetings.all()
     if kind := request.GET.get("kind"):
         meetings = meetings.filter(kind=kind)
@@ -162,7 +163,9 @@ def runnable_meeting(request, pk):
 
 @require_POST
 def meeting_create(request, pk):
-    circle = get_object_or_404(Role.objects.active().circles(), pk=pk)
+    # Circles, and roles whose holders break them down in their inner
+    # circle (constitution 1.3.1): governance meetings only
+    circle = get_object_or_404(Role.objects.active().filter(core_role=""), pk=pk)
     if not can_start_meeting(request.user, circle):
         raise PermissionDenied
     kind = (
@@ -170,6 +173,8 @@ def meeting_create(request, pk):
         if request.POST.get("kind") == Meeting.TACTICAL
         else Meeting.GOVERNANCE
     )
+    if kind == Meeting.TACTICAL and not circle.is_circle:
+        raise PermissionDenied
     # One meeting at a time per circle: starting another one joins it,
     # unless it has been inactive for hours
     end_inactive_meetings(circle.meetings.all())

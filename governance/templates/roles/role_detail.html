@@ -189,7 +189,7 @@
       {% endif %}
 
       {% if due_elections %}{% include "meetings/_due_elections.html" %}{% endif %}
-      {% if role.is_circle and not role.archived_on %}
+      {% if show_meetings %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Meetings" %}</h2></div>
           <ul class="list-group list-group-flush">
@@ -208,15 +208,19 @@
                   <button type="submit" class="btn btn-sm btn-quiet">
                     {% translate "Start a governance meeting" %}
                   </button>
-                  <button type="submit" name="kind" value="tactical" class="btn btn-sm btn-quiet">
-                    {% translate "Start a tactical meeting" %}
-                  </button>
+                  {% if role.is_circle %}
+                    <button type="submit" name="kind" value="tactical" class="btn btn-sm btn-quiet">
+                      {% translate "Start a tactical meeting" %}
+                    </button>
+                  {% endif %}
                 </form>
               {% endif %}
-              <a
-                class="btn btn-sm btn-quiet{% if not can_start_meeting and not running_meeting %} ms-auto{% endif %}"
-                href="{% url 'tactical_call' %}?role={{ role.pk }}"
-              >{% translate "Tactical meeting with selected roles…" %}</a>
+              {% if role.is_circle %}
+                <a
+                  class="btn btn-sm btn-quiet{% if not can_start_meeting and not running_meeting %} ms-auto{% endif %}"
+                  href="{% url 'tactical_call' %}?role={{ role.pk }}"
+                >{% translate "Tactical meeting with selected roles…" %}</a>
+              {% endif %}
             </li>
           </ul>
         </section>

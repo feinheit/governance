@@ -17,7 +17,10 @@ vom eigenen Gerät aus hinzu; die Seite aktualisiert sich von selbst.
 ## Governance Meeting
 
 "Governance Meeting starten" auf der Seite des Kreises, das darf jedes
-Mitglied. Ablauf: Check-in, Agenda, Abschluss.
+Mitglied. Ablauf: Check-in, Agenda, Abschluss. Wer eine Rolle hat,
+startet eines auf der Seite der Rolle, um sie in Rollen aufzuteilen: mit
+der ersten angenommenen Rolle wird sie zum Kreis, die Inhaber:innen
+werden seine Circle Leads.
 
 - **Agenda**: eine Spannung in ein, zwei Wörtern, oder ein Vorschlag
   (wartende, asynchron veröffentlichte, deine Entwürfe).
