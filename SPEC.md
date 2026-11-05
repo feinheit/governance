@@ -477,6 +477,17 @@ Deliberately not modelled:
 
 ## Backlog
 
+- **Verification** (open findings of the last round, see `AGENTS.md`):
+  - The history's changes right after assignments, elections, domain
+    policies and deactivations, not only after the nightly
+    `fairy_tasks` (`update_changes()` is only called by `adopt()`).
+  - A test: a circle removing its own last role in its own running
+    meeting (works, `close_circles()` ends the meeting `item_adopt` holds).
+  - `test` or `replace` on `/roles/X/supporting_circle` (e.g. from the
+    API) turns the circle back into a role: accept only `add` and
+    `remove`.
+  - A crafted POST adding a proposal to a tactical meeting's agenda fails
+    with a `KeyError` (`agenda_add`): refuse it.
 - **Switchover**: a final import, update the handbook's links, cancel
   GlassFrog, then stop the nightly `import_glassfrog --api`. Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog

@@ -50,6 +50,28 @@ views go back to `?next=` (`drafting.done()`, `HX-Location` for htmx).
 4. Run it again and make sure it still fails.
 5. Only then implement the fix and confirm the test passes.
 
+# Verification rounds
+
+From time to time (or when asked what we're missing), look for behaviour
+the tests don't cover, above all scenarios combining features over time:
+async proposals and meetings, restructuring (moving, removing, circles
+turning back into roles), assignments, elections, domain policies, mails,
+the history, the API and `gov`.
+
+1. A fresh agent reads `SPEC.md`, this file, the code and the tests,
+   read-only and without our hypotheses. Tell it what's covered already
+   (the scenario tests below, `git log --grep=Test:`) and to separate
+   verified bugs (shown with a throwaway test it deletes afterwards) from
+   untested risks.
+2. Check its findings against the code before relying on them.
+3. Ask the user where the behaviour is a decision rather than a bug.
+4. Fix bugs as above (failing test first), one commit each, docs and
+   spec included. Whole meetings go into
+   `governance/meetings/test_scenarios.py`, API and CLI round trips into
+   `governance/test_cli.py`.
+5. Keep the open findings in the backlog of `SPEC.md` ("Verification")
+   until they're done, so that the next session continues there.
+
 # User documentation
 
 `docs/`, succinct, explains the tool (not Holacracy) and what it doesn't
