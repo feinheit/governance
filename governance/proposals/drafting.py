@@ -7,6 +7,7 @@ policy again replaces the instructions built for it before.
 """
 
 import json
+import re
 
 from django import forms
 from django.contrib import messages
@@ -582,9 +583,19 @@ def circle_remove(request, pk, key):
     circle = get_role(proposal, key)
     if circle is None or not circle.is_circle or circle.circle_id is None:
         raise PermissionDenied
-    form = CircleRemoveForm(request.POST or None, circle=circle)
+    source = f"/circles/{circle.pk}/"
+    # What the proposal moves out of the circle already (also with the
+    # form moving roles and policies): saving replaces those moves
+    initial = {"roles": [], "policies": []}
+    for instruction in proposal.instructions:
+        if instruction["op"] == "move" and (
+            match := re.fullmatch(
+                rf"{source}(roles|policies)/(\d+)", instruction.get("from", "")
+            )
+        ):
+            initial[match[1]].append(int(match[2]))
+    form = CircleRemoveForm(request.POST or None, circle=circle, initial=initial)
     if form.is_valid():
-        source = f"/circles/{circle.pk}/"
         moves = [
             {
                 "op": "move",

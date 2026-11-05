@@ -438,6 +438,28 @@ class DraftingTest(TestCase):
                 403,
             )
 
+    def test_remove_circle_keeps_moves(self):
+        """The form starts with what the proposal moves out of the circle
+        already: saving it again doesn't drop those moves"""
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        noise = Policy.objects.create(role=bakery, title="Noise")
+        proposal = self.draft()
+        self.client.post(
+            f"/proposals/{proposal.pk}/move/", {"kind": "policies", "key": noise.pk}
+        )
+        url = f"/proposals/{proposal.pk}/roles/{bakery.pk}/remove-circle/"
+        form = self.client.get(url).context["form"]
+        self.assertEqual(
+            (form["roles"].initial, form["policies"].initial), ([], [noise.pk])
+        )
+        self.client.post(url, {"roles": [baker.pk], "policies": [noise.pk]})
+        form = self.client.get(url).context["form"]
+        self.assertEqual(
+            (form["roles"].initial, form["policies"].initial), ([baker.pk], [noise.pk])
+        )
+
     def test_circle_without_roles_turns_back(self):
         """Moving or removing a circle's last role turns it back into a role"""
         bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
