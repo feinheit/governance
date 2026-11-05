@@ -319,8 +319,8 @@ Open meetings are listed on the attendees' person pages.
 
 ## 5. Notifications
 
-Plain text mails per recipient in their language, after the transaction
-commits (`notifications/mails.py`), to the circle's members: published
+Plain text mails per active recipient in their language (none for
+people who left, also as proposers), after the transaction commits (`notifications/mails.py`), to the circle's members: published
 async proposals, those taken back, adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away), domain policy changes (section 3), and when a meeting ends

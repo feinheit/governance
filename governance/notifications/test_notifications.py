@@ -124,3 +124,28 @@ class AffectedTest(TestCase):
         self.assertEqual(
             sorted(m.to[0] for m in mail.outbox), ["ada@example.com", "eve@example.com"]
         )
+
+    def test_nothing_for_people_who_left(self):
+        from governance.proposals.instructions import adopt
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        eve = User.objects.create_user(
+            "eve@example.com", full_name="Eve", is_active=False
+        )
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        Assignment.objects.create(
+            role=Role.objects.create(name="Cook", circle=kitchen), user=ada
+        )
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=eve,  # Published before she left
+            tension="Soup",
+            created_at=timezone.now(),
+            instructions=[
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Baker"},
+            ],
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(proposal)
+        self.assertEqual([m.to[0] for m in mail.outbox], ["ada@example.com"])

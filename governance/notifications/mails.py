@@ -17,9 +17,9 @@ def recipients(circle):
 
 
 def send(users, subject, template, context):
-    """One mail per user, in their language"""
+    """One mail per user, in their language; nothing for people who left"""
     sent = 0
-    for user in users.distinct():
+    for user in users.filter(is_active=True).distinct():
         with override(user.language or settings.LANGUAGE_CODE):
             EmailMessage(
                 subject=str(subject()),
