@@ -330,6 +330,10 @@ class Applier:
                 self.made_circles.append(role)
 
     def convert(self, role, *, to_circle):
+        if to_circle and role in self.converted:
+            # Done before in this proposal; GlassFrog repeats it for new
+            # circles after moving roles into them
+            return
         if role.core_role or role.is_circle == to_circle or role.circle_id is None:
             self.problem(
                 _("%(role)s can't be turned into a circle or back."), role=role

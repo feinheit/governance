@@ -55,3 +55,28 @@ class ProblemsTest(TestCase):
             names={"roles/999999": "Baker"},
         )
         self.assertEqual(problems(proposal), ["Baker doesn't exist anymore."])
+
+    def test_new_circle_like_glassfrog(self):
+        """GlassFrog turns a new role into a circle twice, before and after
+        moving roles into it"""
+        from governance.proposals.instructions import problems
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        circle = {"op": "add", "path": "/roles/n1/supporting_circle"}
+        proposal = Proposal(
+            circle=kitchen,
+            instructions=[
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Pantry"},
+                circle,
+                {
+                    "op": "move",
+                    "from": f"/roles/{cook.pk}",
+                    "path": f"/roles/n1/supporting_circle/roles/{cook.pk}",
+                },
+                circle | {"context": {"related_instruction": {"op": "add"}}},
+            ],
+        )
+        self.assertEqual(problems(proposal), [])
