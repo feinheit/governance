@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 22:10+0100\n"
+"POT-Creation-Date: 2026-11-05 22:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1565,6 +1565,7 @@ msgid "Sign out"
 msgstr "Abmelden"
 
 #: governance/templates/generic/object_form.html
+#: governance/templates/roles/person_detail.html
 msgid "Save"
 msgstr "Speichern"
 
@@ -2311,6 +2312,11 @@ msgid "No roles at the moment."
 msgstr "Zurzeit keine Rollen."
 
 #: governance/templates/roles/person_detail.html
+#: governance/templates/roles/role_detail.html
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: governance/templates/roles/person_detail.html
 msgid "Mails"
 msgstr "Mails"
 
@@ -2329,6 +2335,10 @@ msgstr "Nur meine Kreise"
 #: governance/templates/roles/person_detail.html
 msgid "Inform me about everything in all circles"
 msgstr "Über alles in allen Kreisen informieren"
+
+#: governance/templates/roles/person_detail.html
+msgid "Language"
+msgstr "Sprache"
 
 #: governance/templates/roles/person_detail.html
 msgid "Your meetings"
@@ -2371,10 +2381,6 @@ msgstr "Circle Lead (standardmässig)"
 #: governance/templates/roles/role_detail.html
 msgid "New proposal"
 msgstr "Neuer Vorschlag"
-
-#: governance/templates/roles/role_detail.html
-msgid "Settings"
-msgstr "Einstellungen"
 
 #: governance/templates/roles/role_detail.html
 msgid "Circle browser"

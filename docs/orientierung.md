@@ -42,7 +42,7 @@ Unbesetzte Rollen hat der Circle Lead, ausser dem Circle Rep.
 
 **Deine Personenseite** zeigt deine Rollen, deine Entwürfe und Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine
-Mail-Einstellung.
+Einstellungen: Mails und Sprache (Deutsch oder Englisch).
 
 Laufende Meetings, an denen du teilnimmst, stehen oben auf jeder Seite.
 

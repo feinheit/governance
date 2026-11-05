@@ -158,3 +158,13 @@ def notifications(request):
     request.user.notify_all = request.POST.get("notify_all") == "1"
     request.user.save(update_fields=["notify_all"])
     return redirect(request.user)
+
+
+@require_POST
+@login_required
+def language(request):
+    """The language of the pages and mails (empty: the default)"""
+    if (value := request.POST.get("language")) in dict(settings.LANGUAGES):
+        request.user.language = value
+        request.user.save(update_fields=["language"])
+    return redirect(request.user)

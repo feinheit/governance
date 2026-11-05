@@ -101,3 +101,28 @@ class AuditTest(TestCase):
         self.assertEqual(action.changed_fields, {"full_name": "Ada Example"})
         self.assertEqual(action.user_id, user.id)
         self.assertIn("UPDATE accounts_user", str(action))
+
+
+class SettingsTest(TestCase):
+    def test_language(self):
+        """People choose their language in the settings on their page"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        self.client.force_login(ada)
+        response = self.client.get(ada.get_absolute_url())
+        self.assertContains(response, 'action="/accounts/language/"')
+        self.assertNotContains(
+            self.client.get(bob.get_absolute_url()), "/accounts/language/"
+        )
+
+        response = self.client.post("/accounts/language/", {"language": "de"})
+        self.assertRedirects(response, ada.get_absolute_url())
+        ada.refresh_from_db()
+        self.assertEqual(ada.language, "de")
+        self.assertContains(self.client.get(ada.get_absolute_url()), "Einstellungen")
+        # Only the app's languages
+        self.client.post("/accounts/language/", {"language": "fr"})
+        ada.refresh_from_db()
+        self.assertEqual(ada.language, "de")
+        self.client.post("/accounts/language/", {"language": "en"})
+        self.assertContains(self.client.get(ada.get_absolute_url()), "Settings")

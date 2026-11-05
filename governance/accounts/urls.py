@@ -9,4 +9,5 @@ urlpatterns = [
     path("logout/", views.logout, name="logout"),
     path("api-tokens/", views.api_tokens, name="api_tokens"),
     path("notifications/", views.notifications, name="notifications"),
+    path("language/", views.language, name="language"),
 ]

@@ -53,8 +53,9 @@
       {% if due_elections %}{% include "meetings/_due_elections.html" with show_circle=True %}{% endif %}
       {% if person == request.user %}
         <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Mails" %}</h2></div>
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Settings" %}</h2></div>
           <div class="card-body">
+            <h3 class="h6">{% translate "Mails" %}</h3>
             <p class="mb-2">
               {% if person.notify_all %}
                 {% translate "You get mails about everything in all circles." %}
@@ -73,6 +74,21 @@
                   {% translate "Inform me about everything in all circles" %}
                 </button>
               {% endif %}
+            </form>
+            <h3 class="h6 mt-3">{% translate "Language" %}</h3>
+            <form method="post" action="{% url 'language' %}" class="d-flex gap-1">
+              {% csrf_token %}
+              {% get_current_language as current_language %}
+              {% get_available_languages as available_languages %}
+              {% get_language_info_list for available_languages as languages %}
+              <select name="language" class="form-select form-select-sm w-auto" aria-label="{% translate 'Language' %}">
+                {% for language in languages %}
+                  <option value="{{ language.code }}" {% if language.code == current_language %}selected{% endif %}>
+                    {{ language.name_local }}
+                  </option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Save" %}</button>
             </form>
           </div>
         </section>
