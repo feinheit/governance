@@ -96,3 +96,84 @@ class BackfillTest(AuditTestCase):
         # The accountability at the end is the real row
         rows = rows_on(day3)["accountabilities"]
         self.assertEqual(rows[cooking.pk]["text"], "Cooking")
+
+
+class BusyDayTest(AuditTestCase):
+    def test_changes_undone_the_same_day(self):
+        """Several proposals on one day: the history shows what the day
+        changed, not the steps undone the same day"""
+        from governance.history.backfill import backfill
+        from governance.history.models import Change
+        from governance.proposals.instructions import adopt
+        from governance.proposals.models import Proposal
+
+        ada = User.objects.create_user("ada@example.com")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        waiter = Role.objects.create(name="Waiter", circle=kitchen)
+        dishwasher = Role.objects.create(name="Dishwasher", circle=kitchen)
+        bakery = Role.objects.create(name="Bakery", circle=kitchen, is_circle=True)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        Assignment.objects.create(role=cook, user=ada)
+        today = timezone.localdate()
+        yesterday = today - dt.timedelta(days=1)
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM audit_logged_actions")
+        backfill([(yesterday, structure_from_database(yesterday))])
+
+        def governance(*instructions):
+            return adopt(
+                Proposal.objects.create(
+                    circle=kitchen,
+                    proposer=ada,
+                    tension="Busy",
+                    created_at=timezone.now(),
+                    instructions=list(instructions),
+                )
+            )
+
+        def rename(role, old, new):
+            governance({
+                "op": "replace",
+                "path": f"/roles/{role.pk}/name",
+                "original_value": old,
+                "value": new,
+            })
+
+        rename(cook, "Cook", "Chef")
+        rename(cook, "Chef", "Cook")
+        governance({
+            "op": "move",
+            "path": f"/roles/{bakery.pk}/supporting_circle/roles/{waiter.pk}",
+            "from": f"/roles/{waiter.pk}",
+        })
+        governance({
+            "op": "move",
+            "path": f"/roles/{waiter.pk}",
+            "from": f"/circles/{bakery.pk}/roles/{waiter.pk}",
+        })
+        governance(
+            {"op": "add", "path": "/roles/n1"},
+            {"op": "add", "path": "/roles/n1/name", "value": "Temp"},
+        )
+        temp = Role.objects.get(name="Temp")
+        governance({"op": "remove", "path": f"/roles/{temp.pk}"})
+        governance({"op": "add", "path": f"/roles/{dishwasher.pk}/supporting_circle"})
+        governance({
+            "op": "remove",
+            "path": f"/roles/{dishwasher.pk}/supporting_circle",
+        })
+        rename(dishwasher, "Dishwasher", "Washer")  # The day's only change
+
+        self.assertEqual(
+            canonical(structure_on(today)), canonical(structure_from_database(today))
+        )
+        self.assertEqual(
+            [
+                (change.role, change.kind, change.old, change.new)
+                for change in Change.objects.filter(date=today)
+            ],
+            [(dishwasher, "name", "Dishwasher", "Washer")],
+        )
