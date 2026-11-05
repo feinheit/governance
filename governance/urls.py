@@ -34,10 +34,10 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:  # pragma: no cover
-    from governance.not_found import page_not_found
+    from governance.not_found import preview
 
     # Django shows its own 404 page with DEBUG, this one previews ours
-    urlpatterns.append(path("404/", page_not_found, {"exception": None}))
+    urlpatterns.append(path("404/", preview))
 
 if settings.DEBUG_TOOLBAR:  # pragma: no cover
     from debug_toolbar.toolbar import debug_toolbar_urls

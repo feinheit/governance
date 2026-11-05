@@ -44,3 +44,10 @@ def page_not_found(request, exception):
         },
         status=404,
     )
+
+
+def preview(request):
+    """The 404 page with DEBUG, which shows Django's own; ``?path=`` shows it
+    for another address, e.g. a deleted draft"""
+    request.path_info = request.GET.get("path", request.path_info)
+    return page_not_found(request, None)
