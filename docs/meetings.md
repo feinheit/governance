@@ -29,6 +29,11 @@ Mitglied. Ablauf: Check-in, Traktanden, Abschluss.
   prüft sie. "Annehmen" geht erst, wenn alle Einwände geprüft
   und die gültigen integriert sind. Die Änderung gilt sofort, die Mail
   kommt am Ende des Meetings.
+- **Dieselbe Rolle mehrmals**: hat ein früher angenommener Vorschlag eine
+  Rolle oder Policy geändert, die auch der aktuelle ändert, zeigt das
+  Meeting den Konflikt vor dem Annehmen. Der Secretary öffnet die Rolle
+  im Vorschlag ("Bearbeiten") und speichert sie: der Vorschlag geht dann
+  vom aktuellen Stand aus, seine eigenen Änderungen bleiben.
 - **Wahlen**: der Facilitator führt die Wahl durch, "Wahl festhalten"
   speichert Person und Ende der Amtszeit (Facilitator, Secretary, Circle
   Rep und durch Policy gewählte Rollen). Anstehende Wahlen stehen auf der

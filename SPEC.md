@@ -147,6 +147,13 @@ build them (`proposals/drafting.py`), pages render a diff. New objects use
 keys like `n1` until adoption. `adopt()` (`proposals/instructions.py`)
 applies all or nothing, validated against the constitution; the draft
 page lists the `problems()` and `consequences()` adopting now would have.
+The meeting shows the `problems()` of the item being processed to
+everybody, e.g. a role the proposal changes which a proposal adopted
+earlier in the meeting changed too. Adopting stays blocked; the secretary
+saves the role's (or policy's) form in the proposal once, which starts
+from the proposal's values and rebuilds the instructions against the
+current ones (an accountability removed in the meantime drops the
+proposal's change of it).
 
 States: `draft` → `published` (async) → `adopted`, or → `in_meeting` →
 `adopted`/`withdrawn`. `in_meeting` ("waiting for a meeting") waits for

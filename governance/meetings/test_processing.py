@@ -165,6 +165,68 @@ class ProcessingTest(TestCase):
         response = self.client.post(f"/agenda/{self.item.pk}/adopt/", follow=True)
         self.assertContains(response, "has been changed since")
 
+    def test_same_role_twice(self):
+        """A proposal adopted earlier in the meeting changed the role: the
+        meeting shows the conflict before adopting, saving the role in the
+        proposal once takes over the current values"""
+        second = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            tension="Clearer role",
+            status=Proposal.IN_MEETING,
+            meeting=self.meeting,
+            created_at=timezone.now(),
+            instructions=[
+                {"op": "test", "path": f"/roles/{self.cook.pk}"},
+                {
+                    "op": "replace",
+                    "path": f"/roles/{self.cook.pk}/name",
+                    "original_value": "Cook",
+                    "value": "Head cook",
+                },
+                {
+                    "op": "add",
+                    "path": f"/roles/{self.cook.pk}/accountabilities/n1/description",
+                    "value": "Tasting",
+                },
+            ],
+            names={f"roles/{self.cook.pk}": "Cook"},
+        )
+        item = AgendaItem.objects.create(
+            meeting=self.meeting, proposal=second, label="Clearer role", position=2
+        )
+        self.client.force_login(self.ada)  # The facilitator
+        self.client.post(f"/agenda/{self.item.pk}/process/")
+        self.client.post(f"/agenda/{self.item.pk}/adopt/")
+        self.cook.refresh_from_db()
+        self.assertEqual(self.cook.name, "Chef")
+
+        self.client.post(f"/agenda/{item.pk}/process/")
+        self.assertContains(
+            self.client.get(self.meeting.get_absolute_url()),
+            "Chef: name has been changed since the proposal was drafted.",
+        )
+
+        # The secretary saves the role's form as it is
+        self.client.force_login(self.bob)
+        url = f"/proposals/{second.pk}/roles/{self.cook.pk}/"
+        form = self.client.get(url).context["form"]
+        self.client.post(
+            url, {name: field.initial for name, field in form.fields.items()}
+        )
+        self.assertNotContains(
+            self.client.get(self.meeting.get_absolute_url()), "has been changed since"
+        )
+        self.client.post(f"/agenda/{item.pk}/adopt/")
+        second.refresh_from_db()
+        self.cook.refresh_from_db()
+        self.assertEqual(second.status, Proposal.ADOPTED)
+        self.assertEqual(self.cook.name, "Head cook")
+        self.assertEqual(
+            list(self.cook.accountabilities.values_list("text", flat=True)),
+            ["Tasting"],
+        )
+
     def test_outputs_mail(self):
         from django.core import mail
 
