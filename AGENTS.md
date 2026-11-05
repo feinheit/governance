@@ -243,6 +243,9 @@ the apps' initial migrations).
   raise `MINIMUM` when older ones don't work anymore).
   `governance/test_cli.py` runs the real commands against the API (requests
   go through Django's test client); add a test there for new commands.
+  `cli/skills/` has Claude Code skills using `gov` (e.g.
+  `governance-proposal`, a draft from a tension); `governance/test_skills.py`
+  checks that their examples of instructions are what the server takes.
 - Use `speckenv` to load `.env` files in standalone Python scripts.
 - Pre-commit hooks (via `prek`, not `pre-commit`) run on commit, ruff
   included, and auto-fix formatting. If a commit fails due to formatting,
