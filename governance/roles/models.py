@@ -16,6 +16,11 @@ from governance.roles.constitution import (
 )
 
 
+# The acceptance period of async proposals unless the anchor circle (or a
+# circle in between) sets one; the import sets it on the anchor circle
+ASYNC_ACCEPTANCE_DAYS = 4
+
+
 class RoleQuerySet(models.QuerySet):
     def active(self):
         return self.filter(archived_on__isnull=True)
@@ -143,7 +148,7 @@ class Role(models.Model):
             circle = circle.circle
         return circles[::-1]
 
-    def effective_async_acceptance_days(self, default=4):
+    def effective_async_acceptance_days(self, default=ASYNC_ACCEPTANCE_DAYS):
         circle = self if self.is_circle else self.circle
         while circle is not None:
             if circle.async_acceptance_days is not None:

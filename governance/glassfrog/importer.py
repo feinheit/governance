@@ -27,6 +27,7 @@ from governance.proposals.models import Proposal
 from governance.roles.constitution import constitutional_texts
 from governance.roles.mentions import MentionResolver
 from governance.roles.models import (
+    ASYNC_ACCEPTANCE_DAYS,
     FREQUENCY_CHOICES,
     Accountability,
     Assignment,
@@ -390,6 +391,13 @@ class Importer:
                 role = self.roles[role_id]
                 role.circle = self.roles.get(entry["circle"])
                 role.save(update_fields=["circle"])
+            elif entry["is_circle"]:
+                # GlassFrog has no setting for it, only a policy: the
+                # default at the top, sub-circles inherit it; kept once set
+                role = self.roles[role_id]
+                if role.async_acceptance_days is None:
+                    role.async_acceptance_days = ASYNC_ACCEPTANCE_DAYS
+                    role.save(update_fields=["async_acceptance_days"])
 
         if self.incremental and history.days:
             # Roles GlassFrog doesn't return anymore

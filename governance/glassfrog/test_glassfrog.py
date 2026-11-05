@@ -498,6 +498,9 @@ class ImportTest(TestCase):
             (anchor.circle, anchor.is_circle, anchor.glassfrog_circle_id),
             (None, True, 10),
         )
+        # GlassFrog has no setting for it (only a policy): the default, at
+        # the top, the sub-circles inherit it
+        self.assertEqual(anchor.async_acceptance_days, 4)
         kitchen = Role.objects.get(glassfrog_id=102)
         # Turned back into a role, the purpose comes from roles.json
         self.assertEqual(
@@ -712,6 +715,8 @@ class ImportTest(TestCase):
         ada = User.objects.get(email="ada@example.com")
         bob = User.objects.get(email="bob@example.com")
         self.assertEqual((ada.glassfrog_id, bob.glassfrog_id), (1, 2))
+        # Set here, the import keeps it
+        Role.objects.filter(glassfrog_id=100).update(async_acceptance_days=2)
 
         # The Kitchen is renamed, the Cleaner removed, a Dishwasher added,
         # Bob only shows up redacted, the Tea policy is gone
@@ -748,6 +753,7 @@ class ImportTest(TestCase):
         self.assertEqual(stats["unresolved mentions"], 0)
         # The history stays, today's changes are audit rows by themselves
         self.assertGreater(history_rows(), rows)
+        self.assertEqual(Role.objects.get(glassfrog_id=100).async_acceptance_days, 2)
 
         kitchen = Role.objects.get(glassfrog_id=102)
         self.assertEqual(
