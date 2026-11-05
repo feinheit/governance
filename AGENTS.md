@@ -13,7 +13,7 @@ of depending on it, and keep its conventions unless this file says
 otherwise. This project is BSD-3 licensed (Feinheit AG), Workbench is GPLv3:
 only copy code Feinheit holds the rights to (check `git log` of the file
 there), not other contributors'. Parts with their own licenses are listed
-in `LICENSE` (the constitution's texts, `audit.sql`).
+in `NOTICE` (the constitution's texts, `audit.sql`).
 
 # Running tests
 

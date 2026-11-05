@@ -1,0 +1,16 @@
+Parts with their own licenses
+-----------------------------
+
+docs/constitution/Holacracy-Verfassung.md is the official German translation
+of the Holacracy Constitution 5.0 by HolacracyOne, LLC, unchanged, licensed
+under the Creative Commons Attribution-ShareAlike 4.0 International License
+(docs/constitution/LIZENZ.md). The core roles' purposes, accountabilities and
+domains in governance/roles/constitution.py are texts of the Holacracy
+Constitution 5.0 by HolacracyOne, LLC, under the same license:
+https://creativecommons.org/licenses/by-sa/4.0/
+"Holacracy" is a trademark of HolacracyOne, LLC; this project isn't
+affiliated with or endorsed by HolacracyOne or GlassFrog.
+
+governance/audit/audit.sql is based on the PostgreSQL Audit Trigger Example,
+Copyright (c) 2013, PostgreSQL Global Development Group, released under the
+PostgreSQL License, see the notice at the top of the file.

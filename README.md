@@ -35,4 +35,4 @@ import from GlassFrog.
 
 BSD 3-Clause, see [`LICENSE`](LICENSE). The Holacracy Constitution's texts
 are licensed under CC BY-SA 4.0 by HolacracyOne, `audit.sql` under the
-PostgreSQL License, see `LICENSE` for details.
+PostgreSQL License, see [`NOTICE`](NOTICE).
