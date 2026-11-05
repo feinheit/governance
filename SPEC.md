@@ -481,9 +481,6 @@ Deliberately not modelled:
 - **Verification** (open findings of the last round, see `AGENTS.md`):
   - A test: a circle removing its own last role in its own running
     meeting (works, `close_circles()` ends the meeting `item_adopt` holds).
-  - `test` or `replace` on `/roles/X/supporting_circle` (e.g. from the
-    API) turns the circle back into a role: accept only `add` and
-    `remove`.
   - A crafted POST adding a proposal to a tactical meeting's agenda fails
     with a `KeyError` (`agenda_add`): refuse it.
 - **Switchover**: a final import, update the handbook's links, cancel

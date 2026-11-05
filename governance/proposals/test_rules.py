@@ -80,6 +80,21 @@ class ProblemsTest(TestCase):
         proposal.instructions[0]["value"] = "a ======= b"
         self.assertEqual(problems(proposal), [])
 
+    def test_supporting_circle_only_add_and_remove(self):
+        """Other operations on a role's circle aren't conversions"""
+        from governance.proposals.instructions import problems
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        Role.objects.create(name="Baker", circle=bakery)
+        path = f"/roles/{bakery.pk}/supporting_circle"
+        for op in ["test", "replace"]:
+            proposal = Proposal(circle=kitchen, instructions=[{"op": op, "path": path}])
+            with self.subTest(op=op):
+                self.assertEqual(
+                    problems(proposal), [f"The app can't apply {path} yet."]
+                )
+
     def test_new_circle_like_glassfrog(self):
         """GlassFrog turns a new role into a circle twice, before and after
         moving roles into it"""

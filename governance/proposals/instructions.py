@@ -263,7 +263,10 @@ class Applier:
                     self.unsupported(path)
             return
 
-        if match := re.fullmatch(rf"/roles/{KEY}/supporting_circle", path):
+        if (match := re.fullmatch(rf"/roles/{KEY}/supporting_circle", path)) and op in {
+            "add",
+            "remove",
+        }:
             role = self.get("roles", match[1])
             if role is not None:
                 self.convert(role, to_circle=op == "add")
