@@ -7,7 +7,7 @@ from governance.accounts.models import APIToken
 
 
 class UserToken(HttpBearer):
-    """Personal API tokens, e.g. for scripts preparing proposals"""
+    """Personal API tokens: the gov CLI (`gov login`) and scripts"""
 
     def authenticate(self, request, token):
         if token := APIToken.objects.for_secret(token):

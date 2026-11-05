@@ -77,7 +77,8 @@ class User(AbstractBaseUser):
         return self.is_active and self.is_admin
 
 
-# Created by hand on the API tokens page, there's no CLI login flow yet
+# Created on the API tokens page or by `gov login` (/cli-login/), which asks
+# for a new one through the browser when the old one expired
 API_TOKEN_LIFETIME = dt.timedelta(days=90)
 
 
