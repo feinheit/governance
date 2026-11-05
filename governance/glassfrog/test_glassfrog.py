@@ -249,6 +249,11 @@ def current_files():
                             "path": "/roles/102/domains/802",
                             "original_value": "The fridge",
                         },
+                        {
+                            "op": "add",
+                            "path": "/roles/102/accountabilities/999",
+                            "value": "Asking [@Kitchen](/organizations/1/orgnav/roles/102)",
+                        },
                     ],
                     "links": {"circle": 10, "tension": None, "person": 1},
                 },
@@ -647,7 +652,15 @@ class ImportTest(TestCase):
         fridge = Domain.objects.get(glassfrog_id=802)
         self.assertEqual(
             [i["path"] for i in draft.instructions],
-            [f"/roles/{kitchen.pk}", f"/roles/{kitchen.pk}/domains/{fridge.pk}"],
+            [
+                f"/roles/{kitchen.pk}",
+                f"/roles/{kitchen.pk}/domains/{fridge.pk}",
+                f"/roles/{kitchen.pk}/accountabilities/n1",
+            ],
+        )
+        # Mentions like in the current texts, not GlassFrog's links
+        self.assertEqual(
+            draft.instructions[2]["value"], f"Asking @[Kitchen](role:{kitchen.pk})"
         )
         self.assertEqual(draft.names[f"roles/{kitchen.pk}"], "Kitchen")
         self.assertEqual(problems(draft), [])

@@ -894,6 +894,28 @@ class Importer:
                 if changed:
                     obj.save(update_fields=changed)
                     self.stats["texts with mentions"] += 1
+        # The open proposals' texts too: the app adopts them, and their
+        # original values have to match the converted current texts
+        for proposal in (
+            Proposal.objects
+            .exclude(glassfrog_id=None)
+            .exclude(status=Proposal.ADOPTED)
+            .select_related("circle")
+        ):
+            instructions = [
+                {
+                    **instruction,
+                    **{
+                        key: resolver.convert(instruction[key], proposal.circle)
+                        for key in ("value", "original_value")
+                        if isinstance(instruction.get(key), str)
+                    },
+                }
+                for instruction in proposal.instructions
+            ]
+            if instructions != proposal.instructions:
+                proposal.instructions = instructions
+                proposal.save(update_fields=["instructions"])
         for text in resolver.unresolved:
             self.log(f"Unresolved mention: @{text}")
         self.stats["unresolved mentions"] = len(resolver.unresolved)
