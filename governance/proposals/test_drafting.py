@@ -602,6 +602,7 @@ class DraftingTest(TestCase):
             role=bakery.roles.get(core_role="secretary"), user=self.bob
         )
         baker = Role.objects.create(name="Baker", circle=bakery)
+        noise = Policy.objects.create(role=bakery, title="Noise")
         proposal = self.draft()
         proposal.instructions = [
             {
@@ -617,10 +618,15 @@ class DraftingTest(TestCase):
         proposal.save()
         response = self.client.get(proposal.get_absolute_url())
         self.assertContains(response, "Bakery loses its last roles")
+        # Decided in the same proposal: move them up, or they're archived
+        self.assertContains(response, "Its policies are archived: Noise")
         adopt(proposal)
         bakery.refresh_from_db()
         baker.refresh_from_db()
+        noise.refresh_from_db()
         self.assertEqual((bakery.is_circle, baker.circle), (False, self.kitchen))
+        self.assertIsNotNone(noise.archived_on)
+        self.assertIn(noise, proposal.policies.all())
         self.assertFalse(bakery.roles.active().exists())
         self.assertFalse(Assignment.objects.current().filter(user=self.bob).exists())
         proposal.refresh_from_db()

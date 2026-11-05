@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 22:13+0100\n"
+"POT-Creation-Date: 2026-11-05 23:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1753,6 +1753,12 @@ msgstr "%(circle)s verliert seine letzten Rollen: Wird der Vorschlag angenommen,
 
 #: governance/templates/meetings/_current.html
 #: governance/templates/proposals/proposal_detail.html
+#, python-format
+msgid "Its policies are archived: %(policies)s."
+msgstr "Seine Policies werden archiviert: %(policies)s."
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/proposals/proposal_detail.html
 msgid "The proposal can't be adopted like this:"
 msgstr "So kann der Vorschlag nicht angenommen werden:"
 
@@ -2312,6 +2318,22 @@ msgid "No roles at the moment."
 msgstr "Zurzeit keine Rollen."
 
 #: governance/templates/roles/person_detail.html
+msgid "Your meetings"
+msgstr "Deine Meetings"
+
+#: governance/templates/roles/person_detail.html
+msgid "Waiting for your response"
+msgstr "Warten auf deine Antwort"
+
+#: governance/templates/roles/person_detail.html
+msgid "Your drafts and tensions"
+msgstr "Deine Entwürfe und Spannungen"
+
+#: governance/templates/roles/person_detail.html
+msgid "Earlier roles"
+msgstr "Frühere Rollen"
+
+#: governance/templates/roles/person_detail.html
 #: governance/templates/roles/role_detail.html
 msgid "Settings"
 msgstr "Einstellungen"
@@ -2339,22 +2361,6 @@ msgstr "Über alles in allen Kreisen informieren"
 #: governance/templates/roles/person_detail.html
 msgid "Language"
 msgstr "Sprache"
-
-#: governance/templates/roles/person_detail.html
-msgid "Your meetings"
-msgstr "Deine Meetings"
-
-#: governance/templates/roles/person_detail.html
-msgid "Waiting for your response"
-msgstr "Warten auf deine Antwort"
-
-#: governance/templates/roles/person_detail.html
-msgid "Your drafts and tensions"
-msgstr "Deine Entwürfe und Spannungen"
-
-#: governance/templates/roles/person_detail.html
-msgid "Earlier roles"
-msgstr "Frühere Rollen"
 
 #: governance/templates/roles/policy_detail.html
 #: governance/templates/roles/role_detail.html

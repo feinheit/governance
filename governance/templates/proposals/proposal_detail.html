@@ -71,6 +71,7 @@
     <div class="alert alert-info">
       {% for circle in reverting %}
         {% blocktranslate with circle=circle.name %}{{ circle }} loses its last roles: adopting the proposal turns it back into a role, its Facilitator, Secretary and Circle Rep and their terms end.{% endblocktranslate %}
+        {% if circle.archived_policies %}{% blocktranslate with policies=circle.archived_policies|join:", " %}Its policies are archived: {{ policies }}.{% endblocktranslate %}{% endif %}
       {% endfor %}
     </div>
   {% endif %}

@@ -385,6 +385,12 @@ class Applier:
                 end_assignment(assignment, self.day)
             core_role.archived_on = self.day
             core_role.save(update_fields=["archived_on"])
+        # The circle's policies go: a role only has policies for its domains
+        # (1.3.2); the proposal may move them up first
+        policies = role.policies.active().filter(domain=None)
+        role.archived_policies = list(policies)
+        self.policies.update(role.archived_policies)
+        policies.update(archived_on=self.day)
         role.is_circle = False
         role.save(update_fields=["is_circle"])
 

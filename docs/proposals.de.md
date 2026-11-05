@@ -19,7 +19,8 @@ was das Annehmen bewirken würde oder weshalb es so nicht geht.
 
 Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; ihre Inhaber:innen
 schlagen das selbst vor. Ein Kreis ohne eigene Rollen wird beim Annehmen
-wieder zur Rolle. Wird ein Kreis entfernt oder wieder zur Rolle, werden
+wieder zur Rolle; seine Policies werden archiviert, ausser derselbe
+Vorschlag verschiebt sie nach oben (der Entwurf zeigt das). Wird ein Kreis entfernt oder wieder zur Rolle, werden
 seine offenen Vorschläge zurückgezogen, sein laufendes Meeting endet;
 ebenso bei einer entfernten Rolle die Vorschläge für ihr Inneres.
 
