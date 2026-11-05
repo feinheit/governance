@@ -346,6 +346,28 @@ html:not(.js) .wb-show-more,
   gap: 0 0.5rem;
 }
 
+/* Rows clickable as a whole: their title link covers the row, other links
+   and controls stay on top and work on their own */
+.wb-row-link {
+  position: relative;
+}
+
+.wb-row-link a.wb-row-title::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.wb-row-link
+  :is(a:not(.wb-row-title), button, input, select, textarea, label, summary) {
+  position: relative;
+  z-index: 1;
+}
+
+.wb-row-link:hover {
+  background-color: var(--bs-tertiary-bg);
+}
+
 a.wb-row-title:hover {
   color: var(--bs-link-hover-color);
 }

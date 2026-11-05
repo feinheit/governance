@@ -16,7 +16,7 @@
         <div class="card-header"><h2 class="h6 mb-0">{% translate "Roles" %}</h2></div>
         <ul class="list-group list-group-flush">
           {% for role in roles %}
-            <li class="list-group-item">
+            <li class="list-group-item wb-row-link">
               <a class="wb-row-title" href="{{ role.get_absolute_url }}">{{ role }}</a>
               <div class="wb-row-meta">
                 {% if role.circle %}<span>{{ role.circle }}</span>{% endif %}<span
@@ -32,7 +32,7 @@
         <div class="card-header"><h2 class="h6 mb-0">{% translate "Accountabilities" %}</h2></div>
         <ul class="list-group list-group-flush">
           {% for item in accountabilities %}
-            <li class="list-group-item">
+            <li class="list-group-item wb-row-link">
               {# Like the other results: the page the hit leads to, the role's #}
               <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
               {% if item.role.circle %}<div class="wb-row-meta"><span>{{ item.role.circle }}</span></div>{% endif %}
@@ -47,7 +47,7 @@
         <div class="card-header"><h2 class="h6 mb-0">{% translate "Domains" %}</h2></div>
         <ul class="list-group list-group-flush">
           {% for item in domains %}
-            <li class="list-group-item">
+            <li class="list-group-item wb-row-link">
               {# Like the other results: the page the hit leads to, the role's #}
               <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
               {% if item.role.circle %}<div class="wb-row-meta"><span>{{ item.role.circle }}</span></div>{% endif %}
@@ -62,7 +62,7 @@
         <div class="card-header"><h2 class="h6 mb-0">{% translate "Policies" %}</h2></div>
         <ul class="list-group list-group-flush">
           {% for policy in policies %}
-            <li class="list-group-item">
+            <li class="list-group-item wb-row-link">
               <a class="wb-row-title" href="{{ policy.get_absolute_url }}">{{ policy }}</a>
               <div class="wb-row-meta">
                 <span>{{ policy.role }}</span><span>{{ policy.body|plain|truncatechars:160 }}</span>

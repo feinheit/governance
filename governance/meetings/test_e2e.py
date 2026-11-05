@@ -243,3 +243,21 @@ class MeetingE2ETest(LiveServerTestCase):
             page.get_attribute("[data-shortcut=o]", "aria-keyshortcuts"), "Alt+O"
         )
         self.assertEqual(self.errors, [])
+
+    def test_rows_clickable(self):
+        """Lists of roles, proposals etc.: the whole row opens the title's
+        page, the other links in the row still work"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.kitchen.get_absolute_url()}")
+        row = page.locator(
+            "li.wb-row-link", has=page.locator("a.wb-row-title", has_text="Cook")
+        ).first
+        row.scroll_into_view_if_needed()
+        box = row.bounding_box()
+        page.mouse.click(box["x"] + box["width"] - 20, box["y"] + box["height"] / 2)
+        page.wait_for_url(f"**{self.cook.get_absolute_url()}")
+
+        page.go_back()
+        row.locator("a", has_text="Ada").first.click()
+        page.wait_for_url(f"**{self.ada.get_absolute_url()}")
+        self.assertEqual(self.errors, [])
