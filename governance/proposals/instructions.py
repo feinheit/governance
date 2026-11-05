@@ -17,7 +17,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from governance.history.snapshots import take_snapshot
+from governance.history.update import update_changes
 from governance.notifications.mails import proposal_adopted
 from governance.proposals.models import Proposal
 from governance.roles.assignments import end_assignment, sync_circle_holders
@@ -433,7 +433,7 @@ def adopt(proposal):
     proposal.save()
     proposal.roles.add(*applier.roles)
     proposal.policies.add(*applier.policies)
-    take_snapshot()
+    update_changes(since=timezone.localdate())
     if not (proposal.meeting and proposal.meeting.is_running):
         # The meeting mails its outputs together when it ends
         transaction.on_commit(lambda: proposal_adopted(proposal))

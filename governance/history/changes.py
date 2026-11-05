@@ -1,4 +1,4 @@
-"""Differences between two snapshots, see ``Snapshot.data``"""
+"""Differences between the structures of two days, see ``history.audit``"""
 
 from collections import Counter
 

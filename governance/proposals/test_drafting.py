@@ -4,7 +4,6 @@ import time_machine
 from django.test import TestCase
 
 from governance.accounts.models import User
-from governance.history.models import Snapshot
 from governance.proposals.instructions import ProposalError, adopt, problems
 from governance.proposals.models import Proposal
 from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
@@ -158,7 +157,6 @@ class DraftingTest(TestCase):
         self.assertEqual(proposal.instructions[0]["path"], f"/roles/{baker.pk}")
         self.assertEqual(proposal.names, {f"roles/{baker.pk}": "Baker"})
         self.assertEqual(list(proposal.roles.all()), [baker])
-        self.assertEqual(Snapshot.objects.get().date, dt.date(2026, 12, 1))
         self.assertContains(
             self.client.get(proposal.get_absolute_url()), f'href="/roles/{baker.pk}/"'
         )

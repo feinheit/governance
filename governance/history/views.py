@@ -7,7 +7,8 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.translation import gettext_lazy as _
 
 from governance.accounts.models import User
-from governance.history.models import Change, Snapshot
+from governance.history.audit import structure_on
+from governance.history.models import Change
 from governance.proposals.models import Proposal
 from governance.roles.models import Role
 
@@ -133,10 +134,10 @@ def role_as_of(request, pk):
         day = dt.date.fromisoformat(request.GET.get("date", ""))
     except ValueError:
         day = dt.date.today()
-    snapshot = Snapshot.objects.on(day)
-    if snapshot is None:
-        raise Http404("No snapshot")
-    entries = snapshot.data["roles"]
+    data = structure_on(day)
+    if not data["roles"]:
+        raise Http404("Before the history")
+    entries = data["roles"]
     entry = entries.get(str(role.pk))
     users = User.objects.in_bulk({
         a["user"] for e in entries.values() for a in e["assignments"]
@@ -164,7 +165,7 @@ def role_as_of(request, pk):
         entry = entry | {"holders": holders(entry)}
     policies = [
         {"pk": int(policy_pk)} | policy
-        for policy_pk, policy in snapshot.data.get("policies", {}).items()
+        for policy_pk, policy in data["policies"].items()
         if policy["role"] == role.pk
     ]
     return render(
@@ -176,7 +177,6 @@ def role_as_of(request, pk):
             "children": children,
             "policies": sorted(policies, key=lambda policy: policy["title"]),
             "day": day,
-            "snapshot": snapshot,
             "unrecorded": sum(
                 1 for text in (entry or {}).get("accountabilities", []) if text is None
             ),

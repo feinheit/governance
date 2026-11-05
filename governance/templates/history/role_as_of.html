@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="alert alert-info">
-    {% blocktranslate with day=day|date:"DATE_FORMAT" since=snapshot.date|date:"DATE_FORMAT" %}As of {{ day }}, from the snapshot of {{ since }}.{% endblocktranslate %}
+    {% blocktranslate with day=day|date:"DATE_FORMAT" %}As of {{ day }}.{% endblocktranslate %}
     <a href="{{ role.get_absolute_url }}">{% translate "Today" %}</a> · <a
       href="{% url 'role_history' role.pk %}"
     >{% translate "History" %}</a>

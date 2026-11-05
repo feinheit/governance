@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 14:10+0100\n"
+"POT-Creation-Date: 2026-11-05 15:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -159,18 +159,6 @@ msgstr "Geschichte"
 #: governance/history/models.py
 msgid "date"
 msgstr "Datum"
-
-#: governance/history/models.py
-msgid "data"
-msgstr "Daten"
-
-#: governance/history/models.py
-msgid "snapshot"
-msgstr "Stand"
-
-#: governance/history/models.py
-msgid "snapshots"
-msgstr "Stände"
 
 #: governance/history/models.py governance/meetings/models.py
 #: governance/roles/models.py governance/templates/roles/policy_detail.html
@@ -656,6 +644,7 @@ msgstr "Policy"
 #: governance/templates/roles/_role_rows.html
 #: governance/templates/roles/person_detail.html
 #: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
 msgid "Circle"
 msgstr "Kreis"
 
@@ -1589,8 +1578,8 @@ msgstr "Ältere"
 
 #: governance/templates/history/role_as_of.html
 #, python-format
-msgid "As of %(day)s, from the snapshot of %(since)s."
-msgstr "Stand %(day)s, aus der Aufzeichnung vom %(since)s."
+msgid "As of %(day)s."
+msgstr "Stand %(day)s."
 
 #: governance/templates/history/role_as_of.html
 msgid "Today"
@@ -2450,6 +2439,17 @@ msgstr "Nichts gefunden."
 #: governance/templates/start.html
 msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
 msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+
+#~ msgid "data"
+#~ msgstr "Daten"
+
+#~ msgid "snapshot"
+#~ msgstr "Stand"
+
+#~ msgid "snapshots"
+#~ msgstr "Stände"
+
+#, python-format
 
 #~ msgid "Export (Markdown)"
 #~ msgstr "Export (Markdown)"

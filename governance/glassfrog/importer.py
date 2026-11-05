@@ -19,10 +19,8 @@ from governance.accounts.middleware import set_user_name
 from governance.accounts.models import User
 from governance.glassfrog.export import Export, without_empty
 from governance.glassfrog.normalize import normalize
-from governance.history.audit import TABLES as AUDIT_TABLES
+from governance.history.audit import TABLES as AUDIT_TABLES, structure_from_database
 from governance.history.backfill import USER_NAME as BACKFILL_USER, Backfill
-from governance.history.models import Snapshot
-from governance.history.snapshots import build_snapshot
 from governance.history.update import update_changes
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
@@ -203,7 +201,7 @@ class Importer:
     def run(self):
         start = time.monotonic()
         # The audit log names the import; its own rows of a full import are
-        # replaced by the backfilled history (import_snapshots())
+        # replaced by the backfilled history (import_history())
         set_user_name("GlassFrog import")
         with connection.cursor() as cursor:
             cursor.execute(
@@ -266,9 +264,11 @@ class Importer:
             ]:
                 with self.step(label):
                     method()
-        with self.step("Snapshots"), transaction.atomic():
-            self.import_snapshots()
-        with self.step("Changes between the snapshots"):
+        if not self.incremental:
+            # The nightly import's changes are audit rows by themselves
+            with self.step("History"), transaction.atomic():
+                self.import_history()
+        with self.step("Changes"):
             self.stats["changes"] = update_changes(
                 since=self.history.days[0]
                 if self.incremental and self.history.days
@@ -932,14 +932,16 @@ class Importer:
             self.log(f"Unresolved mention: @{text}")
         self.stats["unresolved mentions"] = len(resolver.unresolved)
 
-    # Snapshots ###############################################################
+    # History #################################################################
 
-    def import_snapshots(self):
-        """Snapshots in the app's format, keyed by the app's IDs
+    def import_history(self):
+        """GlassFrog's history as audit rows (``history.backfill``)
 
-        Texts get the same mentions as in the database, and the newest
-        snapshot is the database's state (``build_snapshot()``), so that the
-        daily task's snapshots continue without differences.
+        The structure of every day in the app's format, keyed by the app's
+        IDs, with the same mentions as in the database; the last day is the
+        database's state, so that the audit log continues without
+        differences. The audit rows replace this import's own rows and the
+        history of an earlier import.
         """
         resolver = self.resolver
         unresolved = len(resolver.unresolved)
@@ -957,7 +959,7 @@ class Importer:
         roles = {role_id: role.pk for role_id, role in self.roles.items()}
         policies = {policy_id: policy.pk for policy_id, policy in self.policies.items()}
         known = unknown = 0
-        history = None if self.incremental else Backfill()
+        history = Backfill()
         for day, data in self.export.snapshots():
             snapshot = normalize(data)
             result = {"roles": {}, "policies": {}}
@@ -1001,28 +1003,22 @@ class Importer:
                         "role": roles[entry["role"]],
                     }
             if day == self.history.days[-1]:
-                result = build_snapshot(day)
-            Snapshot.objects.update_or_create(date=day, defaults={"data": result})
-            self.stats["snapshots"] += 1
-            if history is not None:
-                history.day(day, result)
-        if history is not None:
-            # The history as audit rows instead of this import's rows and an
-            # earlier import's history
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    """
-                    DELETE FROM audit_logged_actions
-                    WHERE table_name = ANY(%s)
-                        AND (event_id > %s OR user_name = %s)
-                    """,
-                    [list(AUDIT_TABLES), self.first_event, BACKFILL_USER],
-                )
-            self.stats["history audit rows"] = history.save()
+                result = structure_from_database(day)
+            history.day(day, result)
+            self.stats["history days"] += 1
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                DELETE FROM audit_logged_actions
+                WHERE table_name = ANY(%s) AND (event_id > %s OR user_name = %s)
+                """,
+                [list(AUDIT_TABLES), self.first_event, BACKFILL_USER],
+            )
+        self.stats["history audit rows"] = history.save()
         del resolver.unresolved[unresolved:]
         total = known + unknown
         if total:
-            self.stats["accountabilities in snapshots with a known text (%)"] = round(
+            self.stats["accountabilities in the history with a known text (%)"] = round(
                 100 * known / total
             )
 

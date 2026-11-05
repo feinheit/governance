@@ -5,8 +5,12 @@ from django.test import TestCase
 from django.utils import timezone
 
 from governance.accounts.models import User
-from governance.history.audit import rows_on, structure_on
-from governance.history.snapshots import build_snapshot, canonical
+from governance.history.audit import (
+    canonical,
+    rows_on,
+    structure_from_database,
+    structure_on,
+)
 from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
 
 
@@ -42,7 +46,7 @@ class StructureOnTest(AuditTestCase):
 
         today = timezone.localdate()
         self.assertEqual(
-            canonical(structure_on(today)), canonical(build_snapshot(today))
+            canonical(structure_on(today)), canonical(structure_from_database(today))
         )
         self.assertEqual(
             structure_on(today)["roles"][str(cook.pk)]["strategy"], "Fresh first"
@@ -69,7 +73,7 @@ class BackfillTest(AuditTestCase):
             cursor.execute("DELETE FROM audit_logged_actions")  # The import's rows
 
         day3 = dt.date(2026, 3, 1)
-        final = build_snapshot(day3)
+        final = structure_from_database(day3)
         day1, day2 = dt.date(2026, 1, 1), dt.date(2026, 2, 1)
         first = copy.deepcopy(final)
         first["roles"][str(cook.pk)] |= {

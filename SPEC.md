@@ -303,18 +303,26 @@ only setting is `User.notify_all` ("everything in all circles").
 
 - **Proposals** say why: per circle, role and policy the adopted proposals
   with date, proposer, tension, meeting and diff.
-- **`history.Snapshot`**: the structure of a day with changes, valid until
-  the next one, imported from the GlassFrog snapshots and written by
-  `fairy_tasks` (`take_snapshot()`). Circle and role pages "as of" a past
-  date render snapshots, which is simpler and more reliable than replaying
-  incomplete proposals. Unknown accountability texts render as "n
-  accountabilities (texts not recorded)".
-- **`history.Change`**: the differences between consecutive snapshots
-  (`update_changes()`), also "changed outside governance" in the GlassFrog
-  period.
-- **Assignments** have `starts_on`/`ends_on`, reconstructed from the
-  snapshots for the GlassFrog period.
-- The audit log covers everything else, row by row.
+- **The audit log** is the history of roles, accountabilities, domains and
+  policies (`history/audit.py`): every change of a row, with who and when.
+  The GlassFrog import writes the time before the app as audit rows of
+  "GlassFrog" from the git history of `glassfrog.json` (`history/backfill.py`,
+  about 8500 rows instead of a structure per day). Accountabilities and
+  domains which no longer exist get negative IDs; texts GlassFrog didn't
+  record are rows without text and render as "n accountabilities (texts
+  not recorded)". The core roles' constitutional texts come from the code
+  from 5.0 on (2022-12-13), the texts of 4.1 before are rows.
+- **"As of" a past date** (`structure_on()`): the last audit row of every
+  row up to that day, which is simpler and more reliable than replaying
+  incomplete proposals.
+- **`history.Change`**: the differences from day to day, computed by
+  replaying the audit log (`update_changes()`, also "changed outside
+  governance" in the GlassFrog period); a cache for the history pages,
+  updated by `fairy_tasks` for yesterday and today and after adopting.
+- **Assignments** have `starts_on`/`ends_on`, reconstructed from GlassFrog's
+  history; they are the holders of the history too. A circle's role has its
+  Circle Leads and Reps as holders, GlassFrog's data missed some of them.
+- The audit log covers everything else the same way, row by row.
 
 ## 7. Views
 
@@ -392,10 +400,11 @@ the user's decision.
    before `accepted_at` or the proposal's own `add` instructions. Open
    proposals (drafts, published, waiting for a meeting) get the app's IDs
    (`to_app_ids()`), objects they add keys like `n1`: the app adopts them.
-4. Assignment history, `Snapshot`s (one per date, oldest first, skipping
-   empty ones) and `Change`s from the git history of `glassfrog.json`.
-   The newest snapshot is the database's state (`build_snapshot()`), so
-   `fairy_tasks` continues without spurious changes.
+4. Assignment history, the history as audit rows (replacing the import's
+   own audit rows of the structure) and `Change`s from the git history of
+   `glassfrog.json`. Its last day is the database's state
+   (`structure_from_database()`), so the audit log continues without
+   spurious changes. Nightly imports' changes are audit rows themselves.
 5. Mentions become `@[Name](role:ID)` (longest name in the circle and its
    super-circles, also earlier names); the import lists unresolved ones.
 

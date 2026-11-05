@@ -143,3 +143,57 @@ def structure(rows, assignments, day):
 def structure_on(day):
     """The structure at the end of the given day"""
     return structure(rows_on(day), assignments_on(day), day)
+
+
+def structure_from_database(day):
+    """The current structure from the tables, e.g. for the last day of
+    GlassFrog's history"""
+    from governance.roles.models import Policy, Role
+
+    roles = Role.objects.active().prefetch_related("accountabilities", "domains")
+    assignments = assignments_on(day)
+    return {
+        "roles": {
+            str(role.pk): {
+                "name": role.name,
+                "purpose": role.purpose,
+                "circle": role.circle_id,
+                "is_circle": role.is_circle,
+                "core_role": role.core_role,
+                "short_name": role.short_name,
+                "strategy": role.strategy,
+                "accountabilities": constitutional(role.core_role, "accountabilities")
+                + [a.text for a in role.accountabilities.all()],
+                "domains": constitutional(role.core_role, "domains")
+                + [d.text for d in role.domains.all()],
+                "assignments": assignments[role.pk],
+            }
+            for role in roles
+        },
+        "policies": {
+            str(policy.pk): {
+                "title": policy.title,
+                "body": policy.body,
+                "role": policy.role_id,
+            }
+            for policy in Policy.objects.active()
+        },
+    }
+
+
+def canonical(data):
+    """``data`` without the order of texts and holders, for comparing"""
+    return {
+        "roles": {
+            pk: entry
+            | {
+                "accountabilities": sorted(entry["accountabilities"], key=str),
+                "domains": sorted(entry["domains"], key=str),
+                "assignments": sorted(
+                    entry["assignments"], key=lambda a: (a["user"], str(a))
+                ),
+            }
+            for pk, entry in data.get("roles", {}).items()
+        },
+        "policies": data.get("policies", {}),
+    }

@@ -164,8 +164,7 @@ import itself one; not around 03:00, when the nightly import runs.
    ```
 
 7. Sign in and check the organization, the history and a proposal. The
-   nightly jobs continue as before; `fairy_tasks` writes today's snapshot
-   only when something changed.
+   nightly jobs continue as before.
 
 The first import ran on 2026-11-04, the migrations were recreated on
 2026-11-05 (`audit.operations.audit_tables()` adds the audit trigger in
@@ -212,12 +211,15 @@ the apps' initial migrations).
   filter for snippets. Textareas of the forms get `data-mentions` (the
   form mixin), which `mentions.js` autocompletes; add it to textareas
   written by hand.
-- History: `history.Snapshot` is the structure of a day (valid until the
-  next one), `history.Change` the differences between consecutive
-  snapshots (`update_changes()`), proposals say why. Daily jobs go into
-  `./manage.py fairy_tasks` like in Workbench; it writes today's snapshot
-  (`take_snapshot()`) when something changed. Circles in the
-  organization's order: `Role.objects.depth_first()`.
+- History: the audit log has every change of roles, accountabilities,
+  domains and policies, the GlassFrog import backfills the time before the
+  app (`history/backfill.py`); `structure_on(day)` is the structure of a
+  past day, `history.Change` the differences from day to day computed from
+  it (`update_changes()`), proposals say why. Tests reading the audit log
+  delete its rows first: other tests (end-to-end) commit theirs and the
+  audit table isn't flushed. Daily jobs go into `./manage.py fairy_tasks`
+  like in Workbench; it updates the history's changes of yesterday and
+  today. Circles in the organization's order: `Role.objects.depth_first()`.
 - Badges are tinted in tones (`wb-tone-*` in `main.css`, light and dark):
   states and kinds through the `tone` filter (`badge {{ x.status|tone }}`),
   role kinds in the circle browser's colors (circle blue, core and

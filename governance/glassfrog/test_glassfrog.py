@@ -11,8 +11,13 @@ from governance.accounts.models import User
 from governance.glassfrog.export import ENDPOINTS, ApiExport, Export
 from governance.glassfrog.importer import import_glassfrog
 from governance.glassfrog.normalize import normalize
-from governance.history.models import Change, Snapshot
-from governance.history.snapshots import build_snapshot, canonical
+from governance.history.audit import (
+    TABLES,
+    canonical,
+    structure_from_database,
+    structure_on,
+)
+from governance.history.models import Change
 from governance.meetings.models import Meeting
 from governance.proposals.instructions import problems
 from governance.proposals.models import Proposal
@@ -406,6 +411,18 @@ def commit(path, files, message):
     )
 
 
+def history_rows():
+    """The number of audit rows of the history"""
+    from django.db import connection
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT count(*) FROM audit_logged_actions WHERE table_name = ANY(%s)",
+            [list(TABLES)],
+        )
+        return cursor.fetchone()[0]
+
+
 @override_settings(ADMINS=[("Admin", "Root@example.com")])
 class ImportTest(TestCase):
     @classmethod
@@ -474,7 +491,7 @@ class ImportTest(TestCase):
 
     def test_import(self):
         stats = import_glassfrog(self.path, log=lambda message: None)
-        self.assertEqual(stats["snapshots"], 3)
+        self.assertEqual(stats["history days"], 3)
 
         anchor = Role.objects.get(glassfrog_id=100)
         self.assertEqual(
@@ -580,7 +597,7 @@ class ImportTest(TestCase):
             Meeting.objects.get(kind=Meeting.TACTICAL).agenda_items.get().owner, bob
         )
 
-        first = Snapshot.objects.get(date=dt.date(2026, 1, 1)).data
+        first = structure_on(dt.date(2026, 1, 1))
         self.assertEqual(
             first["roles"][str(cook.pk)]["assignments"],
             [{"user": bob.pk, "elected_until": None}],
@@ -597,20 +614,18 @@ class ImportTest(TestCase):
             first["roles"][str(Role.objects.get(glassfrog_id=103).pk)]["purpose"],
             f"Clean after the @[Cook](role:{cook.pk})",
         )
-        # The newest snapshot is the database's state
+        # The newest day is the database's state, a day lasts until the next
         self.assertEqual(
-            canonical(Snapshot.objects.get(date=dt.date(2026, 3, 1)).data),
-            canonical(build_snapshot(dt.date(2026, 3, 1))),
+            canonical(structure_on(dt.date(2026, 3, 1))),
+            canonical(structure_from_database(dt.date(2026, 3, 1))),
         )
-        self.assertEqual(
-            Snapshot.objects.on(dt.date(2026, 1, 20)).date, dt.date(2026, 1, 1)
-        )
+        self.assertEqual(structure_on(dt.date(2026, 1, 20)), first)
 
         # Idempotent
         counts = [
             model.objects.count()
-            for model in [Role, Assignment, Policy, Proposal, Meeting, Snapshot, User]
-        ]
+            for model in [Role, Assignment, Policy, Proposal, Meeting, User]
+        ] + [history_rows()]
         import_glassfrog(self.path, log=lambda message: None)
         self.assertEqual(
             counts,
@@ -622,10 +637,10 @@ class ImportTest(TestCase):
                     Policy,
                     Proposal,
                     Meeting,
-                    Snapshot,
                     User,
                 ]
-            ],
+            ]
+            + [history_rows()],
         )
 
     def test_old_escalated_proposals(self):
@@ -650,37 +665,23 @@ class ImportTest(TestCase):
         self.assertEqual(old.status, Proposal.IN_MEETING)
 
     def test_history_in_the_audit_log(self):
-        """The audit log has the whole history: every day of GlassFrog's
-        history is the same as its snapshot"""
-        from django.db import connection
-
-        from governance.history.audit import structure_on
-        from governance.history.snapshots import canonical
-
-        def comparable(data):
-            """Without the assignments (the database's are the history now)
-            and the core roles' constitutional texts (from the code)"""
-            data = canonical(data)
-            for entry in data["roles"].values():
-                entry.pop("assignments")
-                if entry["core_role"]:
-                    entry["accountabilities"] = entry["domains"] = []
-            return data
-
-        with connection.cursor() as cursor:
-            # Rows committed by other tests, the audit table isn't flushed
-            cursor.execute("DELETE FROM audit_logged_actions")
+        """The import writes GlassFrog's history as audit rows; importing
+        again replaces them instead of doubling them"""
         import_glassfrog(self.path, log=lambda message: None)
-        for snapshot in Snapshot.objects.order_by("date"):
-            with self.subTest(day=snapshot.date):
-                self.assertEqual(
-                    comparable(structure_on(snapshot.date)),
-                    comparable(snapshot.data),
-                )
-        # Importing again replaces the history, it isn't doubled
+        rows = history_rows()
+        self.assertTrue(rows)
         import_glassfrog(self.path, log=lambda message: None)
-        last = Snapshot.objects.latest("date")
-        self.assertEqual(comparable(structure_on(last.date)), comparable(last.data))
+        self.assertEqual(history_rows(), rows)
+        day = dt.date(2026, 3, 1)
+        self.assertEqual(
+            canonical(structure_on(day)), canonical(structure_from_database(day))
+        )
+        # Kitchen was a circle at first
+        kitchen = Role.objects.get(glassfrog_id=102)
+        self.assertTrue(
+            structure_on(dt.date(2026, 1, 1))["roles"][str(kitchen.pk)]["is_circle"]
+        )
+        self.assertFalse(structure_on(day)["roles"][str(kitchen.pk)]["is_circle"])
 
     def test_open_proposals_with_the_apps_ids(self):
         """Proposals which aren't adopted yet will be adopted here: the import
@@ -740,12 +741,13 @@ class ImportTest(TestCase):
             "token", day=day, fetch=lambda path, token: files[endpoints[path]]
         )
 
+        rows = history_rows()
         stats = import_glassfrog(export, log=lambda message: None)
-        self.assertEqual(stats["snapshots"], 1)
         # Eve, not Bob: the database knows him
         self.assertEqual(stats["people only known redacted"], 1)
         self.assertEqual(stats["unresolved mentions"], 0)
-        self.assertEqual(Snapshot.objects.count(), 4)
+        # The history stays, today's changes are audit rows by themselves
+        self.assertGreater(history_rows(), rows)
 
         kitchen = Role.objects.get(glassfrog_id=102)
         self.assertEqual(
@@ -777,13 +779,14 @@ class ImportTest(TestCase):
         self.assertEqual(
             Proposal.objects.get(glassfrog_id=700).names["roles/104"], "Cook"
         )
-        self.assertTrue(Change.objects.filter(date=day, role=kitchen).exists())
+        # Today's (the audit rows are the import's, not the export's day)
+        self.assertTrue(Change.objects.filter(kind="name", role=kitchen).exists())
         self.assertTrue(Change.objects.filter(date__lt=day).exists())
 
         # Idempotent
         counts = [
             model.objects.count()
-            for model in [Role, Assignment, Policy, Proposal, Snapshot, User, Change]
+            for model in [Role, Assignment, Policy, Proposal, User, Change]
         ]
         import_glassfrog(export, log=lambda message: None)
         self.assertEqual(
@@ -795,7 +798,6 @@ class ImportTest(TestCase):
                     Assignment,
                     Policy,
                     Proposal,
-                    Snapshot,
                     User,
                     Change,
                 ]
