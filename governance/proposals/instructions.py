@@ -244,6 +244,11 @@ class Applier:
                 )
             elif self.check_original(f"{role}: {obj}", obj.text, instruction):
                 if op == "remove":
+                    if model is Domain:
+                        # The role's policies regulating it go with it
+                        policies = obj.policies.active()
+                        self.policies.update(policies)
+                        policies.update(archived_on=self.day)
                     obj.delete()
                 elif op == "replace":
                     obj.text = value or ""

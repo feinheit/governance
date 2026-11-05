@@ -151,3 +151,67 @@ class DomainPoliciesTest(TestCase):
         )
         self.client.force_login(self.eve)
         self.assertEqual(self.client.get(self.url).status_code, 200)
+
+    def test_restructuring(self):
+        """The policies go with their role and domain: moved with the role,
+        archived with the domain, the role or its circle"""
+        from django.utils import timezone
+
+        from governance.proposals.instructions import adopt
+
+        stays = Domain.objects.create(role=self.admin, text="Backups")
+        access = Policy.objects.create(
+            role=self.admin, domain=self.servers, title="Access"
+        )
+        restore = Policy.objects.create(role=self.admin, domain=stays, title="Restore")
+
+        def governance(circle, *instructions):
+            return adopt(
+                Proposal.objects.create(
+                    circle=circle,
+                    proposer=self.ada,
+                    tension="Changes",
+                    created_at=timezone.now(),
+                    instructions=list(instructions),
+                )
+            )
+
+        # Moved into the sub-circle: the policies stay the role's, its
+        # holders still change them
+        governance(
+            self.web,
+            {
+                "op": "move",
+                "path": f"/roles/{self.hosting.pk}/supporting_circle/roles/{self.admin.pk}",
+                "from": f"/roles/{self.admin.pk}",
+            },
+        )
+        access.refresh_from_db()
+        self.assertEqual((access.role, access.archived_on), (self.admin, None))
+        self.client.force_login(self.ada)
+        self.assertEqual(
+            self.client.get(
+                f"/roles/{self.admin.pk}/domain-policies/{access.pk}/"
+            ).status_code,
+            200,
+        )
+
+        # The domain removed: its policies go, the other domain's stay
+        proposal = governance(
+            self.hosting,
+            {
+                "op": "remove",
+                "path": f"/roles/{self.admin.pk}/domains/{self.servers.pk}",
+                "original_value": "Server access",
+            },
+        )
+        access.refresh_from_db()
+        restore.refresh_from_db()
+        self.assertIsNotNone(access.archived_on)
+        self.assertIsNone(restore.archived_on)
+        self.assertIn(access, proposal.policies.all())  # In the history
+
+        # The role removed with its circle: its policies too
+        governance(self.web, {"op": "remove", "path": f"/roles/{self.hosting.pk}"})
+        restore.refresh_from_db()
+        self.assertIsNotNone(restore.archived_on)

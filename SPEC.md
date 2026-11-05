@@ -229,7 +229,9 @@ rule.
   remove its policies on the role page, each with one of its domains.
   Every change is an adopted proposal of its own kind, mailed to the
   members of the role's circle and all its sub-circles, `notify_all`
-  users and the person making the change.
+  users and the person making the change. They move with their role,
+  and are archived with it, with its circle or with their domain (the
+  proposal removing the domain lists them).
 - **Assignments** are operational: the Circle Lead assigns and removes
   people and their focus (the super-circle's Circle Lead for a
   sub-circle's Circle Lead, admins for the anchor's). Elected roles aren't

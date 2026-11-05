@@ -49,6 +49,8 @@ starts over afterwards) or "Withdraw".
 
 - **Policies of a domain**: whoever holds a role with a domain sets its
   policies on the role's page ("Add a policy for its domains"). The tool
-  records the change as an adopted proposal and sends a mail.
+  records the change as an adopted proposal and sends a mail. The policies
+  move with the role; removing the domain, the role or its circle removes
+  them too.
 - **Spelling** goes through governance: the secretary corrects it in a
   governance meeting.
