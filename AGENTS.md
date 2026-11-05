@@ -52,10 +52,13 @@ views go back to `?next=` (`drafting.done()`, `HX-Location` for htmx).
 
 # User documentation
 
-`docs/*.md`, German and succinct, explains the tool (not Holacracy) and
-what it doesn't do; `/help/` renders it (`governance/help.py`, add new
-pages to `PAGES`). The files link each other relatively (`meetings.md`).
-Update them in the same commit when a change affects what users see.
+`docs/`, succinct, explains the tool (not Holacracy) and what it doesn't
+do: `name.md` in English, `name.de.md` in German, each quoting the labels
+of the interface in its language. `/help/name/` renders them in the
+page's language (`governance/help.py`, add new pages to `_NAMES`). The
+files link each other relatively within their language (`meetings.md`,
+`meetings.de.md`). Update both in the same commit when a change affects
+what users see.
 
 # Translations
 
@@ -100,7 +103,7 @@ variants, grid breakpoints, form parts and color variants of buttons,
 alerts etc. in use: add them there when a template needs another one), the styles
 (`styles/main.css`), the theme toggle, the mentions, the meeting and htmx,
 the keyboard shortcuts (`shortcuts.js`, `data-shortcut` on links and fields,
-listed in `docs/orientierung.md`) and the circle browser (a Preact island, `circles/`, which `main.js` imports
+listed in `docs/orientation.md`) and the circle browser (a Preact island, `circles/`, which `main.js` imports
 only on its page: Preact and d3 are a chunk of their own). No core-js:
 SWC's usage detection adds polyfills by guessing (`Array#map` as an
 iterator helper), the browsers of browserslist's defaults have what the

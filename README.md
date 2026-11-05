@@ -11,8 +11,8 @@ history.
 The interface is German first (and English); the Holacracy terms stay
 English like in the handbook.
 
-- [`docs/`](docs/README.md): the user documentation (German), also
-  available as help pages in the app
+- [`docs/`](docs/README.md): the user documentation in English and German
+  (`name.de.md`), also available as help pages in the app
 - [`SPEC.md`](SPEC.md): what the app does and why, the choices about the
   constitution, the backlog
 - [`AGENTS.md`](AGENTS.md): running the tests, conventions, development

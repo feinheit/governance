@@ -1,6 +1,6 @@
 // Keyboard shortcuts like Workbench's: Alt with a letter, Ctrl on Macs (Alt
 // types special characters there). Elements with data-shortcut="h" are
-// links to follow or fields to focus, see docs/orientierung.md.
+// links to follow or fields to focus, see docs/orientation.md.
 const isMac = /Mac/.test(navigator.platform)
 const modifier = isMac ? "Ctrl" : "Alt"
 

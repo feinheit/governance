@@ -1,10 +1,13 @@
 Parts with their own licenses
 -----------------------------
 
-docs/constitution/Holacracy-Verfassung.md is the official German translation
-of the Holacracy Constitution 5.0 by HolacracyOne, LLC, unchanged, licensed
-under the Creative Commons Attribution-ShareAlike 4.0 International License
-(docs/constitution/LIZENZ.md). The core roles' purposes, accountabilities and
+docs/constitution/Holacracy-Constitution.md is the Holacracy Constitution 5.0
+by HolacracyOne, LLC, unchanged (tag v5.0 of
+https://github.com/holacracyone/Holacracy-Constitution), licensed under the
+Creative Commons Attribution-ShareAlike 4.0 International License
+(docs/constitution/LICENSE.md). docs/constitution/Holacracy-Verfassung.md is
+its official German translation by HolacracyOne, LLC, unchanged, under the
+same license (docs/constitution/LIZENZ.md). The core roles' purposes, accountabilities and
 domains in governance/roles/constitution.py are texts of the Holacracy
 Constitution 5.0 by HolacracyOne, LLC, under the same license:
 https://creativecommons.org/licenses/by-sa/4.0/

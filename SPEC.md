@@ -3,7 +3,8 @@
 A Django app replacing GlassFrog: circles, roles, accountabilities,
 domains, policies, elections, async proposals, governance and tactical
 meetings, following the Holacracy Constitution 5.0
-(`docs/constitution/`, the official German text, CC BY-SA). It keeps the
+(`docs/constitution/`, the English original and the official German
+translation, CC BY-SA). It keeps the
 history since the first day of GlassFrog (2018), including why things
 changed.
 
@@ -361,8 +362,9 @@ only setting is `User.notify_all` ("everything in all circles").
   (`?holders=0` without the people); no button, `gov export` (`GET
   export/`) offers it.
 - **Help** (`/help/`, `governance/help.py`): the user documentation in
-  `docs/` (German, Markdown, also readable on GitHub) and the
-  constitution. It explains the tool, not Holacracy, and what the tool
+  `docs/` (Markdown, also readable on GitHub: `name.md` in English,
+  `name.de.md` in German, shown in the page's language) and the
+  constitution in the page's language. It explains the tool, not Holacracy, and what the tool
   doesn't do (the constitution choices below).
 - **404**: the search and the main pages. Drafts are the only pages which
   disappear (roles and policies are archived, people become inactive), so
@@ -457,7 +459,7 @@ Deliberately not modelled:
 
 - **Switchover**: a final import, update the handbook's links, cancel
   GlassFrog, then stop the nightly `import_glassfrog --api`. Remove
-  "Bis zur Umstellung" from `docs/README.md` and the notes about GlassFrog
+  "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
   being the source of truth in `AGENTS.md` and this file.
 - **Published interpretations** (4.2.1): the Secretary's rulings, binding
   for the circle and its sub-circles, shown on the circle page. Postponed,
