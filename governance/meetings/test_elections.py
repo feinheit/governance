@@ -177,3 +177,71 @@ class ElectionsTest(TestCase):
         self.assertEqual(
             self.client.get(f"/roles/{cook.pk}/settings/").status_code, 403
         )
+
+
+class ElectionsAndRestructuringTest(TestCase):
+    def test_removed_and_reverted_circles(self):
+        """Elections of circles removed or turned back into roles aren't due
+        anymore; a role elected by policy keeps being elected where it
+        moves"""
+        from governance.notifications.mails import elections_due
+        from governance.proposals.instructions import adopt
+        from governance.proposals.models import Proposal
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        today = timezone.localdate()
+        for core_role in ["facilitator", "secretary"]:
+            Assignment.objects.create(
+                role=kitchen.roles.get(core_role=core_role),
+                user=ada,
+                elected_until=today + dt.timedelta(days=365),
+            )
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="secretary"),
+            user=bob,
+            elected_until=today + dt.timedelta(days=10),
+        )
+        pastry = Role.objects.create(name="Pastry", is_circle=True, circle=kitchen)
+        pastry.create_core_roles()
+        taster = Role.objects.create(
+            name="Taster", circle=pastry, is_elected_by_policy=True
+        )
+        circles = list(Role.objects.active().circles())
+        self.assertIn(bakery, {role.circle for role, _a in due_elections(circles)})
+
+        adopt(
+            Proposal.objects.create(
+                circle=kitchen,
+                proposer=ada,
+                tension="Smaller kitchen",
+                created_at=timezone.now(),
+                instructions=[
+                    {"op": "remove", "path": f"/roles/{bakery.pk}"},
+                    {
+                        "op": "move",
+                        "path": f"/roles/{taster.pk}",
+                        "from": f"/circles/{pastry.pk}/roles/{taster.pk}",
+                    },
+                ],
+            )
+        )
+        pastry.refresh_from_db()
+        self.assertFalse(pastry.is_circle)
+        circles = list(Role.objects.active().circles())
+        self.assertEqual(
+            [(role, a) for role, a in due_elections(circles)], [(taster, None)]
+        )
+        self.client.force_login(ada)
+        self.assertContains(
+            self.client.get(kitchen.get_absolute_url()), "Elections due"
+        )
+
+        elections_due()
+        self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])
+        self.assertIn("Taster (Kitchen): nobody elected", mail.outbox[0].body)
