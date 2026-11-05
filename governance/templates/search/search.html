@@ -17,7 +17,10 @@
         <ul class="list-group list-group-flush">
           {% for role in roles %}
             <li class="list-group-item wb-row-link">
-              <a class="wb-row-title" href="{{ role.get_absolute_url }}">{{ role }}</a>
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ role.get_absolute_url }}">{{ role }}</a>
+                {% if role.is_circle %}<span class="badge wb-tone-circle">{% translate "Circle" %}</span>{% endif %}
+              </div>
               <div class="wb-row-meta">
                 {% if role.circle %}<span>{{ role.circle }}</span>{% endif %}<span
                 >{{ role.purpose|plain|truncatechars:160 }}</span>

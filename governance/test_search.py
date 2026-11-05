@@ -32,6 +32,7 @@ class SearchTest(TestCase):
         self.assertContains(response, "Search: domains registering")
         response = self.client.get("/search/", {"q": "kuche"})  # Ignores accents
         self.assertContains(response, circle.get_absolute_url())
+        self.assertContains(response, "badge wb-tone-circle")  # Circles are marked
         response = self.client.get("/search/", {"q": "stove"})
         self.assertContains(response, "The stove")
         self.assertContains(response, "Off at night, ask @Cook")  # Plain text
