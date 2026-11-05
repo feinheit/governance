@@ -73,7 +73,8 @@ flag before any new entry or it won't be used. The Holacracy terms stay
 English like in the handbook and in GlassFrog (Purpose, Accountabilities,
 Domains, Policies, Tactical and Governance Meeting), as do the core roles'
 names and constitutional texts; circles, roles, proposals and tensions are
-Kreise, Rollen, Vorschläge and Spannungen. Tests run in English
+Kreise, Rollen, Vorschläge and Spannungen, a meeting's agenda (items) too
+(Spannungen, not Traktanden or Agenda). Tests run in English
 (`LANGUAGE_CODE` when testing), `governance/test_translations.py` checks the
 German texts.
 
