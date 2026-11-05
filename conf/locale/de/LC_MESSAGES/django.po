@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 15:11+0100\n"
+"POT-Creation-Date: 2026-11-05 21:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2085,6 +2085,10 @@ msgid "from the role"
 msgstr "aus der Rolle"
 
 #: governance/templates/proposals/proposal_detail.html
+msgid "created"
+msgstr "erstellt"
+
+#: governance/templates/proposals/proposal_detail.html
 msgid "to be adopted on"
 msgstr "wird angenommen am"
 
@@ -2450,7 +2454,6 @@ msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./m
 #~ msgstr "Stände"
 
 #, python-format
-
 #~ msgid "Export (Markdown)"
 #~ msgstr "Export (Markdown)"
 

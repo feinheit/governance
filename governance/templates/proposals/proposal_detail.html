@@ -19,6 +19,8 @@
         <span><span class="wb-meta-label">{% translate "status" %}</span> <span
             class="badge {{ proposal.status|tone }}"
           >{{ proposal.get_status_display }}</span></span>
+        <span><span class="wb-meta-label">{% translate "created" %}</span>
+          {{ proposal.created_at|date:"SHORT_DATE_FORMAT" }}</span>
         {% if proposal.decided_at %}<span><span class="wb-meta-label">{% translate "adopted" %}</span>
             {{ proposal.decided_at|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
         {% if proposal.deadline and proposal.status == "published" %}<span><span

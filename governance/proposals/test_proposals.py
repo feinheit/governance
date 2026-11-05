@@ -2,6 +2,7 @@ import datetime as dt
 
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.formats import date_format
 
 from governance.accounts.models import User
 from governance.proposals.describe import describe
@@ -163,7 +164,11 @@ class ProposalsTest(TestCase):
 
         self.client.force_login(ada)
         self.assertContains(self.client.get("/proposals/?status=draft"), "Secret idea")
-        self.assertEqual(self.client.get(draft.get_absolute_url()).status_code, 200)
+        response = self.client.get(draft.get_absolute_url())
+        self.assertContains(response, "created")
+        self.assertContains(
+            response, date_format(timezone.localtime(now), "SHORT_DATE_FORMAT")
+        )
 
 
 class ProposalTitleTest(TestCase):
