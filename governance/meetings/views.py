@@ -22,7 +22,7 @@ from governance.meetings.models import (
 )
 from governance.meetings.outputs import meeting_outputs
 from governance.proposals.drafting import can_edit
-from governance.proposals.instructions import problems
+from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
 from governance.proposals.process import current_responses
 from governance.proposals.views import annotate_changes, drafting_context
@@ -146,8 +146,10 @@ def current_context(request, meeting):
             }
         elif proposal.instructions and proposal.status != Proposal.ADOPTED:
             # Conflicts, e.g. with a proposal adopted earlier in the
-            # meeting, are shown before adopting, to everybody
+            # meeting, and circles turning back into roles are shown before
+            # adopting, to everybody
             context["problems"] = problems(proposal)
+            context["reverting"] = consequences(proposal)
     return context
 
 

@@ -308,3 +308,60 @@ class AsyncAndMeetingScenarioTest(TestCase):
             (Proposal.ADOPTED, meeting),
         )
         self.assertEqual(self.cooking.text, "Cooking food and meals")
+
+
+class CircleEndsItselfScenarioTest(TestCase):
+    def test_last_role_removed_in_its_own_meeting(self):
+        """The bakery's meeting removes its last role: the bakery turns back
+        into a role, its meeting ends with the proposal adopted, its other
+        proposals are withdrawn, the attendees get the outputs"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="facilitator"), user=ada
+        )
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="secretary"), user=bob
+        )
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        other = Proposal.objects.create(
+            circle=bakery,
+            proposer=bob,
+            tension="Ovens",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+        )
+
+        self.client.force_login(ada)
+        self.client.post(f"/roles/{bakery.pk}/meetings/new/")
+        meeting = Meeting.objects.running().get()
+        self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Bread"})
+        item = AgendaItem.objects.get(meeting=meeting)
+        self.client.post(f"/agenda/{item.pk}/process/")
+        self.client.force_login(bob)
+        self.client.post(f"/agenda/{item.pk}/proposal/")
+        item.refresh_from_db()
+        self.client.post(f"/proposals/{item.proposal.pk}/roles/{baker.pk}/remove/")
+        self.client.force_login(ada)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "Bakery loses its last roles")
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
+        self.assertContains(response, "The proposal is adopted.")
+
+        for obj in [bakery, meeting, item, item.proposal, other]:
+            obj.refresh_from_db()
+        self.assertFalse(bakery.is_circle)
+        self.assertEqual(
+            (item.proposal.status, item.is_completed), (Proposal.ADOPTED, True)
+        )
+        self.assertIsNotNone(meeting.ended_at)
+        self.assertEqual(other.status, Proposal.WITHDRAWN)
+        outputs = [m for m in mail.outbox if "Bread" in m.body]
+        self.assertEqual(
+            sorted(m.to[0] for m in outputs), ["ada@example.com", "bob@example.com"]
+        )

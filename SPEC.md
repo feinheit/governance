@@ -478,9 +478,6 @@ Deliberately not modelled:
 
 ## Backlog
 
-- **Verification** (open findings of the last round, see `AGENTS.md`):
-  - A test: a circle removing its own last role in its own running
-    meeting (works, `close_circles()` ends the meeting `item_adopt` holds).
 - **Switchover**: a final import, update the handbook's links, cancel
   GlassFrog, then stop the nightly `import_glassfrog --api`. Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
