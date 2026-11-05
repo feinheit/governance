@@ -311,7 +311,7 @@ msgstr "Fortschritte"
 
 #: governance/meetings/models.py
 msgid "Agenda building"
-msgstr "Spannungen sammeln"
+msgstr "Agenda erstellen"
 
 #: governance/meetings/models.py
 msgid "Triage issues"
@@ -323,7 +323,7 @@ msgstr "Abschlussrunde"
 
 #: governance/meetings/models.py
 msgid "Agenda building and processing"
-msgstr "Spannungen sammeln und bearbeiten"
+msgstr "Agenda erstellen und verarbeiten"
 
 #: governance/meetings/models.py
 msgid "governance meeting"
@@ -397,7 +397,7 @@ msgstr "Standardmässig die Mitglieder des Kreises; weitere können eingeladen w
 
 #: governance/meetings/models.py
 msgid "current agenda item"
-msgstr "aktuelle Spannung"
+msgstr "aktueller Agendapunkt"
 
 #: governance/meetings/models.py governance/proposals/models.py
 #: governance/templates/proposals/proposal_detail.html
@@ -467,11 +467,11 @@ msgstr "Z.B. die dafür erstellte Aufgabe."
 
 #: governance/meetings/models.py
 msgid "agenda item"
-msgstr "Spannung"
+msgstr "Agendapunkt"
 
 #: governance/meetings/models.py
 msgid "agenda items"
-msgstr "Spannungen"
+msgstr "Agendapunkte"
 
 #: governance/meetings/models.py governance/templates/meetings/_current.html
 msgid "raised by"
@@ -1673,7 +1673,7 @@ msgstr "Rollen"
 
 #: governance/templates/meetings/_agenda.html
 msgid "Agenda"
-msgstr "Spannungen"
+msgstr "Agenda"
 
 #: governance/templates/meetings/_agenda.html
 msgid "completed"
@@ -1701,7 +1701,7 @@ msgstr "Entfernen"
 
 #: governance/templates/meetings/_agenda.html
 msgid "Nothing on the agenda."
-msgstr "Noch keine Spannungen."
+msgstr "Keine Agendapunkte."
 
 #: governance/templates/meetings/_current.html
 msgid "Now"
@@ -1847,7 +1847,7 @@ msgstr "Einwand festhalten"
 
 #: governance/templates/meetings/_current.html
 msgid "A tension without a proposal yet: the secretary captures the proposal, or the item is done."
-msgstr "Eine Spannung noch ohne Vorschlag: der Secretary hält den Vorschlag fest, oder die Spannung ist erledigt."
+msgstr "Eine Spannung noch ohne Vorschlag: der Secretary hält den Vorschlag fest, oder der Agendapunkt ist erledigt."
 
 #: governance/templates/meetings/_current.html
 msgid "Capture a proposal"

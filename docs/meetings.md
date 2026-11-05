@@ -1,7 +1,7 @@
 # Meetings
 
 Meetings plant ihr im Kalender. Im Tool beginnt ein Meeting, wenn jemand
-es startet. Alle folgen auf einem geteilten Bildschirm und fügen Spannungen
+es startet. Alle folgen auf einem geteilten Bildschirm und fügen Agendapunkte
 vom eigenen Gerät aus hinzu; die Seite aktualisiert sich von selbst.
 
 - **Wer leitet**: Facilitator und Secretary. Fehlen sie, springen andere
@@ -17,11 +17,11 @@ vom eigenen Gerät aus hinzu; die Seite aktualisiert sich von selbst.
 ## Governance Meeting
 
 "Governance Meeting starten" auf der Seite des Kreises, das darf jedes
-Mitglied. Ablauf: Check-in, Spannungen, Abschluss.
+Mitglied. Ablauf: Check-in, Agenda, Abschluss.
 
-- **Spannungen**: in ein, zwei Wörtern, oder ein Vorschlag
+- **Agenda**: eine Spannung in ein, zwei Wörtern, oder ein Vorschlag
   (wartende, asynchron veröffentlichte, deine Entwürfe).
-- **Behandeln**: der Facilitator wählt eine Spannung; die Schritte des
+- **Behandeln**: der Facilitator wählt einen Agendapunkt; die Schritte des
   integrativen Entscheidungsprozesses leiten, erzwingen aber nichts.
 - **Vorschlag**: nur der Secretary hält ihn aus einer Spannung fest und
   ändert ihn.
@@ -49,7 +49,7 @@ Mitglied. Ablauf: Check-in, Spannungen, Abschluss.
 - **Ad hoc**: "Tactical Meeting einberufen" auf einer Rollenseite, mit
   beliebigen Rollen, auch aus anderen Kreisen.
 
-Ablauf: Check-in, Checklisten, Kennzahlen, Updates, Spannungen,
-Abschluss. Zu jeder Spannung hält der Secretary das Ergebnis fest, eine
+Ablauf: Check-in, Checklisten, Kennzahlen, Updates, Agenda,
+Abschluss. Zu jedem Agendapunkt hält der Secretary das Ergebnis fest, eine
 nächste Aktion oder ein Projekt, und den Link zur Aufgabe, die dafür im
 Aufgaben-Tool erstellt wurde.
