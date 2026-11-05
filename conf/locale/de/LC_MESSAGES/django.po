@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 23:15+0100\n"
+"POT-Creation-Date: 2026-11-05 23:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1003,6 +1003,11 @@ msgstr "Antworten"
 #: governance/proposals/process.py
 msgid "Only drafts with changes can be published."
 msgstr "Nur Entwürfe mit Änderungen können veröffentlicht werden."
+
+#: governance/proposals/process.py
+#, python-format
+msgid "%(user)s doesn't hold %(role)s in %(circle)s anymore: choose another role."
+msgstr "%(user)s hat %(role)s in %(circle)s nicht mehr: wähle eine andere Rolle."
 
 #: governance/proposals/process.py
 msgid "The proposal isn't open for responses anymore."

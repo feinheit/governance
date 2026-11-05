@@ -27,7 +27,8 @@ Drafts are private until you publish them or bring them to a meeting.
 
 ## Publishing async
 
-"Publish (async)" sends the proposal by mail to the circle's members.
+"Publish (async)" sends the proposal by mail to the circle's members (as
+long as you still hold the role the tension comes from).
 Until the deadline the circle sets, they respond:
 
 - **no objection**

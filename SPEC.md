@@ -213,7 +213,8 @@ accountabilities and domains through its own governance (1.3.3).
   adopted proposal records the steps.
 
 **Async proposals**: circle members get a mail with the tension and the
-diff. Until the deadline (`async_acceptance_days`) members ask questions
+diff. Publishing checks again that the proposer may propose from the
+proposal's role (5.3.1), e.g. their assignment ended since drafting. Until the deadline (`async_acceptance_days`) members ask questions
 (comments), consent ("no objection") or request a meeting, optionally with
 the concern, which moves it to the next governance meeting. No async
 objections, like GlassFrog: objections are tested in meetings, so async is

@@ -18,7 +18,7 @@ from governance.notifications import mails
 from governance.proposals.instructions import ProposalError, adopt, problems
 from governance.proposals.models import Proposal, Response
 from governance.roles.models import Policy, Role
-from governance.roles.permissions import members
+from governance.roles.permissions import members, proposer_roles
 
 
 def affected(proposal):
@@ -37,6 +37,20 @@ def affected(proposal):
 def publish(proposal):
     if proposal.status != Proposal.DRAFT or proposal.is_tension:
         raise ProposalError([_("Only drafts with changes can be published.")])
+    # The tension of one of the proposer's roles (5.3.1), still now
+    if proposal.role and proposal.proposer:
+        roles = proposer_roles(proposal.proposer, proposal.circle)
+        if not roles.filter(pk=proposal.role_id).exists():
+            raise ProposalError([
+                _(
+                    "%(user)s doesn't hold %(role)s in %(circle)s anymore: choose another role."
+                )
+                % {
+                    "user": proposal.proposer,
+                    "role": proposal.role,
+                    "circle": proposal.circle,
+                }
+            ])
     if found := problems(proposal):
         raise ProposalError(found)
     now = timezone.now()

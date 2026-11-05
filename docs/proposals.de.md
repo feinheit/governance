@@ -30,7 +30,8 @@ bringst.
 ## Asynchron veröffentlichen
 
 "Veröffentlichen (asynchron)" schickt den Vorschlag per Mail an die
-Mitglieder des Kreises. Bis zur Frist, die der Kreis festlegt, antworten
+Mitglieder des Kreises (solange du die Rolle noch hast, aus der die
+Spannung kommt). Bis zur Frist, die der Kreis festlegt, antworten
 sie:
 
 - **kein Einwand**

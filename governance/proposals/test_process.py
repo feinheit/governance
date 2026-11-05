@@ -175,6 +175,28 @@ class ProcessTest(TestCase):
         proposal.refresh_from_db()
         self.assertEqual(proposal.status, Proposal.DRAFT)
 
+    def test_proposer_without_the_role(self):
+        """Publishing needs the proposer's role still (5.3.1), e.g. after
+        their assignment ended since drafting"""
+        proposal = self.proposal(role=self.cook)
+        Assignment.objects.filter(user=self.ada).update(ends_on=timezone.localdate())
+        with self.assertRaises(ProposalError) as raised:
+            publish(proposal)
+        self.assertEqual(
+            raised.exception.problems,
+            ["Ada doesn't hold Cook in Kitchen anymore: choose another role."],
+        )
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.DRAFT)
+
+        # Holding another role of the circle, the proposal comes from that one
+        waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
+        Assignment.objects.create(role=waiter, user=self.ada)
+        proposal.role = waiter
+        proposal.save()
+        publish(proposal)
+        self.assertEqual(proposal.status, Proposal.PUBLISHED)
+
     def test_pending_and_person(self):
         draft = self.proposal()
         proposal = publish(self.proposal())
