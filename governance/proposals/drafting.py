@@ -211,7 +211,7 @@ class TensionForm(ModelForm):
     class Meta:
         model = Proposal
         fields = ["role", "tension"]
-        widgets = {"tension": forms.Textarea(attrs={"rows": 12})}
+        widgets = {"tension": forms.Textarea(attrs={"rows": 4})}
 
     def __init__(self, *args, roles, **kwargs):
         super().__init__(*args, **kwargs)
