@@ -1,5 +1,7 @@
 """Mails to the subscribers of circles, see section 5 of SPEC.md"""
 
+import re
+
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.db.models import Q
@@ -10,7 +12,11 @@ from django.utils.translation import gettext as _, override
 from governance.accounts.models import User
 from governance.proposals.describe import describe
 from governance.roles.constitution import FACILITATOR, SECRETARY
-from governance.roles.permissions import members, stand_ins
+from governance.roles.permissions import circle_leads, members, stand_ins
+
+
+# Into a sub-circle (any depth, 5.2), ``Applier.move()``
+MOVED_INTO = re.compile(r"/roles/(\d+)/supporting_circle/(?:roles|policies)/\d+")
 
 
 def recipients(circle):
@@ -71,11 +77,31 @@ def proposal_back_to_draft(proposal):
     )
 
 
+def moved_into(proposals):
+    """The Secretaries and Circle Leads of the sub-circles the proposals
+    moved roles or policies into: the Secretary invites them to meetings"""
+    from governance.roles.models import Assignment, Role
+
+    pks = {
+        match[1]
+        for proposal in proposals
+        for instruction in proposal.instructions
+        if instruction["op"] == "move"
+        and (match := MOVED_INTO.fullmatch(instruction["path"]))
+    }
+    circles = list(Role.objects.filter(pk__in=pks))
+    secretaries = Assignment.objects.current().of_core_role(SECRETARY, circles)
+    leads = [user.pk for circle in circles for user in circle_leads(circle)]
+    return Q(pk__in=secretaries.values("user")) | Q(pk__in=leads)
+
+
 def proposal_adopted(proposal, members_before=()):
     """``members_before``: the members when adopting began, e.g. the holders
     of roles the proposal removed or moved away"""
     return send(
-        everybody(proposal) | User.objects.active().filter(pk__in=members_before),
+        everybody(proposal)
+        | User.objects.active().filter(pk__in=members_before)
+        | User.objects.filter(moved_into([proposal])),
         lambda: (
             _("Adopted in %(circle)s: %(proposal)s")
             % {"circle": proposal.circle, "proposal": proposal}
@@ -254,6 +280,7 @@ def meeting_ended(meeting):
                 proposal__in=proposals
             ).values("user")
         )
+        users |= moved_into(proposals)
     return send(
         User.objects.filter(users),
         lambda: _("Outputs of the %(meeting)s") % {"meeting": meeting},

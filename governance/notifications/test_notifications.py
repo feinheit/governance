@@ -160,6 +160,69 @@ class AffectedTest(TestCase):
             sorted(m.to[0] for m in mail.outbox), ["ada@example.com", "eve@example.com"]
         )
 
+    def test_moved_into_a_sub_circle(self):
+        """The Secretary of the circle a role moves into invites it to its
+        meetings, its Circle Leads want to know; not its other members"""
+        from governance.meetings.activity import end_meeting
+        from governance.meetings.models import Meeting
+        from governance.proposals.instructions import adopt
+
+        ada, eve, sam, lou, hal = (
+            User.objects.create_user(f"{name}@example.com", full_name=name)
+            for name in ["ada", "eve", "sam", "lou", "hal"]
+        )
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        Assignment.objects.create(role=cook, user=ada)
+        bakery = Role.objects.create(name="Bakery", circle=kitchen, is_circle=True)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        oven = Role.objects.create(name="Oven", circle=bakery, is_circle=True)
+        oven.create_core_roles()
+        Assignment.objects.create(role=oven.roles.get(core_role="secretary"), user=sam)
+        Assignment.objects.create(role=oven.roles.get(core_role="lead"), user=lou)
+        Assignment.objects.create(
+            role=Role.objects.create(name="Heater", circle=oven), user=hal
+        )
+        dishwasher = Role.objects.create(name="Dishwasher", circle=kitchen)
+        Assignment.objects.create(role=dishwasher, user=eve)
+
+        def move(role, meeting=None):
+            return Proposal.objects.create(
+                circle=kitchen,
+                proposer=ada,
+                tension="Ovens",
+                created_at=timezone.now(),
+                meeting=meeting,
+                instructions=[
+                    {
+                        "op": "move",
+                        "path": f"/roles/{oven.pk}/supporting_circle/roles/{role.pk}",
+                    }
+                ],
+            )
+
+        expected = [
+            "ada@example.com",
+            "eve@example.com",
+            "lou@example.com",
+            "sam@example.com",
+        ]
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(move(cook))
+        self.assertEqual(sorted(m.to[0] for m in mail.outbox), expected)
+
+        mail.outbox = []
+        meeting = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        meeting.attendees.set([ada])
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(move(dishwasher, meeting))
+            end_meeting(meeting)
+        self.assertEqual(sorted(m.to[0] for m in mail.outbox), expected)
+
     def test_nothing_for_people_who_left(self):
         from governance.proposals.instructions import adopt
 

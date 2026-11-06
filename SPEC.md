@@ -366,11 +366,14 @@ Plain text mails per active recipient in their language (none for
 people who left, also as proposers), after the transaction commits (`notifications/mails.py`), to the circle's members: published
 async proposals, those taken back, adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
-roles the proposal removes or moves away), domain policy changes (section 3), and when a meeting ends
+roles the proposal removes or moves away, and the Secretaries, who
+invite them to meetings, and Circle Leads of the sub-circles it moves
+roles or policies into, `mails.moved_into()`), domain policy changes (section 3), and when a meeting ends
 its outputs (adopted proposals, elections, minutes, tactical outcomes;
 also to the attendees and, like adopting async, the holders of roles
 the adopted proposals changed, removed or moved away, also deeper inside:
-roles of a removed circle, core roles of a circle turned back). Like GlassFrog, assignments, removals, elections
+roles of a removed circle, core roles of a circle turned back, and the
+sub-circles' Secretaries and Circle Leads like adopting async). Like GlassFrog, assignments, removals, elections
 and deactivations (`roles.assignments.announce()`) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
@@ -557,9 +560,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (second round of 2026-11-06), open:
-  - Moving a role or policy into a sub-circle (any depth) mails the
-    target circle's Secretary (it may need inviting) and Circle Leads
-    too, one mail per person.
   - A Circle Rep who leads the circle from above (assigned Circle Lead of
     the super-circle, or the circle's own Circle Lead ending): to decide.
     Assigning is refused for now.
