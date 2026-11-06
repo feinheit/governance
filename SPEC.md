@@ -711,7 +711,9 @@ Deliberately not modelled:
   into the backup's format. Let the
   open imported proposals be adopted async too (`adopt()` refuses
   proposals with a `glassfrog_id` outside of running meetings until then,
-  e.g. at GlassFrog's deadlines). Remove
+  e.g. at GlassFrog's deadlines; until then the app's async process moves
+them to "waiting for a meeting" at the last consent or the deadline, and
+the nightly import sets them back: accepted, decided 2026-11-06). Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
   being the source of truth in `AGENTS.md` and this file.
 - **Published interpretations** (4.2.1): the Secretary's rulings, binding
@@ -723,9 +725,6 @@ Deliberately not modelled:
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-06, open findings):
-  - B4: the app's async process moves proposals imported from GlassFrog
-    to "waiting for a meeting" (the last consent, the deadline) until the
-    nightly import sets them back. To decide, maybe until the switchover.
   - Untested risks: concurrent adoption without row locks
     (`select_for_update`), no mail when a due async proposal goes to a
     meeting because of a conflict, nothing adopted until the deadline when
