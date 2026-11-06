@@ -91,6 +91,17 @@ class AssignmentForm(ModelForm):
             raise forms.ValidationError(
                 _("%(user)s already holds this role with this focus.") % {"user": user}
             )
+        role = self.instance.role
+        if (
+            user
+            and role.core_role == LEAD
+            and Assignment.objects
+            .current()
+            .filter(user=user, role__circle=role.circle_id, role__core_role=REP)
+            .exists()
+        ):
+            # Constitution 5.1.1, like electing the Rep
+            self.add_error("user", _("A Circle Lead can't be the Circle Rep."))
         return data
 
 

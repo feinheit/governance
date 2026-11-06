@@ -118,3 +118,17 @@ class AssignmentsTest(TestCase):
             Assignment.objects.get(role=self.kitchen, user=self.bob).ends_on,
             dt.date(2026, 12, 1),
         )
+
+    def test_circle_rep_isnt_circle_lead(self):
+        """The Circle Rep isn't assigned as Circle Lead of the circle (5.1.1)"""
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="rep"), user=self.eve
+        )
+        self.client.force_login(self.ada)
+        response = self.client.post(
+            f"/roles/{self.kitchen_lead.pk}/assignments/", {"user": self.eve.pk}
+        )
+        self.assertContains(response, "A Circle Lead can&#x27;t be the Circle Rep.")
+        self.assertFalse(
+            Assignment.objects.filter(role=self.kitchen_lead, user=self.eve).exists()
+        )
