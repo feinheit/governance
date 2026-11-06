@@ -8,7 +8,7 @@ from governance.accounts.models import User
 from governance.meetings.elections import due_elections
 from governance.meetings.models import Meeting
 from governance.proposals.models import Proposal, Response
-from governance.roles.constitution import SECRETARY
+from governance.roles.constitution import FACILITATOR, SECRETARY
 from governance.roles.domain_policies import can_change_domain_policies
 from governance.roles.editing import can_edit_items, can_edit_strategy
 from governance.roles.models import (
@@ -245,11 +245,12 @@ def person_detail(request, pk):
         "past_more": past_more,
     }
     if user == request.user:
-        # Secretaries see the elections due in their circles
+        # Facilitators (who trigger them, 5.3.5) and Secretaries see the
+        # elections due in their circles
         context["due_elections"] = due_elections([
             assignment.role.circle
             for assignment in assignments
-            if assignment.role.core_role == SECRETARY
+            if assignment.role.core_role in {FACILITATOR, SECRETARY}
         ])
         responded = Response.objects.filter(user=user).exclude(kind=Response.COMMENT)
         circles = {

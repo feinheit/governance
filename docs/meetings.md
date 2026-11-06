@@ -47,7 +47,7 @@ makes it a circle, with them as its Circle Leads.
 - **Elections**: the facilitator runs the election, "Record the
   election" saves the person and the end of the term (Facilitator,
   Secretary, Circle Rep and roles elected by policy). Due elections are
-  shown on the circle's page, secretaries get a reminder on Mondays.
+  shown on the circle's page, facilitators get a reminder on Mondays.
 
 ## Tactical meeting
 

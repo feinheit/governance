@@ -60,7 +60,7 @@ class ElectionsTest(TestCase):
 
         call_command("fairy_tasks")
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].to, ["ada@example.com"])
+        self.assertEqual(mail.outbox[0].to, ["bob@example.com"])  # Facilitator
         self.assertIn("Circle Rep (Kitchen): nobody elected", mail.outbox[0].body)
 
     def test_record(self):
@@ -246,3 +246,28 @@ class ElectionsAndRestructuringTest(TestCase):
         elections_due()
         self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])
         self.assertIn("Taster (Kitchen): nobody elected", mail.outbox[0].body)
+
+
+class ElectionsDueTest(TestCase):
+    def test_reminder_to_the_facilitator(self):
+        """The Facilitator triggers elections (5.3.5), the stand-ins of 5.3.6
+        while there's none"""
+        from governance.notifications.mails import elections_due
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        Role.objects.create(name="Taster", circle=kitchen, is_elected_by_policy=True)
+        facilitator = Assignment.objects.create(
+            role=kitchen.roles.get(core_role="facilitator"), user=ada
+        )
+        Assignment.objects.create(
+            role=kitchen.roles.get(core_role="secretary"), user=bob
+        )
+        elections_due()
+        self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])
+        facilitator.delete()
+        mail.outbox = []
+        elections_due()
+        self.assertEqual([m.to for m in mail.outbox], [["bob@example.com"]])

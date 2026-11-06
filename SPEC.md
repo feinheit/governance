@@ -330,7 +330,8 @@ Leads aren't the Rep: an unfilled Circle Rep is nobody's (not held by the
 Circle Leads like other unfilled roles, not a role to propose from). Re-electing changes the term, electing somebody else
 ends the previous assignment, a Rep also holds the circle's role in the
 super-circle. Due elections (within 30 days, or nobody elected) show on
-the circle page and the Secretary's person page; Secretaries get a mail
+the circle page and the Facilitator's and Secretary's person pages;
+Facilitators (5.3.5; else Secretaries, else Circle Leads) get a mail
 on Mondays.
 
 **Tactical meetings** (article 3): any circle member

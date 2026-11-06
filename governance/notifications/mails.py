@@ -108,27 +108,42 @@ def domain_policy_changed(proposal):
 
 
 def elections_due(day=None):
-    """The weekly reminder to the Secretaries about terms ending soon"""
+    """The weekly reminder to the Facilitators about terms ending soon
+    (5.3.5), else the Secretaries and then the Circle Leads (5.3.6)"""
     from collections import defaultdict
 
     from governance.meetings.elections import due_elections
     from governance.roles.models import Assignment, Role
+    from governance.roles.permissions import circle_leads
 
-    by_secretary = defaultdict(list)
+    by_user = defaultdict(list)
     for circle in Role.objects.active().circles():
         if not (due := due_elections([circle], day=day)):
             continue
-        for assignment in Assignment.objects.current(on=day).filter(
-            role__circle=circle, role__core_role="secretary", role__archived_on=None
-        ):
-            by_secretary[assignment.user_id].extend(due)
+        for core_role in ["facilitator", "secretary"]:
+            users = set(
+                Assignment.objects
+                .current(on=day)
+                .filter(
+                    role__circle=circle,
+                    role__core_role=core_role,
+                    role__archived_on=None,
+                )
+                .values_list("user", flat=True)
+            )
+            if users:
+                break
+        else:
+            users = set(circle_leads(circle).values_list("pk", flat=True))
+        for user_id in users:
+            by_user[user_id].extend(due)
     sent = 0
-    for user in User.objects.active().filter(pk__in=by_secretary):
+    for user in User.objects.active().filter(pk__in=by_user):
         sent += send(
             User.objects.filter(pk=user.pk),
             lambda: _("Elections due"),
             "notifications/elections_due.txt",
-            {"due": by_secretary[user.pk], "base_url": settings.BASE_URL},
+            {"due": by_user[user.pk], "base_url": settings.BASE_URL},
         )
     return sent
 

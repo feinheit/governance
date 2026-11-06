@@ -49,7 +49,7 @@ werden seine Circle Leads.
 - **Wahlen**: der Facilitator führt die Wahl durch, "Wahl festhalten"
   speichert Person und Ende der Amtszeit (Facilitator, Secretary, Circle
   Rep und durch Policy gewählte Rollen). Anstehende Wahlen stehen auf der
-  Seite des Kreises, Secretaries erhalten montags eine Erinnerung.
+  Seite des Kreises, Facilitators erhalten montags eine Erinnerung.
 
 ## Tactical Meeting
 
