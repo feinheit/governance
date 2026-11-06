@@ -9,20 +9,22 @@ from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
 from governance.roles.models import ChecklistItem, Link, Metric, Role
-from governance.roles.permissions import can_lead
+from governance.roles.permissions import ALLOWED, NOT_ALLOWED, can_lead
 
 
 def can_edit_strategy(user, role):
-    return role.is_circle and not role.archived_on and can_lead(user, role)
+    if not role.is_circle or role.archived_on:
+        return NOT_ALLOWED
+    return can_lead(user, role)
 
 
 def can_edit_items(user, role, model):
     """Metrics: the Circle Lead (a circle's own, or its roles'). Checklist
     items and links: anybody, Holacracy defines no process for them."""
     if role.archived_on:
-        return False
+        return NOT_ALLOWED
     if model in {ChecklistItem, Link}:
-        return True
+        return ALLOWED
     return can_lead(user, role.governing_circle)
 
 
@@ -35,7 +37,7 @@ class StrategyForm(ModelForm):
 
 def strategy(request, pk):
     role = get_object_or_404(Role, pk=pk)
-    if not can_edit_strategy(request.user, role):
+    if not (right := can_edit_strategy(request.user, role)):
         raise PermissionDenied
     form = StrategyForm(request.POST or None, instance=role)
     if form.is_valid():
@@ -48,6 +50,7 @@ def strategy(request, pk):
             "title": gettext("Strategy of %(circle)s") % {"circle": role},
             "help": gettext("The Circle Leads set the strategy outside governance."),
             "form": form,
+            "right": right,
             "cancel_url": role.get_absolute_url(),
         },
     )
@@ -83,7 +86,7 @@ def item_edit(request, kind, pk=None, role_pk=None):
             role=role,
             position=model.objects.filter(role=role).count(),
         )
-    if not can_edit_items(request.user, role, model):
+    if not (right := can_edit_items(request.user, role, model)):
         raise PermissionDenied
     form = item_form(model)(request.POST or None, instance=item)
     if form.is_valid():
@@ -100,6 +103,7 @@ def item_edit(request, kind, pk=None, role_pk=None):
             }[model]
             % {"role": role},
             "form": form,
+            "right": right,
             "cancel_url": role.get_absolute_url(),
         },
     )

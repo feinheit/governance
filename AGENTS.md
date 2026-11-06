@@ -258,6 +258,11 @@ the apps' initial migrations).
   states and kinds through the `tone` filter (`badge {{ x.status|tone }}`),
   role kinds in the circle browser's colors (circle blue, core and
   elected purple). Red only for objections; removing is housekeeping, gray.
+  Buttons: `btn-destructive` (red ink) for deleting, removing somebody,
+  withdrawing, `btn-danger` confirming it; buttons needing a permission
+  check use `{% button_class right %}`, amber (`btn-elevated`) when done
+  as admin or as Secretary standing in for the Circle Leads; forms
+  passing `right` to their template explain it (`generic/_right.html`).
 - Actions and projects stay in the task management tool; don't build
   them here. No
   integration with Workbench either (see the decisions in `SPEC.md`).

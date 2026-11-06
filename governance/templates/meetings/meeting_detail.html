@@ -47,7 +47,7 @@
               {% endif %}
             >
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-quiet py-0">{% translate "Take over" %}</button>
+              <button type="submit" {% button_class can_run size="btn-sm py-0" %}>{% translate "Take over" %}</button>
             </form>
           {% endif %}
         </div>
@@ -56,16 +56,23 @@
         <div class="wb-page-actions">
           <form method="post" action="{% url 'meeting_end' meeting.pk %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-quiet">{% translate "End the meeting" %}</button>
+            <button type="submit" {% button_class can_run %}>{% translate "End the meeting" %}</button>
           </form>
           <a
-            class="btn btn-sm btn-quiet"
+            {% button_class can_run %}
             href="{% url 'meeting_update' meeting.pk %}"
             data-modal
           >{% translate "Edit" %}</a>
         </div>
       {% endif %}
     </div>
+
+    {% if can_run|elevated and not meeting.ended_at %}
+      {# Admins who aren't members, the buttons only they have are marked #}
+      <div class="alert alert-warning mt-3">
+        {% translate "You run this meeting as an admin, not as a member of the circle. Only do it when you know it's needed." %}
+      </div>
+    {% endif %}
 
     <div class="row g-4">
       <div class="col-lg-8 order-lg-2">

@@ -267,6 +267,7 @@ def render_assignments(request, role, form, *, reps=None):
             "form": form,
             "can_assign": form is not None,
             "reps": reps,
+            "right": can_end_assignment(request.user, role),
         },
     )
 
@@ -287,6 +288,7 @@ def assignment_update(request, pk):
             "title": gettext("Edit the focus of %(user)s in %(role)s")
             % {"user": assignment.user, "role": role},
             "form": form,
+            "right": can_assign(request.user, role),
             "cancel_url": back(request, role),
         },
     )
@@ -317,7 +319,12 @@ def assignment_end(request, pk):
     return render(
         request,
         "roles/assignment_end.html",
-        {"assignment": assignment, "role": role, "reps": reps},
+        {
+            "assignment": assignment,
+            "role": role,
+            "reps": reps,
+            "right": can_end_assignment(request.user, role),
+        },
     )
 
 

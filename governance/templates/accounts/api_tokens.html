@@ -48,7 +48,7 @@
             </div>
             <form method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-quiet" name="delete" value="{{ token.pk }}">
+              <button type="submit" class="btn btn-sm btn-destructive" name="delete" value="{{ token.pk }}">
                 {% translate "Delete" %}
               </button>
             </form>

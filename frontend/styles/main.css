@@ -168,6 +168,47 @@ h3,
   --bs-btn-active-bg: var(--bs-secondary-bg);
 }
 
+/* Buttons destroying or ending something (deleting, removing somebody,
+   withdrawing): danger ink, a solid one confirming. Buttons for what the
+   constitution leaves to others (as admin, as Secretary standing in for
+   the Circle Leads, the button_class tag) are amber: only when needed. */
+.btn-destructive {
+  --bs-btn-color: var(--wb-danger-ink);
+  --bs-btn-bg: var(--wb-surface);
+  --bs-btn-border-color: var(--bs-border-color);
+  --bs-btn-hover-color: var(--wb-danger-ink);
+  --bs-btn-hover-bg: var(--wb-danger-bg);
+  --bs-btn-hover-border-color: var(--wb-danger-bg);
+  --bs-btn-active-color: var(--wb-danger-ink);
+  --bs-btn-active-bg: var(--wb-danger-bg);
+  --bs-btn-active-border-color: var(--wb-danger-ink);
+}
+
+.btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #b02a1f;
+  --bs-btn-border-color: #b02a1f;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #8f2219;
+  --bs-btn-hover-border-color: #8f2219;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #8f2219;
+  --bs-btn-active-border-color: #8f2219;
+  --bs-btn-focus-shadow-rgb: 176, 42, 31;
+}
+
+.btn-elevated {
+  --bs-btn-color: var(--wb-warning-ink);
+  --bs-btn-bg: var(--wb-warning-bg);
+  --bs-btn-border-color: var(--wb-warning-bg);
+  --bs-btn-hover-color: var(--wb-warning-ink);
+  --bs-btn-hover-bg: var(--wb-warning-bg);
+  --bs-btn-hover-border-color: var(--wb-warning-ink);
+  --bs-btn-active-color: var(--wb-warning-ink);
+  --bs-btn-active-bg: var(--wb-warning-bg);
+  --bs-btn-active-border-color: var(--wb-warning-ink);
+}
+
 .wb-page-header {
   display: flex;
   flex-wrap: wrap;

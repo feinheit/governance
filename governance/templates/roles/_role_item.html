@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load governance i18n %}
 <li class="list-group-item wb-row">
   <div class="wb-row-main">
     <div>{% if item.link %}<a href="{{ item.link }}">{{ item }}</a>{% else %}{{ item }}{% endif %}</div>
@@ -10,10 +10,10 @@
   </div>
   {% if can_edit %}
     <div class="d-flex gap-1 flex-shrink-0">
-      <a class="btn btn-sm btn-quiet" href="{% url 'role_item' kind item.pk %}" data-modal>{% translate "Edit" %}</a>
+      <a {% button_class can_edit %} href="{% url 'role_item' kind item.pk %}" data-modal>{% translate "Edit" %}</a>
       <form method="post" action="{% url 'role_item_delete' kind item.pk %}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-sm btn-quiet">{% translate "Delete" %}</button>
+        <button type="submit" {% button_class can_edit "btn-destructive" %}>{% translate "Delete" %}</button>
       </form>
     </div>
   {% endif %}

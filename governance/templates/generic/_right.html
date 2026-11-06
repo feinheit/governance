@@ -1,0 +1,16 @@
+{% load i18n %}
+{% comment %}
+  Doing something the constitution leaves to others (``right`` of
+  roles.permissions): as admin, or as Secretary standing in for the Circle
+  Leads. On forms and confirmations, the buttons leading there are marked
+  (the button_class tag).
+{% endcomment %}
+{% if right == "admin" %}
+  <div class="alert alert-warning">
+    {% translate "You can do this as an admin, not through one of your roles: the constitution leaves it to others. Only do it when you know it's needed." %}
+  </div>
+{% elif right == "secretary" %}
+  <div class="alert alert-warning">
+    {% translate "You can do this as Secretary, standing in for the Circle Leads: the constitution leaves it to them. Only do it when you know it's needed." %}
+  </div>
+{% endif %}

@@ -27,6 +27,12 @@ Some things change without governance:
   page).
 - The secretary may do everything in the tool the Circle Leads may, so
   that there's a stand-in.
+- Admins may do all of this everywhere, also run any circle's meetings,
+  e.g. in the top circle, which has no Circle Leads above it. Buttons
+  for what the constitution leaves to others are amber for admins and
+  for the Secretary standing in ("As admin" when hovering them), and
+  their forms say so: only use them when you know it's needed. Buttons
+  deleting or removing something are red.
 - The settings implement what the circle's policies define. Sub-circles
   without a deadline for async proposals of their own use the one of the
   circle above, so the policy setting it should say that it applies to

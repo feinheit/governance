@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load governance i18n %}
 {# A role's holders; the Circle Leads assign, change the focus and remove them in modals, back to the page #}
 <section class="card mb-4">
   <div class="card-header"><h2 class="h6 mb-0">{% translate "Holders" %}</h2></div>
@@ -17,12 +17,12 @@
         {% if can_end_assignment %}
           <div class="d-flex gap-1 flex-shrink-0 align-items-start">
             {% if can_assign %}<a
-                class="btn btn-sm btn-quiet"
+                {% button_class can_assign %}
                 href="{% url 'assignment_update' assignment.pk %}?next={{ request.path|urlencode }}"
                 data-modal
               >{% translate "Edit focus" %}</a>{% endif %}
             <a
-              class="btn btn-sm btn-quiet"
+              {% button_class can_end_assignment "btn-destructive" %}
               href="{% url 'assignment_end' assignment.pk %}?next={{ request.path|urlencode }}"
               data-modal
             >{% translate "Remove" %}</a>
@@ -44,7 +44,7 @@
     {% if can_assign %}
       <li class="list-group-item">
         <a
-          class="btn btn-sm btn-quiet"
+          {% button_class can_assign %}
           href="{% url 'role_assignments' role.pk %}?next={{ request.path|urlencode }}"
           data-modal
         >{% translate "Assign somebody" %}</a>

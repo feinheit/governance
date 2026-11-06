@@ -28,6 +28,12 @@ Einiges ändert sich ohne Governance:
   "Besetzung" auf der Rollenseite).
 - Der Secretary darf im Tool alles, was die Circle Leads dürfen, damit es
   eine Stellvertretung gibt.
+- Admins dürfen all das überall, und auch die Meetings aller Kreise
+  leiten, z.B. im obersten Kreis, über dem es keine Circle Leads gibt.
+  Buttons für das, was die Verfassung anderen überlässt, sind für Admins
+  und den stellvertretenden Secretary gelb ("Als Admin" beim Darüberfahren),
+  und ihre Formulare sagen es: Nur verwenden, wenn du weisst, dass es nötig
+  ist. Buttons, die etwas löschen oder entfernen, sind rot.
 - Die Einstellungen setzen um, was Policies des Kreises festlegen.
   Sub-Kreise ohne eigene Frist für asynchrone Vorschläge verwenden die
   des übergeordneten Kreises, deshalb sollte die Policy, die sie

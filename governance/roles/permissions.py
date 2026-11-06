@@ -4,12 +4,28 @@ Circle Leads assign people to the roles of their circle (and the Circle
 Lead of a sub-circle). Admins may do it everywhere, e.g. assign the anchor
 circle's Circle Lead. Everything else changes through governance, also
 spelling.
+
+The checks return why somebody may do something, empty when they may not:
+``ALLOWED`` (through their roles, the constitution or the app's own rules),
+``AS_SECRETARY`` (the Secretary standing in for the Circle Leads, which the
+constitution doesn't do) or ``AS_ADMIN``. The pages mark the latter two
+(``generic/_right.html``, the ``elevated`` filter).
 """
 
 from django.db.models import Q
 
 from governance.roles.constitution import LEAD, REP, SECRETARY
 from governance.roles.models import Assignment, Role
+
+
+NOT_ALLOWED = ""
+ALLOWED = "allowed"
+AS_SECRETARY = "secretary"
+AS_ADMIN = "admin"
+
+
+def as_admin(user):
+    return AS_ADMIN if user.is_admin else NOT_ALLOWED
 
 
 def holds_core_role(user, circle, core_role):
@@ -87,11 +103,13 @@ def can_lead(user, circle):
     The Secretary stands in, although the constitution doesn't give them
     these rights.
     """
-    return circle is not None and (
-        user.is_admin
-        or is_circle_lead(user, circle)
-        or holds_core_role(user, circle, SECRETARY)
-    )
+    if circle is None:
+        return NOT_ALLOWED
+    if is_circle_lead(user, circle):
+        return ALLOWED
+    if holds_core_role(user, circle, SECRETARY):
+        return AS_SECRETARY
+    return as_admin(user)
 
 
 def can_end_assignment(user, role):
@@ -99,14 +117,16 @@ def can_end_assignment(user, role):
     roles: their holders resign through them (1.4.1). The super-circle's
     Circle Leads do it for a sub-circle's Circle Lead."""
     if role.archived_on or role.is_circle or not role.circle:
-        return False
+        return NOT_ALLOWED
     circle = role.circle.circle if role.core_role == LEAD else role.circle
-    return user.is_admin or can_lead(user, circle)
+    return can_lead(user, circle) or as_admin(user)
 
 
 def can_assign(user, role):
     """Those who end assignments also assign, except to elected roles"""
-    return not role.is_elected and can_end_assignment(user, role)
+    if role.is_elected:
+        return NOT_ALLOWED
+    return can_end_assignment(user, role)
 
 
 def members(circle):
@@ -166,7 +186,9 @@ def can_start_meeting(user, circle):
     them: the other one of them, the Circle Lead, and finally the first
     circle member who declares to stand in (constitution 5.3.6).
     """
-    return user.is_admin or is_member(user, circle)
+    if is_member(user, circle):
+        return ALLOWED
+    return as_admin(user)
 
 
 def asks_before_starting(user, circle):
@@ -182,6 +204,7 @@ def can_change_settings(user, role):
     """The Secretary changes a circle's settings (acceptance period) and
     whether a policy makes a role of the circle elected"""
     if role.archived_on or role.core_role:
-        return False
-    circle = role.governing_circle
-    return user.is_admin or holds_core_role(user, circle, SECRETARY)
+        return NOT_ALLOWED
+    if holds_core_role(user, role.governing_circle, SECRETARY):
+        return ALLOWED
+    return as_admin(user)

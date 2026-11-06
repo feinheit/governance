@@ -496,6 +496,17 @@ changes the circle's settings and stands in for the Circle Leads in
 everything the app lets the Circle Leads do (`can_lead()`), although the
 constitution doesn't say so. Superusers set things up.
 
+The permission checks return why somebody may do something
+(`roles/permissions.py`: `ALLOWED`, `AS_SECRETARY`, `AS_ADMIN`, empty
+when not): what the constitution leaves to others, done as admin or as
+Secretary standing in for the Circle Leads, has amber buttons with the
+reason as their title (`btn-elevated`, the `button_class` tag), a note in
+its form or confirmation (`generic/_right.html`), and in a meeting run
+by an admin who isn't a member a note at the top. Buttons deleting,
+removing somebody or withdrawing are red (`btn-destructive`, confirming
+`btn-danger`); removing lines of a draft, agenda items or attendees
+isn't destroying anything and stays quiet.
+
 ## 8. API
 
 django-ninja at `/api/` (docs at `/api/docs`), the same rules as the web

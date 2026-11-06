@@ -57,7 +57,7 @@
         >{% translate "Edit the tension" %}</a>
         <form method="post" action="{% url 'proposal_delete' proposal.pk %}" class="d-inline">
           {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-quiet">{% translate "Delete the draft" %}</button>
+          <button type="submit" class="btn btn-sm btn-destructive">{% translate "Delete the draft" %}</button>
         </form>
       </div>
     {% elif can_draft_again %}
@@ -77,7 +77,7 @@
         {% endif %}
         <form method="post" action="{% url 'proposal_withdraw' proposal.pk %}" class="d-inline">
           {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-quiet">{% translate "Withdraw" %}</button>
+          <button type="submit" class="btn btn-sm btn-destructive">{% translate "Withdraw" %}</button>
         </form>
       </div>
     {% endif %}

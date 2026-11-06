@@ -21,18 +21,24 @@ from governance.forms import ModelForm
 from governance.history.update import update_today
 from governance.proposals.models import Proposal
 from governance.roles.models import Assignment, Domain, Policy, Role
-from governance.roles.permissions import can_lead
+from governance.roles.permissions import (
+    ALLOWED,
+    NOT_ALLOWED,
+    as_admin,
+    can_lead,
+)
 
 
 def can_change_domain_policies(user, role):
+    """Its holders, while nobody holds it its Circle Leads (1.4.2)"""
     if role.archived_on or role.is_circle or role.core_role:
-        return False
+        return NOT_ALLOWED
     if not role.domains.exists():
-        return False
+        return NOT_ALLOWED
     holders = Assignment.objects.current().filter(role=role)
-    if holders.filter(user=user).exists() or user.is_admin:
-        return True
-    return not holders.exists() and can_lead(user, role.circle)
+    if holders.filter(user=user).exists():
+        return ALLOWED
+    return (not holders.exists() and can_lead(user, role.circle)) or as_admin(user)
 
 
 class DomainPolicyForm(ModelForm):
@@ -105,7 +111,7 @@ def changes(policy, old, new):
 @transaction.atomic
 def domain_policy_edit(request, pk, policy_pk=None):
     role = get_object_or_404(Role, pk=pk)
-    if not can_change_domain_policies(request.user, role):
+    if not (right := can_change_domain_policies(request.user, role)):
         raise PermissionDenied
     policy = (
         get_object_or_404(Policy.objects.active(), pk=policy_pk, role=role)
@@ -155,6 +161,7 @@ def domain_policy_edit(request, pk, policy_pk=None):
             )
             % {"circle": role.circle},
             "form": form,
+            "right": right,
             "cancel_url": role.get_absolute_url(),
         },
     )

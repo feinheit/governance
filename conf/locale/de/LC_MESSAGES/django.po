@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:46+0100\n"
+"POT-Creation-Date: 2026-11-06 15:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1688,6 +1688,14 @@ msgstr "API"
 msgid "Sign out"
 msgstr "Abmelden"
 
+#: governance/templates/generic/_right.html
+msgid "You can do this as an admin, not through one of your roles: the constitution leaves it to others. Only do it when you know it's needed."
+msgstr "Du kannst das als Admin tun, nicht über eine deiner Rollen: Die Verfassung überlässt es anderen. Tu es nur, wenn du weisst, dass es nötig ist."
+
+#: governance/templates/generic/_right.html
+msgid "You can do this as Secretary, standing in for the Circle Leads: the constitution leaves it to them. Only do it when you know it's needed."
+msgstr "Du kannst das als Secretary tun, stellvertretend für die Circle Leads: Die Verfassung überlässt es ihnen. Tu es nur, wenn du weisst, dass es nötig ist."
+
 #: governance/templates/generic/object_form.html
 #: governance/templates/roles/person_detail.html
 msgid "Save"
@@ -2106,6 +2114,10 @@ msgstr "Übernehmen"
 #: governance/templates/meetings/meeting_detail.html
 msgid "End the meeting"
 msgstr "Meeting beenden"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "You run this meeting as an admin, not as a member of the circle. Only do it when you know it's needed."
+msgstr "Du leitest dieses Meeting als Admin, nicht als Mitglied des Kreises. Tu es nur, wenn du weisst, dass es nötig ist."
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "The invited roles have no checklist items."
@@ -2787,6 +2799,14 @@ msgstr "Nichts gefunden."
 #: governance/templates/start.html
 msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
 msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+
+#: governance/templatetags/governance.py
+msgid "As admin"
+msgstr "Als Admin"
+
+#: governance/templatetags/governance.py
+msgid "As Secretary, standing in for the Circle Leads"
+msgstr "Als Secretary, stellvertretend für die Circle Leads"
 
 #, python-format
 #~ msgid "%(policy)s can't be moved."

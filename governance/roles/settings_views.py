@@ -34,7 +34,7 @@ class RoleSettingsForm(ModelForm):
 
 def role_settings(request, pk):
     role = get_object_or_404(Role.objects.select_related("circle"), pk=pk)
-    if not can_change_settings(request.user, role):
+    if not (right := can_change_settings(request.user, role)):
         raise PermissionDenied
     form_class = CircleSettingsForm if role.is_circle else RoleSettingsForm
     form = form_class(request.POST or None, instance=role)
@@ -51,6 +51,7 @@ def role_settings(request, pk):
                 " together."
             ),
             "form": form,
+            "right": right,
             "cancel_url": role.get_absolute_url(),
         },
     )

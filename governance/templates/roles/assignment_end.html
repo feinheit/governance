@@ -20,6 +20,7 @@
         {% endif %}
       </div>
     </div>
+    {% include "generic/_right.html" %}
     {% if reps %}{% include "roles/_ending_reps.html" %}{% endif %}
     <form
       method="post"
@@ -33,7 +34,7 @@
       {% csrf_token %}
       {% if reps %}<input type="hidden" name="end_reps" value="1">{% endif %}
       <div class="wb-form-actions">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-danger">
           {% if reps %}{% translate "Remove and end them" %}{% else %}{% translate "Remove" %}{% endif %}
         </button>
         {% if modal %}<button

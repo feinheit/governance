@@ -127,7 +127,7 @@
           {% if can_run and proposal.status == "in_meeting" %}
             <form method="post" action="{% url 'item_discard' current.pk %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Discard" %}</button>
+              <button type="submit" class="btn btn-sm btn-destructive">{% translate "Discard" %}</button>
             </form>
           {% endif %}
         </div>

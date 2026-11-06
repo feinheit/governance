@@ -1,6 +1,7 @@
 from django import template
-from django.utils.html import strip_tags
+from django.utils.html import format_html, strip_tags
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext
 from markdown_it import MarkdownIt
 
 from governance.roles.mentions import render_mentions
@@ -30,6 +31,30 @@ def by_frequency_filter(items):
     from governance.roles.models import by_frequency
 
     return by_frequency(items)
+
+
+@register.filter
+def elevated(right):
+    """Why somebody may do what the constitution leaves to others, a right
+    of roles.permissions: as admin, or as Secretary standing in for the
+    Circle Leads; empty otherwise"""
+    from governance.roles.permissions import AS_ADMIN, AS_SECRETARY
+
+    if right == AS_ADMIN:
+        return gettext("As admin")
+    if right == AS_SECRETARY:
+        return gettext("As Secretary, standing in for the Circle Leads")
+    return ""
+
+
+@register.simple_tag
+def button_class(right, style="btn-quiet", size="btn-sm"):
+    """The attributes of a button needing ``right``: marked (btn-elevated,
+    with the reason as its title) when the right is elevated(), else in
+    ``style``, e.g. btn-destructive"""
+    if reason := elevated(right):
+        return format_html('class="btn {} btn-elevated" title="{}"', size, reason)
+    return format_html('class="btn {} {}"', size, style)
 
 
 # The colors of badges (main.css): states of proposals, kinds of responses,

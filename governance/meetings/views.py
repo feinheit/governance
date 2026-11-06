@@ -165,7 +165,7 @@ def meeting_create(request, pk):
     """Starting a meeting; in a role (not a circle) asked first: rarely
     what people want (meetings/meeting_confirm.html)"""
     circle = get_object_or_404(Role.objects.active().with_inside(), pk=pk)
-    if not can_start_meeting(request.user, circle):
+    if not (right := can_start_meeting(request.user, circle)):
         raise PermissionDenied
     if request.method != "POST":
         # Asked first (asks_before_starting()), e.g. in a modal
@@ -174,6 +174,7 @@ def meeting_create(request, pk):
             "meetings/meeting_confirm.html",
             {
                 "role": circle,
+                "right": right,
                 "tactical": request.GET.get("kind") == Meeting.TACTICAL
                 and circle.is_circle,
                 "secretaries": stand_ins(circle, [SECRETARY]).order_by(

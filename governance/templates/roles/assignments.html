@@ -1,5 +1,5 @@
 {% extends modal|yesno:"modal.html,base.html" %}
-{% load i18n %}
+{% load governance i18n %}
 {% comment %}
   In a modal (e.g. "Assign" on the circle's page, governance/modals.py) only
   the form, which goes back to ?next=
@@ -39,12 +39,12 @@
               </div>
               <div class="d-flex gap-1 flex-shrink-0 align-items-start">
                 {% if can_assign %}<a
-                    class="btn btn-sm btn-quiet"
+                    {% button_class right %}
                     href="{% url 'assignment_update' assignment.pk %}"
                     data-modal
                   >{% translate "Edit focus" %}</a>{% endif %}
                 <a
-                  class="btn btn-sm btn-quiet"
+                  {% button_class right "btn-destructive" %}
                   href="{% url 'assignment_end' assignment.pk %}"
                   data-modal
                 >{% translate "Remove" %}</a>
@@ -58,6 +58,7 @@
         </ul>
       </section>{% endif %}
 
+    {% include "generic/_right.html" %}
     {% if reps %}{% include "roles/_ending_reps.html" %}{% endif %}
 
     {% if not form %}
