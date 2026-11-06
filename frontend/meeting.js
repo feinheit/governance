@@ -100,11 +100,9 @@ function fitFlow() {
     flow.style.maxHeight = ""
     return
   }
+  // Down to the window's lower edge, the column has padding of its own
   const top = flow.getBoundingClientRect().top + window.scrollY
-  const main = getComputedStyle(document.querySelector("main"))
-  const below =
-    Number.parseFloat(main.paddingBottom) + Number.parseFloat(main.marginBottom)
-  flow.style.maxHeight = `${Math.max(window.innerHeight - top - below, 240)}px`
+  flow.style.maxHeight = `${Math.max(window.innerHeight - top, 240)}px`
 }
 
 fitFlow()

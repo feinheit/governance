@@ -344,7 +344,7 @@ Left: who called it, the secretary ("Take over"), the attendees (a
 modal), the agenda (adding items as its last line, completed items
 struck through, "End the meeting" at its bottom), for ad-hoc tactical
 meetings the invited roles, elections, proposals. Right: the rounds, then one column scrolling on its own
-on wide screens, filling the window below its top so that the page only
+on wide screens, down to the window's lower edge so that the page only
 scrolls for the left column (`.wb-flow`, `fitFlow()`): in tactical meetings the results of the
 completed items (a card each, `_results.html`), the item being
 processed, and the notes at the bottom (what doesn't belong to an agenda

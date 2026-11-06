@@ -566,10 +566,16 @@ a.wb-row-title:hover {
 @media (min-width: 992px) {
   .wb-flow {
     position: sticky;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
+    top: 0;
+    max-height: 100vh;
     overflow-y: auto;
     padding-inline-end: 0.25rem;
+    padding-bottom: 1rem;
+  }
+
+  /* Down to the window's edge: the page has no padding below it */
+  .wb-main:has(.wb-flow) {
+    padding-bottom: 0;
   }
 }
 

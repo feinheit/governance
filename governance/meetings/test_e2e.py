@@ -250,9 +250,16 @@ class MeetingE2ETest(LiveServerTestCase):
         page = self.page
         page.set_viewport_size({"width": 1280, "height": 800})
         page.goto(f"{self.live_server_url}{meeting.get_absolute_url()}")
-        # Only the column scrolls, not the page
+        # Only the column scrolls, not the page; it reaches the window's edge
         self.assertLessEqual(
             page.evaluate("document.documentElement.scrollHeight"), 800
+        )
+        self.assertAlmostEqual(
+            page.evaluate(
+                "document.querySelector('.wb-flow').getBoundingClientRect().bottom"
+            ),
+            800,
+            delta=1,
         )
         visible = "(() => { const f = document.querySelector('.wb-flow').getBoundingClientRect(), c = document.querySelector('#current').getBoundingClientRect(); return c.top >= f.top - 1 && c.top < f.bottom })()"
         self.assertTrue(page.evaluate(visible))
