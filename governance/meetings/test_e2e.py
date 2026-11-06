@@ -280,6 +280,30 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("#meeting >> text=Short and sweet")
         self.assertEqual(self.errors, [])
 
+    def test_holders(self):
+        """Assigning and removing on the role's page, in modals"""
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=self.ada
+        )
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        page.locator("a[data-modal]", has_text="Assign somebody").click()
+        page.select_option("#modal[open] select[name=user]", str(bob.pk))
+        page.fill("#modal input[name=focus]", "Bread")
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("main >> text=Bread")
+        self.assertTrue(Assignment.objects.filter(role=self.cook, user=bob).exists())
+
+        page.locator(
+            f"a[data-modal][href*='/assignments/{Assignment.objects.get(user=bob).pk}/end/']"
+        ).click()
+        page.wait_for_selector("#modal[open] >> text=Remove Bob from Cook?")
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("main >> text=Bread", state="detached")
+        self.assertFalse(Assignment.objects.filter(role=self.cook, user=bob).exists())
+        self.assertEqual(self.errors, [])
+
     def test_circle_browser(self):
         """The circle browser (Preact and d3) is loaded only on its page"""
         page = self.page

@@ -1,11 +1,23 @@
 from django import forms
 from django.forms.renderers import TemplatesSetting
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 
 
 # Django 6.1's label of empty choices (``BLANK_CHOICE_LABEL``) has no German
 # translation yet: ours, kept in the catalog because it appears here
 BLANK_CHOICE_LABEL = _("- Select an option -")
+
+
+def next_url(request):
+    """Where to go after saving, e.g. back to the meeting amending the
+    proposal or to the circle's page (``?next=`` or a ``next`` field)"""
+    url = request.POST.get("next") or request.GET.get("next")
+    if url and url_has_allowed_host_and_scheme(
+        url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+    ):
+        return url
+    return None
 
 
 class Renderer(TemplatesSetting):

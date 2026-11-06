@@ -36,7 +36,7 @@ checklists and metrics, links, open proposals, meetings and due
 elections.
 
 A **role** shows its purpose, accountabilities, domains, who holds it
-(with focus and term), its policies and those of its circles, which
+(with focus and term, the Circle Leads assign and remove here), its policies and those of its circles, which
 apply to it too, checklists, metrics and links.
 Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.
@@ -60,8 +60,8 @@ you mention a role: the field suggests names, the link always shows the
 role's current name.
 
 Short forms (strategy, metrics, checklist items, links, policies of a
-domain, settings, a holder's focus, the tension of a draft, a meeting's
-minutes) open above the page. Escape closes them; once something has
+domain, settings, assigning, a holder's focus and removing them, the
+tension of a draft, a meeting's minutes) open above the page. Escape closes them; once something has
 been entered, only when pressed twice.
 
 ## Mails

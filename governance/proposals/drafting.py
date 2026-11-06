@@ -17,11 +17,10 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.html import format_html
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from governance.forms import Form, ModelForm
+from governance.forms import Form, ModelForm, next_url
 from governance.proposals.instructions import MARKERS, NEW_KEY, new_key, subject_of
 from governance.proposals.models import Proposal
 from governance.roles.constitution import CORE_ROLES, LEAD
@@ -36,17 +35,6 @@ TEXT_KINDS = [
 
 
 # Instructions ################################################################
-
-
-def next_url(request):
-    """Where to go after saving, e.g. back to the meeting amending the
-    proposal (``?next=`` or a ``next`` field)"""
-    url = request.POST.get("next") or request.GET.get("next")
-    if url and url_has_allowed_host_and_scheme(
-        url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
-    ):
-        return url
-    return None
 
 
 def done(request, proposal):

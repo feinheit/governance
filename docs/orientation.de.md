@@ -37,7 +37,7 @@ Checklisten und Kennzahlen, Links, offene Vorschläge, Meetings und
 anstehende Wahlen.
 
 Eine **Rolle** zeigt Purpose, Accountabilities, Domains, wer sie hat (mit
-Fokus und Amtszeit), ihre Policies und die ihrer Kreise, die auch für sie
+Fokus und Amtszeit, die Circle Leads weisen hier zu und entfernen), ihre Policies und die ihrer Kreise, die auch für sie
 gelten, Checklisten, Kennzahlen und Links.
 Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
 unbesetzten Circle Lead die des übergeordneten Kreises.
@@ -61,8 +61,8 @@ Texte sind einfaches Markdown (`**fett**`, Listen mit `-`, Links). Mit
 immer den aktuellen Namen der Rolle.
 
 Kurze Formulare (Strategie, Metriken, Checklisten-Punkte, Links, Policies
-einer Domain, Einstellungen, der Fokus einer Zuweisung, die Spannung eines
-Entwurfs, das Protokoll eines Meetings) öffnen sich über der Seite.
+einer Domain, Einstellungen, Zuweisen, Fokus und Entfernen, die Spannung
+eines Entwurfs, das Protokoll eines Meetings) öffnen sich über der Seite.
 Escape schliesst sie; sobald etwas eingegeben ist, erst beim zweiten Mal.
 
 ## Mails

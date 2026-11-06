@@ -10,10 +10,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext, gettext_lazy as _
-from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
-from governance.forms import ModelForm
+from governance.forms import ModelForm, next_url
 from governance.history.update import update_today
 from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Assignment, Role
@@ -228,7 +227,7 @@ def assignable_role(request, pk, check=can_assign):
 
 def assignments(request, pk):
     """The role's holders, with the form to add one (elected roles are
-    elected, their holders only removed here)"""
+    elected, their holders only removed here); in a modal only the form"""
     role = assignable_role(request, pk, check=can_end_assignment)
     form = None
     if can_assign(request.user, role):
@@ -252,13 +251,12 @@ def assignments(request, pk):
                 gettext("%(user)s now holds %(role)s.")
                 % {"user": assignment.user, "role": role},
             )
-            return redirect("role_assignments", pk=role.pk)
+            return redirect(back(request, role))
     return render_assignments(request, role, form, reps=reps)
 
 
-def render_assignments(request, role, form, *, reps=None, ending=None):
-    """``reps``: the Circle Reps the change ends, ``ending``: the assignment
-    whose end would do that"""
+def render_assignments(request, role, form, *, reps=None):
+    """``reps``: the Circle Reps the change ends"""
     return render(
         request,
         "roles/assignments.html",
@@ -269,7 +267,6 @@ def render_assignments(request, role, form, *, reps=None, ending=None):
             "form": form,
             "can_assign": form is not None,
             "reps": reps,
-            "ending": ending,
         },
     )
 
@@ -282,7 +279,7 @@ def assignment_update(request, pk):
     form = AssignmentForm(request.POST or None, instance=assignment, role=role)
     if form.is_valid():
         form.save()
-        return redirect("role_assignments", pk=role.pk)
+        return redirect(back(request, role))
     return render(
         request,
         "generic/object_form.html",
@@ -290,25 +287,40 @@ def assignment_update(request, pk):
             "title": gettext("Edit the focus of %(user)s in %(role)s")
             % {"user": assignment.user, "role": role},
             "form": form,
-            "cancel_url": reverse("role_assignments", kwargs={"pk": role.pk}),
+            "cancel_url": back(request, role),
         },
     )
 
 
-@require_POST
 def assignment_end(request, pk):
+    """Removing somebody from a role, confirmed first (in a modal on the
+    role's page), also when it ends Circle Rep assignments (5.1.1)"""
     assignment = get_object_or_404(
         Assignment.objects.current().select_related("role__circle", "user"), pk=pk
     )
     role = assignable_role(request, assignment.role_id, check=can_end_assignment)
-    try:
-        change_assignments(request, role, lambda day: end_assignment(assignment, day))
-    except EndingReps as exc:
-        form = AssignmentForm(role=role) if can_assign(request.user, role) else None
-        return render_assignments(request, role, form, reps=exc.reps, ending=assignment)
-    messages.success(
+    reps = None
+    if request.method == "POST":
+        try:
+            change_assignments(
+                request, role, lambda day: end_assignment(assignment, day)
+            )
+        except EndingReps as exc:
+            reps = exc.reps
+        else:
+            messages.success(
+                request,
+                gettext("%(user)s doesn't hold %(role)s anymore.")
+                % {"user": assignment.user, "role": role},
+            )
+            return redirect(back(request, role))
+    return render(
         request,
-        gettext("%(user)s doesn't hold %(role)s anymore.")
-        % {"user": assignment.user, "role": role},
+        "roles/assignment_end.html",
+        {"assignment": assignment, "role": role, "reps": reps},
     )
-    return redirect("role_assignments", pk=role.pk)
+
+
+def back(request, role):
+    """After a change: ``?next=`` (the role's page), else its holders"""
+    return next_url(request) or reverse("role_assignments", kwargs={"pk": role.pk})

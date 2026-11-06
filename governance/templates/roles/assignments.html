@@ -1,13 +1,23 @@
-{% extends "base.html" %}
+{% extends modal|yesno:"modal.html,base.html" %}
 {% load i18n %}
+{% comment %}
+  In a modal (e.g. "Assign" on the circle's page, governance/modals.py) only
+  the form, which goes back to ?next=
+{% endcomment %}
 {% block title %}{% translate "Holders" %} – {{ role }} – {{ block.super }}{% endblock %}
 
 {% block content %}
   <div class="wb-form-page">
-    {% include "roles/_breadcrumbs.html" %}
+    {% if not modal %}{% include "roles/_breadcrumbs.html" %}{% endif %}
     <div class="wb-page-header">
       <div class="min-w-0">
-        <h1 class="mb-0"><a href="{{ role.get_absolute_url }}">{{ role }}</a>: {% translate "Holders" %}</h1>
+        {% if modal %}
+          <h1 class="mb-0" id="modal-title">
+            {% blocktranslate %}Assign somebody to {{ role }}{% endblocktranslate %}
+          </h1>
+        {% else %}
+          <h1 class="mb-0"><a href="{{ role.get_absolute_url }}">{{ role }}</a>: {% translate "Holders" %}</h1>
+        {% endif %}
         <div class="wb-meta">
           <span
           >{% translate "Circle Leads assign people to the roles of their circle directly, without a proposal." %}</span>
@@ -15,57 +25,40 @@
       </div>
     </div>
 
-    <section class="card mb-4">
-      <ul class="list-group list-group-flush">
-        {% for assignment in assignments %}
-          <li class="list-group-item wb-row">
-            <div class="wb-row-main">
-              <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
-              <div class="wb-row-meta">
-                {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
-                {% if assignment.starts_on %}<span
-                  >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+    {% if not modal %}<section class="card mb-4">
+        <ul class="list-group list-group-flush">
+          {% for assignment in assignments %}
+            <li class="list-group-item wb-row">
+              <div class="wb-row-main">
+                <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
+                <div class="wb-row-meta">
+                  {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
+                  {% if assignment.starts_on %}<span
+                    >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+                </div>
               </div>
-            </div>
-            <div class="d-flex gap-1 flex-shrink-0 align-items-start">
-              {% if can_assign %}<a
+              <div class="d-flex gap-1 flex-shrink-0 align-items-start">
+                {% if can_assign %}<a
+                    class="btn btn-sm btn-quiet"
+                    href="{% url 'assignment_update' assignment.pk %}"
+                    data-modal
+                  >{% translate "Edit focus" %}</a>{% endif %}
+                <a
                   class="btn btn-sm btn-quiet"
-                  href="{% url 'assignment_update' assignment.pk %}"
+                  href="{% url 'assignment_end' assignment.pk %}"
                   data-modal
-                >{% translate "Edit focus" %}</a>{% endif %}
-              <form method="post" action="{% url 'assignment_end' assignment.pk %}" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-quiet">{% translate "Remove" %}</button>
-              </form>
-            </div>
-          </li>
-        {% empty %}
-          <li class="list-group-item text-body-secondary">
-            {% if role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}{% translate "Nobody" %}{% elif role.core_role == "lead" %}{% translate "Held by the super-circle's Circle Leads" %}{% else %}{% translate "Held by the Circle Leads" %}{% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
-
-    {% if reps %}
-      <div class="alert alert-warning">
-        <p>
-          {% translate "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:" %}
-        </p>
-        <ul>
-          {% for rep in reps %}<li>{{ rep.user }}: {{ rep.role }} ({{ rep.role.circle }})</li>{% endfor %}
+                >{% translate "Remove" %}</a>
+              </div>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-body-secondary">
+              {% if role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}{% translate "Nobody" %}{% elif role.core_role == "lead" %}{% translate "Held by the super-circle's Circle Leads" %}{% else %}{% translate "Held by the Circle Leads" %}{% endif %}
+            </li>
+          {% endfor %}
         </ul>
-        {% if ending %}
-          <form method="post" action="{% url 'assignment_end' ending.pk %}" class="mb-0">
-            {% csrf_token %}
-            <input type="hidden" name="end_reps" value="1">
-            <button type="submit" class="btn btn-sm btn-primary">
-              {% blocktranslate with user=ending.user %}Remove {{ user }} and end them{% endblocktranslate %}
-            </button>
-          </form>
-        {% endif %}
-      </div>
-    {% endif %}
+      </section>{% endif %}
+
+    {% if reps %}{% include "roles/_ending_reps.html" %}{% endif %}
 
     {% if not form %}
       <p class="text-body-secondary">
@@ -73,10 +66,18 @@
       </p>
       <a class="btn btn-quiet" href="{{ role.get_absolute_url }}">{% translate "Back to the role" %}</a>
     {% else %}
-      <h2 class="h6">{% translate "Assign somebody" %}</h2>
-      <form method="post" action="{% url 'role_assignments' role.pk %}">
+      {% if not modal %}<h2 class="h6">{% translate "Assign somebody" %}</h2>{% endif %}
+      <form
+        method="post"
+        action="{{ request.get_full_path }}"
+        {% if modal %}
+          hx-post="{{ request.get_full_path }}"
+          hx-target="#modal"
+          hx-headers='{"HX-Modal": "true"}'
+        {% endif %}
+      >
         {% csrf_token %}
-        {% if reps and not ending %}<input type="hidden" name="end_reps" value="1">{% endif %}
+        {% if reps %}<input type="hidden" name="end_reps" value="1">{% endif %}
         {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
         <section class="card mb-3">
           <div class="card-body">
@@ -85,9 +86,18 @@
         </section>
         <div class="wb-form-actions">
           <button type="submit" class="btn btn-primary">
-            {% if reps and not ending %}{% translate "Assign and end them" %}{% else %}{% translate "Assign" %}{% endif %}
+            {% if reps %}{% translate "Assign and end them" %}{% else %}{% translate "Assign" %}{% endif %}
           </button>
-          <a class="btn btn-quiet" href="{{ role.get_absolute_url }}">{% translate "Back to the role" %}</a>
+          {% if modal %}<button
+              type="button"
+              class="btn btn-quiet"
+              data-modal-close
+            >
+              {% translate "Cancel" %}
+            </button>{% else %}<a
+              class="btn btn-quiet"
+              href="{{ role.get_absolute_url }}"
+            >{% translate "Back to the role" %}</a>{% endif %}
         </div>
       </form>
     {% endif %}

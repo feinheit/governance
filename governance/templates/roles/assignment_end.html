@@ -1,0 +1,52 @@
+{% extends modal|yesno:"modal.html,base.html" %}
+{% load i18n %}
+{% comment %}
+  Removing somebody from a role, e.g. in a modal on the role's page
+  (governance/modals.py), back to ?next=
+{% endcomment %}
+{% block title %}{% translate "Remove" %} – {{ role }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0" {% if modal %}id="modal-title"{% endif %}>
+          {% blocktranslate with user=assignment.user %}Remove {{ user }} from {{ role }}?{% endblocktranslate %}
+        </h1>
+        {% if role.is_elected %}
+          <div class="wb-meta">
+            <span>{% translate "Elected roles are elected in governance meetings; their holders resign here." %}</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% if reps %}{% include "roles/_ending_reps.html" %}{% endif %}
+    <form
+      method="post"
+      action="{{ request.get_full_path }}"
+      {% if modal %}
+        hx-post="{{ request.get_full_path }}"
+        hx-target="#modal"
+        hx-headers='{"HX-Modal": "true"}'
+      {% endif %}
+    >
+      {% csrf_token %}
+      {% if reps %}<input type="hidden" name="end_reps" value="1">{% endif %}
+      <div class="wb-form-actions">
+        <button type="submit" class="btn btn-primary">
+          {% if reps %}{% translate "Remove and end them" %}{% else %}{% translate "Remove" %}{% endif %}
+        </button>
+        {% if modal %}<button
+            type="button"
+            class="btn btn-quiet"
+            data-modal-close
+          >
+            {% translate "Cancel" %}
+          </button>{% else %}<a
+            class="btn btn-quiet"
+            href="{{ role.get_absolute_url }}"
+          >{% translate "Back to the role" %}</a>{% endif %}
+      </div>
+    </form>
+  </div>
+{% endblock content %}

@@ -1,0 +1,10 @@
+{% load i18n %}
+{# The Circle Reps a change of assignments ends (constitution 5.1.1) #}
+<div class="alert alert-warning">
+  <p>
+    {% translate "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:" %}
+  </p>
+  <ul class="mb-0">
+    {% for rep in reps %}<li>{{ rep.user }}: {{ rep.role }} ({{ rep.role.circle }})</li>{% endfor %}
+  </ul>
+</div>

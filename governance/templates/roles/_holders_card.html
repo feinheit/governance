@@ -1,0 +1,54 @@
+{% load i18n %}
+{# A role's holders; the Circle Leads assign, change the focus and remove them in modals, back to the page #}
+<section class="card mb-4">
+  <div class="card-header"><h2 class="h6 mb-0">{% translate "Holders" %}</h2></div>
+  <ul class="list-group list-group-flush">
+    {% for assignment in role.current_assignments %}
+      <li class="list-group-item wb-row">
+        <div class="wb-row-main">
+          <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
+          <div class="wb-row-meta">
+            {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
+            {% if assignment.elected_until %}<span
+              >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% elif assignment.starts_on %}<span
+              >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+          </div>
+        </div>
+        {% if can_end_assignment %}
+          <div class="d-flex gap-1 flex-shrink-0 align-items-start">
+            {% if can_assign %}<a
+                class="btn btn-sm btn-quiet"
+                href="{% url 'assignment_update' assignment.pk %}?next={{ request.path|urlencode }}"
+                data-modal
+              >{% translate "Edit focus" %}</a>{% endif %}
+            <a
+              class="btn btn-sm btn-quiet"
+              href="{% url 'assignment_end' assignment.pk %}?next={{ request.path|urlencode }}"
+              data-modal
+            >{% translate "Remove" %}</a>
+          </div>
+        {% endif %}
+      </li>
+    {% empty %}
+      {# Unfilled roles: the Circle Leads (1.4.2), for the Circle Lead itself those of the super-circle #}
+      <li class="list-group-item text-body-secondary">
+        {% if role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
+          {% translate "Nobody" %}
+        {% else %}
+          {% if role.core_role == "lead" %}{% translate "the super-circle's Circle Leads (by default)" %}{% else %}{% translate "the Circle Leads (by default)" %}{% endif %}{% if leads %}:
+            {% for user in leads %}<a href="{{ user.get_absolute_url }}">{{ user }}</a>{% if not forloop.last %},
+              {% endif %}{% endfor %}{% endif %}
+        {% endif %}
+      </li>
+    {% endfor %}
+    {% if can_assign %}
+      <li class="list-group-item">
+        <a
+          class="btn btn-sm btn-quiet"
+          href="{% url 'role_assignments' role.pk %}?next={{ request.path|urlencode }}"
+          data-modal
+        >{% translate "Assign somebody" %}</a>
+      </li>
+    {% endif %}
+  </ul>
+</section>

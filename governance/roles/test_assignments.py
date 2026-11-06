@@ -54,10 +54,6 @@ class AssignmentsTest(TestCase):
 
     def test_assign_and_remove(self):
         self.client.force_login(self.bob)
-        self.assertContains(
-            self.client.get(f"/roles/{self.cook.pk}/"),
-            f'href="/roles/{self.cook.pk}/assignments/"',
-        )
         url = f"/roles/{self.cook.pk}/assignments/"
         response = self.client.post(url, {"user": self.eve.pk, "focus": "Soup"})
         self.assertRedirects(response, url)
@@ -98,6 +94,64 @@ class AssignmentsTest(TestCase):
         self.assertEqual(
             self.client.get(f"/assignments/{assignment.pk}/").status_code, 404
         )
+
+    def test_holders_on_the_role_page(self):
+        """The role's page lists its holders; assigning, changing the focus
+        and removing open in modals and go back to the page"""
+        modal = {"HTTP_HX_REQUEST": "true", "HTTP_HX_MODAL": "true"}
+        page = f"/roles/{self.cook.pk}/"
+        back = f"?next={page}"
+        assign = f"/roles/{self.cook.pk}/assignments/{back}"
+        self.client.force_login(self.bob)
+        self.assertContains(self.client.get(page), f'href="{assign}"')
+
+        response = self.client.get(assign, **modal)
+        self.assertContains(response, "Assign somebody to Cook")
+        self.assertNotContains(response, "<html")
+        self.assertNotContains(response, "Held by the Circle Leads")  # Only the form
+        response = self.client.post(assign, {"user": self.eve.pk}, **modal)
+        self.assertEqual(response["HX-Redirect"], page)
+        assignment = Assignment.objects.get(role=self.cook, user=self.eve)
+
+        response = self.client.get(page)
+        update = f"/assignments/{assignment.pk}/{back}"
+        end = f"/assignments/{assignment.pk}/end/{back}"
+        self.assertContains(response, f'href="{update}"')
+        self.assertContains(response, f'href="{end}"')
+        response = self.client.post(update, {"focus": "Soup"}, **modal)
+        self.assertEqual(response["HX-Redirect"], page)
+        self.assertContains(self.client.get(page), "Soup")
+
+        # Removing asks first
+        self.assertContains(self.client.get(end, **modal), "Remove Eve from Cook?")
+        response = self.client.post(end, **modal)
+        self.assertEqual(response["HX-Redirect"], page)
+        self.assertFalse(Assignment.objects.filter(role=self.cook).exists())
+
+        # Others see the holders without the buttons
+        Assignment.objects.create(role=self.cook, user=self.eve)
+        self.client.force_login(self.eve)
+        response = self.client.get(page)
+        self.assertContains(response, "Eve")
+        self.assertNotContains(response, "/end/")
+        self.assertNotContains(response, assign)
+
+    def test_ending_reps_in_the_modal(self):
+        """The Circle Rep's warning (5.1.1) stays in the modal"""
+        modal = {"HTTP_HX_REQUEST": "true", "HTTP_HX_MODAL": "true"}
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="rep"), user=self.eve
+        )
+        page = f"/roles/{self.kitchen_lead.pk}/"
+        url = f"/roles/{self.kitchen_lead.pk}/assignments/?next={page}"
+        self.client.force_login(self.ada)
+        response = self.client.post(url, {"user": self.eve.pk}, **modal)
+        self.assertContains(response, "A Circle Lead can't be the Circle Rep")
+        self.assertContains(response, f'hx-post="{url}"')
+        response = self.client.post(
+            url, {"user": self.eve.pk, "end_reps": "1"}, **modal
+        )
+        self.assertEqual(response["HX-Redirect"], page)
 
     def test_circle_lead(self):
         """The circle's role follows its Circle Lead"""
@@ -181,7 +235,7 @@ class AssignmentsTest(TestCase):
         end = f"/assignments/{bakery_lead.pk}/end/"
         response = self.client.post(end)
         self.assertContains(response, "Eve: Circle Rep (Bakery)")
-        self.assertContains(response, "Remove Bob and end them")
+        self.assertContains(response, "Remove and end them")
         bakery_lead.refresh_from_db()
         self.assertIsNone(bakery_lead.ends_on)
         self.client.post(end, {"end_reps": "1"})

@@ -22,7 +22,8 @@
             {% blocktranslate count days=role.async_acceptance_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}</span>{% endif %}
         {% if role.short_name %}<span><span class="wb-meta-label">{% translate "short name" %}</span>
             {{ role.short_name }}</span>{% endif %}
-        {% if role.circle %}<span><span class="wb-meta-label">{% translate "held by" %}</span>
+        {# A circle's holders: its Circle Leads and Rep; a role's are in their card #}
+        {% if role.circle and role.is_circle %}<span><span class="wb-meta-label">{% translate "held by" %}</span>
             {% if role.current_assignments or role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
               {% include "roles/_holders.html" %}
             {% else %}
@@ -38,13 +39,6 @@
           class="btn btn-sm btn-primary"
           href="{% url 'proposal_create' role.pk %}"
         >{% translate "New proposal" %}</a>{% endif %}
-      {% if can_assign %}<a
-          class="btn btn-sm btn-quiet"
-          href="{% url 'role_assignments' role.pk %}"
-        >{% translate "Assign" %}</a>{% elif can_end_assignment and role.current_assignments %}<a
-          class="btn btn-sm btn-quiet"
-          href="{% url 'role_assignments' role.pk %}"
-        >{% translate "Holders" %}</a>{% endif %}
       {% if can_change_settings %}<a
           class="btn btn-sm btn-quiet"
           href="{% url 'role_settings' role.pk %}"
@@ -188,6 +182,8 @@
     </div>
 
     <div class="col-lg-5">
+      {% if role.circle and not role.is_circle %}{% include "roles/_holders_card.html" %}{% endif %}
+
       {% if pending %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposed" %}</h2></div>

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:54+0100\n"
+"POT-Creation-Date: 2026-11-06 14:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1669,6 +1669,8 @@ msgid "Save"
 msgstr "Speichern"
 
 #: governance/templates/generic/object_form.html
+#: governance/templates/roles/assignment_end.html
+#: governance/templates/roles/assignments.html
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1800,6 +1802,8 @@ msgstr "Nach unten"
 #: governance/templates/meetings/_agenda.html
 #: governance/templates/meetings/meeting_detail.html
 #: governance/templates/proposals/_drafting.html
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
 #: governance/templates/roles/role_detail.html
 msgid "Remove"
@@ -2387,13 +2391,19 @@ msgstr "%(circle)s hat keine Sub-Kreise."
 msgid "Back to the proposal"
 msgstr "Zurück zum Vorschlag"
 
+#: governance/templates/roles/_ending_reps.html
+msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
+msgstr "Ein Circle Lead kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen neue Circle Reps:"
+
 #: governance/templates/roles/_holders.html
+#: governance/templates/roles/_holders_card.html
 #: governance/templates/roles/person_detail.html
 #, python-format
 msgid "elected until %(date)s"
 msgstr "gewählt bis %(date)s"
 
 #: governance/templates/roles/_holders.html
+#: governance/templates/roles/_holders_card.html
 #: governance/templates/roles/assignments.html
 msgid "Nobody"
 msgstr "Niemand"
@@ -2403,6 +2413,38 @@ msgstr "Niemand"
 msgid "Held by the super-circle's Circle Leads"
 msgstr "Von den Circle Leads des übergeordneten Kreises besetzt"
 
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignments.html
+msgid "Holders"
+msgstr "Besetzung"
+
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/person_detail.html
+#, python-format
+msgid "since %(date)s"
+msgstr "seit %(date)s"
+
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignments.html
+msgid "Edit focus"
+msgstr "Fokus bearbeiten"
+
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/role_detail.html
+msgid "the super-circle's Circle Leads (by default)"
+msgstr "die Circle Leads des übergeordneten Kreises (standardmässig)"
+
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/role_detail.html
+msgid "the Circle Leads (by default)"
+msgstr "die Circle Leads (standardmässig)"
+
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignments.html
+msgid "Assign somebody"
+msgstr "Jemanden zuweisen"
+
 #: governance/templates/roles/_tree_list.html
 msgid "your role"
 msgstr "deine Rolle"
@@ -2411,52 +2453,39 @@ msgstr "deine Rolle"
 msgid "unassigned"
 msgstr "nicht besetzt"
 
+#: governance/templates/roles/assignment_end.html
+#, python-format
+msgid "Remove %(user)s from %(role)s?"
+msgstr "%(user)s aus %(role)s entfernen?"
+
+#: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
-#: governance/templates/roles/role_detail.html
-msgid "Holders"
-msgstr "Besetzung"
+msgid "Elected roles are elected in governance meetings; their holders resign here."
+msgstr "Gewählte Rollen werden in Governance Meetings gewählt; wer sie innehat, tritt hier zurück."
+
+#: governance/templates/roles/assignment_end.html
+msgid "Remove and end them"
+msgstr "Entfernen und sie beenden"
+
+#: governance/templates/roles/assignment_end.html
+#: governance/templates/roles/assignments.html
+msgid "Back to the role"
+msgstr "Zurück zur Rolle"
+
+#: governance/templates/roles/assignments.html
+#, python-format
+msgid "Assign somebody to %(role)s"
+msgstr "Jemanden %(role)s zuweisen"
 
 #: governance/templates/roles/assignments.html
 msgid "Circle Leads assign people to the roles of their circle directly, without a proposal."
 msgstr "Circle Leads besetzen die Rollen ihres Kreises direkt, ohne Vorschlag."
 
 #: governance/templates/roles/assignments.html
-#: governance/templates/roles/person_detail.html
-#, python-format
-msgid "since %(date)s"
-msgstr "seit %(date)s"
-
-#: governance/templates/roles/assignments.html
-msgid "Edit focus"
-msgstr "Fokus bearbeiten"
-
-#: governance/templates/roles/assignments.html
-msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
-msgstr "Ein Circle Lead kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen neue Circle Reps:"
-
-#: governance/templates/roles/assignments.html
-#, python-format
-msgid "Remove %(user)s and end them"
-msgstr "%(user)s entfernen und sie beenden"
-
-#: governance/templates/roles/assignments.html
-msgid "Elected roles are elected in governance meetings; their holders resign here."
-msgstr "Gewählte Rollen werden in Governance Meetings gewählt; wer sie innehat, tritt hier zurück."
-
-#: governance/templates/roles/assignments.html
-msgid "Back to the role"
-msgstr "Zurück zur Rolle"
-
-#: governance/templates/roles/assignments.html
-msgid "Assign somebody"
-msgstr "Jemanden zuweisen"
-
-#: governance/templates/roles/assignments.html
 msgid "Assign and end them"
 msgstr "Zuweisen und sie beenden"
 
 #: governance/templates/roles/assignments.html
-#: governance/templates/roles/role_detail.html
 msgid "Assign"
 msgstr "Zuweisen"
 
@@ -2559,14 +2588,6 @@ msgid "%(days)s day"
 msgid_plural "%(days)s days"
 msgstr[0] "%(days)s Tag"
 msgstr[1] "%(days)s Tage"
-
-#: governance/templates/roles/role_detail.html
-msgid "the super-circle's Circle Leads (by default)"
-msgstr "die Circle Leads des übergeordneten Kreises (standardmässig)"
-
-#: governance/templates/roles/role_detail.html
-msgid "the Circle Leads (by default)"
-msgstr "die Circle Leads (standardmässig)"
 
 #: governance/templates/roles/role_detail.html
 msgid "New proposal"

@@ -466,7 +466,10 @@ only setting is `User.notify_all` ("everything in all circles").
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
   policies of a domain and settings on the role's page, a holder's focus,
-  a draft's tension, a meeting's minutes. A `<dialog>` loaded by htmx
+  a draft's tension, a meeting's minutes, and a role's holders (a card
+  on its page: assigning, the focus and removing, confirmed first, back
+  to the page with `?next=`; a circle's page lists its roles' holders,
+  changed on their pages). A `<dialog>` loaded by htmx
   with the `HX-Modal` header (`frontend/modal.js`,
   `governance/modals.py`), the views stay as they are:
   `generic/object_form.html` renders only the form, redirects become
@@ -617,5 +620,4 @@ Deliberately not modelled:
   ending a meeting when its inactivity runs out (instead of the hourly
   `end_inactive_meetings`), sending mails outside the request.
 - **PDF export**, if needed.
-- **Modals** for more forms where they help, e.g. assigning roles from
-  the circle's page.
+- **Modals** for more forms where they help.
