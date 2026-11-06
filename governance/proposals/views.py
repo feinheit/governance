@@ -63,8 +63,10 @@ def links(proposal, changes):
         kind: {int(key.split("/")[1]) for key in keys if key.startswith(f"{kind}/")}
         for kind in ["roles", "policies"]
     }
-    # Imported proposals refer to GlassFrog IDs, the app's own to its IDs
-    field = "glassfrog_id" if proposal.glassfrog_id else "pk"
+    # Adopted imported proposals refer to GlassFrog IDs, open ones were
+    # converted to the app's IDs like the app's own (import, to_app_ids())
+    imported = proposal.glassfrog_id and proposal.status == Proposal.ADOPTED
+    field = "glassfrog_id" if imported else "pk"
     urls = {}
     for kind, model in [("roles", Role), ("policies", Policy)]:
         for obj in model.objects.filter(**{f"{field}__in": ids[kind]}):

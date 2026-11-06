@@ -171,6 +171,31 @@ class ProposalsTest(TestCase):
         )
 
 
+class ImportedOpenProposalTest(TestCase):
+    def test_links(self):
+        """Open proposals imported from GlassFrog refer to the app's IDs"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        baker = Role.objects.create(name="Baker", circle=kitchen, glassfrog_id=cook.pk)
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="Names",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+            glassfrog_id=2,
+            instructions=[
+                {"op": "replace", "path": f"/roles/{cook.pk}/name", "value": "Chef"}
+            ],
+            names={f"roles/{cook.pk}": "Cook"},
+        )
+        self.client.force_login(ada)
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(response, cook.get_absolute_url())
+        self.assertNotContains(response, baker.get_absolute_url())
+
+
 class ProposalTitleTest(TestCase):
     def test_without_tension(self):
         """Imported elections have no tension, the title can't be empty"""
