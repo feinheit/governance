@@ -119,3 +119,29 @@ document.addEventListener("click", (event) => {
     scrollToCurrent(true)
   }
 })
+
+// The end of a meeting celebrated (meetings/_celebration.html): confetti
+// unless people prefer less motion, gone after a moment (from Workbench)
+function celebrate() {
+  const el = document.querySelector(".wb-celebration:not([data-done])")
+  if (!el) return
+  el.dataset.done = ""
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const colors = ["#4257c8", "#1a58a6", "#0f6e4b", "#e0a526", "#4a3ab5"]
+    for (let i = 0; i < 40; ++i) {
+      const piece = document.createElement("span")
+      const angle = Math.random() * 2 * Math.PI
+      const distance = 6 + Math.random() * 14
+      piece.className = "wb-confetti"
+      piece.style.setProperty("--x", `${Math.cos(angle) * distance}rem`)
+      piece.style.setProperty("--y", `${Math.sin(angle) * distance}rem`)
+      piece.style.setProperty("--r", `${Math.random() * 720 - 360}deg`)
+      piece.style.background = colors[i % colors.length]
+      el.appendChild(piece)
+    }
+  }
+  setTimeout(() => el.remove(), 3000)
+}
+
+celebrate()
+document.addEventListener("htmx:after:settle", celebrate)

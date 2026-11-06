@@ -467,6 +467,8 @@ def meeting_end(request, pk):
         )
     if meeting.is_running:
         end_meeting(meeting)
+        # Celebrated once (meetings/_celebration.html)
+        return redirect(f"{meeting.get_absolute_url()}?celebrate=1")
     return redirect(meeting)
 
 

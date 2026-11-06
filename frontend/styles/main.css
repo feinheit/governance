@@ -595,6 +595,114 @@ a.wb-row-title:hover {
   scroll-margin-top: 0.5rem;
 }
 
+/* The end of a meeting celebrated (meetings/_celebration.html, meeting.js),
+   from Workbench's logbook */
+.wb-celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 1090;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.wb-celebration-emoji {
+  font-size: 5rem;
+  opacity: 0;
+  animation: wb-celebration-pop 2.4s ease-out forwards;
+}
+
+@keyframes wb-celebration-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+  18%,
+  80% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1) translateY(-1.5rem);
+  }
+}
+
+.wb-celebration-message {
+  padding: 0.5rem 1rem;
+  border-radius: var(--bs-border-radius-pill);
+  background: var(--wb-surface);
+  box-shadow: 0 4px 16px rgba(16, 24, 40, 0.2);
+  font-size: 1.25rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: wb-celebration-message 2.2s ease-out 0.2s forwards;
+}
+
+@keyframes wb-celebration-message {
+  0% {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  15%,
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+.wb-celebration .wb-confetti {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.5rem;
+  height: 0.8rem;
+  border-radius: 1px;
+  animation: wb-confetti-burst 1.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes wb-confetti-burst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x), calc(var(--y) + 4rem)) rotate(var(--r));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-celebration-emoji {
+    animation: wb-celebration-fade 2.4s ease-out forwards;
+  }
+
+  .wb-celebration-message {
+    animation: wb-celebration-fade 2.2s ease-out forwards;
+  }
+
+  @keyframes wb-celebration-fade {
+    0%,
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
 /* The closing round's large button ending the meeting */
 .wb-end-meeting {
   display: flex;

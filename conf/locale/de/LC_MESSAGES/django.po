@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:08+0100\n"
+"POT-Creation-Date: 2026-11-06 17:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -619,8 +619,7 @@ msgid_plural "%(count)s agenda items haven't been processed yet, their proposals
 msgstr[0] "%(count)s Agendapunkt ist noch nicht bearbeitet, sein Vorschlag wartet auf das nächste Meeting."
 msgstr[1] "%(count)s Agendapunkte sind noch nicht bearbeitet, ihre Vorschläge warten auf das nächste Meeting."
 
-#: governance/meetings/views.py
-#: governance/templates/meetings/meeting_detail.html
+#: governance/meetings/views.py governance/templates/meetings/_end_button.html
 msgid "End the meeting"
 msgstr "Meeting beenden"
 
@@ -1934,12 +1933,15 @@ msgid "Agenda"
 msgstr "Agenda"
 
 #: governance/templates/meetings/_agenda.html
-msgid "Drag to reorder"
-msgstr "Ziehen zum Umsortieren"
+#, python-format
+msgid "Attendees (%(count)s)"
+msgid_plural "Attendees (%(count)s)"
+msgstr[0] "Teilnehmende (%(count)s)"
+msgstr[1] "Teilnehmende (%(count)s)"
 
 #: governance/templates/meetings/_agenda.html
-msgid "completed"
-msgstr "erledigt"
+msgid "Drag to reorder"
+msgstr "Ziehen zum Umsortieren"
 
 #: governance/templates/meetings/_agenda.html
 msgid "Process"
@@ -1956,6 +1958,10 @@ msgstr "Nach unten"
 #: governance/templates/meetings/_agenda.html
 msgid "Nothing on the agenda."
 msgstr "Keine Agendapunkte."
+
+#: governance/templates/meetings/_celebration.html
+msgid "Meeting ended – thank you!"
+msgstr "Meeting beendet – danke!"
 
 #: governance/templates/meetings/_current.html
 msgid "Now"
@@ -2297,10 +2303,6 @@ msgid "Start the governance meeting"
 msgstr "Governance Meeting starten"
 
 #: governance/templates/meetings/meeting_detail.html
-msgid "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed."
-msgstr "Du nimmst als Admin an diesem Meeting teil, nicht als Mitglied des Kreises. Übernimm nur, wenn du weisst, dass es nötig ist."
-
-#: governance/templates/meetings/meeting_detail.html
 #, python-format
 msgid "You're looking at another step on your screen, the meeting is at: %(step)s."
 msgstr "Du schaust dir auf deinem Bildschirm einen anderen Schritt an, das Meeting ist bei: %(step)s."
@@ -2314,11 +2316,8 @@ msgid "The invited roles have no metrics."
 msgstr "Die eingeladenen Rollen haben keine Metriken."
 
 #: governance/templates/meetings/meeting_detail.html
-#, python-format
-msgid "Attendees (%(count)s)"
-msgid_plural "Attendees (%(count)s)"
-msgstr[0] "Teilnehmende (%(count)s)"
-msgstr[1] "Teilnehmende (%(count)s)"
+msgid "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed."
+msgstr "Du nimmst als Admin an diesem Meeting teil, nicht als Mitglied des Kreises. Übernimm nur, wenn du weisst, dass es nötig ist."
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "A tension, in one or two words"
@@ -2973,6 +2972,9 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "completed"
+#~ msgstr "erledigt"
 
 #~ msgid "started"
 #~ msgstr "begonnen"

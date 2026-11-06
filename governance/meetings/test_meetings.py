@@ -184,9 +184,15 @@ class MeetingsTest(TestCase):
         self.assertContains(self.client.get(url), "1 agenda item hasn")
         meeting.refresh_from_db()
         self.assertTrue(meeting.is_running)
-        self.client.post(url)
+        response = self.client.post(url, follow=True)
         meeting.refresh_from_db()
         self.assertFalse(meeting.is_running)
+        # Celebrated
+        self.assertEqual(response.request["QUERY_STRING"], "celebrate=1")
+        self.assertContains(response, "wb-celebration")
+        self.assertNotContains(
+            self.client.get(meeting.get_absolute_url()), "wb-celebration"
+        )
 
     def test_invite_preselects_nobody(self):
         self.client.force_login(self.bob)

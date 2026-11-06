@@ -157,6 +157,9 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("#modal[open] >> text=End the meeting?")
         page.locator("#modal button[type=submit]").click()
         page.wait_for_selector("#meeting >> text=Outputs")
+        # Celebrated, for a moment
+        page.wait_for_selector(".wb-celebration .wb-confetti", state="attached")
+        page.wait_for_selector(".wb-celebration", state="detached", timeout=5000)
         self.assertEqual(page.locator("#meeting >> text=Baker").count() > 0, True)
 
         # Links to other pages navigate as usual

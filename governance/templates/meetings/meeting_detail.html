@@ -16,6 +16,7 @@
     hx-swap:inherited="outerHTML show:none"
   >
     {% include "_messages.html" %}
+    {% if meeting.ended_at and request.GET.celebrate %}{% include "meetings/_celebration.html" %}{% endif %}
     {% if not meeting.is_running %}
       {% include "roles/_breadcrumbs.html" %}
       <div class="wb-page-header">

@@ -359,7 +359,9 @@ item, e.g. a special meeting's intent; the secretary's textarea saves
 itself, `data-autosave`). It scrolls to the item when another one is
 processed and when its agenda row is clicked (`meeting.js`), sticky
 beside the agenda's column; a completed item's row leads to its result,
-"Reopen" makes it the current item again (`item_reopen`). An ended
+"Reopen" makes it the current item again (`item_reopen`). Ending it is
+celebrated once (`?celebrate=1`, an emoji, confetti and a thank you from
+Workbench's logbook, without the confetti for reduced motion). An ended
 meeting shows its outputs like its mail (`meetings/outputs.py`) and
 doesn't change anymore (`runnable_meeting()`).
 `meetings/test_e2e.py` covers it in a browser.
@@ -672,9 +674,6 @@ Deliberately not modelled:
 
 ## Backlog
 
-- **Celebrating the end of a meeting**: "End the meeting" could
-  animate and celebrate (Workbench has a celebration to take
-  inspiration from), respecting reduced motion.
 - **The meeting page on phones**: the running meeting's layout (columns
   fitting the window, the sidebar with heading and agenda) is made for
   wide screens and quite broken on phones.
