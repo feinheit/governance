@@ -502,6 +502,34 @@ Deliberately not modelled:
 
 ## Backlog
 
+- **Verification** (round of 2026-11-06), open:
+  - Bugs: a meeting inside a role gets the super-circle's Circle Lead as
+    secretary (`circle_leads()` of a role); a withdrawn proposal and a
+    tension without changes can be adopted in a meeting; a circle emptied
+    by its super-circle while its own meeting runs turns back without a
+    proposal recording it (`revert_after_meeting()`); the API doesn't
+    create proposals inside a role (1.3.1); assigning the Circle Rep as
+    Circle Lead isn't refused (5.1.1); a proposal from a tension may have
+    no role (proposals are grounded in a role, 5.3.1).
+  - Decided: the meeting discards proposals explicitly ("Discard",
+    withdrawn, the proposer may bring them back as a draft); Circle Leads
+    end assignments of elected roles (resigning, 1.4.1); due-election
+    reminders go to the Facilitators (5.3.5); guests in governance
+    meetings stay as they are (proposals come from roles).
+  - To decide: whether a circle turned back into a role keeps its Circle
+    Rep as holder; whether a meeting's outputs also reach the members at
+    its start (holders of roles removed while absent); the day of the
+    steps of a meeting ended later by inactivity (after midnight).
+  - Constitution, low: moves only reach direct sub-circles (5.2 allows
+    any sub-circle thereof); policies can't widen election candidates or
+    allow several Reps (5.1.1); the anchor's governance changes its name
+    and domains directly (1.3.3 says purpose and accountabilities, by
+    policy); temporary representatives and Rep guests can't propose or
+    object (5.3); special governance meetings (5.4); admins who aren't
+    members request meetings on async proposals; `async_acceptance_days`
+    is inherited by sub-circles (5.2.1: a policy applies to sub-circles
+    only if it says so, check the anchor's policy).
+
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so
   look for code treating the two separately without need, e.g. the
