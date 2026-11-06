@@ -145,10 +145,8 @@ h3,
   }
 }
 
-/* Phones: the brand leads to the organization like the first link */
 @media (max-width: 575.98px) {
   /* The circle browser needs more room than phones have */
-  .wb-nav-links .wb-nav-organization,
   .wb-nav-links .wb-nav-circles {
     display: none;
   }
