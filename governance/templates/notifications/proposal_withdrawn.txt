@@ -1,0 +1,8 @@
+{% load i18n %}{% autoescape off %}{% if removed %}{% blocktranslate with circle=proposal.circle %}{{ circle }} has been removed, your proposal in it has been withdrawn:{% endblocktranslate %}{% else %}{% blocktranslate with circle=proposal.circle %}{{ circle }} has turned back into a role, your proposal in it has been withdrawn:{% endblocktranslate %}{% endif %}
+
+{{ proposal }}
+{{ url }}
+{% if adopted %}
+{% translate "Adopted" %}: {{ adopted }}
+{{ adopted_url }}
+{% endif %}{% endautoescape %}

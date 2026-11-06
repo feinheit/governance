@@ -84,6 +84,26 @@ def proposal_adopted(proposal, members_before=()):
     )
 
 
+def proposal_withdrawn(proposal, adopted=None):
+    """Closing the proposal's circle or role withdrew it (``adopted``: the
+    proposal doing so, if any)"""
+    if proposal.proposer_id is None:
+        return 0
+    return send(
+        User.objects.filter(pk=proposal.proposer_id),
+        lambda: _("Withdrawn: %(proposal)s") % {"proposal": proposal},
+        "notifications/proposal_withdrawn.txt",
+        proposal_context(proposal)
+        | {
+            "removed": bool(proposal.circle.archived_on),
+            "adopted": adopted if adopted and adopted.pk else None,
+            "adopted_url": settings.BASE_URL + adopted.get_absolute_url()
+            if adopted and adopted.pk
+            else "",
+        },
+    )
+
+
 def domain_policy_changed(proposal):
     """A role changed a policy for its domains: everybody affected, the
     members of its circle and all sub-circles"""

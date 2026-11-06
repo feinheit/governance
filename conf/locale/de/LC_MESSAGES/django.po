@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 09:28+0100\n"
+"POT-Creation-Date: 2026-11-06 09:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -583,6 +583,11 @@ msgstr "Zurück zum Entwurf in %(circle)s: %(proposal)s"
 #, python-format
 msgid "Adopted in %(circle)s: %(proposal)s"
 msgstr "Angenommen in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Withdrawn: %(proposal)s"
+msgstr "Zurückgezogen: %(proposal)s"
 
 #: governance/notifications/mails.py
 #, python-format
@@ -1953,6 +1958,7 @@ msgstr "Ergebnisse"
 
 #: governance/templates/meetings/_outputs.html
 #: governance/templates/notifications/meeting_ended.txt
+#: governance/templates/notifications/proposal_withdrawn.txt
 msgid "Adopted"
 msgstr "Angenommen"
 
@@ -2163,6 +2169,16 @@ msgstr "%(proposer)s schlägt eine Änderung in %(circle)s vor."
 #, python-format
 msgid "The proposal is adopted on %(date)s unless somebody requests a meeting to discuss it. Questions and requests:"
 msgstr "Der Vorschlag wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen. Fragen und Meetings:"
+
+#: governance/templates/notifications/proposal_withdrawn.txt
+#, python-format
+msgid "%(circle)s has been removed, your proposal in it has been withdrawn:"
+msgstr "%(circle)s wurde entfernt, dein Vorschlag darin wurde zurückgezogen:"
+
+#: governance/templates/notifications/proposal_withdrawn.txt
+#, python-format
+msgid "%(circle)s has turned back into a role, your proposal in it has been withdrawn:"
+msgstr "%(circle)s ist wieder eine Rolle, dein Vorschlag darin wurde zurückgezogen:"
 
 #: governance/templates/notifications/roles_changed.txt
 #, python-format

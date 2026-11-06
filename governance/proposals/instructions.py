@@ -18,7 +18,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from governance.history.update import update_changes
-from governance.notifications.mails import proposal_adopted
+from governance.notifications.mails import proposal_adopted, proposal_withdrawn
 from governance.proposals.models import Proposal
 from governance.roles.assignments import end_assignment, sync_circle_holders
 from governance.roles.constitution import CORE_ROLES, LEAD
@@ -584,8 +584,12 @@ def close_circles(circles, adopted):
     )
     if adopted is not None:
         proposals = proposals.exclude(pk=adopted.pk)
-    for proposal in proposals:
+    for proposal in proposals.select_related("circle", "proposer"):
         withdraw(proposal)
+        # Their proposers learn why
+        transaction.on_commit(
+            lambda proposal=proposal: proposal_withdrawn(proposal, adopted)
+        )
     for meeting in Meeting.objects.filter(circle__in=circles).running():
         end_meeting(meeting)
 

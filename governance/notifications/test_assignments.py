@@ -211,3 +211,42 @@ class AdoptedMailsTest(TestCase):
             sorted(m.to[0] for m in mail.outbox),
             ["ada@example.com", "bob@example.com", "eve@example.com"],
         )
+
+
+class WithdrawnMailsTest(TestCase):
+    def test_closing_a_circle_tells_its_proposers(self):
+        """Removing a circle withdraws its open proposals, their proposers
+        get a mail"""
+        from governance.proposals.instructions import adopt
+        from governance.proposals.models import Proposal
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        Proposal.objects.create(
+            circle=bakery,
+            proposer=bob,
+            tension="Ovens",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(
+                Proposal.objects.create(
+                    circle=kitchen,
+                    proposer=ada,
+                    tension="Smaller",
+                    created_at=timezone.now(),
+                    instructions=[{"op": "remove", "path": f"/roles/{bakery.pk}"}],
+                )
+            )
+        withdrawn = [m for m in mail.outbox if m.subject.startswith("Withdrawn")]
+        self.assertEqual(
+            [(m.to[0], m.subject) for m in withdrawn],
+            [("bob@example.com", "Withdrawn: Ovens")],
+        )
+        self.assertIn("Bakery has been removed", withdrawn[0].body)

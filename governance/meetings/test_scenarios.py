@@ -388,9 +388,14 @@ class CircleEndsItselfScenarioTest(TestCase):
             {"op": "remove", "path": f"/roles/{bakery.pk}/supporting_circle"},
             item.proposal.instructions,
         )
-        outputs = [m for m in mail.outbox if "Bread" in m.body]
+        outputs = [m for m in mail.outbox if m.subject.startswith("Outputs")]
         self.assertEqual(
             sorted(m.to[0] for m in outputs), ["ada@example.com", "bob@example.com"]
+        )
+        # Bob's other proposal was withdrawn with the bakery
+        self.assertIn(
+            ("bob@example.com", "Withdrawn: Ovens"),
+            [(m.to[0], m.subject) for m in mail.outbox],
         )
 
     def test_roles_added_again_before_the_end(self):

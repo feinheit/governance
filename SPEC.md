@@ -199,7 +199,8 @@ selected roles and policies to the super-circle and archives the rest
 (like GlassFrog). Circles and roles removed (also inside a removed
 circle) and circles turned back into roles close: their open proposals
 (drafts too, and those for inside a role) are withdrawn, their running
-meetings end (`instructions.close_circles()`); a proposal of an archived
+meetings end (`instructions.close_circles()`), their proposers get a
+mail; a proposal of an archived
 circle or role isn't adopted. The anchor circle changes its own purpose,
 accountabilities and domains through its own governance (1.3.3).
 
