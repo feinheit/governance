@@ -278,20 +278,15 @@ class MeetingsTest(TestCase):
         Meeting.objects.update(active_at=timezone.now() - dt.timedelta(hours=4))
         self.assertNotContains(self.client.get("/people/"), banner)
 
-    def test_stand_ins(self):
-        """Without a Secretary the Facilitator stands in, then the Circle Lead,
-        then whoever starts the meeting (constitution 5.3.6)"""
-        Assignment.objects.filter(role__core_role="secretary").delete()
+    def test_starter_is_the_secretary(self):
+        """Whoever starts the meeting is its secretary: those who aren't the
+        circle's acting Secretary confirmed starting it (asks_before_starting),
+        they don't have to take over afterwards"""
         self.client.force_login(self.eve)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
         meeting = Meeting.objects.get()
-        self.assertEqual(meeting.secretary, self.ada)
-        meeting.ended_at = timezone.now()
-        meeting.save()
-        Assignment.objects.filter(role__core_role="facilitator").delete()
-        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
-        meeting = Meeting.objects.latest("pk")
         self.assertEqual(meeting.secretary, self.eve)
+        self.assertNotContains(self.client.get(meeting.get_absolute_url()), "Take over")
 
     def test_take_over_as_secretary(self):
         """Anybody running the meeting takes over as its secretary, a warning

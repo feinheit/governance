@@ -314,10 +314,12 @@ item's proposal links to its page and summarizes what it proposes now,
 updated while the secretary amends it (roles and policies added,
 changed, removed, roles moved, `describe.summarize()`); in tactical meetings they look at
 another review on their own screen (`?step=`, `REVIEW_STEPS`). The app doesn't record who
-facilitates. The secretary is the Secretary, else the stand-ins of 5.3.6
-(`acting_secretaries()`: the Facilitator, then the Circle Leads, also
-for asking before starting, "Take over" and the requests for a meeting),
-for ad-hoc tactical meetings whoever called it. The members (and admins,
+facilitates. The secretary is whoever starts it (also an ad-hoc
+tactical meeting): those who aren't acting as the circle's Secretary
+(`acting_secretaries()`: the Secretary, else the stand-ins of 5.3.6, the
+Facilitator, then the Circle Leads; also for "Take over" and the
+requests for a meeting) confirm starting it, they don't take over
+afterwards. The members (and admins,
 marked) take over (`can_take_over()`, "Take over", e.g. for a late
 Secretary), the page asks those who aren't acting as the circle's
 Secretary to confirm. Attendees are the members when it starts; the

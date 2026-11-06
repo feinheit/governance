@@ -278,8 +278,9 @@ def meeting_create(request, pk):
         kind=kind,
         started_at=timezone.now(),
         called_by=request.user if kind == Meeting.TACTICAL else None,
-        # Stand-ins for unfilled roles, in the constitution's order (5.3.6)
-        secretary=acting_secretaries(circle).order_by("pk").first() or request.user,
+        # Whoever starts it: others than the acting Secretary confirmed it
+        # (asks_before_starting()), they don't take over afterwards
+        secretary=request.user,
     )
     meeting.attendees.set(members(circle))
     if kind == Meeting.TACTICAL:

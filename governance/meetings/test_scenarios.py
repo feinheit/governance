@@ -339,7 +339,7 @@ class CircleEndsItselfScenarioTest(TestCase):
             created_at=timezone.now(),
         )
 
-        self.client.force_login(ada)
+        self.client.force_login(bob)  # The Secretary starts it
         self.client.post(f"/roles/{bakery.pk}/meetings/new/")
         meeting = Meeting.objects.running().get()
         self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Bread"})

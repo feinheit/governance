@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:29+0100\n"
+"POT-Creation-Date: 2026-11-06 17:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2286,8 +2286,8 @@ msgid "The Secretary schedules the circle's meetings."
 msgstr "Der Secretary plant die Meetings des Kreises."
 
 #: governance/templates/meetings/meeting_confirm.html
-msgid "Start it yourself when it's planned anyway, e.g. when they're absent or asked you to."
-msgstr "Starte es selbst, wenn es ohnehin geplant ist, z.B. in Vertretung oder auf Bitte des Secretary."
+msgid "Start it yourself when it's planned anyway, e.g. when they're absent or asked you to. You'll be the meeting's secretary."
+msgstr "Starte es selbst, wenn es ohnehin geplant ist, z.B. in Vertretung oder auf Bitte des Secretary. Du bist dann Secretary des Meetings."
 
 #: governance/templates/meetings/meeting_confirm.html
 msgid "A governance meeting in a role is the role's own governance (constitution 1.3.1): its holders break it down into roles of its own. Adopting the first role makes it a circle, with its holders as Circle Leads."

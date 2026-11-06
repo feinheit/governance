@@ -8,11 +8,13 @@ aktualisiert sich von selbst.
 
 - **Wer leitet**: Der Secretary des Meetings hat die Buttons: Schritte,
   Agendapunkte bearbeiten, Einwände, Annehmen, Wahlen, Teilnehmende, das
-  Meeting beenden, dazu das Ändern der Vorschläge. Das ist der Secretary
-  des Kreises, ist die Rolle nicht besetzt, eine Vertretung (der
-  Facilitator, dann die Circle Leads, Verfassung 5.3.6). "Übernehmen"
-  neben dem Secretary macht jemand anderen zum Secretary des Meetings;
-  wer nicht als Secretary des Kreises handelt, bestätigt das zuerst.
+  Meeting beenden, dazu das Ändern der Vorschläge. Das ist, wer das
+  Meeting startet: meist der Secretary des Kreises, ist die Rolle nicht
+  besetzt, eine Vertretung (der Facilitator, dann die Circle Leads,
+  Verfassung 5.3.6); andere bestätigen den Start zuerst. "Übernehmen"
+  neben dem Secretary macht jemand anderen zum Secretary des Meetings,
+  z.B. wenn der Secretary des Kreises dazukommt; wer nicht als Secretary
+  des Kreises handelt, bestätigt das zuerst.
 - **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
   hervorgehoben, eine Übersicht, was der Vorschlag ändert (aktualisiert,
   während der Secretary ihn anpasst), und öffnen ihn mit "Vorschlag

@@ -8,11 +8,12 @@ the page updates by itself.
 
 - **Who leads**: the meeting's secretary has the buttons: steps,
   processing items, objections, adopting, elections, attendees, ending
-  the meeting; they also change proposals. It's the circle's Secretary,
-  if missing a stand-in (the Facilitator, then the Circle Leads,
-  constitution 5.3.6). "Take over" next to the secretary makes somebody
-  else the secretary, e.g. while the Secretary is late; the tool asks
-  those who aren't acting as the circle's Secretary to confirm.
+  the meeting; they also change proposals. It's whoever starts the
+  meeting: usually the circle's Secretary, if missing a stand-in (the
+  Facilitator, then the Circle Leads, constitution 5.3.6); the tool asks
+  others to confirm starting it. "Take over" next to the secretary makes
+  somebody else the secretary, e.g. when the Secretary arrives; the tool
+  asks those who aren't acting as the circle's Secretary to confirm.
 - **Following**: the others see the current step and agenda item
   highlighted, a summary of what the proposal changes (updated while the
   secretary amends it), and open it with "Open the proposal".
