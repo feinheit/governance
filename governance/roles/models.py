@@ -299,7 +299,7 @@ class AssignmentQuerySet(models.QuerySet):
 
 
 class Assignment(models.Model):
-    """A person holding a role, optionally with a focus
+    """A person holding a role, optionally with a focus, once
 
     Ending an assignment keeps the row. ``ends_on`` is the first day the
     person doesn't hold the role anymore.
@@ -329,6 +329,14 @@ class Assignment(models.Model):
 
     class Meta:
         ordering = ["starts_on", "pk"]
+        constraints = [
+            # Once per person, the focus lists everything
+            models.UniqueConstraint(
+                fields=["role", "user"],
+                condition=Q(ends_on=None),
+                name="one_current_assignment_per_role_and_user",
+            )
+        ]
         verbose_name = _("assignment")
         verbose_name_plural = _("assignments")
 

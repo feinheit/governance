@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:33+0100\n"
+"POT-Creation-Date: 2026-11-06 13:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1147,8 +1147,8 @@ msgstr "Optional, z.B. ein Kundenprojekt oder ein Thema, um das sich die Person 
 
 #: governance/roles/assignments.py
 #, python-format
-msgid "%(user)s already holds this role with this focus."
-msgstr "%(user)s besetzt diese Rolle bereits mit diesem Fokus."
+msgid "%(user)s already holds this role."
+msgstr "%(user)s besetzt diese Rolle bereits."
 
 #: governance/roles/assignments.py
 #, python-format

@@ -115,7 +115,9 @@ accountability texts are known where proposals or `roles.json` have them.
 - **`Policy`**: `role` (the circle, or a role for its domains), `title`,
   `body`, optional `domain`, `archived_on`.
 - **`Assignment`**: `role`, `user`, `focus`, `elected_until`, `starts_on`,
-  `ends_on`; ending keeps the row. Circle membership isn't stored: the
+  `ends_on`; ending keeps the row. A person holds a role once (a
+  constraint), the focus lists everything; the import merges GlassFrog's
+  assignments per focus (`importer.merged()`). Circle membership isn't stored: the
   holders of a circle's roles plus the Circle Leads and Circle Reps of its
   sub-circles (`permissions.members()`).
 - **`Metric`**, **`ChecklistItem`**: `role` (a circle for its own items),

@@ -82,31 +82,6 @@ class ProblemsTest(TestCase):
         )
         self.assertEqual(problems(proposal), [])
 
-    def test_holder_with_two_focuses_leads_once(self):
-        """The role's holders lead the new circle, each once"""
-        from governance.accounts.models import User
-        from governance.proposals.instructions import adopt
-        from governance.roles.models import Assignment
-
-        ada = User.objects.create_user("ada@example.com", full_name="Ada")
-        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
-        cook = Role.objects.create(name="Cook", circle=kitchen)
-        for focus in ["Soups", "Sauces"]:
-            Assignment.objects.create(role=cook, user=ada, focus=focus)
-        adopt(
-            Proposal.objects.create(
-                circle=kitchen,
-                proposer=ada,
-                tension="Bigger",
-                created_at=timezone.now(),
-                instructions=[
-                    {"op": "add", "path": f"/roles/{cook.pk}/supporting_circle"}
-                ],
-            )
-        )
-        lead = cook.roles.get(core_role="lead")
-        self.assertEqual(Assignment.objects.current().filter(role=lead).count(), 1)
-
     def test_conflict_markers(self):
         """Texts with conflict markers aren't adopted, e.g. from the API"""
         from governance.proposals.instructions import problems

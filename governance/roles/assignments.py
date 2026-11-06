@@ -208,12 +208,13 @@ class AssignmentForm(ModelForm):
         if user and (
             Assignment.objects
             .current()
-            .filter(role=self.instance.role, user=user, focus=data.get("focus", ""))
+            .filter(role=self.instance.role, user=user)
             .exclude(pk=self.instance.pk)
             .exists()
         ):
+            # Once, the focus lists everything (Assignment's constraint)
             raise forms.ValidationError(
-                _("%(user)s already holds this role with this focus.") % {"user": user}
+                _("%(user)s already holds this role.") % {"user": user}
             )
         return data
 

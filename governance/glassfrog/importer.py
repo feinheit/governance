@@ -525,6 +525,8 @@ class Importer:
         for assignment in self.files["assignments"].get("assignments", []):
             links = assignment["links"]
             current[(links["role"], links["person"])].append(assignment)
+        # GlassFrog has an assignment per focus, the app one per person
+        current = {key: [merged(rows)] for key, rows in current.items()}
         if self.incremental:
             self.update_assignments(current)
             return
@@ -1039,3 +1041,14 @@ class Importer:
 
 def import_glassfrog(path, **kwargs):
     return Importer(path, **kwargs).run()
+
+
+def merged(rows):
+    """One of GlassFrog's assignments of a person to a role, with all
+    focuses and the latest term"""
+    focuses = [row["focus"] for row in rows if row.get("focus")]
+    terms = [row["election"] for row in rows if row.get("election")]
+    return rows[0] | {
+        "focus": ", ".join(dict.fromkeys(focuses))[:200],
+        "election": max(terms, default=None),
+    }

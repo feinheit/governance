@@ -68,9 +68,14 @@ class AssignmentsTest(TestCase):
         )
         self.assertContains(self.client.get(url), "Soup")
 
-        # The same person with the same focus again
-        response = self.client.post(url, {"user": self.eve.pk, "focus": "Soup"})
-        self.assertContains(response, "already holds this role")
+        # The same person again, also with another focus: one assignment
+        # per person, the focus lists everything
+        response = self.client.post(url, {"user": self.eve.pk, "focus": "Salad"})
+        self.assertContains(response, "Eve already holds this role.")
+        from django.db import IntegrityError, transaction
+
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            Assignment.objects.create(role=self.cook, user=self.eve, focus="Salad")
 
         response = self.client.post(
             f"/assignments/{assignment.pk}/", {"user": self.ada.pk, "focus": "Salad"}

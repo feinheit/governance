@@ -176,6 +176,13 @@ def current_files():
                     "links": {"role": 103, "person": 2},
                 },
                 {
+                    # The app has one assignment per person and role
+                    "id": 1004,
+                    "focus": "Floors",
+                    "election": None,
+                    "links": {"role": 103, "person": 2},
+                },
+                {
                     "id": 1002,
                     "focus": "",
                     "election": "2027-01-01",
@@ -551,7 +558,7 @@ class ImportTest(TestCase):
         cleaning = Assignment.objects.get(role__glassfrog_id=103, user=bob)
         self.assertEqual(
             (cleaning.focus, cleaning.glassfrog_id, cleaning.ends_on),
-            ("Windows", 1001, None),
+            ("Windows, Floors", 1001, None),
         )
         self.assertEqual(
             Assignment.objects.get(role=secretary).elected_until, dt.date(2027, 1, 1)
