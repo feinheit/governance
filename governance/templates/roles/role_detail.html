@@ -41,7 +41,10 @@
       {% if can_assign %}<a
           class="btn btn-sm btn-quiet"
           href="{% url 'role_assignments' role.pk %}"
-        >{% translate "Assign" %}</a>{% endif %}
+        >{% translate "Assign" %}</a>{% elif can_end_assignment and role.current_assignments %}<a
+          class="btn btn-sm btn-quiet"
+          href="{% url 'role_assignments' role.pk %}"
+        >{% translate "Holders" %}</a>{% endif %}
       {% if can_change_settings %}<a
           class="btn btn-sm btn-quiet"
           href="{% url 'role_settings' role.pk %}"

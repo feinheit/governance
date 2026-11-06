@@ -247,7 +247,9 @@ rule.
 - **Assignments** are operational: the Circle Leads assign and remove
   people and their focus (the super-circle's Circle Leads for a
   sub-circle's Circle Leads, admins for the anchor's). Elected roles aren't
-  assigned this way. Holders resign through their Circle Leads.
+  assigned this way. Holders resign through their Circle Leads, who end
+  assignments of elected roles too ("Holders" on the role's page;
+  `can_end_assignment()`, a Rep's hold of the circle's role ends with it).
 - **Circle Leads**: a circle may have several, each with all the rights
   (texts speak of Circle Leads). While nobody holds a circle's Circle
   Lead role (its role in the super-circle), the super-circle's Circle

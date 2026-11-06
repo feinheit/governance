@@ -150,9 +150,10 @@ class ElectionsTest(TestCase):
         cook.refresh_from_db()
         self.assertTrue(cook.is_elected)
         self.assertContains(self.client.get(f"/roles/{cook.pk}/"), "elected by policy")
-        # Elected now: an election, not the Circle Lead assigns it
-        self.assertEqual(
-            self.client.get(f"/roles/{cook.pk}/assignments/").status_code, 403
+        # Elected now: an election, not the Circle Leads assign it (they
+        # only end assignments, resigning)
+        self.assertNotContains(
+            self.client.get(f"/roles/{cook.pk}/assignments/"), "Assign somebody"
         )
         self.assertIn(cook, [role for role, _a in due_elections([self.kitchen])])
         self.client.post(

@@ -23,6 +23,7 @@ from governance.roles.models import (
 from governance.roles.permissions import (
     can_assign,
     can_change_settings,
+    can_end_assignment,
     can_start_meeting,
     circle_leads,
     is_member,
@@ -113,6 +114,7 @@ def role_detail(request, pk):
         "role": role,
         "ancestors": role.ancestors(),
         "can_assign": can_assign(request.user, role),
+        "can_end_assignment": can_end_assignment(request.user, role),
         "can_change_settings": can_change_settings(request.user, role),
         "can_edit_strategy": can_edit_strategy(request.user, role),
         "can_edit_metrics": can_edit_items(request.user, role, Metric),

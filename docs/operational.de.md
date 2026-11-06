@@ -16,7 +16,9 @@ Einiges ändert sich ohne Governance:
   übergeordneten Kreises zu; solange niemand einen Sub-Kreis leitet,
   leiten ihn die Circle Leads des übergeordneten Kreises (Verfassung
   1.4.2). Gewählte Rollen werden gewählt, nicht zugewiesen.
-- Wer eine Rolle abgeben will, wendet sich an die Circle Leads.
+- Wer eine Rolle abgeben will, wendet sich an die Circle Leads, die die
+  Person entfernen, auch aus gewählten Rollen ("Besetzung" auf der
+  Rollenseite).
 - Der Secretary darf im Tool alles, was die Circle Leads dürfen, damit es
   eine Stellvertretung gibt.
 - Die Einstellungen setzen um, was Policies des Kreises festlegen.

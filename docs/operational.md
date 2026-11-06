@@ -16,7 +16,8 @@ Some things change without governance:
   of the circle above; while nobody leads a sub-circle, the Circle Leads
   of the circle above lead it (constitution 1.4.2). Elected roles are
   elected, not assigned.
-- Whoever wants to give up a role turns to the Circle Leads.
+- Whoever wants to give up a role turns to the Circle Leads, who remove
+  them, also from elected roles ("Holders" on the role's page).
 - The secretary may do everything in the tool the Circle Leads may, so
   that there's a stand-in.
 - The settings implement what the circle's policies define.

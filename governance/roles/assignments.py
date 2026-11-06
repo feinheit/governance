@@ -15,7 +15,7 @@ from governance.forms import ModelForm
 from governance.history.update import update_today
 from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Assignment, Role
-from governance.roles.permissions import can_assign
+from governance.roles.permissions import can_assign, can_end_assignment
 
 
 def sync_circle_holders(circle, day):
@@ -58,7 +58,7 @@ def end_assignments_of(user, day):
 
 
 def after_change(role, day):
-    if role.core_role == LEAD:
+    if role.core_role in {LEAD, REP}:
         sync_circle_holders(role.circle, day)
     update_today()
 
@@ -105,18 +105,23 @@ class AssignmentForm(ModelForm):
         return data
 
 
-def assignable_role(request, pk):
+def assignable_role(request, pk, check=can_assign):
     role = get_object_or_404(Role.objects.select_related("circle"), pk=pk)
-    if not can_assign(request.user, role):
+    if not check(request.user, role):
         raise PermissionDenied
     return role
 
 
 def assignments(request, pk):
-    """The role's holders, with the form to add one"""
-    role = assignable_role(request, pk)
-    form = AssignmentForm(request.POST or None, role=role)
-    if form.is_valid():
+    """The role's holders, with the form to add one (elected roles are
+    elected, their holders only removed here)"""
+    role = assignable_role(request, pk, check=can_end_assignment)
+    form = None
+    if can_assign(request.user, role):
+        form = AssignmentForm(request.POST or None, role=role)
+    elif request.method == "POST":
+        raise PermissionDenied
+    if form and form.is_valid():
         with transaction.atomic():
             day = timezone.localdate()
             form.instance.starts_on = day
@@ -136,6 +141,7 @@ def assignments(request, pk):
             "ancestors": role.ancestors(),
             "assignments": role.assignments.current().select_related("user"),
             "form": form,
+            "can_assign": form is not None,
         },
     )
 
@@ -166,7 +172,7 @@ def assignment_end(request, pk):
     assignment = get_object_or_404(
         Assignment.objects.current().select_related("role__circle", "user"), pk=pk
     )
-    role = assignable_role(request, assignment.role_id)
+    role = assignable_role(request, assignment.role_id, check=can_end_assignment)
     with transaction.atomic():
         day = timezone.localdate()
         end_assignment(assignment, day)

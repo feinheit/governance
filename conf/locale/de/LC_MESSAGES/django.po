@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:35+0100\n"
+"POT-Creation-Date: 2026-11-06 08:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2277,6 +2277,7 @@ msgid "unassigned"
 msgstr "nicht besetzt"
 
 #: governance/templates/roles/assignments.html
+#: governance/templates/roles/role_detail.html
 msgid "Holders"
 msgstr "Besetzung"
 
@@ -2295,6 +2296,14 @@ msgid "Edit focus"
 msgstr "Fokus bearbeiten"
 
 #: governance/templates/roles/assignments.html
+msgid "Elected roles are elected in governance meetings; their holders resign here."
+msgstr "Gewählte Rollen werden in Governance Meetings gewählt; wer sie innehat, tritt hier zurück."
+
+#: governance/templates/roles/assignments.html
+msgid "Back to the role"
+msgstr "Zurück zur Rolle"
+
+#: governance/templates/roles/assignments.html
 msgid "Assign somebody"
 msgstr "Jemanden zuweisen"
 
@@ -2302,10 +2311,6 @@ msgstr "Jemanden zuweisen"
 #: governance/templates/roles/role_detail.html
 msgid "Assign"
 msgstr "Zuweisen"
-
-#: governance/templates/roles/assignments.html
-msgid "Back to the role"
-msgstr "Zurück zur Rolle"
 
 #: governance/templates/roles/circle_browser.html
 msgid "Click a circle to zoom in, the background to zoom out, a role to open it."

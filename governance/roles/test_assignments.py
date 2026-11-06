@@ -132,3 +132,46 @@ class AssignmentsTest(TestCase):
         self.assertFalse(
             Assignment.objects.filter(role=self.kitchen_lead, user=self.eve).exists()
         )
+
+    def test_resigning_from_elected_roles(self):
+        """Circle Leads end assignments of elected roles (resigning, 1.4.1),
+        they don't assign them"""
+        facilitator = self.kitchen.roles.get(core_role="facilitator")
+        rep = self.kitchen.roles.get(core_role="rep")
+        started = dt.date(2026, 1, 1)
+        held = Assignment.objects.create(
+            role=facilitator, user=self.eve, starts_on=started
+        )
+        representing = Assignment.objects.create(
+            role=rep, user=self.ada, starts_on=started
+        )
+        Assignment.objects.create(role=self.kitchen, user=self.ada, starts_on=started)
+        self.client.force_login(self.bob)  # The kitchen's Circle Lead
+        response = self.client.get(f"/roles/{facilitator.pk}/assignments/")
+        self.assertContains(response, f"/assignments/{held.pk}/end/")
+        self.assertNotContains(response, "Assign somebody")
+        self.assertEqual(
+            self.client.post(
+                f"/roles/{facilitator.pk}/assignments/", {"user": self.ada.pk}
+            ).status_code,
+            403,
+        )
+        self.client.post(f"/assignments/{held.pk}/end/")
+        self.client.post(f"/assignments/{representing.pk}/end/")
+        held.refresh_from_db()
+        representing.refresh_from_db()
+        self.assertEqual(
+            (held.ends_on, representing.ends_on),
+            (dt.date(2026, 12, 1), dt.date(2026, 12, 1)),
+        )
+        # The Rep leaves the kitchen's role in the super-circle too
+        self.assertFalse(
+            Assignment.objects
+            .current()
+            .filter(role=self.kitchen, user=self.ada)
+            .exists()
+        )
+        self.client.force_login(self.eve)
+        self.assertEqual(
+            self.client.post(f"/assignments/{held.pk}/end/").status_code, 404
+        )

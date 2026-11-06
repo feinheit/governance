@@ -91,6 +91,15 @@ def can_assign(user, role):
     return user.is_admin or can_lead(user, circle)
 
 
+def can_end_assignment(user, role):
+    """Those who assign end assignments, also of elected roles: their holders
+    resign through them (1.4.1)"""
+    if role.archived_on or role.is_circle or not role.circle:
+        return False
+    circle = role.circle.circle if role.core_role == LEAD else role.circle
+    return user.is_admin or can_lead(user, circle)
+
+
 def members(circle):
     """Members of a circle hold one of its roles (also of its sub-circles,
     whose Circle Leads and Circle Reps hold the sub-circle's role), and its
