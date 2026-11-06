@@ -341,8 +341,10 @@ replace only `#meeting`, links navigate normally unless marked
 server's, except while somebody types or has the panel or a section open
 (paused longer than one check, a notice says so, `#meeting-paused`).
 Modals don't stop it: they're outside of `#meeting`.
-The header only has the heading (the circle is in the breadcrumbs).
-Left: who called it, the secretary ("Take over"), the attendees (a
+While it runs the heading is in the left column, so that the right one
+starts right below the navigation (an ended meeting has the usual
+header with the date, who called it and the secretary, no scrolling
+column). Left: who called it, the secretary ("Take over"), the attendees (a
 modal), the agenda (adding items as its last line, completed items
 struck through, "End the meeting" at its bottom), for ad-hoc tactical
 meetings the invited roles, elections, proposals. Right: the rounds, then one column scrolling on its own

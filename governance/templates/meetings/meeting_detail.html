@@ -16,23 +16,13 @@
     hx-swap:inherited="outerHTML show:none"
   >
     {% include "_messages.html" %}
-    {% include "roles/_breadcrumbs.html" %}
-    <div class="wb-page-header">
-      <div>
-        <h1 class="wb-title">
-          {{ meeting.get_kind_display }}
-          {% if meeting.is_running %}<span
-              class="badge wb-tone-success fs-6"
-            >{% translate "running" %}</span>{% endif %}
-        </h1>
-        {% if not meeting.is_running %}{% include "meetings/_meta.html" %}{% endif %}
-      </div>
-    </div>
-
-    {% if can_take_over|elevated and not meeting.ended_at %}
-      {# Admins who aren't members, "Take over" is marked #}
-      <div class="alert alert-warning mt-3">
-        {% translate "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed." %}
+    {% if not meeting.is_running %}
+      {% include "roles/_breadcrumbs.html" %}
+      <div class="wb-page-header">
+        <div>
+          <h1 class="wb-title">{{ meeting.get_kind_display }}</h1>
+          {% include "meetings/_meta.html" %}
+        </div>
       </div>
     {% endif %}
 
@@ -101,6 +91,18 @@
       </div>
       <div class="col-lg-4 order-lg-1">
         {% if meeting.is_running %}
+          {# The heading beside the steps and results, which start right below the navigation #}
+          {% include "roles/_breadcrumbs.html" %}
+          <h1 class="wb-title h3">
+            {{ meeting.get_kind_display }}
+            <span class="badge wb-tone-success fs-6">{% translate "running" %}</span>
+          </h1>
+          {% if can_take_over|elevated %}
+            {# Admins who aren't members, "Take over" is marked #}
+            <div class="alert alert-warning">
+              {% translate "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed." %}
+            </div>
+          {% endif %}
           <div class="mb-3">
             {% include "meetings/_meta.html" %}
             <a

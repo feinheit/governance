@@ -250,6 +250,14 @@ class MeetingE2ETest(LiveServerTestCase):
         page = self.page
         page.set_viewport_size({"width": 1280, "height": 800})
         page.goto(f"{self.live_server_url}{meeting.get_absolute_url()}")
+        # The steps start right below the navigation, the heading is beside
+        nav_bottom = page.evaluate(
+            "document.querySelector('nav.navbar').getBoundingClientRect().bottom"
+        )
+        steps_top = page.evaluate(
+            "document.querySelector('nav[aria-label=Steps]').getBoundingClientRect().top"
+        )
+        self.assertLess(steps_top - nav_bottom, 40)
         # Only the column scrolls, not the page; it reaches the window's edge
         self.assertLessEqual(
             page.evaluate("document.documentElement.scrollHeight"), 800
