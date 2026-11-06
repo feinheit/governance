@@ -371,6 +371,48 @@ class ProcessingTest(TestCase):
         self.assertEqual(published.status, Proposal.PUBLISHED)
         self.assertGreater(published.deadline, timezone.now() + dt.timedelta(days=1))
 
+    def test_affected_roles_follow_the_amendments(self):
+        """Proposals brought into or amended in a meeting show as pending on
+        the pages of the roles they change now, and only of those"""
+        dishes = Role.objects.create(name="Dishes", circle=self.kitchen)
+        draft = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            role=self.cook,
+            tension="Draft",
+            created_at=timezone.now(),
+            instructions=self.proposal.instructions,
+            names=self.proposal.names,
+        )
+        self.item.delete()
+        self.client.force_login(self.eve)
+        self.client.post(
+            f"/meetings/{self.meeting.pk}/agenda/add/", {"proposal": draft.pk}
+        )
+        response = self.client.get(self.cook.get_absolute_url())
+        self.assertIn(draft, response.context["pending"])
+
+        # Amended to change the Dishes instead
+        draft.refresh_from_db()
+        draft.instructions = [
+            {
+                "op": "replace",
+                "path": f"/roles/{dishes.pk}/name",
+                "original_value": "Dishes",
+                "value": "Washing up",
+            }
+        ]
+        draft.save()
+        self.assertEqual(list(draft.roles.all()), [dishes])
+        self.client.force_login(self.bob)  # The secretary adopts it
+        item = self.meeting.agenda_items.get(proposal=draft)
+        self.client.post(f"/agenda/{item.pk}/process/")
+        self.client.post(f"/agenda/{item.pk}/adopt/")
+        draft.refresh_from_db()
+        self.assertEqual(draft.status, Proposal.ADOPTED)
+        self.assertNotIn(draft, self.cook.changed_by_proposals.all())
+        self.assertIn(draft, dishes.changed_by_proposals.all())
+
     def test_discard(self):
         """The meeting discards a proposal (5.3.1, 5.3.4): it's withdrawn and
         in the outputs, its proposer drafts it again"""

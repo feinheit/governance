@@ -241,7 +241,10 @@ without objection"); questions and concerns show their author because they
 are answered and discussed with them. A published proposal can't be
 edited: the proposer takes it back to its draft (responses since
 republishing count) or withdraws it. Role and policy pages show pending
-proposals. The weekday restriction of one circle's policy stays a soft
+proposals (published or in a meeting): `Proposal.save()` keeps their
+`roles` and `policies` those the instructions change now, also when
+brought into or amended in a meeting; `adopt()` adds those it creates or
+defers. The weekday restriction of one circle's policy stays a soft
 rule.
 
 **Outside the process**, recorded for the history:
@@ -720,10 +723,6 @@ Deliberately not modelled:
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-06, open findings):
-  - B2: `proposal.roles`/`policies` are only set when publishing:
-    proposals brought into or created in a meeting don't show as pending
-    on role pages, amended ones keep roles they no longer change (history,
-    the meeting's mail to their holders).
   - B4: the app's async process moves proposals imported from GlassFrog
     to "waiting for a meeting" (the last consent, the deadline) until the
     nightly import sets them back. To decide, maybe until the switchover.

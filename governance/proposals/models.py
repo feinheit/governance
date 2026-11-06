@@ -169,6 +169,18 @@ class Proposal(models.Model):
             return str(_("(no tension)"))
         return Truncator(first_line).chars(100)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.status in {self.PUBLISHED, self.IN_MEETING}:
+            # Pending: the roles and policies it changes now (the pages of
+            # roles and policies list it), also when brought into a meeting
+            # or amended there; adopt() adds those it creates or defers
+            from governance.proposals.process import affected
+
+            roles, policies = affected(self)
+            self.roles.set(roles)
+            self.policies.set(policies)
+
     def get_absolute_url(self):
         return reverse("proposal", kwargs={"pk": self.pk})
 

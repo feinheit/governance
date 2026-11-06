@@ -68,10 +68,7 @@ def publish(proposal):
     proposal.deadline = now + dt.timedelta(
         days=proposal.circle.effective_async_acceptance_days()
     )
-    proposal.save()
-    roles, policies = affected(proposal)
-    proposal.roles.set(roles)
-    proposal.policies.set(policies)
+    proposal.save()  # Also sets the roles and policies it changes
     if everybody_consented(proposal):
         # Nobody else to ask, e.g. a role's only holder adding roles inside
         try_adopting(proposal)
