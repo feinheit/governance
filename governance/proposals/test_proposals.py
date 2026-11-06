@@ -240,8 +240,28 @@ class DatesTest(TestCase):
 class ProposalTitleTest(TestCase):
     def test_without_tension(self):
         """Imported elections have no tension, the title can't be empty"""
-        proposal = Proposal(tension="")
+        proposal = Proposal(tension="", kind="")
         self.assertEqual(str(proposal), "(no tension)")
+        # Named after what they change, e.g. three elections of a meeting
+        proposal.instructions = [
+            {"op": "replace", "path": "/roles/5/assignment/links/person", "value": "7"},
+            {
+                "op": "replace",
+                "path": "/roles/5/assignment/until",
+                "value": "2027-11-05",
+            },
+        ]
+        proposal.names = {"roles/5": "Circle Rep"}
+        self.assertEqual(str(proposal), "Election: Circle Rep")
+        proposal.instructions.append({
+            "op": "replace",
+            "path": "/roles/6/aim",
+            "value": "Bread",
+        })
+        proposal.names["roles/6"] = "Baker"
+        self.assertEqual(str(proposal), "Election: Circle Rep …")
+        proposal.instructions, proposal.kind = [], Proposal.SPELLING
+        self.assertEqual(str(proposal), "Spelling correction")
 
 
 class AdoptedOnTest(TestCase):

@@ -156,9 +156,16 @@ class Proposal(models.Model):
             (line for line in lines if line and not line.startswith("#")), ""
         )
         if not first_line:
-            # Spelling corrections, and imported elections without a tension
-            if self.kind:
+            # Spelling corrections and domain policies by their kind
+            if self.kind and self.kind != self.GOVERNANCE:
                 return str(self.get_kind_display()).capitalize()
+            # Imported ones (GlassFrog's elections have no tension) by what
+            # they change
+            from governance.proposals.describe import describe
+
+            if changes := describe(self.instructions, self.names):
+                more = " …" if len(changes) > 1 else ""
+                return f"{changes[0].label}: {changes[0].subject}{more}"
             return str(_("(no tension)"))
         return Truncator(first_line).chars(100)
 
