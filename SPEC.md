@@ -592,9 +592,11 @@ django-ninja at `/api/` (docs at `/api/docs`), the same rules as the web
 interface, session or personal tokens (`APIToken`, read only or read and
 write, valid until 30 days after their last use, created on the API
 tokens page): `GET circles/`, `GET
-roles/{id}/`, `GET search/`, `GET proposals/` and `proposals/{id}/`, `POST
-proposals/` (a draft), `PATCH proposals/{id}/`, `POST
-proposals/{id}/publish/`, `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET me/`
+roles/{id}/`, `GET search/`, `GET proposals/` (`?open=true`: the published ones of the user's
+circles, nearest deadline first; each with `my_response`) and
+`proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
+`POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
+the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET me/`
 (the user, the token's access and their roles); objects come with the URL
 of their page. Clients send instructions only (e.g. written by an LLM from
 a tension); the server fills in names and returns `problems` with every
@@ -619,7 +621,7 @@ The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
 write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
 `gov domains`, `gov export`, `gov search` and `gov proposals` (list, show,
-create, update, publish). The Claude Code skill `governance-proposal`
+create, update, publish; open, consent, request-meeting, comment). The Claude Code skill `governance-proposal`
 (`cli/skills/`) prepares a draft from a tension with it; publishing stays
 the user's decision.
 

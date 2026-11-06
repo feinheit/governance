@@ -1,4 +1,5 @@
-"""Proposals: reading them, preparing drafts and publishing them
+"""Proposals: reading them, preparing drafts and publishing them, responding
+to those open in one's circles
 
 Drafts take GlassFrog's instructions (see SPEC.md), e.g. written by an LLM
 from a tension; the server checks them and lists the problems."""
@@ -210,3 +211,71 @@ def publish(id):
         console.print("Adopted:", link(proposal["url"], proposal["url"]))
     else:
         console.print("Published:", link(proposal["url"], proposal["url"]))
+
+
+# The user's position on a published proposal (my_response)
+POSITIONS = {"consent": "no objection", "meeting": "meeting requested"}
+
+
+@proposals.command("open")
+@click.option("--json", "as_json", is_flag=True)
+def open_proposals(as_json):
+    """Published proposals of your circles, open for your response; the
+    nearest deadline first"""
+    data = request("GET", "proposals/", params={"open": "true"})
+    if as_json:
+        echo_json(data)
+        return
+    if not data:
+        console.print("No open proposals.")
+        return
+    table = make_table("ID>", "Proposal…", "Circle", "Proposer", "Deadline", "You")
+    for proposal in data:
+        table.add_row(
+            link(proposal["id"], proposal["url"]),
+            link(proposal["title"], proposal["url"]),
+            proposal["circle"],
+            proposal["proposer"] or "",
+            _day(proposal["deadline"]),
+            POSITIONS.get(proposal["my_response"], ""),
+        )
+    console.print(table)
+
+
+def _respond(id, kind, text):
+    proposal = request(
+        "POST", f"proposals/{id}/responses/", json={"kind": kind, "text": text}
+    )
+    url = link(proposal["url"], proposal["url"])
+    if proposal["status"] == "adopted":
+        console.print("Everybody consented, the proposal is adopted:", url)
+    elif proposal["status"] == "in_meeting":
+        console.print("The proposal goes to the next governance meeting:", url)
+    else:
+        console.print("Responded:", url)
+
+
+@proposals.command("consent")
+@click.argument("id", type=int, shell_complete=complete_proposals)
+def consent(id):
+    """No objection to the published proposal; adopted when everybody else
+    consented"""
+    _respond(id, "consent", "")
+
+
+@proposals.command("request-meeting")
+@click.argument("id", type=int, shell_complete=complete_proposals)
+@click.option("--concern", default="", help="The concern to discuss; - for stdin.")
+def request_meeting(id, concern):
+    """Discuss the published proposal in the next governance meeting instead
+    of adopting it async"""
+    _respond(id, "meeting", text_or_stdin(concern) if concern else "")
+
+
+@proposals.command("comment")
+@click.argument("id", type=int, shell_complete=complete_proposals)
+@click.argument("text")
+def comment(id, text):
+    """A question or comment on a published proposal (or one waiting for a
+    meeting), for its proposer; - for stdin"""
+    _respond(id, "comment", text_or_stdin(text))

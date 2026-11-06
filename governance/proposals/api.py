@@ -1,8 +1,8 @@
 """Proposals through the API, e.g. prepared from a tension with an LLM
 
-Circle members create drafts and change and publish their own drafts,
-nothing else: the secretary amends others' proposals only in the page of a
-running meeting. The server checks the instructions and returns the
+Circle members create drafts and change and publish their own drafts, and
+respond to published proposals like on their pages; nothing else: the
+secretary amends others' proposals only in the page of a running meeting. The server checks the instructions and returns the
 conflicts and errors it finds.
 """
 
@@ -21,8 +21,9 @@ from governance.proposals.instructions import (
     validate_format,
 )
 from governance.proposals.models import Proposal
+from governance.proposals.views import ResponseForm
 from governance.roles.models import Role
-from governance.roles.permissions import proposer_roles
+from governance.roles.permissions import is_member, proposer_roles
 
 
 router = Router(tags=["proposals"])
@@ -34,6 +35,12 @@ class ProposalIn(Schema):
     role_id: int
     tension: str
     instructions: list = []
+
+
+class ResponseIn(Schema):
+    # consent ("no objection"), meeting ("discuss in a meeting") or comment
+    kind: str
+    text: str = ""
 
 
 class ProposalPatch(Schema):
@@ -90,6 +97,9 @@ class ProposalOut(Schema):
     url: str
     problems: list[str]
     responses: ResponsesOut | None
+    # The user's current position on a published proposal: consent or
+    # meeting, None without one (or not published)
+    my_response: str | None
 
 
 class ProblemsOut(Schema):
@@ -139,7 +149,15 @@ def out(request, proposal):
         if own_draft(request.user, proposal) and proposal.instructions
         else [],
         "responses": responses_out(proposal),
+        "my_response": my_response(request.user, proposal),
     }
+
+
+def my_response(user, proposal):
+    if proposal.status != Proposal.PUBLISHED:
+        return None
+    position = process.positions(proposal).get(user.pk)
+    return position.kind if position else None
 
 
 def responses_out(proposal):
@@ -171,8 +189,16 @@ def set_instructions(proposal, instructions):
 
 
 @router.get("proposals/", response=list[ProposalOut])
-def proposal_list(request, circle_id: int | None = None, status: str | None = None):
-    """Proposals, without the drafts of others; the newest first"""
+def proposal_list(
+    request,
+    circle_id: int | None = None,
+    status: str | None = None,
+    *,
+    open: bool = False,
+):
+    """Proposals, without the drafts of others; the newest first. ``open``:
+    the published ones of the user's circles, open for their response, the
+    nearest deadline first"""
     proposals = Proposal.objects.visible_to(request.user).select_related(
         "circle", "proposer"
     )
@@ -180,6 +206,14 @@ def proposal_list(request, circle_id: int | None = None, status: str | None = No
         proposals = proposals.filter(circle_id=circle_id)
     if status:
         proposals = proposals.filter(status=status)
+    if open:
+        proposals = [
+            proposal
+            for proposal in proposals.filter(status=Proposal.PUBLISHED).order_by(
+                "deadline", "pk"
+            )
+            if is_member(request.user, proposal.circle)
+        ]
     return [out(request, proposal) for proposal in proposals[:100]]
 
 
@@ -235,4 +269,36 @@ def proposal_publish(request, pk: int):
         process.publish(proposal)
     except ProposalError as exc:
         return Status(400, {"problems": exc.problems})
+    return out(request, proposal)
+
+
+@router.post(
+    "proposals/{int:pk}/responses/", response={200: ProposalOut, 400: ProblemsOut}
+)
+def proposal_respond(request, pk: int, data: ResponseIn):
+    """A response like on the proposal's page: no objection, discuss in a
+    meeting (with the concern, optional) or a question or comment"""
+    proposal = get_object_or_404(
+        Proposal.objects.filter(status__in=[Proposal.PUBLISHED, Proposal.IN_MEETING]),
+        pk=pk,
+    )
+    if not is_member(request.user, proposal.circle):
+        raise HttpError(403, "Only the circle's members respond.")
+    form = ResponseForm(
+        {"kind": data.kind, "text": data.text},
+        is_open=proposal.status == Proposal.PUBLISHED,
+        is_proposer=proposal.proposer_id == request.user.pk,
+    )
+    if not form.is_valid():
+        return Status(
+            400,
+            {"problems": [str(e) for errors in form.errors.values() for e in errors]},
+        )
+    try:
+        process.respond(
+            proposal, request.user, form.cleaned_data["kind"], form.cleaned_data["text"]
+        )
+    except ProposalError as exc:
+        return Status(400, {"problems": exc.problems})
+    proposal.refresh_from_db()
     return out(request, proposal)

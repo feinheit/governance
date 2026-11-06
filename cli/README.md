@@ -74,5 +74,12 @@ instructions use GlassFrog's format, in YAML or JSON, e.g. a new role:
 
 The server checks the instructions and lists the problems which would
 prevent adopting the draft; publishing refuses drafts with problems.
+## Responding
+
+    gov proposals open          # published in your circles, your response
+    gov proposals consent 56    # no objection
+    gov proposals request-meeting 56 --concern "Who washes the pots?"
+    gov proposals comment 56 "Does this include the pots?"
+
 Crashes write a bug report to `~/.cache/gov` instead of a traceback, set
 `GOV_DEBUG=1` to see the exception.

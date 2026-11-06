@@ -173,6 +173,83 @@ class CLITest(TestCase):
         self.assertIn(proposal.status, {Proposal.PUBLISHED, Proposal.ADOPTED})
         self.assertIn(proposal.get_absolute_url(), result.output)
 
+    def test_responding(self):
+        """Open proposals of one's circles, responding to them"""
+        import datetime as dt
+
+        from django.utils import timezone
+
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        dishes = Role.objects.create(name="Dishes", circle=self.kitchen)
+        Assignment.objects.create(role=dishes, user=bob)
+        Assignment.objects.create(role=dishes, user=eve)
+        now = timezone.now()
+        published = {
+            "circle": self.kitchen,
+            "role": dishes,
+            "proposer": bob,
+            "status": Proposal.PUBLISHED,
+            "created_at": now,
+            "published_at": now,
+            "instructions": [
+                {
+                    "op": "replace",
+                    "path": f"/roles/{dishes.pk}/name",
+                    "original_value": "Dishes",
+                    "value": "Washing up",
+                }
+            ],
+        }
+        later = Proposal.objects.create(
+            **published, tension="Later", deadline=now + dt.timedelta(days=5)
+        )
+        sooner = Proposal.objects.create(
+            **published, tension="Sooner", deadline=now + dt.timedelta(days=2)
+        )
+        # Not in Ada's circles
+        garden = Role.objects.create(name="Garden", is_circle=True)
+        Proposal.objects.create(
+            **published | {"circle": garden},
+            tension="Flowers",
+            deadline=now + dt.timedelta(days=1),
+        )
+
+        result = self.gov("proposals", "open")
+        self.assertNotIn("Flowers", result.output)
+        self.assertLess(result.output.index("Sooner"), result.output.index("Later"))
+
+        result = self.gov("proposals", "consent", sooner.pk)
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Responded", result.output)
+        result = self.gov("proposals", "open")
+        self.assertIn("no objection", result.output)
+        result = self.gov("proposals", "comment", sooner.pk, "Why now?")
+        self.assertEqual(sooner.responses.get(kind="comment").text, "Why now?")
+        # Eve consents too: everybody did, it's adopted
+        eve_client = Client()
+        eve_client.force_login(eve)
+        eve_client.post(
+            f"/proposals/{sooner.pk}/respond/", {"kind": "consent", "text": ""}
+        )
+        sooner.refresh_from_db()
+        self.assertEqual(sooner.status, Proposal.ADOPTED)
+
+        result = self.gov(
+            "proposals", "request-meeting", later.pk, "--concern", "-", input="Hm\n"
+        )
+        self.assertIn("next governance meeting", result.output)
+        later.refresh_from_db()
+        self.assertEqual(later.status, Proposal.IN_MEETING)
+        self.assertEqual(later.responses.get().text, "Hm")
+        # Not open for consents anymore, the server explains
+        result = self.gov("proposals", "consent", later.pk)
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("Select a valid choice", result.output)
+        # A question needs its text
+        result = self.gov("proposals", "comment", later.pk, " ")
+        self.assertIn("Please explain", result.output)
+
     def test_async_round_trip(self):
         """Drafted and published with gov, answered in the browser, adopted
         at the deadline by the daily task, read back with gov"""
