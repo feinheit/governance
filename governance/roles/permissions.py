@@ -31,9 +31,12 @@ def circle_leads(circle):
     """The circle's Circle Leads: the holders of its Circle Lead role, while
     nobody holds it those of the super-circle (1.4.2: its Circle Leads lead
     the unfilled role, and so its inner circle), recursively. The anchor
-    circle has none unless assigned (1.4)."""
+    circle has none unless assigned (1.4). A role's inner circle is led by
+    those filling the role (1.4)."""
     from governance.accounts.models import User
 
+    if circle is not None and not circle.is_circle:
+        return role_leads(circle)
     while circle is not None:
         leads = User.objects.active().filter(
             pk__in=Assignment.objects

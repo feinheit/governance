@@ -449,6 +449,9 @@ class RoleMeetingScenarioTest(TestCase):
         Assignment.objects.create(
             role=Role.objects.create(name="Waiter", circle=kitchen), user=eve
         )
+        # The kitchen's Circle Lead isn't in the cook's inner circle
+        zoe = User.objects.create_user("zoe@example.com", full_name="Zoe")
+        Assignment.objects.create(role=kitchen.roles.get(core_role="lead"), user=zoe)
 
         # Not for others, and no tactical meetings in a role
         self.client.force_login(eve)
@@ -475,6 +478,8 @@ class RoleMeetingScenarioTest(TestCase):
             (meeting.circle, meeting.kind, set(meeting.attendees.all())),
             (cook, Meeting.GOVERNANCE, {ada, bob}),
         )
+        # Somebody of the inner circle is the secretary, not the kitchen's lead
+        self.assertIn(meeting.secretary, {ada, bob})
         self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Help"})
         item = AgendaItem.objects.get()
         self.client.post(f"/agenda/{item.pk}/process/")
