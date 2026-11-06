@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:13+0100\n"
+"POT-Creation-Date: 2026-11-06 13:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -253,6 +253,10 @@ msgstr "Zugewiesen"
 #: governance/history/views.py
 msgid "No longer assigned"
 msgstr "Nicht mehr zugewiesen"
+
+#: governance/history/views.py
+msgid "Re-elected"
+msgstr "Wiedergewählt"
 
 #: governance/history/views.py
 msgid "Policy added"
@@ -1662,6 +1666,14 @@ msgid "Proposal"
 msgstr "Vorschlag"
 
 #: governance/templates/history/_timeline.html
+#: governance/templates/meetings/_outputs.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/notifications/meeting_ended.txt
+#, python-format
+msgid "until %(date)s"
+msgstr "bis %(date)s"
+
+#: governance/templates/history/_timeline.html
 msgid "Show"
 msgstr "Anzeigen"
 
@@ -1976,13 +1988,6 @@ msgstr "Angenommen"
 #: governance/templates/notifications/meeting_ended.txt
 msgid "Withdrawn"
 msgstr "Zurückgezogen"
-
-#: governance/templates/meetings/_outputs.html
-#: governance/templates/meetings/meeting_detail.html
-#: governance/templates/notifications/meeting_ended.txt
-#, python-format
-msgid "until %(date)s"
-msgstr "bis %(date)s"
 
 #: governance/templates/meetings/_outputs.html
 msgid "No proposals adopted, no elections, no outcomes."

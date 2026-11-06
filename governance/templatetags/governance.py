@@ -49,6 +49,7 @@ TONES = {
     "assigned": "success",
     "removed": "neutral",
     "unassigned": "neutral",
+    "reelected": "core",
     "elected": "core",
     # Meetings, and the special kinds of proposals
     "governance": "core",

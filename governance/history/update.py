@@ -120,8 +120,30 @@ def update_changes(*, since=None):
                         )
                     )
         previous = current
+    new.extend(reelections(holders, since))
     Change.objects.bulk_create(new, batch_size=1000)
     return len(new)
+
+
+def reelections(holders, since):
+    """Elections of the person holding the role for a new term: the holders
+    don't change, the term does (the assignment keeps only the last one)"""
+    from governance.meetings.models import Election
+
+    elections = Election.objects.select_related("meeting")
+    for election in elections.order_by("pk"):
+        day = timezone.localdate(election.meeting.started_at)
+        if since and day < since:
+            continue
+        before = holders.on(day - dt.timedelta(days=1)).get(election.role_id, [])
+        if any(holder["user"] == election.user_id for holder in before):
+            yield Change(
+                date=day,
+                role_id=election.role_id,
+                kind="reelected",
+                old=election.user_id,
+                new=election.term_ends_on.isoformat(),
+            )
 
 
 def update_today():

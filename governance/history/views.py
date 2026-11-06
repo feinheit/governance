@@ -30,13 +30,21 @@ LABELS = {
     "domains-unrecorded": _("Domains changed (texts not recorded)"),
     "assigned": _("Assigned"),
     "unassigned": _("No longer assigned"),
+    "reelected": _("Re-elected"),
     "policy-added": _("Policy added"),
     "policy-removed": _("Policy removed"),
     "policy-title": _("Policy renamed"),
     "policy-body": _("Policy text changed"),
     "policy-moved": _("Policy moved"),
 }
-ASSIGNMENT_KINDS = {"assigned", "unassigned"}
+ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected"}
+
+
+def user_of(change):
+    """``old`` or ``new`` of assignments; re-elections have the term in ``new``"""
+    if change.kind == "reelected":
+        return change.old
+    return change.new or change.old
 
 
 def present(changes):
@@ -45,7 +53,7 @@ def present(changes):
     user_ids, role_ids = set(), set()
     for change in changes:
         if change.kind in ASSIGNMENT_KINDS:
-            user_ids.add(change.new or change.old)
+            user_ids.add(user_of(change))
         elif change.kind in {"moved", "policy-moved"}:
             role_ids.update(value for value in [change.old, change.new] if value)
     users = User.objects.in_bulk(user_ids)
@@ -55,10 +63,11 @@ def present(changes):
         change.old_text = change.old if isinstance(change.old, str) else ""
         change.new_text = change.new if isinstance(change.new, str) else ""
         change.user = (
-            users.get(change.new or change.old)
-            if change.kind in ASSIGNMENT_KINDS
-            else None
+            users.get(user_of(change)) if change.kind in ASSIGNMENT_KINDS else None
         )
+        if change.kind == "reelected":
+            # ``new`` is the end of the term, not a text
+            change.term, change.new_text = dt.date.fromisoformat(change.new), ""
         if change.kind in {"moved", "policy-moved"}:
             change.old_role, change.new_role = (
                 roles.get(change.old),

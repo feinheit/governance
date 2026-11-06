@@ -79,6 +79,56 @@ class HistoryTest(TestCase):
         )
 
 
+class ReelectedTest(TestCase):
+    def test_reelected(self):
+        """Electing the person holding the role for a new term is a change of
+        its own, electing somebody else is an assignment"""
+        import time_machine
+        from django.utils import timezone
+
+        from governance.accounts.models import User
+        from governance.history.audit import structure_from_database
+        from governance.meetings.elections import record_election
+        from governance.meetings.models import Meeting
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        secretary = kitchen.roles.get(core_role="secretary")
+        start = dt.date(2026, 1, 1)
+        history((start, structure_from_database(start)))
+
+        def elect(day, term):
+            with time_machine.travel(dt.datetime(*day, 12), tick=False):
+                meeting = Meeting.objects.create(
+                    circle=kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+                )
+                record_election(meeting, secretary, ada, term)
+                meeting.ended_at = timezone.now()
+                meeting.save(update_fields=["ended_at"])
+
+        elect((2026, 1, 5), dt.date(2026, 12, 31))
+        elect((2026, 12, 20), dt.date(2027, 12, 31))
+        with time_machine.travel(dt.datetime(2026, 12, 21, 12), tick=False):
+            update_changes()
+        self.assertEqual(
+            list(
+                Change.objects
+                .filter(role=secretary, kind__in=["assigned", "reelected"])
+                .order_by("date")
+                .values_list("date", "kind", "old", "new")
+            ),
+            [
+                (dt.date(2026, 1, 5), "assigned", "", ada.pk),
+                (dt.date(2026, 12, 20), "reelected", ada.pk, "2027-12-31"),
+            ],
+        )
+        self.client.force_login(ada)
+        response = self.client.get(f"/roles/{secretary.pk}/history/?assignments=1")
+        self.assertContains(response, "Re-elected")
+        self.assertContains(response, "until 31 December 2027")
+
+
 def history(*days):
     """GlassFrog's history: audit rows instead of the tests' own rows"""
     from django.db import connection

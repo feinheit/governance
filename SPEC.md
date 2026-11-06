@@ -414,6 +414,9 @@ only setting is `User.notify_all` ("everything in all circles").
 - **Assignments** have `starts_on`/`ends_on`, reconstructed from GlassFrog's
   history; they are the holders of the history too. A circle's role has its
   Circle Leads and Reps as holders, GlassFrog's data missed some of them.
+  An assignment keeps only its last term: re-elections (electing the
+  holder for a new term) come from the app's elections
+  (`update.reelections()`), GlassFrog's aren't known.
 - The audit log covers everything else the same way, row by row.
 
 ## 7. Views
@@ -567,11 +570,6 @@ Deliberately not modelled:
   goes into the minutes.
 
 ## Backlog
-
-- **Verification** (third round of 2026-11-06), open:
-  - Untested risks: re-elections (a new term, same person) don't show in
-    the history (`history/changes.py`); `stand_ins(day=…)` falls back to
-    today's Circle Leads.
 
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without

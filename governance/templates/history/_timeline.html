@@ -22,7 +22,11 @@
             {% if obj.user %}<a href="{{ obj.user.get_absolute_url }}">{{ obj.user }}</a>{% endif %}
             {% if obj.old_role or obj.new_role %}<span class="small text-body-secondary">{{ obj.old_role|default:"–" }}
                 → {{ obj.new_role|default:"–" }}</span>{% endif %}
-            {% if obj.kind == "name" or obj.kind == "policy-title" %}
+            {% if obj.kind == "reelected" %}
+              <span
+                class="small text-body-secondary"
+              >{% blocktranslate with date=obj.term|date:"DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
+            {% elif obj.kind == "name" or obj.kind == "policy-title" %}
               <span class="small">{% if obj.old_text %}<span
                     class="text-decoration-line-through text-body-secondary"
                   >{{ obj.old_text }}</span>{% endif %} {{ obj.new_text }}</span>
