@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:10+0100\n"
+"POT-Creation-Date: 2026-11-06 16:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2144,6 +2144,10 @@ msgstr "Keine Links, z.B. dorthin, wo die Projekte und Aktionen verwaltet werden
 #: governance/templates/meetings/_progress.html
 msgid "Outcomes of earlier meetings"
 msgstr "Ergebnisse früherer Meetings"
+
+#: governance/templates/meetings/_progress.html
+msgid "Show earlier meetings"
+msgstr "Frühere Meetings anzeigen"
 
 #: governance/templates/meetings/_running.html
 msgid "Running now:"

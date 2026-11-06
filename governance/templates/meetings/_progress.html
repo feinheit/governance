@@ -19,7 +19,7 @@
   </ul>
 </section>
 {% if earlier_outcomes %}
-  <section class="card mb-4 wb-current">
+  <section class="card mb-4 wb-current" id="earlier-outcomes">
     <div class="card-header"><h2 class="h6 mb-0">{% translate "Outcomes of earlier meetings" %}</h2></div>
     <ul class="list-group list-group-flush">
       {% regroup earlier_outcomes by meeting as by_meeting %}
@@ -39,6 +39,15 @@
           </li>
         {% endfor %}
       {% endfor %}
+      {% if earlier_more %}
+        {# A page of its own (not boosted), the updates keep ?earlier= #}
+        <li class="list-group-item">
+          <a
+            class="btn btn-sm btn-quiet"
+            href="?earlier={{ earlier_more }}#earlier-outcomes"
+          >{% translate "Show earlier meetings" %}</a>
+        </li>
+      {% endif %}
     </ul>
   </section>
 {% endif %}

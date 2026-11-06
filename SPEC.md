@@ -384,7 +384,9 @@ any circle. Steps: check-in, checklist review, metrics review (the
 invited roles' entries, for regular ones also the circle's own, not a
 sub-circle's own), progress updates (the links of the circle and the
 invited roles, the outcomes and links of the circle's last three
-tactical meetings, `progress_context()`), agenda, processing tensions,
+tactical meetings having some, "Show earlier meetings" ten, then ten
+more, `?earlier=`, which the page's updates keep; `progress_context()`),
+agenda, processing tensions,
 closing. An item may record an outcome and a link, both optional: many
 items end with information, next actions and projects live in the task
 management tool (several of them are one link to a to-do list), and a

@@ -260,7 +260,7 @@
     {# or a collapsible section open #}
     <div
       hidden
-      hx-get="{{ meeting.get_absolute_url }}"
+      hx-get="{{ request.get_full_path }}"
       hx-trigger="every 5s[meetingIsIdle()]"
       hx-target="#meeting"
       hx-select="#meeting"

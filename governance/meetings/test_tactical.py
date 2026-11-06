@@ -1,5 +1,8 @@
+import datetime as dt
+
 from django.core import mail
 from django.test import TestCase
+from django.utils import timezone
 
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting
@@ -129,6 +132,38 @@ class TacticalTest(TestCase):
         self.assertNotContains(response, "Sales board")  # Not invited
         self.assertContains(response, "Bob buys new knives")
         self.assertContains(response, 'href="https://tasks.example.com/todos/3"')
+
+    def test_earlier_outcomes(self):
+        """Progress updates show the last three tactical meetings' outcomes,
+        "Show earlier meetings" ten, then ten more; the page's updates keep
+        the number"""
+        start = timezone.now() - dt.timedelta(days=30)
+        for day in range(4):
+            earlier = Meeting.objects.create(
+                circle=self.kitchen,
+                kind=Meeting.TACTICAL,
+                started_at=start + dt.timedelta(days=day),
+                ended_at=start + dt.timedelta(days=day, hours=1),
+            )
+            AgendaItem.objects.create(
+                meeting=earlier, label=f"Item {day}", outcome=f"Outcome {day}"
+            )
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            step="progress",
+        )
+        url = meeting.get_absolute_url()
+        self.client.force_login(self.ada)
+        response = self.client.get(url)
+        self.assertContains(response, "Outcome 3")
+        self.assertNotContains(response, "Outcome 0")
+        self.assertContains(response, 'href="?earlier=10#earlier-outcomes"')
+        response = self.client.get(f"{url}?earlier=10")
+        self.assertContains(response, "Outcome 0")
+        self.assertNotContains(response, "Show earlier meetings")  # All of them
+        self.assertContains(response, f'hx-get="{url}?earlier=10"')
 
     def test_no_proposals(self):
         """Tactical meetings don't process proposals, not even crafted"""

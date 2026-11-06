@@ -74,7 +74,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 Ablauf: Check-in, Checklisten, Metriken, Updates, Agenda, Abschluss. Die
 Updates zeigen die Links des Kreises und der eingeladenen Rollen (z.B.
 zum Aufgaben-Tool) und die Ergebnisse der letzten drei Tactical Meetings,
-um nachzufragen.
+um nachzufragen ("Frühere Meetings anzeigen" für mehr).
 Zu jedem Agendapunkt kann der Secretary ein "Ergebnis" und einen "Link"
 festhalten, "Speichern und erledigt" oder einfach "Erledigt":
 

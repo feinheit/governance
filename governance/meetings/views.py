@@ -87,15 +87,18 @@ def meeting_detail(request, pk):
             else None,
         }
         | current_context(request, meeting)
-        | tactical_context(meeting),
+        | tactical_context(meeting, earlier=request.GET.get("earlier")),
     )
 
 
-# The tactical meetings whose outcomes the progress updates show
+# The tactical meetings whose outcomes the progress updates show: three,
+# "Show earlier meetings" ten, then ten more each time
 EARLIER_MEETINGS = 3
+MORE_EARLIER_MEETINGS = 10
+MAX_EARLIER_MEETINGS = 200
 
 
-def tactical_context(meeting):
+def tactical_context(meeting, *, earlier=None):
     """Checklists and metrics of the invited roles (and the circle's own)"""
     if meeting.kind != Meeting.TACTICAL:
         return {}
@@ -117,29 +120,44 @@ def tactical_context(meeting):
         .filter(role__in=roles)
         .select_related("role")
         .order_by("role__name", "position"),
-    } | (progress_context(meeting, roles) if meeting.step == "progress" else {})
+    } | (
+        progress_context(meeting, roles, earlier) if meeting.step == "progress" else {}
+    )
 
 
-def progress_context(meeting, roles):
+def progress_context(meeting, roles, count):
     """Progress updates: where the projects are (the links of the circle and
     the invited roles), and the outcomes of the circle's last tactical
-    meetings to check on"""
-    earlier = (
+    meetings with outcomes or links to check on (``count`` of them)"""
+    try:
+        count = min(max(int(count), EARLIER_MEETINGS), MAX_EARLIER_MEETINGS)
+    except TypeError, ValueError:
+        count = EARLIER_MEETINGS
+    meetings = (
         Meeting.objects
         .filter(circle=meeting.circle, kind=Meeting.TACTICAL)
         .exclude(ended_at=None)
         .exclude(pk=meeting.pk)
-        .order_by("-started_at")[:EARLIER_MEETINGS]
+        .filter(
+            pk__in=AgendaItem.objects.exclude(outcome="", link="").values("meeting")
+        )
+        .order_by("-started_at")
         if meeting.circle
         else Meeting.objects.none()
     )
+    earlier = list(meetings[: count + 1])
+    more = None
+    if len(earlier) > count:
+        # From three right to ten, then ten more each time
+        more = (count if count >= MORE_EARLIER_MEETINGS else 0) + MORE_EARLIER_MEETINGS
     return {
+        "earlier_more": more,
         "progress_links": Link.objects
         .filter(role__in=roles)
         .select_related("role")
         .order_by("role__name", "position"),
         "earlier_outcomes": AgendaItem.objects
-        .filter(meeting__in=list(earlier))
+        .filter(meeting__in=earlier[:count])
         .exclude(outcome="", link="")
         .select_related("meeting")
         .order_by("-meeting__started_at", "position"),
