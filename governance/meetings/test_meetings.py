@@ -60,6 +60,48 @@ class MeetingsTest(TestCase):
         self.assertFalse(meeting.is_running)
         self.assertIsNotNone(meeting.ended_at)
 
+    def test_asked_before_starting(self):
+        """Others than the Secretary are asked first, starting is the
+        default there"""
+        url = f"/roles/{self.kitchen.pk}/meetings/new/"
+        # The Secretary starts right away
+        self.client.force_login(self.bob)
+        response = self.client.get(f"/roles/{self.kitchen.pk}/")
+        self.assertContains(response, f'<form method="post" action="{url}"')
+        self.assertNotContains(response, f'href="{url}"')
+
+        self.client.force_login(self.eve)
+        for page in [
+            f"/roles/{self.kitchen.pk}/",
+            f"/roles/{self.kitchen.pk}/meetings/",
+        ]:
+            content = self.client.get(page).content.decode()
+            self.assertRegex(content, rf'href="{url}"\s+data-modal')
+            self.assertRegex(content, rf'href="{url}\?kind=tactical"\s+data-modal')
+            self.assertNotIn(f'<form method="post" action="{url}"', content)
+        response = self.client.get(
+            f"{url}?kind=tactical", headers={"hx-request": "true", "hx-modal": "true"}
+        )
+        self.assertContains(response, "Start a tactical meeting of Kitchen?")
+        self.assertContains(
+            response, "The Secretary schedules the circle's meetings: Bob."
+        )
+        self.assertContains(
+            response, '<input type="hidden" name="kind" value="tactical">'
+        )
+        self.assertRegex(
+            response.content.decode(), r'class="btn btn-primary"\s+autofocus'
+        )
+        self.assertFalse(Meeting.objects.exists())
+
+        # Without a Secretary the Circle Leads stand in
+        Assignment.objects.filter(role__core_role="secretary").delete()
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=self.eve
+        )
+        response = self.client.get(f"/roles/{self.kitchen.pk}/")
+        self.assertContains(response, f'<form method="post" action="{url}"')
+
     def test_one_running_meeting_per_circle(self):
         self.client.force_login(self.bob)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")

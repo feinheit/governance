@@ -304,6 +304,33 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertFalse(Assignment.objects.filter(role=self.cook, user=bob).exists())
         self.assertEqual(self.errors, [])
 
+    def test_asked_before_starting(self):
+        """In a role Enter cancels, in a circle (not the Secretary) it starts"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        page.locator("a[data-modal]", has_text="Start a governance meeting").click()
+        page.wait_for_selector("#modal[open] [data-modal-close]:focus")
+        page.keyboard.press("Enter")
+        page.wait_for_selector("#modal[open]", state="detached")
+        self.assertFalse(Meeting.objects.filter(circle=self.cook).exists())
+
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="secretary"), user=bob
+        )
+        Assignment.objects.create(
+            role=Role.objects.create(name="Baker", circle=bakery), user=self.ada
+        )
+        page.goto(f"{self.live_server_url}{bakery.get_absolute_url()}")
+        page.locator("a[data-modal]", has_text="Start a tactical meeting").click()
+        page.wait_for_selector("#modal[open] button[type=submit]:focus")
+        page.keyboard.press("Enter")
+        page.wait_for_url("**/meetings/*/")
+        self.assertEqual(Meeting.objects.get(circle=bakery).kind, Meeting.TACTICAL)
+        self.assertEqual(self.errors, [])
+
     def test_circle_browser(self):
         """The circle browser (Preact and d3) is loaded only on its page"""
         page = self.page

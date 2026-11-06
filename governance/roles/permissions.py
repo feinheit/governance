@@ -169,6 +169,15 @@ def can_start_meeting(user, circle):
     return user.is_admin or is_member(user, circle)
 
 
+def asks_before_starting(user, circle):
+    """Starting a meeting asks first: in a role (its own governance, rarely
+    what people want, 1.3.1), and in a circle for somebody who isn't its
+    Secretary or standing in for them: the Secretary schedules them"""
+    if not circle.is_circle:
+        return True
+    return not stand_ins(circle, [SECRETARY]).filter(pk=user.pk).exists()
+
+
 def can_change_settings(user, role):
     """The Secretary changes a circle's settings (acceptance period) and
     whether a policy makes a role of the circle elected"""

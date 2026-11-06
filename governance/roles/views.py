@@ -21,6 +21,7 @@ from governance.roles.models import (
     by_frequency,
 )
 from governance.roles.permissions import (
+    asks_before_starting,
     can_assign,
     can_change_settings,
     can_end_assignment,
@@ -174,6 +175,7 @@ def role_detail(request, pk):
             Q(ended_at=None) | Q(pk__in=role.meetings.order_by("-started_at")[:3])
         ).order_by("-started_at", "-pk")[:6]
         context["can_start_meeting"] = can_start_meeting(request.user, role)
+        context["asks_before_starting"] = asks_before_starting(request.user, role)
         context["running_meeting"] = role.meetings.running().first()
         context["show_meetings"] = role.is_circle or bool(
             context["meetings"] or context["can_start_meeting"]

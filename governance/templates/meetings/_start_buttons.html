@@ -1,0 +1,30 @@
+{% load i18n %}
+{% comment %}
+  Starting a meeting of a circle or role: right away, or asked first in a
+  modal (asks_before_starting(): in a role, or not the Secretary)
+{% endcomment %}
+{% url 'meeting_create' role.pk as start_url %}
+{% if asks_before_starting %}
+  <div class="d-flex flex-wrap gap-1">
+    <a
+      class="btn btn-sm {% if primary %}btn-primary{% else %}btn-quiet{% endif %}"
+      href="{{ start_url }}"
+      data-modal
+    >{% translate "Start a governance meeting" %}</a>
+    {% if role.is_circle %}<a
+        class="btn btn-sm btn-quiet"
+        href="{{ start_url }}?kind=tactical"
+        data-modal
+      >{% translate "Start a tactical meeting" %}</a>{% endif %}
+  </div>
+{% else %}
+  <form method="post" action="{{ start_url }}" class="d-flex flex-wrap gap-1">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm {% if primary %}btn-primary{% else %}btn-quiet{% endif %}">
+      {% translate "Start a governance meeting" %}
+    </button>
+    <button type="submit" name="kind" value="tactical" class="btn btn-sm btn-quiet">
+      {% translate "Start a tactical meeting" %}
+    </button>
+  </form>
+{% endif %}

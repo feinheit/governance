@@ -1,0 +1,14 @@
+{% load i18n %}
+{# Cancelling a confirmation: closing the modal, else back to the page #}
+{% if modal %}<button
+    type="button"
+    class="btn {{ class }}"
+    data-modal-close
+    {% if autofocus %}autofocus{% endif %}
+  >
+    {% translate "Cancel" %}
+  </button>{% else %}<a
+    class="btn {{ class }}"
+    href="{{ role.get_absolute_url }}"
+    {% if autofocus %}autofocus{% endif %}
+  >{% translate "Cancel" %}</a>{% endif %}

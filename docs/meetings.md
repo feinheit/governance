@@ -1,7 +1,8 @@
 # Meetings
 
 You plan meetings in the calendar. In the tool a meeting begins when
-somebody starts it. Everybody follows on a shared screen and adds agenda
+somebody starts it; the tool asks those who aren't the circle's
+Secretary (or standing in for them) to confirm. Everybody follows on a shared screen and adds agenda
 items from their own device; the page updates by itself.
 
 - **Who leads**: every member can do what the facilitator does in the
@@ -22,7 +23,9 @@ items from their own device; the page updates by itself.
 "Start a governance meeting" on the circle's page, every member may do
 that. Steps: check-in, agenda, closing. The holders of a role start one
 on the role's page to break it down into roles: adopting the first role
-makes it a circle, with them as its Circle Leads.
+makes it a circle, with them as its Circle Leads. The tool asks first,
+cancelling is the default: changing the role itself is proposed in its
+circle.
 
 - **Agenda**: a tension in one or two words, or a proposal (waiting,
   published async, your drafts).

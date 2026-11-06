@@ -1,0 +1,64 @@
+{% extends modal|yesno:"modal.html,base.html" %}
+{% load i18n %}
+{% comment %}
+  Asked before starting a meeting (asks_before_starting()), e.g. in a modal
+  (governance/modals.py). In a role it's rarely what people want:
+  cancelling is the default (the first button, focused). In a circle
+  somebody else than the Secretary starts it, e.g. standing in: starting
+  is the default.
+{% endcomment %}
+{% block title %}{% translate "Start a meeting" %} – {{ role }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0" {% if modal %}id="modal-title"{% endif %}>
+          {% if not role.is_circle %}
+            {% blocktranslate %}Really start a governance meeting in the role {{ role }}?{% endblocktranslate %}
+          {% elif tactical %}
+            {% blocktranslate %}Start a tactical meeting of {{ role }}?{% endblocktranslate %}
+          {% else %}
+            {% blocktranslate %}Start a governance meeting of {{ role }}?{% endblocktranslate %}
+          {% endif %}
+        </h1>
+      </div>
+    </div>
+    <div class="wb-description mb-3">
+      {% if role.is_circle %}
+        <p class="mb-0">
+          {% if secretaries %}
+            {% blocktranslate with names=secretaries|join:", " %}The Secretary schedules the circle's meetings: {{ names }}.{% endblocktranslate %}
+          {% else %}
+            {% translate "The Secretary schedules the circle's meetings." %}
+          {% endif %}
+          {% translate "Start it yourself when it's planned anyway, e.g. when they're absent or asked you to." %}
+        </p>
+      {% else %}
+        <p>
+          {% blocktranslate %}A governance meeting in a role is the role's own governance (constitution 1.3.1): its holders break it down into roles of its own. Adopting the first role makes it a circle, with its holders as Circle Leads.{% endblocktranslate %}
+        </p>
+        <p class="mb-0">
+          {% blocktranslate with circle=role.circle %}To change the role itself, its purpose, accountabilities or domains, propose it in {{ circle }}, async or in a governance meeting there.{% endblocktranslate %}
+        </p>
+      {% endif %}
+    </div>
+    <form method="post" action="{% url 'meeting_create' role.pk %}">
+      {% csrf_token %}
+      {% if tactical %}<input type="hidden" name="kind" value="tactical">{% endif %}
+      <div class="wb-form-actions">
+        {% if role.is_circle %}
+          <button type="submit" class="btn btn-primary" autofocus>
+            {% if tactical %}{% translate "Start a tactical meeting" %}{% else %}{% translate "Start a governance meeting" %}{% endif %}
+          </button>
+          {% include "meetings/_confirm_cancel.html" with class="btn-quiet" %}
+        {% else %}
+          {% include "meetings/_confirm_cancel.html" with class="btn-primary" autofocus=True %}
+          <button type="submit" class="btn btn-quiet">
+            {% translate "Start the governance meeting" %}
+          </button>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+{% endblock content %}

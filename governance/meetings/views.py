@@ -29,6 +29,7 @@ from governance.proposals.views import annotate_changes, drafting_context
 from governance.roles.constitution import FACILITATOR, SECRETARY
 from governance.roles.models import Assignment, ChecklistItem, Metric, Role
 from governance.roles.permissions import (
+    asks_before_starting,
     can_start_meeting,
     holds_core_role,
     members,
@@ -50,6 +51,7 @@ def meeting_list(request, pk):
             "ancestors": [*circle.ancestors(), circle],
             "page": Paginator(meetings, 50).get_page(request.GET.get("page")),
             "can_start_meeting": can_start_meeting(request.user, circle),
+            "asks_before_starting": asks_before_starting(request.user, circle),
         },
     )
 
@@ -159,11 +161,28 @@ def runnable_meeting(request, pk):
     return meeting
 
 
-@require_POST
 def meeting_create(request, pk):
+    """Starting a meeting; in a role (not a circle) asked first: rarely
+    what people want (meetings/meeting_confirm.html)"""
     circle = get_object_or_404(Role.objects.active().with_inside(), pk=pk)
     if not can_start_meeting(request.user, circle):
         raise PermissionDenied
+    if request.method != "POST":
+        # Asked first (asks_before_starting()), e.g. in a modal
+        return render(
+            request,
+            "meetings/meeting_confirm.html",
+            {
+                "role": circle,
+                "tactical": request.GET.get("kind") == Meeting.TACTICAL
+                and circle.is_circle,
+                "secretaries": stand_ins(circle, [SECRETARY]).order_by(
+                    "full_name", "email"
+                )
+                if circle.is_circle
+                else None,
+            },
+        )
     kind = (
         Meeting.TACTICAL
         if request.POST.get("kind") == Meeting.TACTICAL

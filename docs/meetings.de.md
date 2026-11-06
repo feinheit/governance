@@ -1,7 +1,8 @@
 # Meetings
 
 Meetings plant ihr im Kalender. Im Tool beginnt ein Meeting, wenn jemand
-es startet. Alle folgen auf einem geteilten Bildschirm und fügen Agendapunkte
+es startet; wer nicht Secretary des Kreises ist (oder ihn vertritt),
+bestätigt das. Alle folgen auf einem geteilten Bildschirm und fügen Agendapunkte
 vom eigenen Gerät aus hinzu; die Seite aktualisiert sich von selbst.
 
 - **Wer leitet**: Was der Facilitator im Tool macht, kann jedes Mitglied,
@@ -24,7 +25,8 @@ vom eigenen Gerät aus hinzu; die Seite aktualisiert sich von selbst.
 Mitglied. Ablauf: Check-in, Agenda, Abschluss. Wer eine Rolle hat,
 startet eines auf der Seite der Rolle, um sie in Rollen aufzuteilen: mit
 der ersten angenommenen Rolle wird sie zum Kreis, die Inhaber:innen
-werden seine Circle Leads.
+werden seine Circle Leads. Das Tool fragt vorher nach, Abbrechen ist
+vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 
 - **Agenda**: eine Spannung in ein, zwei Wörtern, oder ein Vorschlag
   (wartende, asynchron veröffentlichte, deine Entwürfe).

@@ -294,7 +294,11 @@ and step. Starting is calling: there is no prepared state, scheduling and
 announcing happen in the calendar. Any circle member (and admins) starts
 one (`can_start_meeting()`), the holders of a role a governance meeting
 inside it (1.3.1: its inner circle, adding roles makes it a circle; no
-tactical meetings in a role). Members run it (`can_run()`): the app
+tactical meetings in a role). Starting asks first (`asks_before_starting()`,
+a modal): in a role always, cancelling being the default (rarely what
+people want, the role itself changes in its circle); in a circle those
+who aren't its Secretary or standing in for them, starting being the
+default. Members run it (`can_run()`): the app
 doesn't record who facilitates, nobody needs rights the other members
 don't have for it. It records the secretary, who amends proposals:
 the Secretary, else the stand-ins of 5.3.6; whoever runs the meeting

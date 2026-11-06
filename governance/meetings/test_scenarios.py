@@ -469,9 +469,22 @@ class RoleMeetingScenarioTest(TestCase):
             self.client.post(f"/roles/{cook.pk}/meetings/new/").status_code, 403
         )
         self.client.force_login(ada)
-        self.assertContains(
-            self.client.get(cook.get_absolute_url()), "Start a governance meeting"
+        # Asked first, in a modal on the role's page; cancelling is the
+        # default (the primary button, focused)
+        url = f"/roles/{cook.pk}/meetings/new/"
+        response = self.client.get(cook.get_absolute_url())
+        self.assertRegex(response.content.decode(), rf'href="{url}"\s+data-modal')
+        response = self.client.get(
+            url, headers={"hx-request": "true", "hx-modal": "true"}
         )
+        self.assertContains(
+            response, "Really start a governance meeting in the role Cook?"
+        )
+        self.assertRegex(
+            response.content.decode(),
+            r'class="btn btn-primary"\s+data-modal-close\s+autofocus',
+        )
+        self.assertFalse(Meeting.objects.exists())
         self.assertEqual(
             self.client.post(
                 f"/roles/{cook.pk}/meetings/new/", {"kind": "tactical"}

@@ -206,17 +206,7 @@
                   href="{{ running_meeting.get_absolute_url }}"
                 >{% translate "Join the running meeting" %}</a>
               {% elif can_start_meeting %}
-                <form method="post" action="{% url 'meeting_create' role.pk %}" class="ms-auto">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-quiet">
-                    {% translate "Start a governance meeting" %}
-                  </button>
-                  {% if role.is_circle %}
-                    <button type="submit" name="kind" value="tactical" class="btn btn-sm btn-quiet">
-                      {% translate "Start a tactical meeting" %}
-                    </button>
-                  {% endif %}
-                </form>
+                <div class="ms-auto">{% include "meetings/_start_buttons.html" %}</div>
               {% endif %}
             </li>
           </ul>

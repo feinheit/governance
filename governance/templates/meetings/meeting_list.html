@@ -14,15 +14,7 @@
       </div>
     </div>
     {% if can_start_meeting %}
-      <div class="wb-page-actions">
-        <form method="post" action="{% url 'meeting_create' circle.pk %}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-primary">{% translate "Start a governance meeting" %}</button>
-          <button type="submit" name="kind" value="tactical" class="btn btn-sm btn-quiet">
-            {% translate "Start a tactical meeting" %}
-          </button>
-        </form>
-      </div>
+      <div class="wb-page-actions">{% include "meetings/_start_buttons.html" with role=circle primary=True %}</div>
     {% endif %}
   </div>
   <section class="card">

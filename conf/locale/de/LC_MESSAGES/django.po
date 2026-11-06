@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:17+0100\n"
+"POT-Creation-Date: 2026-11-06 14:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1669,6 +1669,7 @@ msgid "Save"
 msgstr "Speichern"
 
 #: governance/templates/generic/object_form.html
+#: governance/templates/meetings/_confirm_cancel.html
 #: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
 msgid "Cancel"
@@ -1731,7 +1732,6 @@ msgid "This role didn't exist on that day."
 msgstr "Diese Rolle gab es an diesem Tag nicht."
 
 #: governance/templates/history/role_as_of.html
-#: governance/templates/roles/role_detail.html
 msgid "held by"
 msgstr "besetzt durch"
 
@@ -2007,6 +2007,61 @@ msgstr "Keine angenommenen Vorschläge, keine Wahlen, keine Ergebnisse."
 msgid "Running now:"
 msgstr "Läuft gerade:"
 
+#: governance/templates/meetings/_start_buttons.html
+#: governance/templates/meetings/meeting_confirm.html
+msgid "Start a governance meeting"
+msgstr "Governance Meeting starten"
+
+#: governance/templates/meetings/_start_buttons.html
+#: governance/templates/meetings/meeting_confirm.html
+msgid "Start a tactical meeting"
+msgstr "Tactical Meeting starten"
+
+#: governance/templates/meetings/meeting_confirm.html
+msgid "Start a meeting"
+msgstr "Meeting starten"
+
+#: governance/templates/meetings/meeting_confirm.html
+#, python-format
+msgid "Really start a governance meeting in the role %(role)s?"
+msgstr "Wirklich ein Governance Meeting in der Rolle %(role)s starten?"
+
+#: governance/templates/meetings/meeting_confirm.html
+#, python-format
+msgid "Start a tactical meeting of %(role)s?"
+msgstr "Tactical Meeting von %(role)s starten?"
+
+#: governance/templates/meetings/meeting_confirm.html
+#, python-format
+msgid "Start a governance meeting of %(role)s?"
+msgstr "Governance Meeting von %(role)s starten?"
+
+#: governance/templates/meetings/meeting_confirm.html
+#, python-format
+msgid "The Secretary schedules the circle's meetings: %(names)s."
+msgstr "Der Secretary plant die Meetings des Kreises: %(names)s."
+
+#: governance/templates/meetings/meeting_confirm.html
+msgid "The Secretary schedules the circle's meetings."
+msgstr "Der Secretary plant die Meetings des Kreises."
+
+#: governance/templates/meetings/meeting_confirm.html
+msgid "Start it yourself when it's planned anyway, e.g. when they're absent or asked you to."
+msgstr "Starte es selbst, wenn es ohnehin geplant ist, z.B. in Vertretung oder auf Bitte des Secretary."
+
+#: governance/templates/meetings/meeting_confirm.html
+msgid "A governance meeting in a role is the role's own governance (constitution 1.3.1): its holders break it down into roles of its own. Adopting the first role makes it a circle, with its holders as Circle Leads."
+msgstr "Ein Governance Meeting in einer Rolle ist die eigene Governance der Rolle (Verfassung 1.3.1): wer sie hat, teilt sie in eigene Rollen auf. Mit der ersten angenommenen Rolle wird sie zum Kreis, wer sie hat, wird Circle Lead."
+
+#: governance/templates/meetings/meeting_confirm.html
+#, python-format
+msgid "To change the role itself, its purpose, accountabilities or domains, propose it in %(circle)s, async or in a governance meeting there."
+msgstr "Um die Rolle selbst zu ändern, ihren Purpose, ihre Accountabilities oder Domains, schlage es in %(circle)s vor, asynchron oder in einem Governance Meeting dort."
+
+#: governance/templates/meetings/meeting_confirm.html
+msgid "Start the governance meeting"
+msgstr "Governance Meeting starten"
+
 #: governance/templates/meetings/meeting_detail.html
 msgid "started"
 msgstr "begonnen"
@@ -2101,16 +2156,6 @@ msgstr "Governance Meetings"
 #: governance/templates/meetings/meeting_list.html
 msgid "Tactical Meetings"
 msgstr "Tactical Meetings"
-
-#: governance/templates/meetings/meeting_list.html
-#: governance/templates/roles/role_detail.html
-msgid "Start a governance meeting"
-msgstr "Governance Meeting starten"
-
-#: governance/templates/meetings/meeting_list.html
-#: governance/templates/roles/role_detail.html
-msgid "Start a tactical meeting"
-msgstr "Tactical Meeting starten"
 
 #: governance/templates/meetings/meeting_list.html
 msgid "No meetings."
@@ -2431,12 +2476,10 @@ msgid "Edit focus"
 msgstr "Fokus bearbeiten"
 
 #: governance/templates/roles/_holders_card.html
-#: governance/templates/roles/role_detail.html
 msgid "the super-circle's Circle Leads (by default)"
 msgstr "die Circle Leads des übergeordneten Kreises (standardmässig)"
 
 #: governance/templates/roles/_holders_card.html
-#: governance/templates/roles/role_detail.html
 msgid "the Circle Leads (by default)"
 msgstr "die Circle Leads (standardmässig)"
 
