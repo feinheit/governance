@@ -304,10 +304,10 @@ the apps' initial migrations).
 
 # Committing
 
-- **Commit a lot and push a lot.** Commit every self-contained step as soon
-  as it works (a model, a view, a fix, a spec update), and push right
-  after committing. Don't collect changes for a batch commit at the end of
-  a session; unpushed work is lost work when switching computers.
+- **Commit a lot, push in batches.** Commit every self-contained step as
+  soon as it works (a model, a view, a fix, a spec update). Push after a
+  batch of them (each push runs the CI on GitHub), and always before
+  ending a session: unpushed work is lost work when switching computers.
 - One self-contained change per commit, with tests and docs (`SPEC.md`,
   this file) in the same commit.
 - Stage files explicitly (`git add path …`), never `git add -A` or `.`:
