@@ -1,6 +1,5 @@
 """The Governance CLI"""
 
-import csv
 import datetime as dt
 import json
 import os
@@ -543,10 +542,6 @@ def load(file):
         terminate(f"Invalid YAML or JSON: {exc}")
 
 
-def format_bool(value):
-    return "true" if value else "false"
-
-
 def echo_json(data):
     click.echo(json.dumps(data, indent=2, ensure_ascii=False))
 
@@ -582,37 +577,6 @@ def echo_fields(title, fields, *, url=None):
         if value:
             grid.add_row(label, value if isinstance(value, Text) else str(value))
     console.print(grid)
-
-
-def _flatten(row, prefix=""):
-    """Nested objects become columns like ``project.code``, lists are joined"""
-    result = {}
-    for key, value in row.items():
-        if isinstance(value, dict):
-            result |= _flatten(value, f"{prefix}{key}.")
-        elif isinstance(value, list):
-            result[f"{prefix}{key}"] = ", ".join(
-                json.dumps(item, ensure_ascii=False)
-                if isinstance(item, (dict, list))
-                else str(item)
-                for item in value
-            )
-        else:
-            result[f"{prefix}{key}"] = "" if value is None else value
-    return result
-
-
-def without(row, key):
-    return {k: v for k, v in row.items() if k != key}
-
-
-def echo_csv(rows):
-    rows = [_flatten(row) for row in rows]
-    writer = csv.DictWriter(
-        sys.stdout, fieldnames=list(dict.fromkeys(key for row in rows for key in row))
-    )
-    writer.writeheader()
-    writer.writerows(rows)
 
 
 @click.group(cls=_Group)

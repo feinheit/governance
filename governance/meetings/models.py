@@ -129,11 +129,6 @@ class Meeting(models.Model):
         return reverse("meeting", kwargs={"pk": self.pk})
 
     @property
-    def is_regular(self):
-        """Governance meetings, and the regular tactical meetings of a circle"""
-        return self.kind == self.GOVERNANCE or self.circle_id is not None
-
-    @property
     def steps(self):
         return (
             TACTICAL_STEP_CHOICES
