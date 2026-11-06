@@ -28,7 +28,8 @@ cancelling is the default: changing the role itself is proposed in its
 circle.
 
 - **Agenda**: a tension in one or two words, or a proposal (waiting,
-  published async, your drafts).
+  published async, your drafts). "Remove" puts a proposal back: a draft
+  stays yours, an async proposal keeps its deadline.
 - **Process**: the facilitator chooses an agenda item; the steps of the
   integrative decision-making process guide, but don't enforce anything.
 - **Proposal**: only the secretary captures it from a tension and changes

@@ -29,7 +29,9 @@ werden seine Circle Leads. Das Tool fragt vorher nach, Abbrechen ist
 vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 
 - **Agenda**: eine Spannung in ein, zwei Wörtern, oder ein Vorschlag
-  (wartende, asynchron veröffentlichte, deine Entwürfe).
+  (wartende, asynchron veröffentlichte, deine Entwürfe). "Entfernen"
+  legt einen Vorschlag zurück: ein Entwurf bleibt deiner, ein asynchroner
+  behält seine Frist.
 - **Behandeln**: der Facilitator wählt einen Agendapunkt; die Schritte des
   integrativen Entscheidungsprozesses leiten, erzwingen aber nichts.
 - **Vorschlag**: nur der Secretary hält ihn aus einer Spannung fest und

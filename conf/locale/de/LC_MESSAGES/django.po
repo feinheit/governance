@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:28+0100\n"
+"POT-Creation-Date: 2026-11-06 15:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -463,6 +463,10 @@ msgstr "eingebracht von"
 #: governance/proposals/models.py
 msgid "proposal"
 msgstr "Vorschlag"
+
+#: governance/meetings/models.py
+msgid "proposal status"
+msgstr "Status des Vorschlags"
 
 #: governance/meetings/models.py
 msgid "is completed"

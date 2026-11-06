@@ -231,6 +231,47 @@ class ProcessingTest(TestCase):
         self.proposal.refresh_from_db()
         self.assertEqual(self.proposal.status, Proposal.IN_MEETING)
 
+    def test_removed_from_the_agenda(self):
+        """A proposal removed from the agenda goes back where it was: a draft
+        stays private, an async proposal keeps its deadline"""
+        deadline = timezone.now() + dt.timedelta(days=2)
+        draft = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            role=self.cook,
+            tension="Draft",
+            created_at=timezone.now(),
+        )
+        published = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            role=self.cook,
+            tension="Async",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+            published_at=timezone.now(),
+            deadline=deadline,
+        )
+        self.item.delete()
+        self.client.force_login(self.eve)
+        url = f"/meetings/{self.meeting.pk}/agenda/add/"
+        for proposal in [draft, published, self.proposal]:
+            self.client.post(url, {"proposal": proposal.pk})
+            proposal.refresh_from_db()
+            self.assertEqual(proposal.status, Proposal.IN_MEETING)
+            item = self.meeting.agenda_items.get(proposal=proposal)
+            self.client.post(f"/agenda/{item.pk}/remove/")
+        for proposal, status in [
+            (draft, Proposal.DRAFT),
+            (published, Proposal.PUBLISHED),
+            # Waiting for a meeting before, it waits for the next one
+            (self.proposal, Proposal.IN_MEETING),
+        ]:
+            proposal.refresh_from_db()
+            self.assertEqual(proposal.status, status)
+        self.assertEqual(published.deadline, deadline)
+        self.assertIsNone(draft.meeting)
+
     def test_discard(self):
         """The meeting discards a proposal (5.3.1, 5.3.4): it's withdrawn and
         in the outputs, its proposer drafts it again"""

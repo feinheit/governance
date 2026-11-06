@@ -336,7 +336,8 @@ doesn't change anymore (`runnable_meeting()`).
 **Governance meetings**: check-in, agenda, closing (5.4.3). Members and
 attendees add items while it runs (5.4.4): a tension in a few words, or a
 proposal (waiting for a meeting, published async ones, which ends their
-acceptance period, or their own drafts). The facilitator processes items
+acceptance period, or their own drafts; removing the item puts them back,
+`AgendaItem.proposal_status`). The facilitator processes items
 in any order; buttons for the six steps of integrative decision-making
 guide without enforcing them. Only the secretary amends, with the drafting
 controls in a panel, and captures a proposal from a tension. "Discard"
@@ -630,8 +631,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (fourth round, 2026-11-06), open:
-  - Bug: removing a proposal from the agenda leaves it `in_meeting` (a
-    draft becomes public, an async proposal loses its deadline).
   - Decisions: a mail when the proposer withdraws a published proposal?
     The JSON backup names who responded (responses are anonymous
     elsewhere). A role's domain policies when it becomes a circle.

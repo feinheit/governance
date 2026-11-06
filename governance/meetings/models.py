@@ -177,6 +177,8 @@ class AgendaItem(models.Model):
         related_name="agenda_items",
         verbose_name=_("proposal"),
     )
+    # Removing the item puts a draft or an async proposal back
+    proposal_status = models.CharField(_("proposal status"), max_length=20, blank=True)
     is_completed = models.BooleanField(_("is completed"), default=False)
     step = models.CharField(_("step"), max_length=20, choices=STEP_CHOICES, blank=True)
     outcome = models.TextField(

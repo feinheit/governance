@@ -384,6 +384,7 @@ def agenda_add(request, pk):
         if "addable_proposals" not in context:
             raise PermissionDenied  # Tactical meetings don't process proposals
         proposal = get_object_or_404(context["addable_proposals"], pk=proposal_id)
+        status = proposal.status
         if proposal.status in {Proposal.DRAFT, Proposal.PUBLISHED}:
             # Brought into the meeting: a draft isn't private anymore, an
             # async proposal's acceptance period ends
@@ -395,6 +396,7 @@ def agenda_add(request, pk):
             position=position,
             owner=request.user,
             proposal=proposal,
+            proposal_status=status,
             label=Truncator(str(proposal)).chars(500),
         )
     elif label := request.POST.get("label", "").strip():
@@ -407,11 +409,22 @@ def agenda_add(request, pk):
 @require_POST
 def agenda_remove(request, pk):
     item = get_object_or_404(
-        AgendaItem.objects.select_related("meeting__circle"), pk=pk
+        AgendaItem.objects.select_related("meeting__circle", "proposal"), pk=pk
     )
     context = agenda_context(request, item.meeting)
     if not next((i.can_remove for i in context["agenda"] if i.pk == item.pk), False):
         raise PermissionDenied
+    proposal = item.proposal
+    if (
+        proposal
+        and proposal.status == Proposal.IN_MEETING
+        and item.proposal_status in {Proposal.DRAFT, Proposal.PUBLISHED}
+    ):
+        # Back where it was: a draft stays private, an async proposal
+        # continues with its deadline
+        proposal.status = item.proposal_status
+        proposal.meeting = None
+        proposal.save(update_fields=["status", "meeting"])
     item.delete()
     return redirect(item.meeting)
 
