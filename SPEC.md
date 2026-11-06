@@ -207,7 +207,10 @@ accountabilities and domains through its own governance (1.3.3).
   Circle Leads. With a single holder publishing adopts right away. Moving
   roles into a role is the circle's governance and converts it too.
 - A circle losing its last own roles turns back into a role when
-  adopting; its core roles are archived and their assignments end, its
+  adopting, or when its own meeting running meanwhile ends
+  (`revert_after_meeting()`): the meeting goes on to its closing round,
+  the last adopted proposal changing the circle's roles records the
+  step; its core roles are archived and their assignments end, its
   policies are archived (a role only has policies for its domains, 1.3.2;
   the same proposal may move them up). Drafts say so beforehand, the
   adopted proposal records the steps.

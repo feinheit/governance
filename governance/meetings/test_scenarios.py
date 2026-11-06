@@ -19,7 +19,9 @@ from governance.accounts.models import User
 from governance.history.audit import structure_from_database, structure_on
 from governance.history.backfill import backfill
 from governance.history.models import Change
+from governance.meetings.activity import end_meeting
 from governance.meetings.models import AgendaItem, Meeting
+from governance.proposals.instructions import adopt
 from governance.proposals.models import Proposal
 from governance.roles.models import Accountability, Assignment, Policy, Role
 
@@ -312,9 +314,10 @@ class AsyncAndMeetingScenarioTest(TestCase):
 
 class CircleEndsItselfScenarioTest(TestCase):
     def test_last_role_removed_in_its_own_meeting(self):
-        """The bakery's meeting removes its last role: the bakery turns back
-        into a role, its meeting ends with the proposal adopted, its other
-        proposals are withdrawn, the attendees get the outputs"""
+        """The bakery's meeting removes its last role: the meeting goes on to
+        its closing round, the bakery turns back into a role when it ends,
+        its other proposals are withdrawn then, the attendees get the
+        outputs"""
         ada = User.objects.create_user("ada@example.com", full_name="Ada")
         bob = User.objects.create_user("bob@example.com", full_name="Bob")
         kitchen = Role.objects.create(name="Kitchen", is_circle=True)
@@ -349,22 +352,86 @@ class CircleEndsItselfScenarioTest(TestCase):
         self.client.force_login(ada)
         response = self.client.get(meeting.get_absolute_url())
         self.assertContains(response, "Bakery loses its last roles")
+        self.assertContains(response, "when the meeting ends")
         with self.captureOnCommitCallbacks(execute=True):
             response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
         self.assertContains(response, "The proposal is adopted.")
 
+        # The meeting goes on, to its closing round
         for obj in [bakery, meeting, item, item.proposal, other]:
             obj.refresh_from_db()
-        self.assertFalse(bakery.is_circle)
         self.assertEqual(
             (item.proposal.status, item.is_completed), (Proposal.ADOPTED, True)
         )
+        self.assertTrue(bakery.is_circle)
+        self.assertIsNone(meeting.ended_at)
+        self.assertEqual(other.status, Proposal.PUBLISHED)
+        self.client.post(f"/meetings/{meeting.pk}/step/", {"step": "closing"})
+        meeting.refresh_from_db()
+        self.assertEqual(meeting.step, "closing")
+        self.assertEqual(
+            [m for m in mail.outbox if "Bread" in m.body], []
+        )  # Not before the end
+
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/meetings/{meeting.pk}/end/")
+        for obj in [bakery, meeting, item.proposal, other]:
+            obj.refresh_from_db()
+        self.assertFalse(bakery.is_circle)
         self.assertIsNotNone(meeting.ended_at)
         self.assertEqual(other.status, Proposal.WITHDRAWN)
+        self.assertFalse(
+            Assignment.objects.current().filter(role__circle=bakery).exists()
+        )
+        # The proposal records the step, its diff and the history show it
+        self.assertIn(
+            {"op": "remove", "path": f"/roles/{bakery.pk}/supporting_circle"},
+            item.proposal.instructions,
+        )
         outputs = [m for m in mail.outbox if "Bread" in m.body]
         self.assertEqual(
             sorted(m.to[0] for m in outputs), ["ada@example.com", "bob@example.com"]
         )
+
+    def test_roles_added_again_before_the_end(self):
+        """A circle whose meeting removes its last role and adds another one
+        stays a circle"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="secretary"), user=ada
+        )
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        meeting = Meeting.objects.create(
+            circle=bakery,
+            kind=Meeting.GOVERNANCE,
+            started_at=timezone.now(),
+            secretary=ada,
+        )
+        for instructions in [
+            [{"op": "remove", "path": f"/roles/{baker.pk}"}],
+            [
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Pastry Chef"},
+            ],
+        ]:
+            adopt(
+                Proposal.objects.create(
+                    circle=bakery,
+                    proposer=ada,
+                    tension="Bread",
+                    status=Proposal.IN_MEETING,
+                    meeting=meeting,
+                    instructions=instructions,
+                    created_at=timezone.now(),
+                )
+            )
+        end_meeting(meeting)
+        bakery.refresh_from_db()
+        self.assertTrue(bakery.is_circle)
 
 
 class RoleMeetingScenarioTest(TestCase):

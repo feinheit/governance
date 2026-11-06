@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:05+0100\n"
+"POT-Creation-Date: 2026-11-06 08:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1744,6 +1744,12 @@ msgstr "Der Secretary hält das Ergebnis fest."
 #: governance/templates/meetings/meeting_detail.html
 msgid "Steps"
 msgstr "Schritte"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/proposals/proposal_detail.html
+#, python-format
+msgid "%(circle)s loses its last roles: it turns back into a role when the meeting ends, its Facilitator, Secretary and Circle Rep and their terms end."
+msgstr "%(circle)s verliert seine letzten Rollen: Der Kreis wird wieder zu einer Rolle, wenn das Meeting endet, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
 
 #: governance/templates/meetings/_current.html
 #: governance/templates/proposals/proposal_detail.html

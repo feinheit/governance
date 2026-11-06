@@ -18,10 +18,12 @@ would cause or why it can't be adopted like this.
 
 Adding roles inside a role makes it a circle; its holders propose that
 themselves. A circle without roles of its own turns back into a role when
-the proposal is adopted; its policies are archived unless the same
-proposal moves them up (the draft says so). A circle removed or turned back into a role
-takes its open proposals with it (they're withdrawn), its running meeting
-ends; so does a removed role with the proposals for inside it.
+the proposal is adopted, or, when the circle's own meeting removed its
+last roles, when that meeting ends (after its closing round); its
+policies are archived unless the same proposal moves them up (the draft
+says so). A circle removed or turned back into a role takes its open
+proposals with it (they're withdrawn), a removed circle's running
+meeting ends; so does a removed role with the proposals for inside it.
 
 Drafts are private until you publish them or bring them to a meeting.
 

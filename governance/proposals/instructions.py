@@ -87,6 +87,9 @@ class Applier:
         # they turn back into roles (finish())
         self.shrunk = set()
         self.reverted = []
+        # Those with a meeting of their own running turn back when it ends
+        # (revert_after_meeting()), after its closing round
+        self.deferred = []
         # Roles and circles removed, also those inside removed circles
         self.removed = []
         self.made_circles = []  # Automatically, by adding roles inside
@@ -402,18 +405,66 @@ class Applier:
         # Circles left without roles of their own turn back into roles
         # automatically, like in GlassFrog 5: a circle of core roles only
         # makes no sense
+        from governance.meetings.models import Meeting
+
         for circle in self.shrunk:
             circle.refresh_from_db()
-            if (
-                circle.is_circle
-                and circle.circle_id
-                and not circle.archived_on
-                and not circle.roles.active().exclude(core_role__in=CORE).exists()
-            ):
-                self.convert(circle, to_circle=False)
-                self.reverted.append(circle)
+            if not is_empty_circle(circle):
+                continue
+            if Meeting.objects.filter(circle=circle).running().exists():
+                self.deferred.append(circle)
+                continue
+            self.convert(circle, to_circle=False)
+            self.reverted.append(circle)
         for role in self.converted:
             sync_circle_holders(role, self.day)
+
+
+def is_empty_circle(circle):
+    """A circle without roles of its own, which turns back into a role"""
+    return (
+        circle.is_circle
+        and circle.circle_id is not None
+        and not circle.archived_on
+        and not circle.roles.active().exclude(core_role__in=CORE).exists()
+    )
+
+
+@transaction.atomic
+def revert_after_meeting(meeting):
+    """A circle which lost its last roles while its meeting ran turns back
+    into a role when the meeting ends, recorded in the last adopted proposal
+    changing its roles since the meeting started"""
+    circle = meeting.circle
+    if circle is None:
+        return
+    circle.refresh_from_db()
+    if not is_empty_circle(circle):
+        return
+    proposal = (
+        Proposal.objects
+        .filter(
+            status=Proposal.ADOPTED,
+            glassfrog_id=None,
+            decided_at__gte=meeting.started_at,
+            roles__circle=circle,
+        )
+        .order_by("-decided_at", "-pk")
+        .first()
+    )
+    applier = Applier(proposal or Proposal(circle=circle))
+    applier.convert(circle, to_circle=False)
+    if proposal:
+        proposal.instructions.append({
+            "op": "remove",
+            "path": f"/roles/{circle.pk}/supporting_circle",
+        })
+        proposal.names[f"roles/{circle.pk}"] = circle.name
+        proposal.save(update_fields=["instructions", "names"])
+        proposal.roles.add(circle)
+        proposal.policies.add(*applier.policies)
+    close_circles([circle], proposal)
+    update_changes(since=timezone.localdate())
 
 
 def role_texts_count(model, role):
@@ -487,12 +538,12 @@ def close_circles(circles, adopted):
 
     if not circles:
         return
-    for proposal in (
-        Proposal.objects
-        .filter(circle__in=circles)
-        .exclude(status__in=[Proposal.ADOPTED, Proposal.WITHDRAWN])
-        .exclude(pk=adopted.pk)
-    ):
+    proposals = Proposal.objects.filter(circle__in=circles).exclude(
+        status__in=[Proposal.ADOPTED, Proposal.WITHDRAWN]
+    )
+    if adopted is not None:
+        proposals = proposals.exclude(pk=adopted.pk)
+    for proposal in proposals:
         withdraw(proposal)
     for meeting in Meeting.objects.filter(circle__in=circles).running():
         end_meeting(meeting)
@@ -510,7 +561,9 @@ def consequences(proposal):
     except ProposalError:
         return []
     except Rollback:
-        return applier.reverted
+        for circle in applier.deferred:
+            circle.at_meeting_end = True
+        return [*applier.reverted, *applier.deferred]
 
 
 def problems(proposal):

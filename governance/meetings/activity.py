@@ -51,10 +51,14 @@ def connect():
 
 
 def end_meeting(meeting, at=None):
-    """Ends the meeting, its outputs go out by mail"""
+    """Ends the meeting, its outputs go out by mail; a circle which lost its
+    last roles in it turns back into a role now"""
+    from governance.proposals.instructions import revert_after_meeting
+
     meeting.ended_at = at or timezone.now()
     meeting.current_item = None
     meeting.save(update_fields=["ended_at", "current_item"])
+    revert_after_meeting(meeting)
     transaction.on_commit(lambda: meeting_ended(meeting))
 
 

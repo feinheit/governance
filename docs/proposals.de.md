@@ -19,9 +19,12 @@ was das Annehmen bewirken würde oder weshalb es so nicht geht.
 
 Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; ihre Inhaber:innen
 schlagen das selbst vor. Ein Kreis ohne eigene Rollen wird beim Annehmen
-wieder zur Rolle; seine Policies werden archiviert, ausser derselbe
-Vorschlag verschiebt sie nach oben (der Entwurf zeigt das). Wird ein Kreis entfernt oder wieder zur Rolle, werden
-seine offenen Vorschläge zurückgezogen, sein laufendes Meeting endet;
+wieder zur Rolle, oder, wenn das eigene Meeting des Kreises seine letzten
+Rollen entfernt hat, wenn dieses Meeting endet (nach der
+Abschlussrunde); seine Policies werden archiviert, ausser derselbe
+Vorschlag verschiebt sie nach oben (der Entwurf zeigt das). Wird ein
+Kreis entfernt oder wieder zur Rolle, werden seine offenen Vorschläge
+zurückgezogen, das laufende Meeting eines entfernten Kreises endet;
 ebenso bei einer entfernten Rolle die Vorschläge für ihr Inneres.
 
 Entwürfe sind privat, bis du sie veröffentlichst oder in ein Meeting
