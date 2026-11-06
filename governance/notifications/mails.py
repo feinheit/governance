@@ -83,6 +83,20 @@ def proposal_back_to_draft(proposal):
     )
 
 
+def proposal_to_meeting(proposal, problems):
+    """It couldn't be adopted async (e.g. a conflict with a change made
+    meanwhile): it waits for a meeting"""
+    return send(
+        everybody(proposal),
+        lambda: (
+            _("Waiting for a meeting in %(circle)s: %(proposal)s")
+            % {"circle": proposal.circle, "proposal": proposal}
+        ),
+        "notifications/proposal_to_meeting.txt",
+        proposal_context(proposal) | {"problems": problems},
+    )
+
+
 def proposal_retracted(proposal):
     return send(
         everybody(proposal),

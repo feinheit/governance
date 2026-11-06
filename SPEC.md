@@ -453,7 +453,10 @@ Open meetings are listed on the attendees' person pages.
 Plain text mails per active recipient in their language (none for
 people who left, also as proposers), after the transaction commits (`notifications/mails.py`), to the circle's members: published
 async proposals, those taken back, those their proposer withdraws
-(published or waiting for a meeting, `process.retract()`), adopted ones with the diff (also to
+(published or waiting for a meeting, `process.retract()`), those which
+can't be adopted async and wait for a meeting (a conflict at the
+deadline or the last consent, `mails.proposal_to_meeting()` with the
+problems; not imported ones, which the nightly import sets back), adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves
@@ -727,11 +730,9 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-06, open findings):
-  - Untested risks: concurrent adoption without row locks
-    (`select_for_update`), no mail when a due async proposal goes to a
-    meeting because of a conflict, nothing adopted until the deadline when
-    the last member who hadn't consented leaves, `draft_again` of
-    proposals withdrawn because their circle turned back into a role,
-    double mails for a circle emptied by its super-circle while both
-    meetings run, re-elections after midnight dated by the meeting's
-    start (`history/update.py`).
+  - Untested risks: `draft_again` of proposals withdrawn because their
+    circle turned back into a role, double mails for a circle emptied by
+    its super-circle while both meetings run, re-elections after midnight
+    dated by the meeting's start (`history/update.py`). Decided
+    2026-11-06: nothing adopted early when the last member who hadn't
+    consented leaves, it waits for the deadline like announced.

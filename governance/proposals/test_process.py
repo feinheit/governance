@@ -189,14 +189,27 @@ class ProcessTest(TestCase):
         self.assertEqual(proposal.status, Proposal.PUBLISHED)
 
     def test_deadline(self):
+        from django.core import mail
+
         proposal = publish(self.proposal())
-        conflicting = publish(self.proposal())
+        conflicting = self.proposal()
+        conflicting.tension = "Another name"
+        conflicting = publish(conflicting)
         self.assertEqual(adopt_due_proposals(), [])
         with time_machine.travel(NOW + dt.timedelta(days=2, minutes=1), tick=False):
-            self.assertEqual(adopt_due_proposals(), [proposal])
-            # The other one conflicts now: it goes to the meeting
+            mail.outbox = []
+            with self.captureOnCommitCallbacks(execute=True):
+                self.assertEqual(adopt_due_proposals(), [proposal])
+            # The other one conflicts now: it goes to the meeting, those who
+            # got it learn why
             conflicting.refresh_from_db()
             self.assertEqual(conflicting.status, Proposal.IN_MEETING)
+            messages = [m for m in mail.outbox if "Another name" in m.subject]
+            self.assertIn("next governance meeting", messages[0].body)
+            self.assertIn("has been changed", messages[0].body)
+            self.assertEqual(
+                {m.to[0] for m in messages}, {"ada@example.com", "bob@example.com"}
+            )
             call_command("fairy_tasks")
 
     def test_cannot_publish(self):

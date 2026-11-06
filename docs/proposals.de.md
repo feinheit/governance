@@ -49,7 +49,11 @@ sie:
   Kreises erhalten eine Mail.
 
 Sind alle anderen ohne Einwand, ist der Vorschlag sofort angenommen,
-sonst in der Nacht nach der Frist ("wird angenommen am"). Einwände gibt es
+sonst in der Nacht nach der Frist ("wird angenommen am"). Geht das dann
+nicht (z.B. weil eine Rolle, die er ändert, inzwischen geändert wurde),
+wartet er auf das nächste Governance Meeting, und die Mitglieder des
+Kreises erhalten eine Mail mit dem Grund. Verlässt jemand den Kreis,
+wird er deswegen nicht früher angenommen: er wartet auf die Frist. Einwände gibt es
 asynchron nicht, sie werden im Meeting geprüft: asynchron ist für
 unumstrittene Änderungen.
 

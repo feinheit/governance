@@ -45,7 +45,11 @@ Until the deadline the circle sets, they respond:
   get a mail.
 
 When everybody else has no objection, the proposal is adopted right away,
-otherwise in the night after the deadline ("to be adopted on").
+otherwise in the night after the deadline ("to be adopted on"). If it
+can't be adopted then (e.g. a role it changes was changed meanwhile), it
+waits for the next governance meeting, and the circle's members get a
+mail saying why. Somebody leaving the circle doesn't make it pass
+earlier: it waits for the deadline.
 Objections don't exist async, they're tested in the meeting: async is for
 uncontroversial changes.
 

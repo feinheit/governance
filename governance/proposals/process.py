@@ -133,6 +133,8 @@ def to_meeting(proposal):
         status=Proposal.IN_MEETING
     ):
         proposal.status = Proposal.IN_MEETING
+        return True
+    return False
 
 
 @transaction.atomic
@@ -170,8 +172,12 @@ def try_adopting(proposal):
     try:
         with transaction.atomic():
             adopt(proposal)
-    except ProposalError:
-        to_meeting(proposal)
+    except ProposalError as exc:
+        # Those who got it learn why it didn't pass async; not for those
+        # imported from GlassFrog, which the nightly import sets back
+        problems = exc.problems
+        if to_meeting(proposal) and not proposal.glassfrog_id:
+            transaction.on_commit(lambda: mails.proposal_to_meeting(proposal, problems))
         return False
     return True
 

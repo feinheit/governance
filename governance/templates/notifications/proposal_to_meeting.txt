@@ -1,0 +1,9 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with circle=proposal.circle %}The proposal in {{ circle }} can't be adopted async as it is, it goes to the next governance meeting instead:{% endblocktranslate %}
+{% for problem in problems %}
+- {{ problem }}{% endfor %}
+
+{% translate "Tension" %}:
+{{ proposal.tension|plain }}
+
+{{ url }}
+{% endautoescape %}
