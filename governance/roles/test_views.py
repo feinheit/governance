@@ -115,15 +115,15 @@ class ViewsTest(TestCase):
         )
         cook = Role.objects.create(name="Cook", circle=kitchen)
         response = self.client.get(cook.get_absolute_url())
-        self.assertContains(response, "the Circle Lead (by default)")
+        self.assertContains(response, "the Circle Leads (by default)")
         self.assertContains(response, self.user.get_absolute_url())
-        self.assertNotContains(response, "Held by the Circle Lead")
+        self.assertNotContains(response, "Held by the Circle Leads")
 
         # The Circle Lead isn't eligible for the Circle Rep, an unfilled one
         # is nobody's (also not a role to propose from)
         rep = kitchen.roles.get(core_role="rep")
         response = self.client.get(rep.get_absolute_url())
-        self.assertNotContains(response, "the Circle Lead (by default)")
+        self.assertNotContains(response, "the Circle Leads (by default)")
         self.assertContains(response, "Nobody")
         self.assertNotIn(rep, proposer_roles(self.user, kitchen))
         self.assertIn(cook, proposer_roles(self.user, kitchen))
@@ -191,7 +191,7 @@ class ViewsTest(TestCase):
 
         response = self.client.get(kitchen.get_absolute_url())
         self.assertContains(response, "Circle Rep")
-        self.assertContains(response, "Held by the Circle Lead")  # The dishwasher
+        self.assertContains(response, "Held by the Circle Leads")  # The dishwasher
         response = self.client.get(
             kitchen.roles.get(core_role="secretary").get_absolute_url()
         )

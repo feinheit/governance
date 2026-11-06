@@ -24,6 +24,7 @@ from governance.roles.permissions import (
     can_assign,
     can_change_settings,
     can_start_meeting,
+    circle_leads,
     is_member,
 )
 
@@ -161,9 +162,6 @@ def role_detail(request, pk):
         # Sub-circles are roles too, the badge tells them apart
         context["roles"] = [r for r in roles if not r.core_role]
         mark_reps(context["roles"])
-        # Roles nobody holds are held by the Circle Lead
-        lead = next((r for r in roles if r.core_role == "lead"), None)
-        context["lead"] = lead
         context["due_elections"] = due_elections([role])
     if not role.core_role and not role.archived_on:
         # Circles, and roles whose holders break them down in their inner
@@ -176,14 +174,9 @@ def role_detail(request, pk):
         context["show_meetings"] = role.is_circle or bool(
             context["meetings"] or context["can_start_meeting"]
         )
-    if not role.is_circle and role.circle_id:
-        context["lead"] = (
-            role.circle.roles
-            .active()
-            .filter(core_role="lead")
-            .prefetch_related(current_assignments())
-            .first()
-        )
+    if role.circle_id:
+        # Who covers the role while nobody holds it (1.4.2)
+        context["leads"] = circle_leads(role.circle).order_by("full_name", "email")
     return render(request, "roles/role_detail.html", context)
 
 

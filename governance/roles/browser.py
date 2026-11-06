@@ -64,12 +64,12 @@ def circle_browser(request):
     labels = {
         "Path": gettext("Path"),
         "Open the circle's page": gettext("Open the circle's page"),
-        "Held by the Circle Lead": gettext("Held by the Circle Lead"),
+        "Held by the Circle Leads": gettext("Held by the Circle Leads"),
         "roles": gettext("roles"),
         "Assigned": gettext("Assigned"),
         "Core roles and elected roles": gettext("Core roles and elected roles"),
-        "Unassigned (held by the Circle Lead)": gettext(
-            "Unassigned (held by the Circle Lead)"
+        "Unassigned (held by the Circle Leads)": gettext(
+            "Unassigned (held by the Circle Leads)"
         ),
         "Circle Lead": gettext("Circle Lead"),
         "Your roles": gettext("Your roles"),

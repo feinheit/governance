@@ -13,7 +13,7 @@ class TranslationsTest(TestCase):
         circle.create_core_roles()
         response = self.client.get(circle.get_absolute_url())
         self.assertContains(response, "Kernrollen")
-        self.assertContains(response, "Vom Circle Lead besetzt")
+        self.assertContains(response, "Von den Circle Leads besetzt")
         # The core roles keep their names, like in GlassFrog and the handbook
         self.assertContains(response, "Secretary")
         lead = circle.roles.get(core_role="lead")

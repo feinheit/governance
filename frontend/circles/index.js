@@ -58,7 +58,7 @@ function Legend() {
       {[
         ["assigned", "Assigned"],
         ["core", "Core roles and elected roles"],
-        ["unassigned", "Unassigned (held by the Circle Lead)"],
+        ["unassigned", "Unassigned (held by the Circle Leads)"],
         ["lead", "Circle Lead"],
         ["mine", "Your roles"],
       ].map(([key, text]) => (
@@ -380,7 +380,7 @@ function Tooltip({ node, x, y, width, height }) {
         <div className="text-body-secondary small">
           {data.holders.length
             ? data.holders.join(", ")
-            : label("Held by the Circle Lead")}
+            : label("Held by the Circle Leads")}
           {data.elected ? ` · ${label("elected")}` : ""}
         </div>
       )}

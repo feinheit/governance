@@ -66,7 +66,7 @@ people. A snapshot is valid until the next commit. Quirks:
   linked their owner with `circle_id`/`role_id`.
 - Only the circles' policies, no accountability texts (IDs only), some
   sub-circles' holders missing in the super-circle.
-- Roles without people are held by the Circle Lead.
+- Roles without people are held by the Circle Leads.
 - The API shows people who left as "Removed" with a redacted email; the
   snapshots still have their names.
 
@@ -100,7 +100,7 @@ accountability texts are known where proposals or `roles.json` have them.
 - **`Role`**: one table for roles and circles (a circle is a role broken
   down into roles; converting is a flag, not a copy). `circle` (null only
   for the anchor), `name`, `purpose`, `position`, `is_circle`; circles
-  have `short_name` and `strategy` (set by the Circle Lead, not
+  have `short_name` and `strategy` (set by the Circle Leads, not
   governance). `core_role` (lead, facilitator, secretary, rep): created
   and removed with their circle, governance only adds accountabilities
   and domains to them (not to the Circle Lead, see the constitution
@@ -120,7 +120,7 @@ accountability texts are known where proposals or `roles.json` have them.
   sub-circles (`permissions.members()`).
 - **`Metric`**, **`ChecklistItem`**: `role` (a circle for its own items),
   `description`, `frequency` (weekly, monthly, quarterly, yearly or none;
-  only groups them), `link`. Operational: the Circle Lead edits metrics,
+  only groups them), `link`. Operational: the Circle Leads edit metrics,
   anybody edits checklist items (Holacracy defines no process), the audit
   log keeps their history. A circle's page lists its roles' items too.
   GlassFrog's "global" items, shown everywhere, aren't supported; items
@@ -185,8 +185,8 @@ proposals ask for the tension, an example and how the proposal helps
 
 **Who proposes**: a proposal addresses a tension of one of the proposer's
 roles in the circle (5.3.1), chosen from `proposer_roles()`: the roles
-held in the circle (also a sub-circle's role, held by its Circle Lead and
-Rep), for the Circle Lead also the unfilled ones (1.4.2). Agenda items
+held in the circle (also a sub-circle's role, held by its Circle Leads and
+Rep), for the Circle Leads also the unfilled ones (1.4.2). Agenda items
 turned into proposals get the owner's first role, the secretary changes
 it if needed.
 
@@ -236,17 +236,27 @@ rule.
 **Outside the process**, recorded for the history:
 
 - **Policies of a domain's role** (1.3.2, `roles/domain_policies.py`):
-  the role's holders (the Circle Lead while unfilled) add, change and
+  the role's holders (the Circle Leads while unfilled) add, change and
   remove its policies on the role page, each with one of its domains.
   Every change is an adopted proposal of its own kind, mailed to the
   members of the role's circle and all its sub-circles, `notify_all`
   users and the person making the change. They move with their role,
   and are archived with it, with its circle or with their domain (the
   proposal removing the domain lists them).
-- **Assignments** are operational: the Circle Lead assigns and removes
-  people and their focus (the super-circle's Circle Lead for a
-  sub-circle's Circle Lead, admins for the anchor's). Elected roles aren't
-  assigned this way. Holders resign through their Circle Lead. An
+- **Assignments** are operational: the Circle Leads assign and remove
+  people and their focus (the super-circle's Circle Leads for a
+  sub-circle's Circle Leads, admins for the anchor's). Elected roles aren't
+  assigned this way. Holders resign through their Circle Leads.
+- **Circle Leads**: a circle may have several, each with all the rights
+  (texts speak of Circle Leads). While nobody holds a circle's Circle
+  Lead role (its role in the super-circle), the super-circle's Circle
+  Leads lead it, recursively (1.4.2, `permissions.circle_leads()`):
+  they assign, propose from its unfilled roles and are its members. The
+  same for a role nobody holds: its circle's Circle Leads are its
+  holders (`role_leads()`), also for its inner circle. The anchor circle
+  has Circle Leads only when assigned. Facilitator and Secretary follow
+  the constitution's stand-ins (5.3.6); the app gives them no rights in
+  meetings the other members don't have, except the secretary amending. An
   assignment removed on the day it started was a mistake and is deleted.
   A circle's role follows its Circle Leads and Reps.
 
@@ -309,9 +319,9 @@ governance at once; the mail waits for the end.
 **Elections** (`meetings/elections.py`): the facilitator runs the
 integrative election process (5.3.5) without the app, which records the
 result (person, term end) for Facilitator, Secretary, Circle Rep and
-roles elected by policy. Only circle members are candidates, the Circle
-Lead isn't the Rep: an unfilled Circle Rep is nobody's (not held by the
-Circle Lead like other unfilled roles, not a role to propose from). Re-electing changes the term, electing somebody else
+roles elected by policy. Only circle members are candidates, Circle
+Leads aren't the Rep: an unfilled Circle Rep is nobody's (not held by the
+Circle Leads like other unfilled roles, not a role to propose from). Re-electing changes the term, electing somebody else
 ends the previous assignment, a Rep also holds the circle's role in the
 super-circle. Due elections (within 30 days, or nobody elected) show on
 the circle page and the Secretary's person page; Secretaries get a mail
@@ -412,8 +422,8 @@ only setting is `User.notify_all` ("everything in all circles").
   way of forms and htmx.
 
 Everyone signed in reads everything except others' drafts. The Secretary
-changes the circle's settings and stands in for the Circle Lead in
-everything the app lets the Circle Lead do (`can_lead()`), although the
+changes the circle's settings and stands in for the Circle Leads in
+everything the app lets the Circle Leads do (`can_lead()`), although the
 constitution doesn't say so. Superusers set things up.
 
 ## 8. API

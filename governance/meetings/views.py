@@ -26,10 +26,11 @@ from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
 from governance.proposals.process import current_responses
 from governance.proposals.views import annotate_changes, drafting_context
-from governance.roles.constitution import FACILITATOR, LEAD, SECRETARY
+from governance.roles.constitution import FACILITATOR, SECRETARY
 from governance.roles.models import Assignment, ChecklistItem, Metric, Role
 from governance.roles.permissions import (
     can_start_meeting,
+    circle_leads,
     holds_core_role,
     members,
     proposer_roles,
@@ -198,7 +199,7 @@ def meeting_create(request, pk):
         # Stand-ins for unfilled roles, in the constitution's order (5.3.6)
         secretary=holder(circle, SECRETARY)
         or holder(circle, FACILITATOR)
-        or holder(circle, LEAD)
+        or circle_leads(circle).order_by("pk").first()
         or request.user,
     )
     meeting.attendees.set(members(circle))

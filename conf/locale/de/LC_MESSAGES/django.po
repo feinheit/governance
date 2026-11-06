@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:08+0100\n"
+"POT-Creation-Date: 2026-11-06 08:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -283,8 +283,8 @@ msgid "The day the term ends."
 msgstr "Der letzte Tag der Amtszeit."
 
 #: governance/meetings/elections.py
-msgid "The Circle Lead can't be the Circle Rep."
-msgstr "Der Circle Lead kann nicht Circle Rep sein."
+msgid "A Circle Lead can't be the Circle Rep."
+msgstr "Ein Circle Lead kann nicht Circle Rep sein."
 
 #: governance/meetings/elections.py
 #, python-format
@@ -1092,16 +1092,16 @@ msgstr "Seite des Kreises öffnen"
 
 #: governance/roles/browser.py governance/templates/roles/_holders.html
 #: governance/templates/roles/assignments.html
-msgid "Held by the Circle Lead"
-msgstr "Vom Circle Lead besetzt"
+msgid "Held by the Circle Leads"
+msgstr "Von den Circle Leads besetzt"
 
 #: governance/roles/browser.py
 msgid "Core roles and elected roles"
 msgstr "Kernrollen und gewählte Rollen"
 
 #: governance/roles/browser.py
-msgid "Unassigned (held by the Circle Lead)"
-msgstr "Nicht besetzt (beim Circle Lead)"
+msgid "Unassigned (held by the Circle Leads)"
+msgstr "Nicht besetzt (bei den Circle Leads)"
 
 #: governance/roles/browser.py governance/roles/constitution.py
 msgid "Circle Lead"
@@ -1211,8 +1211,8 @@ msgid "Strategy of %(circle)s"
 msgstr "Strategie von %(circle)s"
 
 #: governance/roles/editing.py
-msgid "The Circle Lead sets the strategy outside governance."
-msgstr "Der Circle Lead legt die Strategie ausserhalb der Governance fest."
+msgid "The Circle Leads set the strategy outside governance."
+msgstr "Die Circle Leads legen die Strategie ausserhalb der Governance fest."
 
 #: governance/roles/editing.py
 #, python-format
@@ -2255,6 +2255,11 @@ msgstr "gewählt bis %(date)s"
 msgid "Nobody"
 msgstr "Niemand"
 
+#: governance/templates/roles/_holders.html
+#: governance/templates/roles/assignments.html
+msgid "Held by the super-circle's Circle Leads"
+msgstr "Von den Circle Leads des übergeordneten Kreises besetzt"
+
 #: governance/templates/roles/_tree_list.html
 msgid "your role"
 msgstr "deine Rolle"
@@ -2316,8 +2321,8 @@ msgid "Held by"
 msgstr "Besetzt durch"
 
 #: governance/templates/roles/governance.txt
-msgid "the Circle Lead"
-msgstr "Circle Lead"
+msgid "the Circle Leads"
+msgstr "die Circle Leads"
 
 #: governance/templates/roles/people.html
 msgid "Nobody holds a role yet."
@@ -2395,8 +2400,12 @@ msgstr[0] "%(days)s Tag"
 msgstr[1] "%(days)s Tage"
 
 #: governance/templates/roles/role_detail.html
-msgid "the Circle Lead (by default)"
-msgstr "Circle Lead (standardmässig)"
+msgid "the super-circle's Circle Leads (by default)"
+msgstr "die Circle Leads des übergeordneten Kreises (standardmässig)"
+
+#: governance/templates/roles/role_detail.html
+msgid "the Circle Leads (by default)"
+msgstr "die Circle Leads (standardmässig)"
 
 #: governance/templates/roles/role_detail.html
 msgid "New proposal"

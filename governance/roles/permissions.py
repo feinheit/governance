@@ -27,15 +27,52 @@ def holds_core_role(user, circle, core_role):
     )
 
 
+def circle_leads(circle):
+    """The circle's Circle Leads: the holders of its Circle Lead role, while
+    nobody holds it those of the super-circle (1.4.2: its Circle Leads lead
+    the unfilled role, and so its inner circle), recursively. The anchor
+    circle has none unless assigned (1.4)."""
+    from governance.accounts.models import User
+
+    while circle is not None:
+        leads = User.objects.active().filter(
+            pk__in=Assignment.objects
+            .current()
+            .filter(role__circle=circle, role__core_role=LEAD, role__archived_on=None)
+            .values("user")
+        )
+        if circle.circle_id is None or leads.exists():
+            return leads
+        circle = circle.circle
+    return User.objects.none()
+
+
+def role_leads(role):
+    """Who fills a role: its holders, while nobody holds it its circle's
+    Circle Leads (1.4.2)"""
+    from governance.accounts.models import User
+
+    holders = User.objects.active().filter(
+        pk__in=Assignment.objects.current().filter(role=role).values("user")
+    )
+    if holders.exists() or role.circle is None:
+        return holders
+    return circle_leads(role.circle)
+
+
+def is_circle_lead(user, circle):
+    return circle is not None and circle_leads(circle).filter(pk=user.pk).exists()
+
+
 def can_lead(user, circle):
-    """What the circle's Circle Lead may do in the app
+    """What the circle's Circle Leads may do in the app
 
     The Secretary stands in, although the constitution doesn't give them
     these rights.
     """
     return circle is not None and (
         user.is_admin
-        or holds_core_role(user, circle, LEAD)
+        or is_circle_lead(user, circle)
         or holds_core_role(user, circle, SECRETARY)
     )
 
@@ -53,20 +90,22 @@ def can_assign(user, role):
 
 def members(circle):
     """Members of a circle hold one of its roles (also of its sub-circles,
-    whose Circle Leads and Circle Reps hold the sub-circle's role)"""
+    whose Circle Leads and Circle Reps hold the sub-circle's role), and its
+    Circle Leads (also those of the super-circle standing in)"""
     from governance.accounts.models import User
 
     if not circle.is_circle:
         # A role's inner circle, before it has roles (constitution 1.3.1):
-        # its holders
-        return User.objects.active().filter(
-            pk__in=Assignment.objects.current().filter(role=circle).values("user")
-        )
+        # its holders, while nobody holds it its circle's Circle Leads (1.4.2)
+        return role_leads(circle)
     return User.objects.active().filter(
-        pk__in=Assignment.objects
-        .current()
-        .filter(role__circle=circle, role__archived_on=None)
-        .values("user")
+        Q(
+            pk__in=Assignment.objects
+            .current()
+            .filter(role__circle=circle, role__archived_on=None)
+            .values("user")
+        )
+        | Q(pk__in=circle_leads(circle).values("pk"))
     )
 
 
@@ -84,15 +123,15 @@ def proposer_roles(user, circle):
     the Circle Lead isn't eligible for it.
     """
     if not circle.is_circle:
-        # Adding roles inside the role: its holders, for the role itself
-        return Role.objects.active().filter(
-            pk=circle.pk,
-            pk__in=Assignment.objects.current().filter(user=user).values("role"),
-        )
+        # Adding roles inside the role: its holders (or Circle Leads), for
+        # the role itself
+        if not role_leads(circle).filter(pk=user.pk).exists():
+            return Role.objects.none()
+        return Role.objects.active().filter(pk=circle.pk)
     roles = Role.objects.active().filter(circle=circle)
     held = Assignment.objects.current().filter(user=user).values("role")
     condition = Q(pk__in=held)
-    if holds_core_role(user, circle, LEAD):
+    if is_circle_lead(user, circle):
         condition |= ~Q(pk__in=Assignment.objects.current().values("role")) & ~Q(
             core_role=REP
         )

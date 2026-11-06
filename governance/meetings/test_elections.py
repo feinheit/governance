@@ -114,7 +114,7 @@ class ElectionsTest(TestCase):
             {"role": self.rep.pk, "user": eve.pk, "term_ends_on": "2027-12-31"},
             follow=True,
         )
-        self.assertContains(response, "The Circle Lead can&#x27;t be the Circle Rep.")
+        self.assertContains(response, "A Circle Lead can&#x27;t be the Circle Rep.")
         Assignment.objects.create(
             role=Role.objects.create(name="Cook", circle=self.kitchen), user=self.bob
         )

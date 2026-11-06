@@ -4,17 +4,20 @@ Some things change without governance:
 
 | What | Who |
 | --- | --- |
-| Assignments and focus ("Assign" on the role's page) | Circle Lead |
-| The circle's strategy | Circle Lead |
-| Metrics | Circle Lead |
+| Assignments and focus ("Assign" on the role's page) | Circle Leads |
+| The circle's strategy | Circle Leads |
+| Metrics | Circle Leads |
 | Checklist items and links | everybody |
 | Policies of a domain | whoever holds the role with the domain |
 | Settings (deadline for async proposals, roles elected by policy) | Secretary |
 
-- The Circle Lead of a sub-circle is assigned by the Circle Lead of the
-  circle above. Elected roles are elected, not assigned.
-- Whoever wants to give up a role turns to the Circle Lead.
-- The secretary may do everything in the tool the Circle Lead may, so
+- A circle may have several Circle Leads, each of them may do all of
+  this. The Circle Leads of a sub-circle are assigned by the Circle Leads
+  of the circle above; while nobody leads a sub-circle, the Circle Leads
+  of the circle above lead it (constitution 1.4.2). Elected roles are
+  elected, not assigned.
+- Whoever wants to give up a role turns to the Circle Leads.
+- The secretary may do everything in the tool the Circle Leads may, so
   that there's a stand-in.
 - The settings implement what the circle's policies define.
 - The tool records all these changes.

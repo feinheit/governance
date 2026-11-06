@@ -38,7 +38,8 @@ anstehende Wahlen.
 
 Eine **Rolle** zeigt Purpose, Accountabilities, Domains, wer sie hat (mit
 Fokus und Amtszeit), ihre Policies, Checklisten, Kennzahlen und Links.
-Unbesetzte Rollen hat der Circle Lead, ausser dem Circle Rep.
+Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
+unbesetzten Circle Lead die des übergeordneten Kreises.
 
 **Deine Personenseite**, die Startseite, zeigt deine Rollen, deine Entwürfe und Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine

@@ -46,7 +46,7 @@ def strategy(request, pk):
         "generic/object_form.html",
         {
             "title": gettext("Strategy of %(circle)s") % {"circle": role},
-            "help": gettext("The Circle Lead sets the strategy outside governance."),
+            "help": gettext("The Circle Leads set the strategy outside governance."),
             "form": form,
             "cancel_url": role.get_absolute_url(),
         },

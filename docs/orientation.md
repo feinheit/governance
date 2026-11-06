@@ -37,7 +37,8 @@ elections.
 
 A **role** shows its purpose, accountabilities, domains, who holds it
 (with focus and term), its policies, checklists, metrics and links.
-Unfilled roles are held by the Circle Lead, except the Circle Rep.
+Unfilled roles are held by the Circle Leads, except the Circle Rep; an
+unfilled Circle Lead by those of the circle above.
 
 **Your page**, the start page, shows your roles, your drafts and tensions, proposals
 waiting for your response, your meetings and your settings: mails and

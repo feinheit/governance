@@ -40,7 +40,7 @@
           </li>
         {% empty %}
           <li class="list-group-item text-body-secondary">
-            {% if role.core_role == "lead" or role.core_role == "rep" %}{% translate "Nobody" %}{% else %}{% translate "Held by the Circle Lead" %}{% endif %}
+            {% if role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}{% translate "Nobody" %}{% elif role.core_role == "lead" %}{% translate "Held by the super-circle's Circle Leads" %}{% else %}{% translate "Held by the Circle Leads" %}{% endif %}
           </li>
         {% endfor %}
       </ul>

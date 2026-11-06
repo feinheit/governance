@@ -17,9 +17,9 @@ from governance.history.update import update_today
 from governance.meetings.access import can_run
 from governance.meetings.models import Election, Meeting
 from governance.roles.assignments import end_assignment, sync_circle_holders
-from governance.roles.constitution import FACILITATOR, LEAD, REP, SECRETARY
+from governance.roles.constitution import FACILITATOR, REP, SECRETARY
 from governance.roles.models import Assignment, Role
-from governance.roles.permissions import holds_core_role, members
+from governance.roles.permissions import is_circle_lead, members
 
 
 ELECTED = [FACILITATOR, SECRETARY, REP]
@@ -111,10 +111,10 @@ class ElectionForm(ModelForm):
             role
             and user
             and role.core_role == REP
-            and holds_core_role(user, self.circle, LEAD)
+            and is_circle_lead(user, self.circle)
         ):
             # Constitution 5.1.1
-            self.add_error("user", _("The Circle Lead can't be the Circle Rep."))
+            self.add_error("user", _("A Circle Lead can't be the Circle Rep."))
         return data
 
 
