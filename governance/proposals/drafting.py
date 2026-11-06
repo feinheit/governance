@@ -649,6 +649,14 @@ class CircleRemoveForm(Form):
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
+        # Nothing to choose: say so instead of an empty list
+        empty = {
+            "roles": _("%(circle)s has no roles besides its core roles."),
+            "policies": _("%(circle)s has no policies."),
+        }
+        for name, text in empty.items():
+            if not self.fields[name].queryset.exists():
+                self.fields[name].help_text = text % {"circle": circle}
 
 
 def circle_remove(request, pk, key):

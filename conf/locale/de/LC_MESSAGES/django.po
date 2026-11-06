@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:29+0100\n"
+"POT-Creation-Date: 2026-11-06 14:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -824,6 +824,16 @@ msgstr "Rollen, die nach %(circle)s verschoben werden"
 #, python-format
 msgid "Policies to move to %(circle)s"
 msgstr "Policies, die nach %(circle)s verschoben werden"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "%(circle)s has no roles besides its core roles."
+msgstr "%(circle)s hat ausser den Kernrollen keine Rollen."
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "%(circle)s has no policies."
+msgstr "%(circle)s hat keine Policies."
 
 #: governance/proposals/drafting.py
 #, python-format

@@ -490,6 +490,18 @@ class DraftingTest(TestCase):
                 403,
             )
 
+    def test_remove_circle_without_policies(self):
+        """The form says when the circle has nothing of a kind to move"""
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        proposal = self.draft()
+        response = self.client.get(
+            f"/proposals/{proposal.pk}/roles/{bakery.pk}/remove-circle/"
+        )
+        self.assertContains(response, "Bakery has no policies.")
+        self.assertNotContains(response, "Bakery has no roles")
+
     def test_remove_circle_keeps_moves(self):
         """The form starts with what the proposal moves out of the circle
         already: saving it again doesn't drop those moves"""
