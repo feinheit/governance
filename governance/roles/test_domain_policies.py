@@ -51,6 +51,12 @@ class DomainPoliciesTest(TestCase):
             )
         self.assertRedirects(response, self.admin.get_absolute_url())
         policy = Policy.objects.get()
+        # The domain links to its policies (frontend/open_details.js)
+        response = self.client.get(self.admin.get_absolute_url())
+        self.assertContains(response, f'href="#policy-{policy.pk}"')
+        self.assertContains(response, f'data-open-details="policy-{policy.pk}"')
+        self.assertContains(response, f'id="policy-{policy.pk}"')
+        self.assertContains(response, "1 policy")
         self.assertEqual((policy.role, policy.domain), (self.admin, self.servers))
         proposal = Proposal.objects.get()
         self.assertEqual(

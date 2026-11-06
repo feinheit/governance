@@ -37,7 +37,8 @@ elections.
 
 A **role** shows its purpose, accountabilities, domains, who holds it
 (with focus and term, the Circle Leads assign and remove here), its policies and those of its circles, which
-apply to it too, checklists, metrics and links.
+apply to it too, checklists, metrics and links. A domain with policies
+links to them ("2 policies"), which opens them.
 Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.
 

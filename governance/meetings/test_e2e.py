@@ -17,7 +17,7 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
-from governance.roles.models import Assignment, ChecklistItem, Policy, Role
+from governance.roles.models import Assignment, ChecklistItem, Domain, Policy, Role
 
 
 try:
@@ -285,6 +285,20 @@ class MeetingE2ETest(LiveServerTestCase):
         )
         page.locator("#modal button[type=submit]").click()
         page.wait_for_selector("#meeting >> text=Short and sweet")
+        self.assertEqual(self.errors, [])
+
+    def test_domain_policies(self):
+        """A domain's link opens its policies and scrolls there"""
+        domain = Domain.objects.create(role=self.cook, text="The stove")
+        for title in ["Gas", "Cleaning"]:
+            Policy.objects.create(role=self.cook, domain=domain, title=title)
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        self.assertEqual(page.locator("details[open]").count(), 0)
+        page.locator("a[data-open-details]", has_text="2 policies").click()
+        page.wait_for_function(
+            "document.querySelectorAll('details[id^=policy-][open]').length === 2"
+        )
         self.assertEqual(self.errors, [])
 
     def test_holders(self):

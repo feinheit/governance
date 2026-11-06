@@ -111,6 +111,11 @@ def role_detail(request, pk):
         pk=pk,
     )
     mark_reps([role])
+    policies = list(role.policies.active().select_related("domain"))
+    domains = list(role.domains.all())
+    for domain in domains:
+        # Linked to in the domains, opened there (frontend/open_details.js)
+        domain.role_policies = [p for p in policies if p.domain_id == domain.pk]
     context = {
         "role": role,
         "ancestors": role.ancestors(),
@@ -128,8 +133,8 @@ def role_detail(request, pk):
         and not role.core_role
         and proposer_roles(request.user, role).exists(),
         "accountabilities": role.accountabilities.all(),
-        "domains": role.domains.all(),
-        "policies": role.policies.active().select_related("domain"),
+        "domains": domains,
+        "policies": policies,
         # A role's policies for its domains, without governance (1.3.2)
         "can_change_domain_policies": can_change_domain_policies(request.user, role),
         # Policies apply in sub-circles unless they say otherwise (5.2.1),

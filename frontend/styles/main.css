@@ -434,6 +434,10 @@ a.wb-row-title:hover {
 }
 
 /* Collapsible list items, e.g. policies */
+.wb-details {
+  scroll-margin-top: 1rem;
+}
+
 .wb-details > summary {
   cursor: pointer;
 }

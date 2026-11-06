@@ -38,7 +38,8 @@ anstehende Wahlen.
 
 Eine **Rolle** zeigt Purpose, Accountabilities, Domains, wer sie hat (mit
 Fokus und Amtszeit, die Circle Leads weisen hier zu und entfernen), ihre Policies und die ihrer Kreise, die auch für sie
-gelten, Checklisten, Metriken und Links.
+gelten, Checklisten, Metriken und Links. Eine Domain mit Policies
+verlinkt sie ("2 Policies") und klappt sie auf.
 Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
 unbesetzten Circle Lead die des übergeordneten Kreises.
 

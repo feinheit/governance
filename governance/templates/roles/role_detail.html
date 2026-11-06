@@ -101,7 +101,14 @@
               </li>
             {% endfor %}
             {% for domain in domains %}
-              <li class="list-group-item wb-markdown">{{ domain.text|markdown }}</li>
+              <li class="list-group-item wb-row">
+                <div class="wb-row-main wb-markdown">{{ domain.text|markdown }}</div>
+                {% if domain.role_policies %}<a
+                    class="small flex-shrink-0"
+                    href="#policy-{{ domain.role_policies.0.pk }}"
+                    data-open-details="{% for policy in domain.role_policies %}policy-{{ policy.pk }}{% if not forloop.last %} {% endif %}{% endfor %}"
+                  >{% blocktranslate count count=domain.role_policies|length %}{{ count }} policy{% plural %}{{ count }} policies{% endblocktranslate %}</a>{% endif %}
+              </li>
             {% endfor %}
           </ul>
         </section>
@@ -131,7 +138,7 @@
           {% endif %}
           <div class="list-group list-group-flush">
             {% for policy in policies %}
-              <details class="list-group-item wb-details">
+              <details class="list-group-item wb-details" id="policy-{{ policy.pk }}">
                 <summary>
                   <span class="wb-row-title d-inline">{{ policy }}</span>
                   {% if policy.domain %}<span class="wb-row-meta d-inline ms-2">{% translate "domain" %}:
