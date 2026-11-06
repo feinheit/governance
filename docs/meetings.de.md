@@ -49,12 +49,26 @@ werden seine Circle Leads.
 
 ## Tactical Meeting
 
-- **Regelmässig**: Facilitator oder Secretary startet es auf der Seite des
-  Kreises, alle Rollen des Kreises sind eingeladen.
+- **Regelmässig**: "Tactical Meeting starten" auf der Seite des Kreises,
+  das darf jedes Mitglied; alle Rollen des Kreises sind eingeladen.
 - **Ad hoc**: "Tactical Meeting einberufen" auf einer Rollenseite, mit
   beliebigen Rollen, auch aus anderen Kreisen.
 
-Ablauf: Check-in, Checklisten, Kennzahlen, Updates, Agenda,
-Abschluss. Zu jedem Agendapunkt hält der Secretary das Ergebnis fest, eine
-nächste Aktion oder ein Projekt, und den Link zur Aufgabe, die dafür im
-Aufgaben-Tool erstellt wurde.
+Ablauf: Check-in, Checklisten, Kennzahlen, Updates, Agenda, Abschluss.
+Zu jedem Agendapunkt kann der Secretary ein "Ergebnis" und einen "Link"
+festhalten, "Speichern und erledigt" oder einfach "Erledigt":
+
+- **Nichts** ist in Ordnung: viele Punkte enden mit einer Information
+  oder einer kurzen Diskussion.
+- **Nächste Aktionen und Projekte** bleiben im Aufgaben-Tool, das Tool
+  verfolgt sie nicht. Mehrere davon, z.B. eine für alle, die eine Rolle
+  innehaben, sind ein Link auf die To-do-Liste, die sie enthält.
+- **Eine Governance-Spannung** gehört in ein Governance Meeting: wer sie
+  hat, notiert sie als Spannung ("Neuer Vorschlag" auf der Seite des Kreises, siehe [Vorschläge](proposals.de.md))
+  oder bringt sie in die Agenda des nächsten Governance Meetings. Das
+  Tool kann keine Spannungen für andere erfassen; ein To-do erinnert sie
+  wenn nötig.
+
+Die Mail mit den Ergebnissen am Ende listet die Punkte mit Ergebnis oder
+Link. Aus GlassFrog importierte Tactical Meetings haben nur ihre
+Agendapunkte, GlassFrogs Aktionen und Projekte werden nicht importiert.

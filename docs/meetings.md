@@ -48,12 +48,25 @@ makes it a circle, with them as its Circle Leads.
 
 ## Tactical meeting
 
-- **Regular**: the facilitator or the secretary starts it on the circle's
-  page, all of the circle's roles are invited.
+- **Regular**: "Start a tactical meeting" on the circle's page, every
+  member may do that; all of the circle's roles are invited.
 - **Ad hoc**: "Call a tactical meeting" on a role's page, with any roles,
   also from other circles.
 
 Steps: check-in, checklists, metrics, updates, agenda, closing. For each
-agenda item the secretary records the outcome, a next action or a
-project, and the link to the task created for it in the task management
-tool.
+agenda item the secretary may record an "Outcome" and a "Link", "Save and
+done" or just "Done":
+
+- **Nothing** is fine: many items end with information or a short
+  discussion.
+- **Next actions and projects** stay in the task management tool, the
+  tool doesn't track them. Several of them, e.g. one for everybody
+  holding a role, are one link to the to-do list containing them.
+- **A governance tension** goes into a governance meeting: its owner
+  writes it down in a tension ("New proposal" on the circle's page, see [proposals](proposals.md))
+  or brings it to the next governance meeting's agenda. The tool can't
+  add tensions for somebody else; a to-do reminds them if needed.
+
+The outputs mail at the end lists the items with an outcome or a link.
+Tactical meetings imported from GlassFrog have their agenda items only,
+GlassFrog's actions and projects aren't imported.

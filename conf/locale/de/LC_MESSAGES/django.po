@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 23:18+0100\n"
+"POT-Creation-Date: 2026-11-06 08:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1726,8 +1726,8 @@ msgid "Outcome"
 msgstr "Ergebnis"
 
 #: governance/templates/meetings/_current.html
-msgid "What was decided or requested, e.g. a next action or a project."
-msgstr "Was entschieden oder verlangt wurde, z.B. eine nächste Aktion oder ein Projekt."
+msgid "Optional: what was decided or requested, e.g. next actions or a project. Governance tensions are captured by their owners."
+msgstr "Optional: was entschieden oder verlangt wurde, z.B. nächste Aktionen oder ein Projekt. Governance-Spannungen erfassen die, die sie haben, selbst."
 
 #: governance/templates/meetings/_current.html
 msgid "Link"

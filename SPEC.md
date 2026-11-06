@@ -311,13 +311,18 @@ super-circle. Due elections (within 30 days, or nobody elected) show on
 the circle page and the Secretary's person page; Secretaries get a mail
 on Mondays.
 
-**Tactical meetings** (article 3): the circle's Facilitator or Secretary
+**Tactical meetings** (article 3): any circle member
 starts a regular one (all roles of the circle invited, attendees its
 members); anybody calls an ad-hoc one from a role page, inviting roles of
 any circle. Steps: check-in, checklist review, metrics review (the
 invited roles' entries, for regular ones also the circle's own, not a
-sub-circle's own), progress updates, agenda, processing tensions with
-their outcome and an optional link (e.g. the task created), closing.
+sub-circle's own), progress updates, agenda, processing tensions,
+closing. An item may record an outcome and a link, both optional: many
+items end with information, next actions and projects live in the task
+management tool (several of them are one link to a to-do list), and a
+governance tension is captured by its owner as a tension of their own
+(the app doesn't add tensions for others). GlassFrog's actions and
+projects aren't imported.
 Open meetings are listed on the attendees' person pages.
 
 ## 5. Notifications
