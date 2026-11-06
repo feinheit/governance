@@ -160,6 +160,19 @@ class ProcessingTest(TestCase):
                     self.assertEqual(response.status_code, 403)
         self.assertFalse(Proposal.objects.exclude(pk=self.proposal.pk).exists())
 
+    def test_outputs_end_with_the_meeting(self):
+        """A proposal still waiting after the meeting and withdrawn later isn't
+        one of its outputs"""
+        from governance.meetings.activity import end_meeting
+        from governance.meetings.outputs import meeting_outputs
+
+        end_meeting(self.meeting)
+        self.client.force_login(self.eve)
+        self.client.post(f"/proposals/{self.proposal.pk}/withdraw/")
+        self.proposal.refresh_from_db()
+        self.assertEqual(self.proposal.status, Proposal.WITHDRAWN)
+        self.assertEqual(meeting_outputs(self.meeting)["withdrawn"], [])
+
     def test_only_open_proposals_with_changes_are_adopted(self):
         """A proposal withdrawn by its proposer meanwhile, or a tension
         without changes, isn't adopted in the meeting"""
