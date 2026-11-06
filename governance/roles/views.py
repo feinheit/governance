@@ -26,7 +26,7 @@ from governance.roles.permissions import (
     can_end_assignment,
     can_start_meeting,
     circle_leads,
-    is_member,
+    proposer_roles,
 )
 
 
@@ -121,10 +121,11 @@ def role_detail(request, pk):
         "can_edit_checklist": can_edit_items(request.user, role, ChecklistItem),
         "can_edit_links": can_edit_items(request.user, role, Link),
         "links": role.links.all(),
-        # In a circle its members, in a role its holders (adding roles inside)
+        # From a role of theirs in the circle, in a role its holders (adding
+        # roles inside), like proposal_create(); admins too only then
         "can_propose": not role.archived_on
         and not role.core_role
-        and (request.user.is_admin or is_member(request.user, role)),
+        and proposer_roles(request.user, role).exists(),
         "accountabilities": role.accountabilities.all(),
         "domains": role.domains.all(),
         "policies": role.policies.active().select_related("domain"),

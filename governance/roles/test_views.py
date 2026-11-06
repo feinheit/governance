@@ -106,6 +106,17 @@ class ViewsTest(TestCase):
         response = self.client.get(facilitator.get_absolute_url())
         self.assertNotContains(response, "as far as no role or process")
 
+    def test_new_proposal_only_for_proposers(self):
+        """Admins outside the circle don't get "New proposal", which would
+        refuse them"""
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        self.user.is_admin = True
+        self.user.save()
+        self.assertNotContains(
+            self.client.get(kitchen.get_absolute_url()), "New proposal"
+        )
+
     def test_unassigned_role_held_by_the_circle_lead(self):
         anchor = Role.objects.create(name="Example Ltd", is_circle=True)
         kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
