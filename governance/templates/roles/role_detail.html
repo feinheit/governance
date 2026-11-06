@@ -33,8 +33,9 @@
           {% button_class can_change_settings %}
           href="{% url 'role_settings' role.pk %}"
           data-modal
-        >{% translate "Settings" %}</a>{% endif %}
-      <a class="btn btn-sm btn-quiet" href="{% url 'role_history' role.pk %}">{% translate "History" %}</a>
+        >{% icon "gear" %} {% translate "Settings" %}</a>{% endif %}
+      <a class="btn btn-sm btn-quiet" href="{% url 'role_history' role.pk %}">{% icon "clock-history" %}
+        {% translate "History" %}</a>
       {% if role.is_circle and not role.archived_on %}<a
           class="btn btn-sm btn-quiet d-none d-sm-inline-block"
           href="{% url 'circle_browser' %}?circle={{ role.pk }}"
@@ -56,10 +57,10 @@
             <h2 class="h6 text-body-secondary mt-3 d-flex align-items-center gap-2">
               {% translate "Strategy" %}
               {% if can_edit_strategy %}<a
-                  {% button_class can_edit_strategy %}
+                  {% button_class can_edit_strategy title=_("Edit") %}
                   href="{% url 'role_strategy' role.pk %}"
                   data-modal
-                >{% translate "Edit" %}</a>{% endif %}
+                >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>{% endif %}
             </h2>
             <div class="wb-markdown wb-description">{{ role.strategy|markdown|default:"–" }}</div>
           {% endif %}
@@ -149,15 +150,15 @@
                   <a class="small" href="{{ policy.get_absolute_url }}">{% translate "Details and history" %}</a>
                   {% if can_change_domain_policies %}
                     <a
-                      {% button_class can_change_domain_policies %}
+                      {% button_class can_change_domain_policies title=_("Change") %}
                       href="{% url 'domain_policy' role.pk policy.pk %}"
                       data-modal
-                    >{% translate "Change" %}</a>
+                    >{% icon "pencil" %}<span class="visually-hidden">{% translate "Change" %}</span></a>
                     <a
-                      {% button_class can_change_domain_policies "btn-destructive" %}
+                      {% button_class can_change_domain_policies "btn-destructive" title=_("Remove") %}
                       href="{% url 'domain_policy_remove' role.pk policy.pk %}"
                       data-modal
-                    >{% translate "Remove" %}</a>
+                    >{% icon "trash" %}<span class="visually-hidden">{% translate "Remove" %}</span></a>
                   {% endif %}
                 </div>
               </details>
@@ -169,7 +170,7 @@
                 {% button_class can_change_domain_policies %}
                 href="{% url 'domain_policy_add' role.pk %}"
                 data-modal
-              >{% translate "Add a policy for its domains" %}</a>
+              >{% icon "plus-lg" %} {% translate "Add a policy for its domains" %}</a>
               <div class="form-text">
                 {% translate "The role regulates its domains itself, without a governance process. Everybody affected is informed." %}
               </div>
@@ -239,12 +240,12 @@
                     {% button_class can_edit_checklist %}
                     href="{% url 'role_checklist_add' role.pk %}"
                     data-modal
-                  >{% translate "Add a checklist item" %}</a>{% endif %}
+                  >{% icon "plus-lg" %} {% translate "Add a checklist item" %}</a>{% endif %}
                 {% if can_edit_metrics %}<a
                     {% button_class can_edit_metrics %}
                     href="{% url 'role_metrics_add' role.pk %}"
                     data-modal
-                  >{% translate "Add a metric" %}</a>{% endif %}
+                  >{% icon "plus-lg" %} {% translate "Add a metric" %}</a>{% endif %}
               </li>
             {% endif %}
           </ul>
@@ -267,12 +268,13 @@
                       class="btn btn-sm btn-quiet"
                       href="{% url 'role_item' 'links' link.pk %}"
                       data-modal
-                    >{% translate "Edit" %}</a>
+                      title="{% translate "Edit" %}"
+                    >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>
                     <a
-                      {% button_class can_edit_links "btn-destructive" %}
+                      {% button_class can_edit_links "btn-destructive" title=_("Delete") %}
                       href="{% url 'role_item_delete' 'links' link.pk %}"
                       data-modal
-                    >{% translate "Delete" %}</a>
+                    >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>
                   </div>
                 {% endif %}
               </li>
@@ -287,7 +289,7 @@
                   class="btn btn-sm btn-quiet"
                   href="{% url 'role_links_add' role.pk %}"
                   data-modal
-                >{% translate "Add a link" %}</a>
+                >{% icon "plus-lg" %} {% translate "Add a link" %}</a>
               </li>
             {% endif %}
           </ul>

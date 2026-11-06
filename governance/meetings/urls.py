@@ -17,6 +17,7 @@ urlpatterns = [
     path("meetings/<int:pk>/agenda/add/", views.agenda_add, name="agenda_add"),
     path("agenda/<int:pk>/remove/", views.agenda_remove, name="agenda_remove"),
     path("agenda/<int:pk>/move/", views.agenda_move, name="agenda_move"),
+    path("meetings/<int:pk>/agenda/order/", views.agenda_order, name="agenda_order"),
     path("agenda/<int:pk>/process/", processing.item_process, name="item_process"),
     path("agenda/<int:pk>/step/", processing.item_step, name="item_step"),
     path("agenda/<int:pk>/complete/", processing.item_complete, name="item_complete"),

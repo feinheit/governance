@@ -3,6 +3,7 @@
 // except the circle browser (Preact and d3), loaded only on its page
 import "./styles/bootstrap.scss"
 import "./styles/main.css"
+import "./styles/icons.css"
 
 import "./theme.js"
 import "./mentions.js"

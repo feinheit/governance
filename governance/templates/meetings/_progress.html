@@ -45,7 +45,7 @@
           <a
             class="btn btn-sm btn-quiet"
             href="?{% if shown_step != meeting.step %}step={{ shown_step }}&amp;{% endif %}earlier={{ earlier_more }}#earlier-outcomes"
-          >{% translate "Show earlier meetings" %}</a>
+          >{% icon "chevron-down" %} {% translate "Show earlier meetings" %}</a>
         </li>
       {% endif %}
     </ul>

@@ -43,6 +43,7 @@
               <form method="post" action="{% url 'meeting_secretary' meeting.pk %}" class="d-inline">
                 {% csrf_token %}
                 <button type="submit" {% button_class can_take_over size="btn-sm py-0" %}>
+                  {% icon "person-check" %}
                   {% translate "Take over" %}
                 </button>
               </form>
@@ -51,7 +52,7 @@
                 {% button_class can_take_over size="btn-sm py-0" %}
                 href="{% url 'meeting_secretary' meeting.pk %}"
                 data-modal
-              >{% translate "Take over" %}</a>
+              >{% icon "person-check" %} {% translate "Take over" %}</a>
             {% endif %}
           {% endif %}
         </div>
@@ -60,13 +61,16 @@
         <div class="wb-page-actions">
           <form method="post" action="{% url 'meeting_end' meeting.pk %}">
             {% csrf_token %}
-            <button type="submit" {% button_class can_run %}>{% translate "End the meeting" %}</button>
+            <button type="submit" {% button_class can_run %}>
+              {% icon "stop-fill" %}
+              {% translate "End the meeting" %}
+            </button>
           </form>
           <a
             {% button_class can_run %}
             href="{% url 'meeting_update' meeting.pk %}"
             data-modal
-          >{% translate "Edit" %}</a>
+          >{% icon "pencil" %} {% translate "Edit" %}</a>
         </div>
       {% endif %}
     </div>

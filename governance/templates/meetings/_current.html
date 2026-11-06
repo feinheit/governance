@@ -9,7 +9,10 @@
     {% if can_run %}
       <form method="post" action="{% url 'item_complete' current.pk %}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-sm btn-quiet">{% translate "Done" %}</button>
+        <button type="submit" class="btn btn-sm btn-quiet">
+          {% icon "check-lg" %}
+          {% translate "Done" %}
+        </button>
       </form>
     {% endif %}
   </div>
@@ -126,13 +129,19 @@
           {% if can_run and proposal.status == "in_meeting" and proposal.instructions %}
             <form method="post" action="{% url 'item_adopt' current.pk %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-primary">{% translate "Adopt" %}</button>
+              <button type="submit" class="btn btn-sm btn-primary">
+                {% icon "check-circle" %}
+                {% translate "Adopt" %}
+              </button>
             </form>
           {% endif %}
           {% if can_run and proposal.status == "in_meeting" %}
             <form method="post" action="{% url 'item_discard' current.pk %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-destructive">{% translate "Discard" %}</button>
+              <button type="submit" class="btn btn-sm btn-destructive">
+                {% icon "x-circle" %}
+                {% translate "Discard" %}
+              </button>
             </form>
           {% endif %}
         </div>

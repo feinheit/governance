@@ -40,7 +40,8 @@ circle.
   published async, your drafts). "Remove" puts a proposal back: a draft
   stays yours, an async proposal keeps its deadline.
 - **Process**: the facilitator chooses an agenda item, the secretary
-  clicks "Process"; the steps of the
+  clicks it ("Process") and drags the items by their handles to reorder
+  them; the steps of the
   integrative decision-making process guide, but don't enforce anything.
 - **Proposal**: only the secretary captures it from a tension and changes
   it. "Discard" withdraws it (e.g. it isn't valid, or its proposer is

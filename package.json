@@ -7,6 +7,7 @@
     "@swc/helpers": "^0.5.23",
     "autoprefixer": "^10.6.2",
     "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.2",
     "css-loader": "^7.1.5",
     "d3-hierarchy": "^3.1.2",
     "htmx.org": "^4.0.1",
@@ -14,7 +15,8 @@
     "postcss-loader": "^8.2.1",
     "preact": "^11.1.1",
     "sass-embedded": "^1.107.1",
-    "sass-loader": "^17.1.0"
+    "sass-loader": "^17.1.0",
+    "sortablejs": "^1.15.7"
   },
   "prettier": {
     "semi": false

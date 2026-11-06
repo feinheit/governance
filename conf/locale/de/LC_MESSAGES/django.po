@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:18+0100\n"
+"POT-Creation-Date: 2026-11-06 16:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1913,6 +1913,10 @@ msgstr "Policies"
 #: governance/templates/meetings/_agenda.html
 msgid "Agenda"
 msgstr "Agenda"
+
+#: governance/templates/meetings/_agenda.html
+msgid "Drag to reorder"
+msgstr "Ziehen zum Umsortieren"
 
 #: governance/templates/meetings/_agenda.html
 msgid "completed"

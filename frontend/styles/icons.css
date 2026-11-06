@@ -1,0 +1,84 @@
+/* Bootstrap Icons (npm's bootstrap-icons, MIT): the font, and only the
+   icons in use ({% icon "name" %}, governance/templatetags/governance.py;
+   governance/test_icons.py checks that each has its class here). The
+   codepoints are in node_modules/bootstrap-icons/font/bootstrap-icons.json. */
+@font-face {
+  font-display: block;
+  font-family: "bootstrap-icons";
+  src: url("bootstrap-icons/font/fonts/bootstrap-icons.woff2") format("woff2");
+}
+
+.bi::before {
+  display: inline-block;
+  /* biome-ignore lint/a11y/useGenericFontNames: an icon font, no fallback makes sense */
+  font-family: "bootstrap-icons" !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: -0.125em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Beside a button's label */
+.btn .bi + span,
+.btn span + .bi {
+  margin-inline-start: 0.35em;
+}
+
+.bi-arrow-counterclockwise::before {
+  content: "\f117";
+}
+.bi-arrow-down::before {
+  content: "\f128";
+}
+.bi-arrow-up::before {
+  content: "\f148";
+}
+.bi-check-circle::before {
+  content: "\f26b";
+}
+.bi-check-lg::before {
+  content: "\f633";
+}
+.bi-chevron-down::before {
+  content: "\f282";
+}
+.bi-clock-history::before {
+  content: "\f292";
+}
+.bi-gear::before {
+  content: "\f3e5";
+}
+.bi-grip-vertical::before {
+  content: "\f3fe";
+}
+.bi-pencil::before {
+  content: "\f4cb";
+}
+.bi-person-check::before {
+  content: "\f4d6";
+}
+.bi-person-plus::before {
+  content: "\f4dd";
+}
+.bi-play-fill::before {
+  content: "\f4f4";
+}
+.bi-plus-lg::before {
+  content: "\f64d";
+}
+.bi-stop-fill::before {
+  content: "\f592";
+}
+.bi-trash::before {
+  content: "\f5de";
+}
+.bi-x-circle::before {
+  content: "\f623";
+}
+.bi-x-lg::before {
+  content: "\f659";
+}

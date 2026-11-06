@@ -33,6 +33,13 @@ def by_frequency_filter(items):
     return by_frequency(items)
 
 
+@register.simple_tag
+def icon(name):
+    """A Bootstrap Icon (frontend/styles/icons.css lists those in use),
+    hidden from screen readers: the button's label or title says it"""
+    return format_html('<i class="bi bi-{}" aria-hidden="true"></i>', name)
+
+
 @register.filter
 def elevated(right):
     """Why somebody may do what the constitution leaves to others, a right
@@ -48,12 +55,15 @@ def elevated(right):
 
 
 @register.simple_tag
-def button_class(right, style="btn-quiet", size="btn-sm"):
+def button_class(right, style="btn-quiet", size="btn-sm", title=""):
     """The attributes of a button needing ``right``: marked (btn-elevated,
-    with the reason as its title) when the right is elevated(), else in
-    ``style``, e.g. btn-destructive"""
+    with the reason in its title) when the right is elevated(), else in
+    ``style``, e.g. btn-destructive; ``title``, e.g. of icon-only buttons"""
     if reason := elevated(right):
-        return format_html('class="btn {} btn-elevated" title="{}"', size, reason)
+        title = f"{title} – {reason}" if title else reason
+        style = "btn-elevated"
+    if title:
+        return format_html('class="btn {} {}" title="{}"', size, style, title)
     return format_html('class="btn {} {}"', size, style)
 
 

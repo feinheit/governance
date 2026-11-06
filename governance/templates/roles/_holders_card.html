@@ -17,15 +17,15 @@
         {% if can_end_assignment %}
           <div class="d-flex gap-1 flex-shrink-0 align-items-start">
             {% if can_assign %}<a
-                {% button_class can_assign %}
+                {% button_class can_assign title=_("Edit focus") %}
                 href="{% url 'assignment_update' assignment.pk %}?next={{ request.path|urlencode }}"
                 data-modal
-              >{% translate "Edit focus" %}</a>{% endif %}
+              >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit focus" %}</span></a>{% endif %}
             <a
-              {% button_class can_end_assignment "btn-destructive" %}
+              {% button_class can_end_assignment "btn-destructive" title=_("Remove") %}
               href="{% url 'assignment_end' assignment.pk %}?next={{ request.path|urlencode }}"
               data-modal
-            >{% translate "Remove" %}</a>
+            >{% icon "trash" %}<span class="visually-hidden">{% translate "Remove" %}</span></a>
           </div>
         {% endif %}
       </li>
@@ -47,7 +47,7 @@
           {% button_class can_assign %}
           href="{% url 'role_assignments' role.pk %}?next={{ request.path|urlencode }}"
           data-modal
-        >{% translate "Assign somebody" %}</a>
+        >{% icon "person-plus" %} {% translate "Assign somebody" %}</a>
       </li>
     {% endif %}
   </ul>

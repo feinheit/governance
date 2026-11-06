@@ -39,15 +39,15 @@
               </div>
               <div class="d-flex gap-1 flex-shrink-0 align-items-start">
                 {% if can_assign %}<a
-                    {% button_class right %}
+                    {% button_class right title=_("Edit focus") %}
                     href="{% url 'assignment_update' assignment.pk %}"
                     data-modal
-                  >{% translate "Edit focus" %}</a>{% endif %}
+                  >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit focus" %}</span></a>{% endif %}
                 <a
-                  {% button_class right "btn-destructive" %}
+                  {% button_class right "btn-destructive" title=_("Remove") %}
                   href="{% url 'assignment_end' assignment.pk %}"
                   data-modal
-                >{% translate "Remove" %}</a>
+                >{% icon "trash" %}<span class="visually-hidden">{% translate "Remove" %}</span></a>
               </div>
             </li>
           {% empty %}

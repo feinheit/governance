@@ -407,6 +407,47 @@ html:not(.js) .wb-show-more,
   background-color: var(--bs-tertiary-bg);
 }
 
+/* A row whose default action is a button (the agenda's "Process"): the
+   button covers the row like a title link */
+.wb-row-link button.wb-row-action {
+  position: static;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.wb-row-link button.wb-row-action:focus-visible::after {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: -2px;
+}
+
+.wb-row-link .wb-row-action::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* The agenda's drag handles (frontend/agenda.js), without JavaScript the
+   arrows (.wb-no-js) */
+.wb-drag-handle {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  margin-inline-end: -0.5rem;
+  color: var(--bs-secondary-color);
+  cursor: grab;
+  touch-action: none;
+}
+
+html:not(.js) .wb-drag-handle,
+.js .wb-no-js {
+  display: none;
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+}
+
 a.wb-row-title:hover {
   color: var(--bs-link-hover-color);
 }

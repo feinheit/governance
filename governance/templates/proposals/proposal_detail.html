@@ -54,12 +54,12 @@
           class="btn btn-sm btn-quiet"
           href="{% url 'proposal_update' proposal.pk %}"
           data-modal
-        >{% translate "Edit the tension" %}</a>
+        >{% icon "pencil" %} {% translate "Edit the tension" %}</a>
         <a
           class="btn btn-sm btn-destructive"
           href="{% url 'proposal_delete' proposal.pk %}"
           data-modal
-        >{% translate "Delete the draft" %}</a>
+        >{% icon "trash" %} {% translate "Delete the draft" %}</a>
       </div>
     {% elif can_draft_again %}
       <div class="wb-page-actions">
@@ -73,14 +73,17 @@
         {% if proposal.status == "published" %}
           <form method="post" action="{% url 'proposal_back_to_draft' proposal.pk %}" class="d-inline">
             {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-quiet">{% translate "Back to the draft" %}</button>
+            <button type="submit" class="btn btn-sm btn-quiet">
+              {% icon "arrow-counterclockwise" %}
+              {% translate "Back to the draft" %}
+            </button>
           </form>
         {% endif %}
         <a
           class="btn btn-sm btn-destructive"
           href="{% url 'proposal_withdraw' proposal.pk %}"
           data-modal
-        >{% translate "Withdraw" %}</a>
+        >{% icon "x-circle" %} {% translate "Withdraw" %}</a>
       </div>
     {% endif %}
   </div>

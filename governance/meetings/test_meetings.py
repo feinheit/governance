@@ -148,7 +148,25 @@ class MeetingsTest(TestCase):
         self.assertEqual((meeting.minutes, meeting.step, first.position), ("", "", 1))
         self.assertFalse(meeting.attendees.filter(pk=zoe.pk).exists())
 
-    def test_one_running_meeting_per_circle(self):
+    def test_agenda_order(self):
+        """The secretary drags the agenda's items into an order (the IDs in
+        their new order, unknown ones ignored, missing ones last)"""
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        items = [
+            AgendaItem.objects.create(meeting=meeting, label=label, position=n)
+            for n, label in enumerate(["Tea", "Cake", "Soup"], 1)
+        ]
+        url = f"/meetings/{meeting.pk}/agenda/order/"
+        self.client.post(url, {"ids": [items[2].pk, items[0].pk, 999999]})
+        self.assertEqual(
+            list(meeting.agenda_items.values_list("label", flat=True)),
+            ["Soup", "Tea", "Cake"],
+        )
+        self.client.force_login(self.eve)  # Following
+        self.assertEqual(self.client.post(url, {"ids": [items[1].pk]}).status_code, 403)
+
         self.client.force_login(self.bob)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
         meeting = Meeting.objects.get()

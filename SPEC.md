@@ -348,7 +348,9 @@ doesn't change anymore (`runnable_meeting()`).
 attendees add items while it runs (5.4.4): a tension in a few words, or a
 proposal (waiting for a meeting, published async ones, which ends their
 acceptance period, or their own drafts; removing the item puts them back,
-`AgendaItem.proposal_status`). The secretary processes items
+`AgendaItem.proposal_status`). The secretary processes items (clicking
+the row), orders them with drag handles (`agenda_order`, without
+JavaScript arrows)
 in any order; buttons for the six steps of integrative decision-making
 guide without enforcing them. Only the secretary amends, with the drafting
 controls in a panel, and captures a proposal from a tension. "Discard"

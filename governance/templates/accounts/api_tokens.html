@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load governance i18n %}
 {% block title %}{% translate "API tokens" %} – {{ block.super }}{% endblock %}
 
 {% block content %}
@@ -50,7 +50,7 @@
               class="btn btn-sm btn-destructive"
               href="{% url 'api_token_delete' token.pk %}"
               data-modal
-            >{% translate "Delete" %}</a>
+            >{% icon "trash" %} {% translate "Delete" %}</a>
           </li>
         {% empty %}
           <li class="list-group-item text-body-secondary">{% translate "No API tokens." %}</li>

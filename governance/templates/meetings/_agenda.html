@@ -1,8 +1,17 @@
-{% load i18n %}
+{% load governance i18n %}
 <div class="card-header"><h2 class="h6 mb-0">{% translate "Agenda" %}</h2></div>
-<ul class="list-group list-group-flush">
+{# The secretary drags the items by their handles (frontend/agenda.js), without JavaScript the arrows; clicking a row processes it #}
+<ul class="list-group list-group-flush" {% if can_run and meeting.is_running %}data-agenda-sortable{% endif %}>
   {% for item in agenda %}
-    <li class="list-group-item wb-row{% if item.pk == meeting.current_item_id %} wb-current{% endif %}">
+    <li
+      class="list-group-item wb-row{% if item.pk == meeting.current_item_id %} wb-current{% endif %}{% if item.can_process %} wb-row-link{% endif %}"
+      data-agenda-item="{{ item.pk }}"
+    >
+      {% if can_run and meeting.is_running %}<span
+          class="wb-drag-handle"
+          data-agenda-handle
+          title="{% translate 'Drag to reorder' %}"
+        >{% icon "grip-vertical" %}</span>{% endif %}
       <div class="wb-row-main">
         <span class="wb-row-title">
           {% if item.proposal %}<a
@@ -19,14 +28,17 @@
       </div>
       {% if not meeting.ended_at %}
         <div class="d-flex gap-1 flex-shrink-0">
-          {% if can_run and meeting.is_running and not item.is_completed and item.pk != meeting.current_item_id %}
+          {% if item.can_process %}
             <form method="post" action="{% url 'item_process' item.pk %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Process" %}</button>
+              {# Invisible, covering the row: clicking it processes the item #}
+              <button type="submit" class="wb-row-action" title="{% translate "Process" %}">
+                <span class="visually-hidden">{% translate "Process" %}</span>
+              </button>
             </form>
           {% endif %}
           {% if can_run %}
-            <form method="post" action="{% url 'agenda_move' item.pk %}">
+            <form method="post" action="{% url 'agenda_move' item.pk %}" class="wb-no-js">
               {% csrf_token %}
               <button
                 type="submit"
@@ -35,7 +47,7 @@
                 class="btn btn-sm btn-quiet"
                 title="{% translate 'Move up' %}"
               >
-                ↑
+                {% icon "arrow-up" %}<span class="visually-hidden">{% translate 'Move up' %}</span>
               </button>
               <button
                 type="submit"
@@ -44,14 +56,16 @@
                 class="btn btn-sm btn-quiet"
                 title="{% translate 'Move down' %}"
               >
-                ↓
+                {% icon "arrow-down" %}<span class="visually-hidden">{% translate 'Move down' %}</span>
               </button>
             </form>
           {% endif %}
           {% if item.can_remove %}
             <form method="post" action="{% url 'agenda_remove' item.pk %}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Remove" %}</button>
+              <button type="submit" class="btn btn-sm btn-quiet" title="{% translate "Remove" %}">
+                {% icon "x-lg" %}<span class="visually-hidden">{% translate "Remove" %}</span>
+              </button>
             </form>
           {% endif %}
         </div>
@@ -61,3 +75,6 @@
     <li class="list-group-item text-body-secondary">{% translate "Nothing on the agenda." %}</li>
   {% endfor %}
 </ul>
+{% if can_run and meeting.is_running %}
+  <form method="post" action="{% url 'agenda_order' meeting.pk %}" hidden data-agenda-order>{% csrf_token %}</form>
+{% endif %}

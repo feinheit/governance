@@ -425,6 +425,13 @@ def agenda_context(request, meeting):
     can_add = can_add_items(request.user, meeting)
     items = list(meeting.agenda_items.select_related("owner", "proposal"))
     for item in items:
+        # The secretary processes an item by clicking its row
+        item.can_process = (
+            runs
+            and meeting.is_running
+            and not item.is_completed
+            and item.pk != meeting.current_item_id
+        )
         item.can_remove = (
             can_add
             and (runs or item.owner_id == request.user.pk)
@@ -508,6 +515,26 @@ def agenda_remove(request, pk):
         proposal.save(update_fields=["status", "meeting"])
     item.delete()
     return redirect(item.meeting)
+
+
+@require_POST
+def agenda_order(request, pk):
+    """The secretary drags the agenda's items into an order (the agenda's
+    drag handles, frontend/agenda.js): their IDs in the new order, missing
+    ones keep their order after them"""
+    meeting = runnable_meeting(request, pk)
+    items = {item.pk: item for item in meeting.agenda_items.all()}
+    ids = [
+        int(value)
+        for value in request.POST.getlist("ids")
+        if value.isdigit() and int(value) in items
+    ]
+    order = [*dict.fromkeys(ids), *(pk for pk in items if pk not in ids)]
+    for position, item_pk in enumerate(order, 1):
+        if items[item_pk].position != position:
+            items[item_pk].position = position
+            items[item_pk].save(update_fields=["position"])
+    return redirect(meeting)
 
 
 @require_POST

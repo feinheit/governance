@@ -106,7 +106,7 @@ class MeetingE2ETest(LiveServerTestCase):
         page.locator("form[action$='/agenda/add/'] button[type=submit]").first.click()
         page.wait_for_selector("#agenda >> text=Bread")
         self.assertEqual(page.input_value("input[name=label]"), "")
-        page.locator("#agenda form[action$='/process/'] button").click()
+        page.locator("#agenda li.wb-row-link").first.click()  # Processing it
         page.locator("form[action$='/proposal/'] button").click()
         page.wait_for_selector(".wb-amend-area")
         self.assertSamePage()
@@ -166,6 +166,37 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertIsNone(page.evaluate("window.marker"))
         self.assertEqual(self.errors, [])
 
+    def test_agenda_dragging_and_processing(self):
+        """The secretary drags agenda items by their handles, clicking a row
+        processes it"""
+        for position, label in enumerate(["Tea", "Cake", "Soup"], 1):
+            AgendaItem.objects.create(
+                meeting=self.meeting, label=label, position=position
+            )
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        self.assertFalse(page.locator("#agenda .wb-no-js").first.is_visible())
+        soup = page.locator("#agenda [data-agenda-item]", has_text="Soup")
+        tea = page.locator("#agenda [data-agenda-item]", has_text="Tea")
+        soup.locator("[data-agenda-handle]").drag_to(
+            tea, target_position={"x": 20, "y": 5}
+        )
+        page.wait_for_function(
+            "document.querySelector('#agenda [data-agenda-item]').textContent.includes('Soup')"
+        )
+        self.assertEqual(
+            list(self.meeting.agenda_items.values_list("label", flat=True)),
+            ["Soup", "Tea", "Cake"],
+        )
+
+        cake = page.locator("#agenda [data-agenda-item]", has_text="Cake")
+        box = cake.bounding_box()
+        page.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+        page.wait_for_selector("#agenda .wb-current >> text=Cake")
+        self.meeting.refresh_from_db()
+        self.assertEqual(self.meeting.current_item.label, "Cake")
+        self.assertEqual(self.errors, [])
+
     def test_paused_notice(self):
         """Updates paused for longer than a moment (typing, something open):
         a notice says so until it continues"""
@@ -204,7 +235,7 @@ class MeetingE2ETest(LiveServerTestCase):
         page = self.page
         page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
         page.evaluate("window.marker = 1")
-        page.locator("#agenda form[action$='/process/'] button").click()
+        page.locator("#agenda li.wb-row-link").first.click()  # Processing it
         page.wait_for_selector(".wb-amend-area")
 
         # Moving the policy out of the bakery

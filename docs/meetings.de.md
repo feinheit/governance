@@ -40,7 +40,8 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   legt einen Vorschlag zurück: ein Entwurf bleibt deiner, ein asynchroner
   behält seine Frist.
 - **Behandeln**: der Facilitator wählt einen Agendapunkt, der Secretary
-  klickt "Behandeln"; die Schritte des
+  klickt ihn an ("Behandeln") und zieht die Punkte an ihren Griffen in
+  eine andere Reihenfolge; die Schritte des
   integrativen Entscheidungsprozesses leiten, erzwingen aber nichts.
 - **Vorschlag**: nur der Secretary hält ihn aus einer Spannung fest und
   ändert ihn. "Verwerfen" zieht ihn zurück (z.B. ist er nicht gültig,

@@ -10,12 +10,16 @@
   </div>
   {% if can_edit %}
     <div class="d-flex gap-1 flex-shrink-0">
-      <a {% button_class can_edit %} href="{% url 'role_item' kind item.pk %}" data-modal>{% translate "Edit" %}</a>
       <a
-        {% button_class can_edit "btn-destructive" %}
+        {% button_class can_edit title=_("Edit") %}
+        href="{% url 'role_item' kind item.pk %}"
+        data-modal
+      >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>
+      <a
+        {% button_class can_edit "btn-destructive" title=_("Delete") %}
         href="{% url 'role_item_delete' kind item.pk %}"
         data-modal
-      >{% translate "Delete" %}</a>
+      >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>
     </div>
   {% endif %}
 </li>

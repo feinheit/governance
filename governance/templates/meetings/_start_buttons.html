@@ -11,20 +11,22 @@
       {% button_class can_start_meeting primary|yesno:"btn-primary,btn-quiet" %}
       href="{{ start_url }}"
       data-modal
-    >{% translate "Start a governance meeting" %}</a>
+    >{% icon "play-fill" %} {% translate "Start a governance meeting" %}</a>
     {% if role.is_circle %}<a
         {% button_class can_start_meeting %}
         href="{{ start_url }}?kind=tactical"
         data-modal
-      >{% translate "Start a tactical meeting" %}</a>{% endif %}
+      >{% icon "play-fill" %} {% translate "Start a tactical meeting" %}</a>{% endif %}
   </div>
 {% else %}
   <form method="post" action="{{ start_url }}" class="d-flex flex-wrap gap-1">
     {% csrf_token %}
     <button type="submit" {% button_class can_start_meeting primary|yesno:"btn-primary,btn-quiet" %}>
+      {% icon "play-fill" %}
       {% translate "Start a governance meeting" %}
     </button>
     <button type="submit" name="kind" value="tactical" {% button_class can_start_meeting %}>
+      {% icon "play-fill" %}
       {% translate "Start a tactical meeting" %}
     </button>
   </form>

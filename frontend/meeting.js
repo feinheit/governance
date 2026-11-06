@@ -17,11 +17,17 @@ let busyChecks = 0
 window.meetingIsIdle = () => {
   if (document.hidden) return false
   const busy = Boolean(
-    document.querySelector("#meeting details[open], #amend > *") ||
-      document.activeElement?.closest("#meeting form"),
+    document.querySelector(
+      "#meeting details[open], #amend > *, .sortable-chosen",
+    ) || document.activeElement?.closest("#meeting form"),
   )
   busyChecks = busy ? busyChecks + 1 : 0
   const notice = document.getElementById("meeting-paused")
   if (notice) notice.hidden = busyChecks < 2
   return !busy
+}
+
+// Dragging the agenda's items (the secretary): SortableJS, a chunk of its own
+if (document.getElementById("meeting")) {
+  import(/* webpackChunkName: "agenda" */ "./agenda.js")
 }
