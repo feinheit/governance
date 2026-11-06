@@ -11,7 +11,7 @@ from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
 from governance.forms import ModelForm
-from governance.meetings.access import can_add_items, can_run
+from governance.meetings.access import can_add_items, can_run, can_take_over
 from governance.meetings.activity import end_inactive_meetings, end_meeting
 from governance.meetings.elections import ElectionForm
 from governance.meetings.models import (
@@ -246,6 +246,7 @@ def tactical_call(request):
         meeting = form.save(commit=False)
         meeting.kind = Meeting.TACTICAL
         meeting.called_by = request.user
+        meeting.secretary = request.user
         meeting.started_at = timezone.now()
         meeting.save()
         form.save_m2m()
@@ -321,7 +322,9 @@ def meeting_update(request, pk):
 def meeting_secretary(request, pk):
     """Somebody running the meeting takes over as its secretary, e.g. standing
     in for a late Secretary (5.3.6); the page warns those who aren't"""
-    meeting = runnable_meeting(request, pk, running=False)
+    meeting = get_object_or_404(Meeting.objects.select_related("circle"), pk=pk)
+    if not can_take_over(request.user, meeting):
+        raise PermissionDenied
     if meeting.is_running:
         meeting.secretary = request.user
         meeting.save(update_fields=["secretary"])
@@ -342,6 +345,7 @@ def meeting_end(request, pk):
 def agenda_context(request, meeting):
     circle = meeting.circle
     runs = can_run(request.user, meeting)
+    takes_over = can_take_over(request.user, meeting)
     can_add = can_add_items(request.user, meeting)
     items = list(meeting.agenda_items.select_related("owner", "proposal"))
     for item in items:
@@ -354,6 +358,7 @@ def agenda_context(request, meeting):
         "meeting": meeting,
         "agenda": items,
         "can_run": runs,
+        "can_take_over": takes_over,
         "can_add_items": can_add,
     }
     if can_add and meeting.kind == Meeting.GOVERNANCE:

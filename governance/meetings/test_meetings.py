@@ -321,7 +321,10 @@ class MeetingsTest(TestCase):
         from governance.proposals.models import Proposal
 
         meeting = Meeting.objects.create(
-            circle=self.kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+            circle=self.kitchen,
+            kind=Meeting.GOVERNANCE,
+            started_at=timezone.now(),
+            secretary=self.bob,
         )
         draft = Proposal.objects.create(
             circle=self.kitchen,
@@ -369,7 +372,8 @@ class MeetingsTest(TestCase):
         )
         response = self.client.get(meeting.get_absolute_url())
         self.assertContains(response, "Dishes")
-        self.assertContains(response, "Move up")  # Members may run it
+        # The secretary handles the meeting's buttons, not Eve
+        self.assertNotContains(response, "Move up")
 
         # Ada's own draft isn't offered to Eve
         other = Proposal.objects.create(

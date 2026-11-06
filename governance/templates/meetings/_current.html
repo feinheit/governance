@@ -2,6 +2,10 @@
 <section class="card mb-4 wb-current">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h2 class="h6 mb-0">{% translate "Now" %}: {{ current }}</h2>
+    {% if current.proposal and not can_run %}
+      {# Attendees read the proposal themselves #}
+      <a class="small" href="{{ current.proposal.get_absolute_url }}">{% translate "Open the proposal" %}</a>
+    {% endif %}
     {% if can_run %}
       <form method="post" action="{% url 'item_complete' current.pk %}">
         {% csrf_token %}
@@ -59,7 +63,8 @@
               </form>
             {% else %}
               <span
-                class="badge {% if key == current.step %}wb-tone-primary{% else %}wb-tone-neutral{% endif %}"
+                class="badge {% if key == current.step %}wb-step-current{% else %}wb-tone-neutral{% endif %}"
+                {% if key == current.step %}aria-current="step"{% endif %}
               >{{ forloop.counter }}. {{ label }}</span>
             {% endif %}
           {% endfor %}

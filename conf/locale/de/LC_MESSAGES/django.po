@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:32+0100\n"
+"POT-Creation-Date: 2026-11-06 15:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1926,6 +1926,10 @@ msgid "Now"
 msgstr "Jetzt"
 
 #: governance/templates/meetings/_current.html
+msgid "Open the proposal"
+msgstr "Vorschlag öffnen"
+
+#: governance/templates/meetings/_current.html
 msgid "Done"
 msgstr "Erledigt"
 
@@ -2195,8 +2199,8 @@ msgid "End the meeting"
 msgstr "Meeting beenden"
 
 #: governance/templates/meetings/meeting_detail.html
-msgid "You run this meeting as an admin, not as a member of the circle. Only do it when you know it's needed."
-msgstr "Du leitest dieses Meeting als Admin, nicht als Mitglied des Kreises. Tu es nur, wenn du weisst, dass es nötig ist."
+msgid "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed."
+msgstr "Du nimmst als Admin an diesem Meeting teil, nicht als Mitglied des Kreises. Übernimm nur, wenn du weisst, dass es nötig ist."
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "The invited roles have no checklist items."

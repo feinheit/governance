@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from governance.accounts.models import User
-from governance.meetings.access import can_run
+from governance.meetings.access import can_take_over
 from governance.meetings.models import Meeting
 from governance.roles.domain_policies import can_change_domain_policies
 from governance.roles.models import Assignment, Domain, Role
@@ -151,8 +151,7 @@ class ElevatedRightsTest(TestCase):
         meeting = Meeting.objects.create(
             circle=self.kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
         )
-        self.assertEqual(can_run(self.admin, meeting), AS_ADMIN)
-        self.assertContains(
-            self.client.get(meeting.get_absolute_url()),
-            "You run this meeting as an admin",
-        )
+        self.assertEqual(can_take_over(self.admin, meeting), AS_ADMIN)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "You take part in this meeting as an admin")
+        self.assertContains(response, 'btn-elevated" title="As admin"')  # Take over

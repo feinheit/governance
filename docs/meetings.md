@@ -2,15 +2,19 @@
 
 You plan meetings in the calendar. In the tool a meeting begins when
 somebody starts it; the tool asks those who aren't the circle's
-Secretary (or standing in for them) to confirm. Everybody follows on a shared screen and adds agenda
-items from their own device; the page updates by itself.
+Secretary (or standing in for them) to confirm. Everybody follows on a
+shared screen or their own and adds agenda items from their own device;
+the page updates by itself.
 
-- **Who leads**: every member can do what the facilitator does in the
-  tool, it doesn't record who facilitates. The secretary is recorded,
-  since only they change proposals: the circle's Secretary, if missing
-  a stand-in (constitution 5.3.6). "Take over" next to the secretary
-  makes somebody else the secretary, e.g. while the Secretary is late;
-  the tool asks those who aren't the circle's Secretary to confirm.
+- **Who leads**: the meeting's secretary has the buttons: steps,
+  processing items, objections, adopting, elections, attendees, ending
+  the meeting; they also change proposals. It's the circle's Secretary,
+  if missing a stand-in (the Facilitator, then the Circle Leads,
+  constitution 5.3.6). "Take over" next to the secretary makes somebody
+  else the secretary, e.g. while the Secretary is late; the tool asks
+  those who aren't acting as the circle's Secretary to confirm.
+- **Following**: the others see the current step and agenda item
+  highlighted, and open the item's proposal with "Open the proposal".
 - **Attendees** are the circle's members at the start; members invite
   others or remove them.
 - **One meeting per circle**: starting a second one leads to the running
@@ -30,14 +34,15 @@ circle.
 - **Agenda**: a tension in one or two words, or a proposal (waiting,
   published async, your drafts). "Remove" puts a proposal back: a draft
   stays yours, an async proposal keeps its deadline.
-- **Process**: the facilitator chooses an agenda item; the steps of the
+- **Process**: the facilitator chooses an agenda item, the secretary
+  clicks "Process"; the steps of the
   integrative decision-making process guide, but don't enforce anything.
 - **Proposal**: only the secretary captures it from a tension and changes
   it. "Discard" withdraws it (e.g. it isn't valid, or its proposer is
   gone); its proposer may "Draft again" on the proposal's page. "Done"
   without adopting or discarding keeps it waiting for the next meeting.
 - **Objections** are recorded with the person and the role, the
-  facilitator tests them. "Adopt" only works once every objection is
+  facilitator tests them, the secretary records it. "Adopt" only works once every objection is
   tested and the valid ones are integrated. The change applies right
   away, the mail comes at the end of the meeting.
 - **The same role several times**: if a proposal adopted earlier changed
@@ -50,8 +55,8 @@ circle.
   removed in the meantime, its text is among the new ones between
   markers: keep it or delete it. The proposal then starts from the
   current state.
-- **Elections**: the facilitator runs the election, "Record the
-  election" saves the person and the end of the term (Facilitator,
+- **Elections**: the facilitator runs the election, the secretary's
+  "Record the election" saves the person and the end of the term (Facilitator,
   Secretary, Circle Rep and roles elected by policy). Due elections are
   shown on the circle's page, facilitators get a reminder on Mondays.
 

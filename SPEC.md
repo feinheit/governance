@@ -303,16 +303,19 @@ tactical meetings in a role). Starting asks first (`asks_before_starting()`,
 a modal): in a role always, cancelling being the default (rarely what
 people want, the role itself changes in its circle); in a circle those
 who aren't its Secretary or standing in for them, starting being the
-default. Members run it (`can_run()`): the app
-doesn't record who facilitates, nobody needs rights the other members
-don't have for it. It records the secretary, who amends proposals:
-the Secretary, else the stand-ins of 5.3.6 (`acting_secretaries()`: the
-Facilitator, then the Circle Leads, also for asking before starting,
-"Take over" and the requests for a meeting); whoever runs the meeting
-takes over ("Take over", e.g. for a late Secretary), the page asks
-those who aren't acting as the circle's Secretary to confirm. Attendees are the
-members when it starts; those running it invite others (also guests of
-Circle Reps) and remove them.
+default. The meeting's secretary handles its buttons (`can_run()`):
+steps, processing items, objections, adopting, elections, attendees,
+the minutes, ending it; they also amend proposals. The others follow on
+their own screens: the current step and agenda item are highlighted, the
+item's proposal links to its page. The app doesn't record who
+facilitates. The secretary is the Secretary, else the stand-ins of 5.3.6
+(`acting_secretaries()`: the Facilitator, then the Circle Leads, also
+for asking before starting, "Take over" and the requests for a meeting),
+for ad-hoc tactical meetings whoever called it. The members (and admins,
+marked) take over (`can_take_over()`, "Take over", e.g. for a late
+Secretary), the page asks those who aren't acting as the circle's
+Secretary to confirm. Attendees are the members when it starts; the
+secretary invites others (also guests of Circle Reps) and removes them.
 One meeting at a time per circle (a constraint): starting another one
 joins the running one, the circle page offers it instead. Ad-hoc tactical
 meetings have no circle and may always run.
@@ -341,7 +344,7 @@ doesn't change anymore (`runnable_meeting()`).
 attendees add items while it runs (5.4.4): a tension in a few words, or a
 proposal (waiting for a meeting, published async ones, which ends their
 acceptance period, or their own drafts; removing the item puts them back,
-`AgendaItem.proposal_status`). The facilitator processes items
+`AgendaItem.proposal_status`). The secretary processes items
 in any order; buttons for the six steps of integrative decision-making
 guide without enforcing them. Only the secretary amends, with the drafting
 controls in a panel, and captures a proposal from a tension. "Discard"
@@ -637,8 +640,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (fourth round, 2026-11-06), open:
-  - Meetings: the secretary handles the meeting's buttons, attendees
-    see where the meeting is and read the proposal themselves.
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).

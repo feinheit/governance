@@ -73,7 +73,7 @@ class GovernanceMeetingScenarioTest(TestCase):
         return item, item.proposal
 
     def adopt(self, item):
-        self.client.force_login(self.ada)  # The facilitator
+        self.client.force_login(self.bob)  # The secretary
         response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
         self.assertContains(response, "The proposal is adopted.")
         item.proposal.refresh_from_db()
@@ -261,7 +261,7 @@ class AsyncAndMeetingScenarioTest(TestCase):
         self.client.post(f"/agenda/{item.pk}/proposal/")
         item.refresh_from_db()
         self.change_cooking(item.proposal, "Cooking food")
-        self.client.force_login(self.ada)
+        self.client.force_login(self.bob)
         self.client.post(f"/agenda/{item.pk}/adopt/")
         self.client.post(f"/meetings/{meeting.pk}/end/")
         self.cooking.refresh_from_db()
@@ -299,7 +299,7 @@ class AsyncAndMeetingScenarioTest(TestCase):
                 ">>>>>>> proposal",
             )
             self.change_cooking(async_proposal, "Cooking food and meals")
-            self.client.force_login(self.ada)
+            self.client.force_login(self.bob)
             response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
             self.assertContains(response, "The proposal is adopted.")
 
@@ -344,8 +344,8 @@ class CircleEndsItselfScenarioTest(TestCase):
         meeting = Meeting.objects.running().get()
         self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Bread"})
         item = AgendaItem.objects.get(meeting=meeting)
+        self.client.force_login(bob)  # The secretary
         self.client.post(f"/agenda/{item.pk}/process/")
-        self.client.force_login(bob)
         self.client.post(f"/agenda/{item.pk}/proposal/")
         item.refresh_from_db()
         self.client.post(f"/proposals/{item.proposal.pk}/roles/{baker.pk}/remove/")
@@ -353,6 +353,7 @@ class CircleEndsItselfScenarioTest(TestCase):
         response = self.client.get(meeting.get_absolute_url())
         self.assertContains(response, "Bakery loses its last roles")
         self.assertContains(response, "when the meeting ends")
+        self.client.force_login(bob)
         with self.captureOnCommitCallbacks(execute=True):
             response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
         self.assertContains(response, "The proposal is adopted.")

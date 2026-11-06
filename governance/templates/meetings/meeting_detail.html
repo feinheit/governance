@@ -36,7 +36,7 @@
               {{ meeting.called_by }}</span>{% endif %}
           {% if meeting.secretary %}<span><span class="wb-meta-label">{% translate "secretary" %}</span>
               {{ meeting.secretary }}</span>{% endif %}
-          {% if can_run and meeting.is_running and meeting.secretary != request.user %}
+          {% if can_take_over and meeting.is_running and meeting.secretary != request.user %}
             {# Standing in, e.g. for a late Secretary (5.3.6) #}
             <form
               method="post"
@@ -47,7 +47,9 @@
               {% endif %}
             >
               {% csrf_token %}
-              <button type="submit" {% button_class can_run size="btn-sm py-0" %}>{% translate "Take over" %}</button>
+              <button type="submit" {% button_class can_take_over size="btn-sm py-0" %}>
+                {% translate "Take over" %}
+              </button>
             </form>
           {% endif %}
         </div>
@@ -67,10 +69,10 @@
       {% endif %}
     </div>
 
-    {% if can_run|elevated and not meeting.ended_at %}
-      {# Admins who aren't members, the buttons only they have are marked #}
+    {% if can_take_over|elevated and not meeting.ended_at %}
+      {# Admins who aren't members, "Take over" is marked #}
       <div class="alert alert-warning mt-3">
-        {% translate "You run this meeting as an admin, not as a member of the circle. Only do it when you know it's needed." %}
+        {% translate "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed." %}
       </div>
     {% endif %}
 
@@ -93,8 +95,10 @@
                     </button>
                   </form>
                 {% else %}
+                  {# Following: where the meeting is #}
                   <span
-                    class="badge {% if key == meeting.step %}wb-tone-primary{% else %}wb-tone-neutral{% endif %}"
+                    class="badge {% if key == meeting.step %}wb-step-current{% else %}wb-tone-neutral{% endif %}"
+                    {% if key == meeting.step %}aria-current="step"{% endif %}
                   >{{ forloop.counter }}. {{ label }}</span>
                 {% endif %}
               {% endfor %}

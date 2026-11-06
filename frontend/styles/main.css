@@ -497,8 +497,20 @@ a.wb-row-title:hover {
   padding-bottom: 4.5rem;
 }
 
+/* Where the meeting is: the agenda item being processed, the current step
+   (for those following, the secretary has buttons) */
 .wb-current {
   border-inline-start: 3px solid var(--bs-primary);
+}
+
+.list-group-item.wb-current {
+  background: var(--wb-primary-bg);
+}
+
+.badge.wb-step-current {
+  background: var(--bs-primary);
+  color: #fff;
+  font-weight: 600;
 }
 
 /* Help pages (docs/, governance/help.py): readable line length */

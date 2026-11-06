@@ -2,16 +2,21 @@
 
 Meetings plant ihr im Kalender. Im Tool beginnt ein Meeting, wenn jemand
 es startet; wer nicht Secretary des Kreises ist (oder ihn vertritt),
-bestätigt das. Alle folgen auf einem geteilten Bildschirm und fügen Agendapunkte
-vom eigenen Gerät aus hinzu; die Seite aktualisiert sich von selbst.
+bestätigt das. Alle folgen auf einem geteilten oder dem eigenen
+Bildschirm und fügen Agendapunkte vom eigenen Gerät aus hinzu; die Seite
+aktualisiert sich von selbst.
 
-- **Wer leitet**: Was der Facilitator im Tool macht, kann jedes Mitglied,
-  das Tool hält nicht fest, wer moderiert. Der Secretary wird
-  festgehalten, weil nur er Vorschläge ändert: der Secretary des Kreises,
-  fehlt er, eine Vertretung (Verfassung 5.3.6). "Übernehmen" neben dem
-  Secretary macht jemand anderen zum Secretary, z.B. solange der
-  Secretary sich verspätet; wer nicht Secretary des Kreises ist, bestätigt
-  das zuerst.
+- **Wer leitet**: Der Secretary des Meetings hat die Buttons: Schritte,
+  Agendapunkte bearbeiten, Einwände, Annehmen, Wahlen, Teilnehmende, das
+  Meeting beenden; er ändert auch die Vorschläge. Das ist der Secretary
+  des Kreises, fehlt er, eine Vertretung (der Facilitator, dann die
+  Circle Leads, Verfassung 5.3.6). "Übernehmen" neben dem Secretary macht
+  jemand anderen zum Secretary, z.B. solange der Secretary sich
+  verspätet; wer nicht als Secretary des Kreises handelt, bestätigt das
+  zuerst.
+- **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
+  hervorgehoben und öffnen den Vorschlag des Punkts mit "Vorschlag
+  öffnen".
 - **Teilnehmende** sind die Mitglieder des Kreises beim Start; Mitglieder
   laden weitere ein oder entfernen sie.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.
@@ -32,7 +37,8 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   (wartende, asynchron veröffentlichte, deine Entwürfe). "Entfernen"
   legt einen Vorschlag zurück: ein Entwurf bleibt deiner, ein asynchroner
   behält seine Frist.
-- **Behandeln**: der Facilitator wählt einen Agendapunkt; die Schritte des
+- **Behandeln**: der Facilitator wählt einen Agendapunkt, der Secretary
+  klickt "Behandeln"; die Schritte des
   integrativen Entscheidungsprozesses leiten, erzwingen aber nichts.
 - **Vorschlag**: nur der Secretary hält ihn aus einer Spannung fest und
   ändert ihn. "Verwerfen" zieht ihn zurück (z.B. ist er nicht gültig,
@@ -40,7 +46,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   Person kann ihn auf der Seite des Vorschlags "Neu entwerfen". "Erledigt"
   ohne Annehmen oder Verwerfen lässt ihn auf das nächste Meeting warten.
 - **Einwände** werden mit Person und Rolle festgehalten, der Facilitator
-  prüft sie. "Annehmen" geht erst, wenn alle Einwände geprüft
+  prüft sie, der Secretary hält es fest. "Annehmen" geht erst, wenn alle Einwände geprüft
   und die gültigen integriert sind. Die Änderung gilt sofort, die Mail
   kommt am Ende des Meetings.
 - **Dieselbe Rolle mehrmals**: hat ein früher angenommener Vorschlag eine
@@ -54,7 +60,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   Domain, steht ihr Text zwischen Markierungen bei den neuen: behalten
   oder löschen. Der Vorschlag geht dann vom aktuellen Stand aus.
 - **Wahlen**: der Facilitator führt die Wahl durch, "Wahl festhalten"
-  speichert Person und Ende der Amtszeit (Facilitator, Secretary, Circle
+  des Secretarys speichert Person und Ende der Amtszeit (Facilitator, Secretary, Circle
   Rep und durch Policy gewählte Rollen). Anstehende Wahlen stehen auf der
   Seite des Kreises, Facilitators erhalten montags eine Erinnerung.
 

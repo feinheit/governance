@@ -54,15 +54,26 @@ class ProcessingTest(TestCase):
         )
 
     def test_proposal(self):
+        # The secretary handles the meeting's buttons, the others follow
         self.client.force_login(self.ada)  # The facilitator
+        self.assertEqual(
+            self.client.post(f"/agenda/{self.item.pk}/process/").status_code, 403
+        )
+        self.client.force_login(self.bob)
         self.client.post(f"/agenda/{self.item.pk}/process/")
         self.item.refresh_from_db()
         self.assertEqual(self.item.step, "present")
+        self.client.force_login(self.ada)
         response = self.client.get(self.meeting.get_absolute_url())
         self.assertContains(response, "Now")
         self.assertContains(response, "Chef")
         self.assertContains(response, "Clarifying questions")
-        self.assertNotContains(response, "Propose changes")  # The secretary
+        self.assertNotContains(response, f"/agenda/{self.item.pk}/step/")
+        self.assertNotContains(response, "Propose changes")
+        # Where the meeting is, and the proposal to read
+        self.assertContains(response, 'aria-current="step"')
+        self.assertContains(response, "Open the proposal")
+        self.client.force_login(self.bob)
 
         self.client.post(f"/agenda/{self.item.pk}/step/", {"step": "objections"})
         self.client.post(
@@ -275,7 +286,7 @@ class ProcessingTest(TestCase):
     def test_discard(self):
         """The meeting discards a proposal (5.3.1, 5.3.4): it's withdrawn and
         in the outputs, its proposer drafts it again"""
-        self.client.force_login(self.ada)
+        self.client.force_login(self.bob)  # The secretary
         self.client.post(f"/agenda/{self.item.pk}/process/")
         self.assertContains(self.client.get(self.meeting.get_absolute_url()), "Discard")
         self.client.post(f"/agenda/{self.item.pk}/discard/")
@@ -312,7 +323,7 @@ class ProcessingTest(TestCase):
     def test_objection_left_open(self):
         """A meeting ends with an untested objection: the next meeting
         processing the proposal tests it"""
-        self.client.force_login(self.ada)
+        self.client.force_login(self.bob)  # The secretary
         self.client.post(f"/agenda/{self.item.pk}/process/")
         self.client.post(
             f"/agenda/{self.item.pk}/objections/",
@@ -412,13 +423,14 @@ class ProcessingTest(TestCase):
         item = AgendaItem.objects.create(
             meeting=self.meeting, proposal=second, label="Clearer role", position=2
         )
-        self.client.force_login(self.ada)  # The facilitator
+        self.client.force_login(self.bob)  # The secretary
         self.client.post(f"/agenda/{self.item.pk}/process/")
         self.client.post(f"/agenda/{self.item.pk}/adopt/")
         self.cook.refresh_from_db()
         self.assertEqual(self.cook.name, "Chef")
 
         self.client.post(f"/agenda/{item.pk}/process/")
+        self.client.force_login(self.ada)  # Following
         self.assertContains(
             self.client.get(self.meeting.get_absolute_url()),
             "Chef: name has been changed since the proposal was drafted.",
