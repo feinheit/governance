@@ -198,7 +198,7 @@ class ImportedOpenProposalTest(TestCase):
 
 class DatesTest(TestCase):
     def test_dates_in_order(self):
-        """Created, published while open, then adopted or withdrawn"""
+        """The latest that happened: created, published, adopted or withdrawn"""
         import re
 
         ada = User.objects.create_user("ada@example.com", full_name="Ada")
@@ -220,15 +220,21 @@ class DatesTest(TestCase):
             return re.findall(r'class="wb-meta-label"\s*>([^<]+)<', html)[1:]
 
         self.assertEqual(
-            labels(),
-            ["proposer", "status", "created", "published (async)", "to be adopted on"],
+            labels(), ["proposer", "status", "published (async)", "to be adopted on"]
         )
         proposal.status, proposal.decided_at = Proposal.ADOPTED, now
         proposal.save()
-        self.assertEqual(labels(), ["proposer", "status", "created", "adopted"])
+        self.assertEqual(labels(), ["proposer", "status", "adopted"])
         proposal.status = Proposal.WITHDRAWN
         proposal.save()
-        self.assertEqual(labels(), ["proposer", "status", "created", "withdrawn"])
+        self.assertEqual(labels(), ["proposer", "status", "withdrawn"])
+        proposal.status, proposal.published_at, proposal.decided_at = (
+            Proposal.DRAFT,
+            None,
+            None,
+        )
+        proposal.save()
+        self.assertEqual(labels(), ["proposer", "status", "created"])
 
 
 class ProposalTitleTest(TestCase):
