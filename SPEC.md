@@ -639,7 +639,6 @@ Deliberately not modelled:
 
 ## Backlog
 
-- **Verification** (fourth round, 2026-11-06), open:
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
