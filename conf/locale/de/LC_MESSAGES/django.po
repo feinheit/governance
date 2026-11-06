@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 11:42+0100\n"
+"POT-Creation-Date: 2026-11-06 11:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -282,7 +282,7 @@ msgstr "Meetings"
 msgid "The day the term ends."
 msgstr "Der letzte Tag der Amtszeit."
 
-#: governance/meetings/elections.py governance/roles/assignments.py
+#: governance/meetings/elections.py
 msgid "A Circle Lead can't be the Circle Rep."
 msgstr "Ein Circle Lead kann nicht Circle Rep sein."
 
@@ -2403,6 +2403,15 @@ msgid "Edit focus"
 msgstr "Fokus bearbeiten"
 
 #: governance/templates/roles/assignments.html
+msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
+msgstr "Ein Circle Lead kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen neue Circle Reps:"
+
+#: governance/templates/roles/assignments.html
+#, python-format
+msgid "Remove %(user)s and end them"
+msgstr "%(user)s entfernen und sie beenden"
+
+#: governance/templates/roles/assignments.html
 msgid "Elected roles are elected in governance meetings; their holders resign here."
 msgstr "Gewählte Rollen werden in Governance Meetings gewählt; wer sie innehat, tritt hier zurück."
 
@@ -2413,6 +2422,10 @@ msgstr "Zurück zur Rolle"
 #: governance/templates/roles/assignments.html
 msgid "Assign somebody"
 msgstr "Jemanden zuweisen"
+
+#: governance/templates/roles/assignments.html
+msgid "Assign and end them"
+msgstr "Zuweisen und sie beenden"
 
 #: governance/templates/roles/assignments.html
 #: governance/templates/roles/role_detail.html

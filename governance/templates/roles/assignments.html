@@ -46,6 +46,26 @@
       </ul>
     </section>
 
+    {% if reps %}
+      <div class="alert alert-warning">
+        <p>
+          {% translate "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:" %}
+        </p>
+        <ul>
+          {% for rep in reps %}<li>{{ rep.user }}: {{ rep.role }} ({{ rep.role.circle }})</li>{% endfor %}
+        </ul>
+        {% if ending %}
+          <form method="post" action="{% url 'assignment_end' ending.pk %}" class="mb-0">
+            {% csrf_token %}
+            <input type="hidden" name="end_reps" value="1">
+            <button type="submit" class="btn btn-sm btn-primary">
+              {% blocktranslate with user=ending.user %}Remove {{ user }} and end them{% endblocktranslate %}
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% if not form %}
       <p class="text-body-secondary">
         {% translate "Elected roles are elected in governance meetings; their holders resign here." %}
@@ -53,8 +73,9 @@
       <a class="btn btn-quiet" href="{{ role.get_absolute_url }}">{% translate "Back to the role" %}</a>
     {% else %}
       <h2 class="h6">{% translate "Assign somebody" %}</h2>
-      <form method="post" action="{{ request.get_full_path }}">
+      <form method="post" action="{% url 'role_assignments' role.pk %}">
         {% csrf_token %}
+        {% if reps and not ending %}<input type="hidden" name="end_reps" value="1">{% endif %}
         {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
         <section class="card mb-3">
           <div class="card-body">
@@ -62,7 +83,9 @@
           </div>
         </section>
         <div class="wb-form-actions">
-          <button type="submit" class="btn btn-primary">{% translate "Assign" %}</button>
+          <button type="submit" class="btn btn-primary">
+            {% if reps and not ending %}{% translate "Assign and end them" %}{% else %}{% translate "Assign" %}{% endif %}
+          </button>
           <a class="btn btn-quiet" href="{{ role.get_absolute_url }}">{% translate "Back to the role" %}</a>
         </div>
       </form>

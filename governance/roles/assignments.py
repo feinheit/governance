@@ -121,10 +121,64 @@ def end_assignments_of(user, day):
         Assignment.objects.current().filter(user=user).select_related("role__circle")
     )
     circles = [c for a in assignments for c in affected_circles(a.role)]
+    before = reps_leading_their_circle()
     with announce(circles):
         for assignment in assignments:
             end_assignment(assignment, day)
             after_change(assignment.role, day)
+        # Nobody to warn here
+        end_reps(new_reps_leading(before), day)
+
+
+def reps_leading_their_circle():
+    """The assignments of Circle Reps who also lead their circle, e.g. from
+    the super-circle (1.4.2), which the constitution forbids (5.1.1)"""
+    from governance.roles.permissions import is_circle_lead
+
+    return [
+        rep
+        for rep in Assignment.objects
+        .current()
+        .filter(role__core_role=REP, role__archived_on=None)
+        .select_related("user", "role__circle")
+        if is_circle_lead(rep.user, rep.role.circle)
+    ]
+
+
+def new_reps_leading(before):
+    return [rep for rep in reps_leading_their_circle() if rep not in before]
+
+
+def end_reps(reps, day):
+    """The Circle Reps leading their circle now resign, the circle elects
+    another one"""
+    for rep in reps:
+        end_assignment(rep, day)
+        after_change(rep.role, day)
+
+
+class EndingReps(Exception):
+    """The change would make Circle Reps lead their circle: confirm first"""
+
+    def __init__(self, reps):
+        super().__init__()
+        self.reps = reps
+
+
+def change_assignments(request, role, change):
+    """Runs the change of the role's holders with its mails. Circle Reps it
+    makes lead their circle (5.1.1) end with it once ``end_reps`` confirms
+    it; until then ``EndingReps`` rolls the change back."""
+    before = reps_leading_their_circle()
+    with transaction.atomic(), announce(affected_circles(role)):
+        day = timezone.localdate()
+        result = change(day)
+        after_change(role, day)
+        if reps := new_reps_leading(before):
+            if not request.POST.get("end_reps"):
+                raise EndingReps(reps)
+            end_reps(reps, day)
+    return result
 
 
 def after_change(role, day):
@@ -161,31 +215,7 @@ class AssignmentForm(ModelForm):
             raise forms.ValidationError(
                 _("%(user)s already holds this role with this focus.") % {"user": user}
             )
-        role = self.instance.role
-        if user and role.core_role == LEAD and represents(user, role.circle):
-            # Constitution 5.1.1, like electing the Rep
-            self.add_error("user", _("A Circle Lead can't be the Circle Rep."))
         return data
-
-
-def represents(user, circle):
-    """Whether the person is the Circle Rep of the circle, or of a sub-circle
-    which the circle's Circle Leads lead because nobody else does (1.4.2)"""
-    reps = (
-        Assignment.objects
-        .current()
-        .filter(user=user, role__core_role=REP, role__archived_on=None)
-        .select_related("role__circle")
-    )
-    for rep in reps:
-        represented = rep.role.circle
-        while represented is not None:
-            if represented == circle:
-                return True
-            if Assignment.objects.current().of_core_role(LEAD, represented).exists():
-                break  # Led by its own Circle Lead
-            represented = represented.circle
-    return False
 
 
 def assignable_role(request, pk, check=can_assign):
@@ -204,18 +234,30 @@ def assignments(request, pk):
         form = AssignmentForm(request.POST or None, role=role)
     elif request.method == "POST":
         raise PermissionDenied
+    reps = None
     if form and form.is_valid():
-        with transaction.atomic(), announce(affected_circles(role)):
-            day = timezone.localdate()
+
+        def assign(day):
             form.instance.starts_on = day
-            assignment = form.save()
-            after_change(role, day)
-        messages.success(
-            request,
-            gettext("%(user)s now holds %(role)s.")
-            % {"user": assignment.user, "role": role},
-        )
-        return redirect("role_assignments", pk=role.pk)
+            return form.save()
+
+        try:
+            assignment = change_assignments(request, role, assign)
+        except EndingReps as exc:
+            reps = exc.reps
+        else:
+            messages.success(
+                request,
+                gettext("%(user)s now holds %(role)s.")
+                % {"user": assignment.user, "role": role},
+            )
+            return redirect("role_assignments", pk=role.pk)
+    return render_assignments(request, role, form, reps=reps)
+
+
+def render_assignments(request, role, form, *, reps=None, ending=None):
+    """``reps``: the Circle Reps the change ends, ``ending``: the assignment
+    whose end would do that"""
     return render(
         request,
         "roles/assignments.html",
@@ -225,6 +267,8 @@ def assignments(request, pk):
             "assignments": role.assignments.current().select_related("user"),
             "form": form,
             "can_assign": form is not None,
+            "reps": reps,
+            "ending": ending,
         },
     )
 
@@ -256,10 +300,11 @@ def assignment_end(request, pk):
         Assignment.objects.current().select_related("role__circle", "user"), pk=pk
     )
     role = assignable_role(request, assignment.role_id, check=can_end_assignment)
-    with transaction.atomic(), announce(affected_circles(role)):
-        day = timezone.localdate()
-        end_assignment(assignment, day)
-        after_change(role, day)
+    try:
+        change_assignments(request, role, lambda day: end_assignment(assignment, day))
+    except EndingReps as exc:
+        form = AssignmentForm(role=role) if can_assign(request.user, role) else None
+        return render_assignments(request, role, form, reps=exc.reps, ending=assignment)
     messages.success(
         request,
         gettext("%(user)s doesn't hold %(role)s anymore.")

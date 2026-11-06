@@ -119,43 +119,92 @@ class AssignmentsTest(TestCase):
             dt.date(2026, 12, 1),
         )
 
-    def test_circle_rep_isnt_circle_lead(self):
-        """The Circle Rep isn't assigned as Circle Lead of the circle (5.1.1)"""
-        Assignment.objects.create(
-            role=self.kitchen.roles.get(core_role="rep"), user=self.eve
+    def test_circle_rep_assigned_circle_lead(self):
+        """Assigning the Circle Rep as Circle Lead ends their Circle Rep
+        assignment after a warning (5.1.1)"""
+        rep = self.kitchen.roles.get(core_role="rep")
+        representing = Assignment.objects.create(
+            role=rep, user=self.eve, starts_on=dt.date(2026, 1, 1)
         )
         self.client.force_login(self.ada)
-        response = self.client.post(
-            f"/roles/{self.kitchen_lead.pk}/assignments/", {"user": self.eve.pk}
-        )
-        self.assertContains(response, "A Circle Lead can&#x27;t be the Circle Rep.")
+        url = f"/roles/{self.kitchen_lead.pk}/assignments/"
+        response = self.client.post(url, {"user": self.eve.pk})
+        self.assertContains(response, "A Circle Lead can't be the Circle Rep")
+        self.assertContains(response, "Eve: Circle Rep (Kitchen)")
         self.assertFalse(
             Assignment.objects.filter(role=self.kitchen_lead, user=self.eve).exists()
         )
 
+        self.client.post(url, {"user": self.eve.pk, "end_reps": "1"})
+        representing.refresh_from_db()
+        self.assertEqual(representing.ends_on, dt.date(2026, 12, 1))
+        self.assertTrue(
+            Assignment.objects
+            .current()
+            .filter(role=self.kitchen_lead, user=self.eve)
+            .exists()
+        )
+
     def test_circle_rep_of_a_sub_circle_led_from_above(self):
-        """The Circle Lead also leads the sub-circles nobody leads (1.4.2),
-        so their Circle Rep isn't assigned either"""
+        """The Circle Lead also leads the sub-circles nobody leads (1.4.2):
+        their Circle Rep too, also when the sub-circle's own Circle Lead
+        ends"""
         bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
         bakery.create_core_roles()
         Role.objects.create(name="Baker", circle=bakery)
-        Assignment.objects.create(role=bakery.roles.get(core_role="rep"), user=self.eve)
+        representing = Assignment.objects.create(
+            role=bakery.roles.get(core_role="rep"), user=self.eve
+        )
         self.client.force_login(self.ada)
-        response = self.client.post(
-            f"/roles/{self.kitchen_lead.pk}/assignments/", {"user": self.eve.pk}
-        )
-        self.assertContains(response, "A Circle Lead can&#x27;t be the Circle Rep.")
+        url = f"/roles/{self.kitchen_lead.pk}/assignments/"
+        response = self.client.post(url, {"user": self.eve.pk})
+        self.assertContains(response, "Eve: Circle Rep (Bakery)")
 
-        # Unless the sub-circle has a Circle Lead of its own
-        Assignment.objects.create(
-            role=bakery.roles.get(core_role="lead"), user=self.bob
+        # Not while the sub-circle has a Circle Lead of its own
+        bakery_lead = Assignment.objects.create(
+            role=bakery.roles.get(core_role="lead"),
+            user=self.bob,
+            starts_on=dt.date(2026, 1, 1),
         )
-        self.client.post(
-            f"/roles/{self.kitchen_lead.pk}/assignments/", {"user": self.eve.pk}
-        )
+        self.client.post(url, {"user": self.eve.pk})
         self.assertTrue(
             Assignment.objects.filter(role=self.kitchen_lead, user=self.eve).exists()
         )
+
+        # Until it ends
+        self.client.force_login(self.bob)
+        end = f"/assignments/{bakery_lead.pk}/end/"
+        response = self.client.post(end)
+        self.assertContains(response, "Eve: Circle Rep (Bakery)")
+        self.assertContains(response, "Remove Bob and end them")
+        bakery_lead.refresh_from_db()
+        self.assertIsNone(bakery_lead.ends_on)
+        self.client.post(end, {"end_reps": "1"})
+        bakery_lead.refresh_from_db()
+        representing.refresh_from_db()
+        self.assertEqual(
+            (bakery_lead.ends_on, representing.ends_on),
+            (dt.date(2026, 12, 1), dt.date(2026, 12, 1)),
+        )
+
+    def test_circle_rep_leading_after_a_deactivation(self):
+        """Nobody to warn: the Circle Rep's assignment ends right away"""
+        from governance.roles.assignments import end_assignments_of
+
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="lead"), user=self.ada
+        )
+        representing = Assignment.objects.create(
+            role=bakery.roles.get(core_role="rep"),
+            user=self.bob,  # The kitchen's Circle Lead
+            starts_on=dt.date(2026, 1, 1),
+        )
+        end_assignments_of(self.ada, dt.date(2026, 12, 1))
+        representing.refresh_from_db()
+        self.assertEqual(representing.ends_on, dt.date(2026, 12, 1))
 
     def test_resigning_from_elected_roles(self):
         """Circle Leads end assignments of elected roles (resigning, 1.4.1),

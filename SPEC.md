@@ -269,8 +269,11 @@ rule.
   Adopted proposals record whose assignments they ended
   (`Proposal.ended_holders`), so that the meeting's outputs reach them
   too. A circle's role follows its Circle Leads and Reps. Nobody leading a
-  circle, also from above, is its Circle Rep (5.1.1): neither elected nor
-  assigned as Circle Lead (`assignments.represents()`).
+  circle, also from above, is its Circle Rep (5.1.1): not elected, and
+  when assigning or removing would make a Circle Rep lead their circle,
+  the page warns and then ends the Circle Rep's assignment
+  (`assignments.change_assignments()`), the circle elects a new one;
+  deactivating ends it without asking (moves by proposals: backlog).
 
 Spelling corrections go through governance on purpose, like striking
 invalid governance (4.2.2): the Secretary starts a governance meeting,
@@ -559,10 +562,11 @@ Deliberately not modelled:
 
 ## Backlog
 
-- **Verification** (second round of 2026-11-06), open:
-  - A Circle Rep who leads the circle from above (assigned Circle Lead of
-    the super-circle, or the circle's own Circle Lead ending): to decide.
-    Assigning is refused for now.
+- **Circle Reps leading their circle through moves**: a proposal moving
+  a circle without a Circle Lead of its own under one whose Circle Lead
+  is its Circle Rep isn't checked (5.1.1). Like the assignments, the
+  draft's consequences could warn and adopting end the Circle Rep's
+  assignment.
 
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so
