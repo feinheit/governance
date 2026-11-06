@@ -215,6 +215,42 @@ class AdoptedMailsTest(TestCase):
         self.assertFalse(Assignment.objects.current().filter(user=self.eve).exists())
         self.assertEqual([m.to[0] for m in mail.outbox], ["eve@example.com"])
 
+    def test_turned_back_while_the_super_circles_meeting_runs(self):
+        """The super-circle's meeting empties the circle while both meetings
+        run: those losing its core roles hear about it once, when the
+        circle's meeting ends, not again from the super-circle's outputs"""
+        from governance.meetings.activity import end_meeting
+        from governance.proposals.instructions import adopt
+        from governance.proposals.models import Proposal
+
+        bakery_meeting = Meeting.objects.create(
+            circle=self.bakery, kind=Meeting.TACTICAL, started_at=timezone.now()
+        )
+        kitchen_meeting = Meeting.objects.create(
+            circle=self.kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(
+                self.proposal(
+                    [
+                        {
+                            "op": "move",
+                            "from": f"/circles/{self.bakery.pk}/roles/{self.baker.pk}",
+                            "path": f"/roles/{self.baker.pk}",
+                        }
+                    ],
+                    status=Proposal.IN_MEETING,
+                    meeting=kitchen_meeting,
+                )
+            )
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(bakery_meeting)
+        self.assertEqual([m.to[0] for m in mail.outbox], ["eve@example.com"])
+        mail.outbox = []
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(kitchen_meeting)
+        self.assertNotIn("eve@example.com", [m.to[0] for m in mail.outbox])
+
     def test_meeting(self):
         from governance.meetings.activity import end_meeting
         from governance.proposals.instructions import adopt

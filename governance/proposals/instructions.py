@@ -564,7 +564,10 @@ def revert_after_meeting(meeting):
         proposal.save(update_fields=["instructions", "names"])
         proposal.roles.add(circle)
         proposal.policies.add(*applier.policies)
-        proposal.ended_holders.add(*applier.ended_users)
+        if own:
+            # For the meeting's outputs; announced otherwise, not again in
+            # the mail of a super-circle's meeting still running
+            proposal.ended_holders.add(*applier.ended_users)
     close_circles([circle], proposal)
     update_changes(since=timezone.localdate())
 
