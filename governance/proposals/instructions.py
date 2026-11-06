@@ -597,6 +597,14 @@ def replace_keys(proposal, created):
 @transaction.atomic
 def adopt(proposal):
     """Applies the proposal and marks it as adopted"""
+    # Locked, with its status in the database: two requests (or a click and
+    # the nightly task) may adopt the same proposal loaded before
+    proposal.status = (
+        Proposal.objects
+        .select_for_update()
+        .values_list("status", flat=True)
+        .get(pk=proposal.pk)
+    )
     if proposal.status == Proposal.ADOPTED:
         raise ProposalError([_("The proposal has already been adopted.")])
     if proposal.glassfrog_id and not (proposal.meeting and proposal.meeting.is_running):

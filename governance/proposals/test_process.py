@@ -48,6 +48,31 @@ class ProcessTest(TestCase):
             **kwargs,
         )
 
+    def test_adopted_twice_at_once(self):
+        """Two requests (or a click and the nightly task) adopting the same
+        proposal: the second one changes nothing"""
+        from governance.proposals.instructions import adopt
+        from governance.proposals.process import try_adopting
+
+        proposal = self.proposal(status=Proposal.PUBLISHED)
+        proposal.instructions = [
+            {"op": "add", "path": "/roles/n1"},
+            {"op": "add", "path": "/roles/n1/name", "value": "Baker"},
+        ]
+        proposal.save()
+        first = Proposal.objects.get(pk=proposal.pk)
+        second = Proposal.objects.get(pk=proposal.pk)  # Loaded before
+        adopt(first)
+        with self.assertRaises(ProposalError):
+            adopt(second)
+        self.assertFalse(try_adopting(Proposal.objects.get(pk=proposal.pk)))
+        stale = Proposal.objects.get(pk=proposal.pk)
+        stale.status = Proposal.PUBLISHED
+        self.assertFalse(try_adopting(stale))
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.ADOPTED)
+        self.assertEqual(Role.objects.filter(name="Baker").count(), 1)
+
     def test_publish_and_consent(self):
         proposal = self.proposal()
         self.client.force_login(self.ada)

@@ -127,13 +127,24 @@ def everybody_consented(proposal):
 
 
 def to_meeting(proposal):
-    proposal.status = Proposal.IN_MEETING
-    proposal.save(update_fields=["status"])
+    """Only while it's published: not one adopted meanwhile (try_adopting()
+    failing because another request adopted it)"""
+    if Proposal.objects.filter(pk=proposal.pk, status=Proposal.PUBLISHED).update(
+        status=Proposal.IN_MEETING
+    ):
+        proposal.status = Proposal.IN_MEETING
 
 
 @transaction.atomic
 def respond(proposal, user, kind, text=""):
     """Records the response, adopts or moves the proposal if it decides"""
+    # Locked, with its status in the database (two last consents at once)
+    proposal.status = (
+        Proposal.objects
+        .select_for_update()
+        .values_list("status", flat=True)
+        .get(pk=proposal.pk)
+    )
     if proposal.status != Proposal.PUBLISHED and kind != Response.COMMENT:
         raise ProposalError([_("The proposal isn't open for responses anymore.")])
     if kind == Response.OBJECTION:
