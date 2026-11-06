@@ -134,6 +134,32 @@ class ProcessingTest(TestCase):
             self.client.post(f"/agenda/{self.item.pk}/process/").status_code, 403
         )
 
+    def test_only_open_proposals_with_changes_are_adopted(self):
+        """A proposal withdrawn by its proposer meanwhile, or a tension
+        without changes, isn't adopted in the meeting"""
+        self.client.force_login(self.eve)
+        self.client.post(f"/proposals/{self.proposal.pk}/withdraw/")
+        self.client.force_login(self.ada)
+        self.client.post(f"/agenda/{self.item.pk}/adopt/")
+        self.proposal.refresh_from_db()
+        self.cook.refresh_from_db()
+        self.assertEqual(
+            (self.proposal.status, self.cook.name), (Proposal.WITHDRAWN, "Cook")
+        )
+
+        tension = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            tension="Noise",
+            status=Proposal.IN_MEETING,
+            meeting=self.meeting,
+            created_at=timezone.now(),
+        )
+        item = AgendaItem.objects.create(meeting=self.meeting, proposal=tension)
+        self.client.post(f"/agenda/{item.pk}/adopt/")
+        tension.refresh_from_db()
+        self.assertEqual(tension.status, Proposal.IN_MEETING)
+
     def test_objection_left_open(self):
         """A meeting ends with an untested objection: the next meeting
         processing the proposal tests it"""

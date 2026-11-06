@@ -497,6 +497,10 @@ def adopt(proposal):
     """Applies the proposal and marks it as adopted"""
     if proposal.glassfrog_id or proposal.status == Proposal.ADOPTED:
         raise ProposalError([_("The proposal has already been adopted.")])
+    if proposal.status == Proposal.WITHDRAWN:
+        raise ProposalError([_("The proposal has been withdrawn.")])
+    if not proposal.instructions:
+        raise ProposalError([_("A tension without changes isn't adopted.")])
     # Who is affected, before roles are removed or moved away
     before = list(members(proposal.circle).values_list("pk", flat=True))
     applier = Applier(proposal)

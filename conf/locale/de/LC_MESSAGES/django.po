@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:12+0100\n"
+"POT-Creation-Date: 2026-11-06 08:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -870,6 +870,14 @@ msgstr "%(circle)s hat noch Rollen, diese müssen zuerst weg."
 msgid "The proposal has already been adopted."
 msgstr "Der Vorschlag wurde bereits angenommen."
 
+#: governance/proposals/instructions.py governance/proposals/views.py
+msgid "The proposal has been withdrawn."
+msgstr "Der Vorschlag wurde zurückgezogen."
+
+#: governance/proposals/instructions.py
+msgid "A tension without changes isn't adopted."
+msgstr "Eine Spannung ohne Änderungen wird nicht angenommen."
+
 #: governance/proposals/instructions.py
 msgid "The instructions have to be a list."
 msgstr "Die Instruktionen müssen eine Liste sein."
@@ -1040,10 +1048,6 @@ msgstr "Der Vorschlag ist veröffentlicht. Er wird am %(date)s angenommen, wenn 
 #: governance/proposals/views.py
 msgid "The proposal is a draft again. Publish it again when it's ready, the circle starts over then."
 msgstr "Der Vorschlag ist wieder ein Entwurf. Veröffentliche ihn erneut, wenn er bereit ist; der Kreis beginnt dann von vorne."
-
-#: governance/proposals/views.py
-msgid "The proposal has been withdrawn."
-msgstr "Der Vorschlag wurde zurückgezogen."
 
 #: governance/proposals/views.py
 msgid "Everybody consented, the proposal is adopted."

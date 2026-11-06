@@ -125,7 +125,7 @@
           {% endfor %}
         </ul>
         <div class="d-flex flex-wrap gap-1">
-          {% if can_run and proposal.status != "adopted" %}
+          {% if can_run and proposal.status == "in_meeting" and proposal.instructions %}
             <form method="post" action="{% url 'item_adopt' current.pk %}">
               {% csrf_token %}
               <button type="submit" class="btn btn-sm btn-primary">{% translate "Adopt" %}</button>
