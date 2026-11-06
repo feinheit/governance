@@ -273,7 +273,9 @@ rule.
   when assigning or removing would make a Circle Rep lead their circle,
   the page warns and then ends the Circle Rep's assignment
   (`assignments.change_assignments()`), the circle elects a new one;
-  deactivating ends it without asking (moves by proposals: backlog).
+  proposals moving a circle under one its Circle Rep leads show it in
+  their consequences and end it when adopted (`Applier.finish()`),
+  deactivating ends it without asking.
 
 Spelling corrections go through governance on purpose, like striking
 invalid governance (4.2.2): the Secretary starts a governance meeting,
@@ -561,12 +563,6 @@ Deliberately not modelled:
   goes into the minutes.
 
 ## Backlog
-
-- **Circle Reps leading their circle through moves**: a proposal moving
-  a circle without a Circle Lead of its own under one whose Circle Lead
-  is its Circle Rep isn't checked (5.1.1). Like the assignments, the
-  draft's consequences could warn and adopting end the Circle Rep's
-  assignment.
 
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so

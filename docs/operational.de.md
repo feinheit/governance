@@ -20,7 +20,8 @@ Einiges ändert sich ohne Governance:
   5.1.1). Würde eine Zuweisung oder ihr Entfernen einen Circle Rep zum
   Circle Lead seines Kreises machen, auch vom übergeordneten Kreis her,
   warnt das Tool und beendet dann die Zuweisung als Circle Rep; der Kreis
-  wählt einen neuen. Das Deaktivieren einer Person beendet sie ohne
+  wählt einen neuen. Ein Vorschlag, der einen Kreis verschiebt, zeigt
+  das vor dem Annehmen, das Deaktivieren einer Person beendet sie ohne
   Rückfrage.
 - Wer eine Rolle abgeben will, wendet sich an die Circle Leads, die die
   Person entfernen, auch aus gewählten Rollen ("Besetzung" auf der

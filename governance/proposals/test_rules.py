@@ -143,3 +143,58 @@ class DescribeTest(TestCase):
         self.assertEqual(
             [(c.label, c.subject, c.new) for c in moved], [("Role", "Cook", "Pantry")]
         )
+
+
+class CircleRepMovedUnderOwnLeadTest(TestCase):
+    def test_moved_under_its_circle_reps_lead(self):
+        """A circle without a Circle Lead of its own is led from above
+        (1.4.2): moved under a circle its Circle Rep leads, the Circle Rep
+        resigns (5.1.1), after the draft warned"""
+        from django.core import mail
+
+        from governance.proposals.instructions import adopt
+        from governance.roles.models import Assignment
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        Assignment.objects.create(role=kitchen.roles.get(core_role="lead"), user=ada)
+        Assignment.objects.create(role=kitchen, user=ada)
+        pantry = Role.objects.create(name="Pantry", circle=kitchen, is_circle=True)
+        pantry.create_core_roles()
+        Role.objects.create(name="Shelves", circle=pantry)
+        Assignment.objects.create(role=pantry.roles.get(core_role="lead"), user=eve)
+        bakery = Role.objects.create(name="Bakery", circle=kitchen, is_circle=True)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        representing = Assignment.objects.create(
+            role=bakery.roles.get(core_role="rep"),
+            user=eve,
+            starts_on=timezone.localdate() - timezone.timedelta(days=30),
+        )
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="Bread belongs to the pantry",
+            created_at=timezone.now(),
+            instructions=[
+                {
+                    "op": "move",
+                    "path": f"/roles/{pantry.pk}/supporting_circle/roles/{bakery.pk}",
+                }
+            ],
+        )
+        self.client.force_login(ada)
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(
+            response,
+            "Eve would lead Bakery while being its Circle Rep: adopting the proposal"
+            " ends that assignment",
+        )
+
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(proposal)
+        representing.refresh_from_db()
+        self.assertEqual(representing.ends_on, timezone.localdate())
+        self.assertIn("eve@example.com", [m.to[0] for m in mail.outbox])

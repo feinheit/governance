@@ -20,7 +20,12 @@ from django.utils.translation import gettext as _
 from governance.history.update import update_changes
 from governance.notifications.mails import proposal_adopted, proposal_withdrawn
 from governance.proposals.models import Proposal
-from governance.roles.assignments import end_assignment, sync_circle_holders
+from governance.roles.assignments import (
+    end_assignment,
+    new_reps_leading,
+    reps_leading_their_circle,
+    sync_circle_holders,
+)
 from governance.roles.constitution import CORE_ROLES, LEAD
 from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
 from governance.roles.permissions import members
@@ -94,6 +99,8 @@ class Applier:
         self.removed = []
         self.made_circles = []  # Automatically, by adding roles inside
         self.ended_users = set()
+        # Circle Reps leading their circle afterwards resign (5.1.1)
+        self.ended_reps = []
 
     def problem(self, message, **kwargs):
         # Once, even if several instructions refer to the missing role
@@ -161,6 +168,7 @@ class Applier:
             # Removed since: its proposals are withdrawn with it
             self.problem(_("%(object)s doesn't exist anymore."), object=self.circle)
             raise ProposalError(self.problems)
+        self.reps_before = reps_leading_their_circle()
         for instruction in instructions:
             self.apply_one(instruction)
         for kind, obj in self.created.items():
@@ -458,6 +466,12 @@ class Applier:
             self.reverted.append(circle)
         for role in self.converted:
             sync_circle_holders(role, self.day)
+        # E.g. a circle without a Circle Lead of its own moved under one its
+        # Circle Rep leads (1.4.2)
+        for rep in new_reps_leading(self.reps_before):
+            self.end_assignment(rep)
+            sync_circle_holders(rep.role.circle, self.day)
+            self.ended_reps.append(rep)
 
 
 def is_empty_circle(circle):
@@ -606,7 +620,8 @@ def close_circles(circles, adopted):
 
 def consequences(proposal):
     """What adopting the proposal does automatically: the circles turning
-    back into roles because they lose their last roles"""
+    back into roles because they lose their last roles (``reverting``), the
+    Circle Reps resigning because they'd lead their circle (``reps``)"""
     applier = Applier(proposal)
     try:
         with transaction.atomic():
@@ -614,11 +629,14 @@ def consequences(proposal):
             applier.finish()
             raise Rollback
     except ProposalError:
-        return []
+        return {}
     except Rollback:
         for circle in applier.deferred:
             circle.at_meeting_end = True
-        return [*applier.reverted, *applier.deferred]
+        return {
+            "reverting": [*applier.reverted, *applier.deferred],
+            "reps": applier.ended_reps,
+        }
 
 
 def problems(proposal):

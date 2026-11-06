@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 11:49+0100\n"
+"POT-Creation-Date: 2026-11-06 11:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1815,24 +1815,6 @@ msgstr "Schritte"
 
 #: governance/templates/meetings/_current.html
 #: governance/templates/proposals/proposal_detail.html
-#, python-format
-msgid "%(circle)s loses its last roles: it turns back into a role when the meeting ends, its Facilitator, Secretary and Circle Rep and their terms end."
-msgstr "%(circle)s verliert seine letzten Rollen: Der Kreis wird wieder zu einer Rolle, wenn das Meeting endet, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
-
-#: governance/templates/meetings/_current.html
-#: governance/templates/proposals/proposal_detail.html
-#, python-format
-msgid "%(circle)s loses its last roles: adopting the proposal turns it back into a role, its Facilitator, Secretary and Circle Rep and their terms end."
-msgstr "%(circle)s verliert seine letzten Rollen: Wird der Vorschlag angenommen, wird der Kreis wieder zu einer Rolle, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
-
-#: governance/templates/meetings/_current.html
-#: governance/templates/proposals/proposal_detail.html
-#, python-format
-msgid "Its policies are archived: %(policies)s."
-msgstr "Seine Policies werden archiviert: %(policies)s."
-
-#: governance/templates/meetings/_current.html
-#: governance/templates/proposals/proposal_detail.html
 msgid "The proposal can't be adopted like this:"
 msgstr "So kann der Vorschlag nicht angenommen werden:"
 
@@ -2202,6 +2184,26 @@ msgstr "Du hast jetzt %(role)s in %(circle)s."
 #, python-format
 msgid "You don't hold %(role)s in %(circle)s anymore."
 msgstr "Du hast %(role)s in %(circle)s nicht mehr."
+
+#: governance/templates/proposals/_consequences.html
+#, python-format
+msgid "%(circle)s loses its last roles: it turns back into a role when the meeting ends, its Facilitator, Secretary and Circle Rep and their terms end."
+msgstr "%(circle)s verliert seine letzten Rollen: Der Kreis wird wieder zu einer Rolle, wenn das Meeting endet, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
+
+#: governance/templates/proposals/_consequences.html
+#, python-format
+msgid "%(circle)s loses its last roles: adopting the proposal turns it back into a role, its Facilitator, Secretary and Circle Rep and their terms end."
+msgstr "%(circle)s verliert seine letzten Rollen: Wird der Vorschlag angenommen, wird der Kreis wieder zu einer Rolle, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
+
+#: governance/templates/proposals/_consequences.html
+#, python-format
+msgid "Its policies are archived: %(policies)s."
+msgstr "Seine Policies werden archiviert: %(policies)s."
+
+#: governance/templates/proposals/_consequences.html
+#, python-format
+msgid "%(user)s would lead %(circle)s while being its Circle Rep: adopting the proposal ends that assignment (constitution 5.1.1), the circle elects a new Circle Rep."
+msgstr "%(user)s würde %(circle)s leiten und wäre zugleich sein Circle Rep: Wird der Vorschlag angenommen, endet diese Zuweisung (Verfassung 5.1.1), der Kreis wählt einen neuen Circle Rep."
 
 #: governance/templates/proposals/_drafting.html
 msgid "Propose changes"

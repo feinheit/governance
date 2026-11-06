@@ -148,7 +148,7 @@ def current_context(request, meeting):
             # meeting, and circles turning back into roles are shown before
             # adopting, to everybody
             context["problems"] = problems(proposal)
-            context["reverting"] = consequences(proposal)
+            context["consequences"] = consequences(proposal)
     return context
 
 

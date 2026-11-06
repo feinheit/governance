@@ -128,8 +128,8 @@ def drafting_context(proposal):
     return {
         "editable": True,
         "problems": problems(proposal) if proposal.instructions else [],
-        # Circles losing their last roles turn back into roles
-        "reverting": consequences(proposal) if proposal.instructions else [],
+        # E.g. circles losing their last roles turn back into roles
+        "consequences": consequences(proposal) if proposal.instructions else {},
         # The anchor circle changes its own purpose and accountabilities
         "circle_roles": ([] if circle.circle_id else [circle])
         # The Circle Lead stays as the constitution defines it
