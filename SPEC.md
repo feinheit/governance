@@ -490,6 +490,15 @@ author, `process.response_summary()`). The API only
 changes the user's own drafts: the secretary amends others' proposals in a
 running meeting's page, not through scripts.
 
+`GET backup/` is the JSON backup (`backup.py`), what the token's user
+sees, one file per kind: `people`, `roles` (with accountabilities and
+domains), `assignments`, `policies`, `history` (the `Change`s since
+2018), `proposals` (with responses, without others' drafts), `meetings`
+(with agenda, objections, elections), `metrics`, `checklist_items`,
+`links`. Lists ordered by ID with the models' field names and GlassFrog
+IDs. `scripts/fetch_backup.py REPO` commits them daily to a git
+repository, like the GlassFrog export before (the backlog has the rest).
+
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
 write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
@@ -578,6 +587,11 @@ Deliberately not modelled:
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
+- **JSON backup**: convert every commit of the GlassFrog export to the
+  backup's format (prepared, not run), then run `scripts/fetch_backup.py`
+  daily on the fetcher's server instead of `fetch_glassfrog.py`. API
+  tokens expire after 90 days: renew the backup's token, or let tokens
+  in use extend themselves.
 - **Switchover**: a final import, update the handbook's links, cancel
   GlassFrog, then stop the nightly `import_glassfrog --api`. Let the
   open imported proposals be adopted (`adopt()` refuses every proposal

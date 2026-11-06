@@ -3,6 +3,7 @@ from ninja import NinjaAPI
 
 from governance.accounts.api import router as accounts_router
 from governance.accounts.api_auth import user_auth
+from governance.backup import backup
 from governance.proposals.api import router as proposals_router
 from governance.roles.api import router as roles_router
 
@@ -16,3 +17,10 @@ api = NinjaAPI(
 api.add_router("/", accounts_router)
 api.add_router("/", roles_router)
 api.add_router("/", proposals_router)
+
+
+@api.get("backup/")
+def backup_files(request):
+    """The JSON backup's files, what the token's user sees
+    (``scripts/fetch_backup.py``)"""
+    return backup(request.user)
