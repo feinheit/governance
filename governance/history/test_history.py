@@ -294,6 +294,20 @@ class HistoryViewsTest(TestCase):
         )
 
 
+class TimelineTest(TestCase):
+    def test_local_days(self):
+        """Proposals are on their local day like the changes, also when
+        decided shortly after midnight"""
+        from governance.history.views import timeline
+        from governance.proposals.models import Proposal
+
+        proposal = Proposal(
+            tension="Night owls",
+            decided_at=dt.datetime(2026, 11, 6, 23, 30, tzinfo=dt.UTC),
+        )
+        self.assertEqual(timeline([], [proposal])[0][0], dt.date(2026, 11, 7))
+
+
 class FairyTasksTest(TestCase):
     def test_changes_of_the_app(self):
         """Changes made in the app are audit rows: the daily task turns them

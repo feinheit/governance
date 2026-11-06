@@ -726,8 +726,6 @@ Deliberately not modelled:
   - B4: the app's async process moves proposals imported from GlassFrog
     to "waiting for a meeting" (the last consent, the deadline) until the
     nightly import sets them back. To decide, maybe until the switchover.
-  - B5: the history's timeline puts proposals on their UTC day
-    (`decided_at.date()`), changes on the local one.
   - Untested risks: concurrent adoption without row locks
     (`select_for_update`), no mail when a due async proposal goes to a
     meeting because of a conflict, nothing adopted until the deadline when

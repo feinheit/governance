@@ -4,6 +4,7 @@ from itertools import groupby
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from governance.accounts.models import User
@@ -101,7 +102,9 @@ def present(changes):
 def timeline(changes, proposals):
     """Changes and proposals grouped by day, newest first"""
     entries = [(change.date, "change", change) for change in present(changes)] + [
-        (proposal.decided_at.date(), "proposal", proposal) for proposal in proposals
+        # The local day like the changes', not UTC's
+        (timezone.localdate(proposal.decided_at), "proposal", proposal)
+        for proposal in proposals
     ]
     entries.sort(key=lambda entry: (entry[0], entry[1] == "proposal"), reverse=True)
     return [
