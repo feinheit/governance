@@ -85,7 +85,8 @@ Zu jedem Agendapunkt kann der Secretary ein "Ergebnis" und einen "Link"
 festhalten, die sich beim Tippen speichern (die anderen sehen sie),
 "Speichern und erledigt" oder einfach "Erledigt". Die Ergebnisse der
 erledigten Punkte stapeln sich rechts (hochscrollen für frühere), die
-Agenda streicht sie durch:
+Agenda streicht sie durch; ein Klick darauf zeigt das Ergebnis, "Wieder
+öffnen" kehrt zum Punkt zurück, um es zu korrigieren:
 
 - **Nichts** ist in Ordnung: viele Punkte enden mit einer Information
   oder einer kurzen Diskussion.

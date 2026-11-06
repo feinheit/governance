@@ -84,7 +84,7 @@ function scrollToCurrent(force = false) {
   if (flow.scrollHeight > flow.clientHeight) {
     flow.scrollTo({
       top: current.offsetTop,
-      behavior: force ? "smooth" : "auto",
+      behavior: force ? "smooth" : "instant",
     })
   } else if (force) {
     current.scrollIntoView({ behavior: "smooth", block: "start" })

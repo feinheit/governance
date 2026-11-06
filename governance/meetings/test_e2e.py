@@ -256,6 +256,17 @@ class MeetingE2ETest(LiveServerTestCase):
         page.locator("#agenda li", has_text="Second").click()
         page.wait_for_selector("#current >> text=Second")
         page.wait_for_function(visible)
+
+        # A completed item's row leads to its result, "Reopen" goes back
+        page.locator("#agenda li", has_text="Done 1").click()
+        page.wait_for_function(
+            "document.querySelector('#results section').getBoundingClientRect().top"
+            " >= document.querySelector('.wb-flow').getBoundingClientRect().top - 1"
+        )
+        page.locator("#results section", has_text="Done 1").locator(
+            "button", has_text="Reopen"
+        ).click()
+        page.wait_for_selector("#current >> text=Done 1")
         self.assertEqual(self.errors, [])
 
     def test_paused_notice(self):

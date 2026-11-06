@@ -73,6 +73,18 @@ def complete(item):
 
 
 @require_POST
+def item_reopen(request, pk):
+    """A completed item becomes the current one again, e.g. to correct its
+    outcome"""
+    item = running_item(request, pk)
+    item.is_completed = False
+    item.save(update_fields=["is_completed"])
+    item.meeting.current_item = item
+    item.meeting.save(update_fields=["current_item"])
+    return redirect(item.meeting)
+
+
+@require_POST
 def item_complete(request, pk):
     item = running_item(request, pk)
     complete(item)

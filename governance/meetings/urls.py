@@ -21,6 +21,7 @@ urlpatterns = [
     path("agenda/<int:pk>/process/", processing.item_process, name="item_process"),
     path("agenda/<int:pk>/step/", processing.item_step, name="item_step"),
     path("agenda/<int:pk>/complete/", processing.item_complete, name="item_complete"),
+    path("agenda/<int:pk>/reopen/", processing.item_reopen, name="item_reopen"),
     path("agenda/<int:pk>/discard/", processing.item_discard, name="item_discard"),
     path(
         "agenda/<int:pk>/proposal/",

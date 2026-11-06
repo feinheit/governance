@@ -4,7 +4,7 @@
 <ul class="list-group list-group-flush" {% if can_run and meeting.is_running %}data-agenda-sortable{% endif %}>
   {% for item in agenda %}
     <li
-      class="list-group-item wb-row{% if item.pk == meeting.current_item_id %} wb-current{% endif %}{% if item.can_process %} wb-row-link{% endif %}"
+      class="list-group-item wb-row{% if item.pk == meeting.current_item_id %} wb-current{% endif %}{% if item.can_process or item.has_result %} wb-row-link{% endif %}"
       data-agenda-item="{{ item.pk }}"
     >
       {% if can_run and meeting.is_running %}<span
@@ -13,11 +13,16 @@
           title="{% translate 'Drag to reorder' %}"
         >{% icon "grip-vertical" %}</span>{% endif %}
       <div class="wb-row-main">
-        <span class="wb-row-title{% if item.is_completed %} wb-completed{% endif %}">
-          {% if item.proposal %}<a
-              href="{{ item.proposal.get_absolute_url }}"
-            >{{ item }}</a>{% else %}{{ item }}{% endif %}
-        </span>
+        {% if item.has_result %}
+          {# Leads to its result beside the agenda #}
+          <a class="wb-row-title wb-completed" href="#result-{{ item.pk }}">{{ item }}</a>
+        {% else %}
+          <span class="wb-row-title{% if item.is_completed %} wb-completed{% endif %}">
+            {% if item.proposal %}<a
+                href="{{ item.proposal.get_absolute_url }}"
+              >{{ item }}</a>{% else %}{{ item }}{% endif %}
+          </span>
+        {% endif %}
         <div class="wb-row-meta">
           {% if item.owner %}<span>{{ item.owner }}</span>{% endif %}
           {% if item.proposal %}<span>{{ item.proposal.get_status_display }}</span>{% endif %}

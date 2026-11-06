@@ -442,6 +442,13 @@ def agenda_context(request, meeting):
             and not item.is_completed
             and item.pk != meeting.current_item_id
         )
+        # A completed item's row leads to its result (_results.html)
+        item.has_result = (
+            meeting.kind == Meeting.TACTICAL
+            and meeting.is_running
+            and item.is_completed
+            and bool(item.outcome or item.link)
+        )
         item.can_remove = (
             can_add
             and (runs or item.owner_id == request.user.pk)
@@ -451,11 +458,7 @@ def agenda_context(request, meeting):
         "meeting": meeting,
         "agenda": items,
         # Tactical meetings stack the completed items' results (_results.html)
-        "results": [
-            item for item in items if item.is_completed and (item.outcome or item.link)
-        ]
-        if meeting.kind == Meeting.TACTICAL and meeting.is_running
-        else [],
+        "results": [item for item in items if item.has_result],
         "can_run": runs,
         "can_take_over": takes_over,
         "can_add_items": can_add,

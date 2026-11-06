@@ -562,12 +562,25 @@ a.wb-row-title:hover {
   position: relative;
 }
 
+/* Sticky: the page scrolls the agenda column, this one stays in view */
 @media (min-width: 992px) {
   .wb-flow {
+    position: sticky;
+    top: 1rem;
     max-height: calc(100vh - 2rem);
     overflow-y: auto;
     padding-inline-end: 0.25rem;
   }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wb-flow {
+    scroll-behavior: smooth;
+  }
+}
+
+.wb-result {
+  scroll-margin-top: 0.5rem;
 }
 
 .wb-completed {

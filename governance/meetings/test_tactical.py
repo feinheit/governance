@@ -269,6 +269,35 @@ class TacticalTest(TestCase):
         self.assertContains(response, "Everybody was there")
         self.assertNotContains(response, 'name="minutes"')
 
+    def test_reopen(self):
+        """A completed item's agenda row leads to its result, the secretary
+        reopens it there to correct it"""
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.ada,
+        )
+        knives = AgendaItem.objects.create(
+            meeting=meeting, label="Knives", outcome="Bob buys", is_completed=True
+        )
+        self.client.force_login(self.bob)  # Following
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, f'href="#result-{knives.pk}"')
+        self.assertContains(response, f'id="result-{knives.pk}"')
+        self.assertNotContains(response, f"/agenda/{knives.pk}/reopen/")
+        self.assertEqual(
+            self.client.post(f"/agenda/{knives.pk}/reopen/").status_code, 403
+        )
+        self.client.force_login(self.ada)
+        self.assertContains(
+            self.client.get(meeting.get_absolute_url()), f"/agenda/{knives.pk}/reopen/"
+        )
+        self.client.post(f"/agenda/{knives.pk}/reopen/")
+        knives.refresh_from_db()
+        meeting.refresh_from_db()
+        self.assertEqual((knives.is_completed, meeting.current_item), (False, knives))
+
     def test_no_proposals(self):
         """Tactical meetings don't process proposals, not even crafted"""
         from governance.proposals.models import Proposal

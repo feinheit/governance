@@ -1,9 +1,21 @@
-{% load i18n %}
+{% load governance i18n %}
 {# The results of a tactical meeting's completed items, a card each, above the item being processed (in .wb-flow, scrolled to the item) #}
 <div id="results">
   {% for item in results %}
-    <section class="card mb-3">
-      <div class="card-header"><h2 class="h6 mb-0">{{ item }}</h2></div>
+    <section class="card mb-3 wb-result" id="result-{{ item.pk }}">
+      <div class="card-header d-flex justify-content-between align-items-center gap-2">
+        <h2 class="h6 mb-0">{{ item }}</h2>
+        {% if can_run %}
+          {# Back to it, e.g. to correct its outcome #}
+          <form method="post" action="{% url 'item_reopen' item.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-quiet">
+              {% icon "arrow-counterclockwise" %}
+              {% translate "Reopen" %}
+            </button>
+          </form>
+        {% endif %}
+      </div>
       <div class="card-body">
         {% if item.outcome %}<div>{{ item.outcome|linebreaksbr }}</div>{% endif %}
         {% if item.link %}<a

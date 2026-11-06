@@ -83,7 +83,8 @@ meetings, to check on them ("Show earlier meetings" for more). For each
 agenda item the secretary may record an "Outcome" and a "Link", which
 save themselves while typing (the others see them), "Save and done" or
 just "Done". The results of the completed items stack up on the right
-(scroll up for earlier ones), the agenda strikes them through:
+(scroll up for earlier ones), the agenda strikes them through; clicking
+one there shows its result, "Reopen" goes back to it to correct it:
 
 - **Nothing** is fine: many items end with information or a short
   discussion.

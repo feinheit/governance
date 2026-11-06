@@ -346,7 +346,9 @@ completed items (a card each, `_results.html`), the item being
 processed, and the notes at the bottom (what doesn't belong to an agenda
 item, e.g. a special meeting's intent; the secretary's textarea saves
 itself, `data-autosave`). It scrolls to the item when another one is
-processed and when its agenda row is clicked (`meeting.js`). An ended
+processed and when its agenda row is clicked (`meeting.js`), sticky
+beside the agenda's column; a completed item's row leads to its result,
+"Reopen" makes it the current item again (`item_reopen`). An ended
 meeting shows its outputs like its mail (`meetings/outputs.py`) and
 doesn't change anymore (`runnable_meeting()`).
 `meetings/test_e2e.py` covers it in a browser.
