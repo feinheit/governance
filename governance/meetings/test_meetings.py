@@ -432,8 +432,8 @@ class MeetingsTest(TestCase):
         self.assertNotContains(response, "Your proposals")  # Bob has none
         self.assertRegex(
             response.content.decode(),
-            r'<optgroup label="Others\' proposals">\s*<option[^>]*>Objected'
-            r" \(waiting for a meeting, Ada\)</option>\s*<option[^>]*>Async",
+            r'<optgroup label="Others\' proposals">\s*<option[^>]*>\s*Objected'
+            r" \(waiting for a meeting, Ada\)\s*</option>\s*<option[^>]*>\s*Async",
         )
         self.client.post(url, {"proposal": published.pk})
         published.refresh_from_db()
