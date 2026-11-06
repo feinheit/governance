@@ -82,10 +82,7 @@ def affected_circles(role):
     if role.core_role in {LEAD, REP} and role.circle:
         circles.append(role.circle.circle)
     if role.core_role == LEAD and role.circle:
-        parents = [role.circle]
-        while parents:
-            parents = list(Role.objects.active().circles().filter(circle__in=parents))
-            circles.extend(parents)
+        circles.extend(role.circle.sub_circles())
     return circles
 
 

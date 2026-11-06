@@ -108,11 +108,7 @@ def proposal_withdrawn(proposal, adopted=None):
 def domain_policy_changed(proposal):
     """A role changed a policy for its domains: everybody affected, the
     members of its circle and all sub-circles"""
-    circles, pending = [], [proposal.circle]
-    while pending:
-        circle = pending.pop()
-        circles.append(circle)
-        pending.extend(circle.roles.active().circles())
+    circles = [proposal.circle, *proposal.circle.sub_circles()]
     users = User.objects.filter(
         Q(pk__in=User.objects.active().filter(notify_all=True))
         | Q(pk=proposal.proposer_id)

@@ -164,6 +164,14 @@ class Role(models.Model):
             circle = circle.circle
         return circles[::-1]
 
+    def sub_circles(self):
+        """The active circles inside, at any depth (5.2), level by level"""
+        circles, parents = [], [self]
+        while parents:
+            parents = list(Role.objects.active().circles().filter(circle__in=parents))
+            circles.extend(parents)
+        return circles
+
     def effective_async_acceptance_days(self, default=ASYNC_ACCEPTANCE_DAYS):
         circle = self.governing_circle
         while circle is not None:
