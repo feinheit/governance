@@ -344,8 +344,9 @@ Modals don't stop it: they're outside of `#meeting`.
 While it runs the heading is in the left column, so that the right one
 starts right below the navigation (an ended meeting has the usual
 header with the date, who called it and the secretary, no scrolling
-column). Left: the secretary ("Take over"), the agenda (the attendees in a
-modal from its heading) (adding items as its last line, completed items
+column). Left: the secretary ("Take over"), the agenda (compact rows
+"description – short name"; the attendees in a modal and "End the
+meeting" in its heading) (adding items as its last line, completed items
 struck through, "End the meeting" at its bottom), for ad-hoc tactical
 meetings the invited roles, elections, proposals. On wide screens both columns fit the window down to its lower edge and
 scroll on their own, the page doesn't (`.wb-fit`, `fitFlow()`).
@@ -669,6 +670,9 @@ Deliberately not modelled:
 
 ## Backlog
 
+- **The meeting page on phones**: the running meeting's layout (columns
+  fitting the window, the sidebar with heading and agenda) is made for
+  wide screens and quite broken on phones.
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).

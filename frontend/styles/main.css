@@ -595,6 +595,25 @@ a.wb-row-title:hover {
   scroll-margin-top: 0.5rem;
 }
 
+/* Compact agenda rows: "description – short name" */
+.wb-agenda-row {
+  align-items: center;
+  padding-block: 0.4rem;
+}
+
+/* Its buttons (removing, the arrows without JavaScript) don't make it
+   higher */
+.wb-agenda-row .btn {
+  --bs-btn-padding-y: 0;
+  --bs-btn-padding-x: 0.3rem;
+  line-height: 1.4;
+}
+
+.wb-agenda-owner {
+  font-weight: normal;
+  color: var(--bs-secondary-color);
+}
+
 .wb-completed {
   text-decoration: line-through;
   color: var(--bs-secondary-color);

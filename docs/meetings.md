@@ -24,10 +24,10 @@ the page updates by itself.
 - **Notes** at the bottom: what doesn't belong to an agenda item, e.g. a
   special meeting's intent. The secretary writes them, they save
   themselves; the outputs mail includes them.
-- **Attendees** ("Attendees" beside the agenda) are the circle's members
-  at the start; the secretary invites others or removes them there.
-  "End the meeting" is at the bottom of the agenda; with unprocessed
-  items it asks first.
+- **Attendees** ("Attendees" in the agenda's heading) are the circle's
+  members at the start; the secretary invites others or removes them
+  there. "End the meeting" (■ beside it) asks first while items are
+  unprocessed.
 - **One meeting per circle**: starting a second one leads to the running
   one.
 - **End**: "End the meeting", or by itself three hours after the last
