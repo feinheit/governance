@@ -296,8 +296,13 @@ class Applier:
     def apply_to_supporting_circle(self, instruction, key):
         """Turns a role into a circle (``add``) or back (``remove``)"""
         role = self.get("roles", key)
-        if role is not None:
-            self.convert(role, to_circle=instruction["op"] == "add")
+        if role is None:
+            return
+        to_circle = instruction["op"] == "add"
+        self.convert(role, to_circle=to_circle)
+        if not to_circle and not role.is_circle:
+            # Closes like a circle turning back automatically (finish())
+            self.reverted.append(role)
 
     def move(self, instruction):
         """Moves a role or policy into a sub-circle, or out of one"""
@@ -569,10 +574,9 @@ def adopt(proposal):
         proposal.names[f"roles/{role.pk}"] = role.name
     for circle in applier.reverted:
         # Recorded, so that the proposal's diff and the history show it
-        proposal.instructions.append({
-            "op": "remove",
-            "path": f"/roles/{circle.pk}/supporting_circle",
-        })
+        step = {"op": "remove", "path": f"/roles/{circle.pk}/supporting_circle"}
+        if step not in proposal.instructions:  # Unless done on purpose
+            proposal.instructions.append(step)
         proposal.names[f"roles/{circle.pk}"] = circle.name
     proposal.status = Proposal.ADOPTED
     proposal.decided_at = timezone.now()

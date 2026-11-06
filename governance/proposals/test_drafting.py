@@ -654,6 +654,55 @@ class DraftingTest(TestCase):
         other.refresh_from_db()
         self.assertTrue(other.is_circle)
 
+    def test_circle_turned_back_explicitly(self):
+        """Turning a circle back into a role on purpose closes it like
+        losing its last roles does: its proposals are withdrawn, its meeting
+        ends"""
+        from governance.meetings.models import Meeting
+
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        other = Proposal.objects.create(
+            circle=bakery,
+            proposer=self.ada,
+            tension="Ovens",
+            status=Proposal.PUBLISHED,
+            created_at=dt.datetime(2026, 11, 1, tzinfo=dt.UTC),
+        )
+        meeting = Meeting.objects.create(
+            circle=bakery,
+            kind=Meeting.GOVERNANCE,
+            started_at=dt.datetime(2026, 12, 1, 11, tzinfo=dt.UTC),
+        )
+        proposal = self.draft()
+        proposal.instructions = [
+            {
+                "op": "move",
+                "path": f"/roles/{baker.pk}",
+                "from": f"/circles/{bakery.pk}/roles/{baker.pk}",
+            },
+            {"op": "remove", "path": f"/roles/{bakery.pk}/supporting_circle"},
+        ]
+        proposal.save()
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(response, "adopting the proposal turns it back into a role")
+
+        adopt(proposal)
+        for obj in [bakery, other, meeting, proposal]:
+            obj.refresh_from_db()
+        self.assertFalse(bakery.is_circle)
+        self.assertEqual(other.status, Proposal.WITHDRAWN)
+        self.assertIsNotNone(meeting.ended_at)
+        # Recorded once
+        self.assertEqual(
+            proposal.instructions.count({
+                "op": "remove",
+                "path": f"/roles/{bakery.pk}/supporting_circle",
+            }),
+            1,
+        )
+
     def test_roles_inside_a_role(self):
         """The role's holders add roles inside it, which makes it a circle"""
         self.assertContains(
