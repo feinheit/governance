@@ -33,6 +33,10 @@ Some things change without governance:
   for the Secretary standing in ("As admin" when hovering them), and
   their forms say so: only use them when you know it's needed. Buttons
   deleting or removing something are red and ask first.
+- When a role becomes a circle, its policies become the circle's, which
+  change through its governance. When it turns back into a role, the
+  policies for its domains stay and its holders change them again, the
+  others are archived.
 - The settings implement what the circle's policies define. Sub-circles
   without a deadline for async proposals of their own use the one of the
   circle above, so the policy setting it should say that it applies to

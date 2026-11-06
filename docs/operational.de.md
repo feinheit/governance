@@ -35,6 +35,10 @@ Einiges ändert sich ohne Governance:
   und ihre Formulare sagen es: Nur verwenden, wenn du weisst, dass es nötig
   ist. Buttons, die etwas löschen oder entfernen, sind rot und fragen
   zuerst nach.
+- Wird eine Rolle zum Kreis, werden ihre Policies die des Kreises, die
+  sich durch seine Governance ändern. Wird er wieder zur Rolle, bleiben
+  die Policies für ihre Domains, ihre Inhaber:innen ändern sie wieder,
+  die anderen werden archiviert.
 - Die Einstellungen setzen um, was Policies des Kreises festlegen.
   Sub-Kreise ohne eigene Frist für asynchrone Vorschläge verwenden die
   des übergeordneten Kreises, deshalb sollte die Policy, die sie

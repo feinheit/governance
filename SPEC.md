@@ -219,8 +219,9 @@ accountabilities and domains through its own governance (1.3.3).
   (`revert_after_meeting()`): the meeting goes on to its closing round,
   the proposal which left the circle without roles (also one of the
   super-circle, `Proposal.reverting_circles`) records the step; its core roles are archived and their assignments end, its
-  policies are archived (a role only has policies for its domains, 1.3.2;
-  the same proposal may move them up). Drafts say so beforehand, the
+  policies without a domain are archived (a role only has policies for
+  its domains, 1.3.2; the same proposal may move them up), those for its
+  domains stay the role's, its holders change them again. Drafts say so beforehand, the
   adopted proposal records the steps.
 
 **Async proposals**: circle members get a mail with the tension and the
@@ -252,7 +253,10 @@ rule.
   users and the person making the change. They move with their role,
   and are archived with it, with its circle or with their domain (the
   proposal removing the domain lists them). Only the role changes them:
-  the circle's proposals don't, they may remove the domain.
+  the circle's proposals don't, they may remove the domain. A role
+  becoming a circle keeps them as the circle's own policies, which its
+  governance changes from then on (a decision); turning back into a role
+  they're the role's again.
 - **Assignments** are operational: the Circle Leads assign and remove
   people and their focus (the super-circle's Circle Leads for a
   sub-circle's Circle Leads, admins for the anchor's). Elected roles aren't
@@ -633,9 +637,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (fourth round, 2026-11-06), open:
-  - Decisions: a role's domain policies when it becomes a circle (they
-    become the circle's, document it); a circle's policies when it turns
-    back into a role (archived? domain policies kept?).
   - Meetings: the secretary handles the meeting's buttons, attendees
     see where the meeting is and read the proposal themselves.
 - **Non-core members of a role** (later, not yet): people taking part in
