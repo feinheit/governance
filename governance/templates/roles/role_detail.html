@@ -22,16 +22,6 @@
             {% blocktranslate count days=role.async_acceptance_days %}{{ days }} day{% plural %}{{ days }} days{% endblocktranslate %}</span>{% endif %}
         {% if role.short_name %}<span><span class="wb-meta-label">{% translate "short name" %}</span>
             {{ role.short_name }}</span>{% endif %}
-        {# A circle's holders: its Circle Leads and Rep; a role's are in their card #}
-        {% if role.circle and role.is_circle %}<span><span class="wb-meta-label">{% translate "held by" %}</span>
-            {% if role.current_assignments or role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
-              {% include "roles/_holders.html" %}
-            {% else %}
-              {# Unfilled roles: the Circle Leads (1.4.2), for the Circle Lead itself those of the super-circle #}
-              {% if role.core_role == "lead" %}{% translate "the super-circle's Circle Leads (by default)" %}{% else %}{% translate "the Circle Leads (by default)" %}{% endif %}{% if leads %}:
-                {% for user in leads %}<a href="{{ user.get_absolute_url }}">{{ user }}</a>{% if not forloop.last %},
-                  {% endif %}{% endfor %}{% endif %}
-            {% endif %}</span>{% endif %}
       </div>
     </div>
     <div class="wb-page-actions">
@@ -182,7 +172,15 @@
     </div>
 
     <div class="col-lg-5">
-      {% if role.circle and not role.is_circle %}{% include "roles/_holders_card.html" %}{% endif %}
+      {# Who holds it: a role's holders, a circle's core roles #}
+      {% if role.is_circle %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Core roles" %}</h2></div>
+          <ul class="list-group list-group-flush">{% include "roles/_role_rows.html" with roles=core_roles %}</ul>
+        </section>
+      {% elif role.circle %}
+        {% include "roles/_holders_card.html" %}
+      {% endif %}
 
       {% if pending %}
         <section class="card mb-4">
@@ -222,13 +220,6 @@
               {% endif %}
             </li>
           </ul>
-        </section>
-      {% endif %}
-
-      {% if role.is_circle %}
-        <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Core roles" %}</h2></div>
-          <ul class="list-group list-group-flush">{% include "roles/_role_rows.html" with roles=core_roles %}</ul>
         </section>
       {% endif %}
 

@@ -246,7 +246,13 @@ class ViewsTest(TestCase):
 
         response = self.client.get(anchor.get_absolute_url())
         self.assertContains(response, "(Circle Rep)", count=1)  # Bob, not Ada
-        self.assertContains(self.client.get(kitchen.get_absolute_url()), "(Circle Rep)")
+        # The circle's own page: its holders are those of its core roles,
+        # first in the sidebar
+        kitchen_page = self.client.get(kitchen.get_absolute_url()).content.decode()
+        self.assertNotIn("(Circle Rep)", kitchen_page)
+        self.assertLess(
+            kitchen_page.index("Core roles"), kitchen_page.index("Meetings")
+        )
         self.assertContains(response, "<strong>Tea</strong> first")
         self.assertContains(response, "Kitchen")
         self.assertNotContains(response, ">Circle Rep</a>")  # Not in the anchor circle
