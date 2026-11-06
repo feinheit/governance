@@ -22,6 +22,9 @@ Einiges ändert sich ohne Governance:
 - Der Secretary darf im Tool alles, was die Circle Leads dürfen, damit es
   eine Stellvertretung gibt.
 - Die Einstellungen setzen um, was Policies des Kreises festlegen.
+  Sub-Kreise ohne eigene Frist für asynchrone Vorschläge verwenden die
+  des übergeordneten Kreises, deshalb sollte die Policy, die sie
+  festlegt, sagen, dass sie für alle Sub-Kreise gilt (Verfassung 5.2.1).
 - Das Tool hält alle diese Änderungen fest.
 
 Neue Personen erfassen und Personen deaktivieren, die gehen, machen die

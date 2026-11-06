@@ -162,7 +162,12 @@ class ElectionsTest(TestCase):
         )
         self.assertEqual(Assignment.objects.current().get(role=cook).user, self.bob)
 
-        # The circle's own setting
+        # The circle's own setting, which sub-circles inherit (a decision,
+        # 5.2.1 applies such policies only in the circle unless they say so)
+        self.assertContains(
+            self.client.get(f"/roles/{self.kitchen.pk}/settings/"),
+            "applies to all sub-circles",
+        )
         self.client.post(
             f"/roles/{self.kitchen.pk}/settings/", {"async_acceptance_days": "2"}
         )

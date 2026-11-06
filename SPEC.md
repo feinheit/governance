@@ -545,8 +545,7 @@ Deliberately not modelled:
 - **Verification** (round of 2026-11-06), open: meeting outputs also to
   the people who lost a role through the meeting's adopted proposals;
   moves into any sub-circle thereof and out of it (5.2), not only direct
-  ones; the async deadline's reach (section 10) explained in the
-  settings.
+  ones.
 
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so

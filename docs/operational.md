@@ -20,7 +20,10 @@ Some things change without governance:
   them, also from elected roles ("Holders" on the role's page).
 - The secretary may do everything in the tool the Circle Leads may, so
   that there's a stand-in.
-- The settings implement what the circle's policies define.
+- The settings implement what the circle's policies define. Sub-circles
+  without a deadline for async proposals of their own use the one of the
+  circle above, so the policy setting it should say that it applies to
+  all sub-circles (constitution 5.2.1).
 - The tool records all these changes.
 
 The admins add new people and deactivate people who leave: their roles

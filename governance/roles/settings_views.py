@@ -14,6 +14,17 @@ class CircleSettingsForm(ModelForm):
         model = Role
         fields = ["async_acceptance_days"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # A decision, see section 10 of SPEC.md: the constitution applies a
+        # policy changing a default process only in its circle unless it
+        # says otherwise (5.2.1)
+        self.fields["async_acceptance_days"].help_text = gettext(
+            "In calendar days. Sub-circles without a deadline of their own use"
+            " this one, so the policy setting it should say that it applies to"
+            " all sub-circles (constitution 5.2.1)."
+        )
+
 
 class RoleSettingsForm(ModelForm):
     class Meta:

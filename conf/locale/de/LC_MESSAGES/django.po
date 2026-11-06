@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:44+0100\n"
+"POT-Creation-Date: 2026-11-06 09:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1419,6 +1419,10 @@ msgstr "URL"
 #: governance/roles/models.py
 msgid "links"
 msgstr "Links"
+
+#: governance/roles/settings_views.py
+msgid "In calendar days. Sub-circles without a deadline of their own use this one, so the policy setting it should say that it applies to all sub-circles (constitution 5.2.1)."
+msgstr"In Kalendertagen. Sub-Kreise ohne eigene Frist verwenden diese, deshalb sollte die Policy, die sie festlegt, sagen, dass sie für alle Sub-Kreise gilt (Verfassung 5.2.1)."
 
 #: governance/roles/settings_views.py
 #, python-format
