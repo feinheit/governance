@@ -138,6 +138,28 @@ class ProcessingTest(TestCase):
             self.client.post(f"/agenda/{self.item.pk}/process/").status_code, 403
         )
 
+    def test_no_governance_in_tactical_meetings(self):
+        """Tactical meetings don't process proposals (5.4), also not through
+        requests the page doesn't offer"""
+        Meeting.objects.filter(pk=self.meeting.pk).update(ended_at=timezone.now())
+        called = Meeting.objects.create(
+            kind=Meeting.TACTICAL, started_at=timezone.now(), called_by=self.bob
+        )
+        regular = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.bob,
+        )
+        self.client.force_login(self.bob)
+        for meeting in [regular, called]:
+            item = AgendaItem.objects.create(meeting=meeting, label="Soup")
+            for action in ["proposal", "adopt", "discard", "step", "objections"]:
+                with self.subTest(meeting=meeting, action=action):
+                    response = self.client.post(f"/agenda/{item.pk}/{action}/")
+                    self.assertEqual(response.status_code, 403)
+        self.assertFalse(Proposal.objects.exclude(pk=self.proposal.pk).exists())
+
     def test_only_open_proposals_with_changes_are_adopted(self):
         """A proposal withdrawn by its proposer meanwhile, or a tension
         without changes, isn't adopted in the meeting"""

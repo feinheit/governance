@@ -27,13 +27,16 @@ from governance.roles.permissions import proposer_roles
 STEPS = [key for key, _label in STEP_CHOICES]
 
 
-def running_item(request, pk):
-    """An agenda item of a running meeting, for its facilitator or secretary"""
+def running_item(request, pk, *, governance=False):
+    """An agenda item of a running meeting, for its facilitator or secretary
+    (``governance``: proposals are only processed in governance meetings)"""
     item = get_object_or_404(
         AgendaItem.objects.select_related("meeting__circle", "proposal"), pk=pk
     )
     meeting = item.meeting
     if not meeting.is_running or not can_run(request.user, meeting):
+        raise PermissionDenied
+    if governance and meeting.kind != Meeting.GOVERNANCE:
         raise PermissionDenied
     return item
 
@@ -52,7 +55,7 @@ def item_process(request, pk):
 
 @require_POST
 def item_step(request, pk):
-    item = running_item(request, pk)
+    item = running_item(request, pk, governance=True)
     if (step := request.POST.get("step")) in STEPS:
         item.step = step
         item.save(update_fields=["step"])
@@ -78,7 +81,7 @@ def item_complete(request, pk):
 @require_POST
 def item_to_proposal(request, pk):
     """An agenda item's tension becomes a proposal, amended by the secretary"""
-    item = running_item(request, pk)
+    item = running_item(request, pk, governance=True)
     if item.proposal:
         return redirect(item.meeting)
     with transaction.atomic():
@@ -101,7 +104,7 @@ def item_to_proposal(request, pk):
 
 @require_POST
 def objection_add(request, pk):
-    item = running_item(request, pk)
+    item = running_item(request, pk, governance=True)
     # "user:role": objections are raised for a role the objector represents
     user_id, _sep, role_id = request.POST.get("objector", "").partition(":")
     user = User.objects.active().filter(pk=user_id or None).first()
@@ -138,7 +141,7 @@ def objection_update(request, pk):
     ).first()
     if item is None:
         raise PermissionDenied
-    item = running_item(request, item.pk)
+    item = running_item(request, item.pk, governance=True)
     action = request.POST.get("action")
     if action in {"valid", "invalid"}:
         objection.is_valid = action == "valid"
@@ -153,7 +156,7 @@ def objection_update(request, pk):
 
 @require_POST
 def item_adopt(request, pk):
-    item = running_item(request, pk)
+    item = running_item(request, pk, governance=True)
     proposal = item.proposal
     if proposal is None or proposal.status == Proposal.ADOPTED:
         raise PermissionDenied
@@ -182,7 +185,7 @@ def item_adopt(request, pk):
 def item_discard(request, pk):
     """The meeting discards the item's proposal (5.3.1, 5.3.4): withdrawn,
     its proposer may draft it again"""
-    item = running_item(request, pk)
+    item = running_item(request, pk, governance=True)
     proposal = item.proposal
     if proposal is None or proposal.status != Proposal.IN_MEETING:
         raise PermissionDenied
