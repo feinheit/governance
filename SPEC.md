@@ -270,7 +270,9 @@ rule.
   they assign, propose from its unfilled roles and are its members. The
   same for a role nobody holds: its circle's Circle Leads are its
   holders (`role_leads()`), also for its inner circle. The anchor circle
-  has Circle Leads only when assigned. Facilitator and Secretary follow
+  has Circle Leads only when assigned. Archived circles and roles have
+  nobody: archiving ends their assignments, and nobody from above fills
+  them in. Facilitator and Secretary follow
   the constitution's stand-ins (5.3.6); the app gives them no rights in
   meetings the other members don't have, except the secretary amending. An
   assignment removed on the day it started was a mistake and is deleted.

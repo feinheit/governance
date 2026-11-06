@@ -32,7 +32,7 @@
     {% empty %}
       {# Unfilled roles: the Circle Leads (1.4.2), for the Circle Lead itself those of the super-circle #}
       <li class="list-group-item text-body-secondary">
-        {% if role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
+        {% if role.archived_on or role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
           {% translate "Nobody" %}
         {% else %}
           {% if role.core_role == "lead" %}{% translate "the super-circle's Circle Leads (by default)" %}{% else %}{% translate "the Circle Leads (by default)" %}{% endif %}{% if leads %}:

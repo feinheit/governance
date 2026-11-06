@@ -20,6 +20,7 @@ from governance.roles.permissions import (
     circle_leads,
     is_member,
     proposer_roles,
+    role_leads,
 )
 
 
@@ -70,6 +71,32 @@ class CircleLeadsTest(TestCase):
         self.assertTrue(can_lead(eve, bakery))
         # The anchor circle has no Circle Leads unless assigned (1.4)
         self.assertEqual(list(circle_leads(anchor)), [])
+
+
+class ArchivedTest(TestCase):
+    def test_nobody_leads_archived_circles_and_roles(self):
+        """Archived circles and roles have no holders (archiving ends their
+        assignments), and nobody from above fills them in"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        anchor.create_core_roles()
+        Assignment.objects.create(role=anchor.roles.get(core_role="lead"), user=ada)
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        self.assertEqual(list(circle_leads(kitchen)), [ada])
+        Role.objects.filter(pk__in=[kitchen.pk, cook.pk]).update(
+            archived_on=timezone.localdate()
+        )
+        kitchen.refresh_from_db()
+        cook.refresh_from_db()
+        self.assertEqual(list(circle_leads(kitchen)), [])
+        self.assertEqual(list(role_leads(cook)), [])
+        self.assertFalse(is_member(ada, kitchen))
+        self.client.force_login(ada)
+        self.assertNotContains(
+            self.client.get(cook.get_absolute_url()), "the Circle Leads (by default)"
+        )
 
 
 class ElevatedRightsTest(TestCase):
