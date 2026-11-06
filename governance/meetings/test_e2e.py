@@ -211,12 +211,20 @@ class MeetingE2ETest(LiveServerTestCase):
             kind=Meeting.TACTICAL,
             started_at=timezone.now(),
             secretary=self.ada,
+            step="tensions",
         )
         item = AgendaItem.objects.create(meeting=meeting, label="Knives")
         meeting.current_item = item
         meeting.save()
         page = self.page
         page.goto(f"{self.live_server_url}{meeting.get_absolute_url()}")
+        # Textareas grow with their text
+        outcome = page.locator("textarea[name=outcome]")
+        height = outcome.evaluate("textarea => textarea.offsetHeight")
+        outcome.fill("Line\n" * 12)
+        self.assertGreater(
+            outcome.evaluate("textarea => textarea.offsetHeight"), height
+        )
         page.fill("textarea[name=outcome]", "Bob buys new knives")
         for _attempt in range(30):
             item.refresh_from_db()
@@ -287,6 +295,16 @@ class MeetingE2ETest(LiveServerTestCase):
         page.locator("#agenda li", has_text="Second").click()
         page.wait_for_selector("#current >> text=Second")
         page.wait_for_function(visible)
+        # The meeting's updates don't move the column
+        scrolled = page.locator(".wb-flow").evaluate("flow => flow.scrollTop")
+        AgendaItem.objects.create(meeting=meeting, label="Meanwhile", position=9)
+        page.wait_for_selector("#agenda >> text=Meanwhile", timeout=8000)
+        page.wait_for_timeout(300)
+        self.assertAlmostEqual(
+            page.locator(".wb-flow").evaluate("flow => flow.scrollTop"),
+            scrolled,
+            delta=2,
+        )
 
         # A completed item's row leads to its result, "Reopen" goes back
         page.locator("#agenda li", has_text="Done 1").click()
