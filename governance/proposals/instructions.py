@@ -625,6 +625,7 @@ def validate_format(instructions):
             or instruction.get("op") not in OPS
             or not isinstance(instruction.get("path"), str)
             or not instruction["path"].startswith("/")
+            or not isinstance(instruction.get("from", ""), str)
         ):
             found.append(
                 _("Instruction %(number)s needs an op (%(ops)s) and a path.")

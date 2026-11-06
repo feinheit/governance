@@ -214,6 +214,20 @@ class APITest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["problems"], [])
 
+    def test_malformed_instructions(self):
+        """Instructions of the wrong shape are problems, not errors"""
+        response = self.api(
+            "post",
+            "/api/proposals/",
+            {
+                "circle_id": self.kitchen.pk,
+                "role_id": self.cook.pk,
+                "tension": "No bread",
+                "instructions": [{"op": "move", "path": "/roles/1", "from": 5}],
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+
     def test_only_proposers_change_proposals(self):
         """The secretary amends in a running meeting's page, not through the
         API: scripts only change their user's own drafts"""
