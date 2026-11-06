@@ -217,7 +217,7 @@ class PolicyDetailOut(Schema):
 
 
 def policy_out(policy):
-    circle = policy.role if policy.role.is_circle else policy.role.circle
+    circle = policy.role.governing_circle
     return {
         "id": policy.pk,
         "title": policy.title,
@@ -247,7 +247,7 @@ def policies(request, circle_id: int | None = None):
         for policy in sorted(
             queryset,
             key=lambda p: (
-                order.get(p.role_id if p.role.is_circle else p.role.circle_id, -1),
+                order.get(p.role.governing_circle_id, -1),
                 not p.role.is_circle,
                 p.role.name,
                 p.position,
@@ -309,14 +309,14 @@ def domains(request, circle_id: int | None = None):
     for domain in sorted(
         queryset,
         key=lambda d: (
-            order.get(d.role_id if d.role.is_circle else d.role.circle_id, -1),
+            order.get(d.role.governing_circle_id, -1),
             not d.role.is_circle,
             d.role.name,
             d.position,
             d.pk,
         ),
     ):
-        circle = domain.role if domain.role.is_circle else domain.role.circle
+        circle = domain.role.governing_circle
         result.append({
             "id": domain.pk,
             "text": domain.text,

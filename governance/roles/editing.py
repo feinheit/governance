@@ -23,7 +23,7 @@ def can_edit_items(user, role, model):
         return False
     if model in {ChecklistItem, Link}:
         return True
-    return can_lead(user, role if role.is_circle else role.circle)
+    return can_lead(user, role.governing_circle)
 
 
 class StrategyForm(ModelForm):

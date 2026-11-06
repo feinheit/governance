@@ -139,6 +139,16 @@ class Role(models.Model):
             return self.core.is_elected
         return self.is_elected_by_policy and not self.is_circle
 
+    @property
+    def governing_circle(self):
+        """The circle whose governance defines the role and its policies: a
+        circle's own, a role's circle"""
+        return self if self.is_circle else self.circle
+
+    @property
+    def governing_circle_id(self):
+        return self.pk if self.is_circle else self.circle_id
+
     def ancestors(self):
         """The circles containing this role, outermost first"""
         circles = []
@@ -149,7 +159,7 @@ class Role(models.Model):
         return circles[::-1]
 
     def effective_async_acceptance_days(self, default=ASYNC_ACCEPTANCE_DAYS):
-        circle = self if self.is_circle else self.circle
+        circle = self.governing_circle
         while circle is not None:
             if circle.async_acceptance_days is not None:
                 return circle.async_acceptance_days

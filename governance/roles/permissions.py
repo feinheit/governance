@@ -165,5 +165,5 @@ def can_change_settings(user, role):
     whether a policy makes a role of the circle elected"""
     if role.archived_on or role.core_role:
         return False
-    circle = role if role.is_circle else role.circle
+    circle = role.governing_circle
     return user.is_admin or holds_core_role(user, circle, SECRETARY)

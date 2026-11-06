@@ -124,7 +124,7 @@ class Applier:
             # (constitution 1.3.3), other roles are governed by their circle
             owner = obj.pk if obj.circle_id is None else obj.circle_id
         else:
-            owner = obj.role_id if obj.role.is_circle else obj.role.circle_id
+            owner = obj.role.governing_circle_id
         if owner != circle.pk and not (
             deep
             and kind == "roles"
