@@ -415,7 +415,9 @@ only setting is `User.notify_all` ("everything in all circles").
   after assignments, elections and domain policies (`update_today()`).
 - **Assignments** have `starts_on`/`ends_on`, reconstructed from GlassFrog's
   history; they are the holders of the history too. A circle's role has its
-  Circle Leads and Reps as holders, GlassFrog's data missed some of them.
+  Circle Leads and Reps as holders, GlassFrog's data missed some of them;
+  the history lists the core role's assignment, not the circle's role's
+  following it the same day (`views.without_following()`).
   An assignment keeps only its last term: re-elections (electing the
   holder for a new term) come from the app's elections
   (`update.reelections()`), GlassFrog's aren't known.

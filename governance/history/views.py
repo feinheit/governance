@@ -10,6 +10,7 @@ from governance.accounts.models import User
 from governance.history.audit import structure_on
 from governance.history.models import Change
 from governance.proposals.models import Proposal
+from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Role
 
 
@@ -47,9 +48,30 @@ def user_of(change):
     return change.new or change.old
 
 
+def without_following(changes):
+    """Without the assignments of a circle's role which follow those of its
+    Circle Leads and Reps on the same day (``sync_circle_holders()``)"""
+    core = {
+        (change.date, change.kind, user_of(change), change.role.circle_id)
+        for change in changes
+        if change.kind in {"assigned", "unassigned"}
+        and change.role
+        and change.role.core_role in {LEAD, REP}
+    }
+    return [
+        change
+        for change in changes
+        if not (
+            change.role
+            and change.role.is_circle
+            and (change.date, change.kind, user_of(change), change.role_id) in core
+        )
+    ]
+
+
 def present(changes):
     """Readable labels, users and roles for the template"""
-    changes = list(changes)
+    changes = without_following(list(changes))
     user_ids, role_ids = set(), set()
     for change in changes:
         if change.kind in ASSIGNMENT_KINDS:
@@ -90,7 +112,7 @@ def timeline(changes, proposals):
 
 def role_history(request, pk):
     role = get_object_or_404(Role, pk=pk)
-    changes = role.changes.select_related("policy")
+    changes = role.changes.select_related("role", "policy")
     if not request.GET.get("assignments"):
         changes = changes.exclude(kind__in=ASSIGNMENT_KINDS)
     proposals = role.changed_by_proposals.filter(

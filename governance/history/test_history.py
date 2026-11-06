@@ -129,6 +129,28 @@ class ReelectedTest(TestCase):
         self.assertContains(response, "until 31 December 2027")
 
 
+class FollowingTest(TestCase):
+    def test_circles_role_follows_its_core_roles(self):
+        """A circle's role follows its Circle Leads and Reps: their
+        assignment is the change, the circle's role isn't one besides"""
+        from governance.accounts.models import User
+        from governance.history.views import present
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        rep = bakery.roles.get(core_role="rep")
+        day = dt.date(2026, 3, 1)
+        changes = [
+            Change(date=day, role=rep, kind="assigned", old="", new=ada.pk),
+            Change(date=day, role=bakery, kind="assigned", old="", new=ada.pk),
+        ]
+        self.assertEqual([c.role for c in present(changes)], [rep])
+        # Alone, e.g. on the circle's own history, it stays
+        self.assertEqual([c.role for c in present(changes[1:])], [bakery])
+
+
 def history(*days):
     """GlassFrog's history: audit rows instead of the tests' own rows"""
     from django.db import connection
