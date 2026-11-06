@@ -8,20 +8,7 @@
     >{% icon "people" %}
       {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}</a>{% endif %}
   {% if can_run and meeting.is_running %}
-    {# Ending: asked first while items are unprocessed (in a modal) #}
-    {% if open_items %}<a
-        {% button_class can_run size="btn-sm py-0" title=_("End the meeting") %}
-        href="{% url 'meeting_end' meeting.pk %}"
-        data-modal
-      >{% icon "stop-fill" %}<span class="visually-hidden">{% translate "End the meeting" %}</span></a>
-    {% else %}
-      <form method="post" action="{% url 'meeting_end' meeting.pk %}">
-        {% csrf_token %}
-        <button type="submit" {% button_class can_run size="btn-sm py-0" title=_("End the meeting") %}>
-          {% icon "stop-fill" %}<span class="visually-hidden">{% translate "End the meeting" %}</span>
-        </button>
-      </form>
-    {% endif %}
+    {% include "meetings/_end_button.html" %}
   {% endif %}
 </div>
 {# The secretary drags the items by their handles (frontend/agenda.js), without JavaScript the arrows; clicking a row processes it #}

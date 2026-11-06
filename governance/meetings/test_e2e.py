@@ -234,6 +234,7 @@ class MeetingE2ETest(LiveServerTestCase):
             kind=Meeting.TACTICAL,
             started_at=timezone.now(),
             secretary=self.ada,
+            step="tensions",
         )
         for position in range(1, 4):
             AgendaItem.objects.create(

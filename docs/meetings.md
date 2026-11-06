@@ -26,8 +26,8 @@ the page updates by itself.
   themselves; the outputs mail includes them.
 - **Attendees** ("Attendees" in the agenda's heading) are the circle's
   members at the start; the secretary invites others or removes them
-  there. "End the meeting" (■ beside it) asks first while items are
-  unprocessed.
+  there. "End the meeting" (■ beside it, large in the closing round)
+  asks first while items are unprocessed.
 - **One meeting per circle**: starting a second one leads to the running
   one.
 - **End**: "End the meeting", or by itself three hours after the last

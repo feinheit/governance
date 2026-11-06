@@ -79,9 +79,17 @@
           {% if meeting.is_running %}
             {# One scrolling column (wide screens): the results, the item being processed, the notes; meeting.js scrolls to the item when it changes #}
             <div class="wb-flow wb-fit">
-              {% if results %}{% include "meetings/_results.html" %}{% endif %}
-              {% if current %}{% include "meetings/_current.html" %}{% endif %}
-              {% include "meetings/_notes.html" %}
+              {% if meeting.step == "closing" %}
+                {# The closing round: the notes, and ending the meeting #}
+                {% include "meetings/_notes.html" %}
+                {% if can_run %}
+                  <div class="wb-end-meeting">{% include "meetings/_end_button.html" with large=True %}</div>
+                {% endif %}
+              {% else %}
+                {% if results %}{% include "meetings/_results.html" %}{% endif %}
+                {% if current %}{% include "meetings/_current.html" %}{% endif %}
+                {% include "meetings/_notes.html" %}
+              {% endif %}
             </div>
           {% else %}
             {% if outputs %}{% include "meetings/_outputs.html" %}{% endif %}

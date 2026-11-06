@@ -241,6 +241,7 @@ class TacticalTest(TestCase):
             kind=Meeting.TACTICAL,
             started_at=timezone.now(),
             secretary=self.ada,
+            step="tensions",
         )
         AgendaItem.objects.create(
             meeting=meeting,
@@ -281,6 +282,7 @@ class TacticalTest(TestCase):
             kind=Meeting.TACTICAL,
             started_at=timezone.now(),
             secretary=self.ada,
+            step="tensions",
         )
         knives = AgendaItem.objects.create(
             meeting=meeting, label="Knives", outcome="Bob buys", is_completed=True
@@ -301,6 +303,33 @@ class TacticalTest(TestCase):
         knives.refresh_from_db()
         meeting.refresh_from_db()
         self.assertEqual((knives.is_completed, meeting.current_item), (False, knives))
+
+    def test_closing_round(self):
+        """The closing round shows the notes and a large button to end the
+        meeting, not the results"""
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.ada,
+            step="closing",
+        )
+        AgendaItem.objects.create(
+            meeting=meeting, label="Knives", outcome="Bob buys", is_completed=True
+        )
+        self.client.force_login(self.ada)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertNotContains(response, "Bob buys")
+        self.assertContains(response, 'name="minutes"')
+        self.assertContains(response, "wb-end-meeting")
+        self.client.force_login(self.bob)  # Following: the notes only
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertNotContains(response, "wb-end-meeting")
+        # Only while processing the tensions, not in the other steps
+        for step, shown in [("check_in", False), ("agenda", False), ("tensions", True)]:
+            Meeting.objects.filter(pk=meeting.pk).update(step=step)
+            response = self.client.get(meeting.get_absolute_url())
+            self.assertEqual("Bob buys" in response.content.decode(), shown, step)
 
     def test_no_proposals(self):
         """Tactical meetings don't process proposals, not even crafted"""

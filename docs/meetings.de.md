@@ -25,8 +25,8 @@ aktualisiert sich von selbst.
   sich selbst; die Mail mit den Ergebnissen enthält sie.
 - **Teilnehmende** ("Teilnehmende" im Kopf der Agenda) sind die
   Mitglieder des Kreises beim Start; der Secretary lädt dort weitere ein
-  oder entfernt sie. "Meeting beenden" (■ daneben) fragt zuerst, solange
-  Punkte unbearbeitet sind.
+  oder entfernt sie. "Meeting beenden" (■ daneben, gross in der
+  Abschlussrunde) fragt zuerst, solange Punkte unbearbeitet sind.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.
 - **Ende**: "Meeting beenden", oder von selbst drei Stunden nach der
   letzten Änderung. Dann erhalten Mitglieder und Teilnehmende die

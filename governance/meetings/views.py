@@ -487,10 +487,12 @@ def agenda_context(request, meeting):
             and not item.is_completed
             and item.pk != meeting.current_item_id
         )
-        # A completed item's row leads to its result (_results.html)
+        # A completed item's row leads to its result (_results.html), shown
+        # while processing the tensions
         item.has_result = (
             meeting.kind == Meeting.TACTICAL
             and meeting.is_running
+            and meeting.step == "tensions"
             and item.is_completed
             and bool(item.outcome or item.link)
         )

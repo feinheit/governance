@@ -595,6 +595,13 @@ a.wb-row-title:hover {
   scroll-margin-top: 0.5rem;
 }
 
+/* The closing round's large button ending the meeting */
+.wb-end-meeting {
+  display: flex;
+  justify-content: center;
+  padding-block: 1.5rem;
+}
+
 /* Compact agenda rows: "description – short name" */
 .wb-agenda-row {
   align-items: center;

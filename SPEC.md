@@ -350,8 +350,10 @@ meeting" in its heading) (adding items as its last line, completed items
 struck through, "End the meeting" at its bottom), for ad-hoc tactical
 meetings the invited roles, elections, proposals. On wide screens both columns fit the window down to its lower edge and
 scroll on their own, the page doesn't (`.wb-fit`, `fitFlow()`).
-Right: the rounds, then one column (`.wb-flow`): in tactical meetings the results of the
-completed items (a card each, `_results.html`), the item being
+Right: the rounds, then one column (`.wb-flow`; in the closing round
+only the notes and a large "End the meeting"): in tactical meetings the results of the
+completed items while processing the tensions (a card each,
+`_results.html`), the item being
 processed, and the notes at the bottom (what doesn't belong to an agenda
 item, e.g. a special meeting's intent; the secretary's textarea saves
 itself, `data-autosave`). It scrolls to the item when another one is
@@ -670,6 +672,9 @@ Deliberately not modelled:
 
 ## Backlog
 
+- **Celebrating the end of a meeting**: "End the meeting" could
+  animate and celebrate (Workbench has a celebration to take
+  inspiration from), respecting reduced motion.
 - **The meeting page on phones**: the running meeting's layout (columns
   fitting the window, the sidebar with heading and agenda) is made for
   wide screens and quite broken on phones.
