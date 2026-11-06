@@ -16,7 +16,12 @@ from governance.forms import ModelForm
 from governance.history.update import update_today
 from governance.meetings.access import can_run
 from governance.meetings.models import Election, Meeting
-from governance.roles.assignments import end_assignment, sync_circle_holders
+from governance.roles.assignments import (
+    affected_circles,
+    announce,
+    end_assignment,
+    sync_circle_holders,
+)
 from governance.roles.constitution import FACILITATOR, REP, SECRETARY
 from governance.roles.models import Assignment, Role
 from governance.roles.permissions import is_circle_lead, members
@@ -44,6 +49,11 @@ def elected_roles(circles):
 @transaction.atomic
 def record_election(meeting, role, user, term_ends_on):
     """The elected person holds the role until the term ends"""
+    with announce(affected_circles(role)):
+        return _record_election(meeting, role, user, term_ends_on)
+
+
+def _record_election(meeting, role, user, term_ends_on):
     day = timezone.localdate()
     reelected = False
     for assignment in Assignment.objects.current().filter(role=role):

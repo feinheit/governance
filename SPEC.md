@@ -359,7 +359,12 @@ async proposals, those taken back, adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away), domain policy changes (section 3), and when a meeting ends
 its outputs (adopted proposals, elections, minutes, tactical outcomes;
-also to the attendees). Not configurable, people filter their mails; the
+also to the attendees). Like GlassFrog, assignments, removals, elections
+and deactivations (`roles.assignments.announce()`) tell people the roles
+they get and lose (not the circle's role in the super-circle, which
+follows the core roles), and the circle's Secretaries who joined and
+left the circle; changes by adopted proposals are in their mails, the
+nightly GlassFrog import announces nothing. Not configurable, people filter their mails; the
 only setting is `User.notify_all` ("everything in all circles").
 
 ## 6. History

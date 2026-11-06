@@ -1,0 +1,3 @@
+{% load i18n %}{% autoescape off %}{% for role, holds in changes %}{% if holds %}{% blocktranslate with role=role circle=role.circle %}You now hold {{ role }} in {{ circle }}.{% endblocktranslate %}{% else %}{% blocktranslate with role=role circle=role.circle %}You don't hold {{ role }} in {{ circle }} anymore.{% endblocktranslate %}{% endif %}
+{{ base_url }}{{ role.get_absolute_url }}
+{% endfor %}{% endautoescape %}

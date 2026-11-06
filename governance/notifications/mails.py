@@ -107,6 +107,78 @@ def domain_policy_changed(proposal):
     )
 
 
+def roles_changed(started, ended):
+    """``started`` and ``ended`` are sets of ``(user_id, role_id)``"""
+    from governance.roles.models import Role
+
+    roles = Role.objects.select_related("circle").in_bulk({
+        role for _user, role in started | ended
+    })
+    sent = 0
+    for user_id in sorted({user for user, _role in started | ended}):
+        changes = [
+            (roles[role], True) for user, role in sorted(started) if user == user_id
+        ] + [(roles[role], False) for user, role in sorted(ended) if user == user_id]
+        sent += send(
+            User.objects.filter(pk=user_id),
+            lambda changes=changes: (
+                _("Your roles: %(changes)s")
+                % {
+                    "changes": ", ".join(
+                        (
+                            f"{role} ({role.circle})"
+                            if holds
+                            else _("no longer %(role)s")
+                            % {"role": f"{role} ({role.circle})"}
+                        )
+                        for role, holds in changes
+                    )
+                }
+            ),
+            "notifications/roles_changed.txt",
+            {"changes": changes, "base_url": settings.BASE_URL},
+        )
+    return sent
+
+
+def members_changed(circle, joined, left):
+    """To the circle's Secretaries, like GlassFrog"""
+    from governance.roles.models import Assignment
+
+    joined = list(User.objects.filter(pk__in=joined).order_by("full_name", "email"))
+    left = list(User.objects.filter(pk__in=left).order_by("full_name", "email"))
+
+    def subject():
+        parts = []
+        if joined:
+            parts.append(
+                _("%(people)s joined") % {"people": ", ".join(map(str, joined))}
+            )
+        if left:
+            parts.append(_("%(people)s left") % {"people": ", ".join(map(str, left))})
+        return _("Members of %(circle)s: %(changes)s") % {
+            "circle": circle,
+            "changes": "; ".join(parts),
+        }
+
+    return send(
+        User.objects.filter(
+            pk__in=Assignment.objects
+            .current()
+            .filter(role__circle=circle, role__core_role="secretary")
+            .values("user")
+        ),
+        subject,
+        "notifications/members_changed.txt",
+        {
+            "circle": circle,
+            "joined": joined,
+            "left": left,
+            "url": settings.BASE_URL + circle.get_absolute_url(),
+        },
+    )
+
+
 def elections_due(day=None):
     """The weekly reminder to the Facilitators about terms ending soon
     (5.3.5), else the Secretaries and then the Circle Leads (5.3.6)"""

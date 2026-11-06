@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:41+0100\n"
+"POT-Creation-Date: 2026-11-06 08:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -588,6 +588,31 @@ msgstr "Angenommen in %(circle)s: %(proposal)s"
 #, python-format
 msgid "Policy of %(role)s changed: %(policy)s"
 msgstr "Policy von %(role)s geändert: %(policy)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Your roles: %(changes)s"
+msgstr "Deine Rollen: %(changes)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "no longer %(role)s"
+msgstr "nicht mehr %(role)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "%(people)s joined"
+msgstr "%(people)s beigetreten"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "%(people)s left"
+msgstr "%(people)s ausgetreten"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Members of %(circle)s: %(changes)s"
+msgstr "Mitglieder von %(circle)s: %(changes)s"
 
 #: governance/notifications/mails.py
 #: governance/templates/meetings/_due_elections.html
@@ -2094,6 +2119,19 @@ msgstr "%(user)s, Amtszeit endet am %(date)s"
 msgid "The %(meeting)s of %(date)s has ended."
 msgstr "Das %(meeting)s vom %(date)s ist beendet."
 
+#: governance/templates/notifications/members_changed.txt
+#, python-format
+msgid "The members of %(circle)s changed."
+msgstr "Die Mitglieder von %(circle)s haben sich geändert."
+
+#: governance/templates/notifications/members_changed.txt
+msgid "Joined"
+msgstr "Beigetreten"
+
+#: governance/templates/notifications/members_changed.txt
+msgid "Left"
+msgstr "Ausgetreten"
+
 #: governance/templates/notifications/proposal_adopted.txt
 #, python-format
 msgid "A proposal has been adopted in %(circle)s."
@@ -2113,6 +2151,16 @@ msgstr "%(proposer)s schlägt eine Änderung in %(circle)s vor."
 #, python-format
 msgid "The proposal is adopted on %(date)s unless somebody requests a meeting to discuss it. Questions and requests:"
 msgstr "Der Vorschlag wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen. Fragen und Meetings:"
+
+#: governance/templates/notifications/roles_changed.txt
+#, python-format
+msgid "You now hold %(role)s in %(circle)s."
+msgstr "Du hast jetzt %(role)s in %(circle)s."
+
+#: governance/templates/notifications/roles_changed.txt
+#, python-format
+msgid "You don't hold %(role)s in %(circle)s anymore."
+msgstr "Du hast %(role)s in %(circle)s nicht mehr."
 
 #: governance/templates/proposals/_drafting.html
 msgid "Propose changes"

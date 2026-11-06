@@ -1,0 +1,10 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate with circle=circle %}The members of {{ circle }} changed.{% endblocktranslate %}
+{% if joined %}
+{% translate "Joined" %}:{% for user in joined %}
+* {{ user }}{% endfor %}
+{% endif %}{% if left %}
+{% translate "Left" %}:{% for user in left %}
+* {{ user }}{% endfor %}
+{% endif %}
+{{ url }}
+{% endautoescape %}

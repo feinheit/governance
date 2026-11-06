@@ -1,5 +1,7 @@
 """Circle Leads assign people to roles directly, see section 3 of SPEC.md"""
 
+from contextlib import contextmanager
+
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -15,7 +17,70 @@ from governance.forms import ModelForm
 from governance.history.update import update_today
 from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Assignment, Role
-from governance.roles.permissions import can_assign, can_end_assignment
+from governance.roles.permissions import can_assign, can_end_assignment, members
+
+
+@contextmanager
+def announce(circles):
+    """Mails about the assignments changing inside the block (like
+    GlassFrog): the people about the roles they get and lose, the circles'
+    Secretaries about people joining and leaving. A circle's role in the
+    super-circle follows its Circle Leads and Rep, it isn't announced."""
+    from governance.notifications import mails
+
+    circles = {circle for circle in circles if circle is not None}
+
+    def holdings():
+        return set(
+            Assignment.objects
+            .current()
+            .filter(role__circle__in=circles, role__is_circle=False)
+            .values_list("user", "role")
+        )
+
+    def memberships():
+        # Also people deactivated meanwhile, members() only has active ones
+        return {
+            circle: set(members(circle).values_list("pk", flat=True))
+            | set(
+                Assignment.objects
+                .current()
+                .filter(role__circle=circle)
+                .values_list("user", flat=True)
+            )
+            for circle in circles
+        }
+
+    held, joined = holdings(), memberships()
+    # Nothing to announce when the block fails
+    yield  # noqa: RUF075
+    now_held, now_joined = holdings(), memberships()
+    started, ended = now_held - held, held - now_held
+    changes = [
+        (
+            circle,
+            now_joined[circle] - joined[circle],
+            joined[circle] - now_joined[circle],
+        )
+        for circle in circles
+        if now_joined[circle] != joined[circle]
+    ]
+    if started or ended:
+        transaction.on_commit(lambda: mails.roles_changed(started, ended))
+    for circle, new, gone in changes:
+        transaction.on_commit(
+            lambda circle=circle, new=new, gone=gone: mails.members_changed(
+                circle, new, gone
+            )
+        )
+
+
+def affected_circles(role):
+    """The circles whose roles and members change with the role's holders"""
+    circles = [role.circle]
+    if role.core_role in {LEAD, REP} and role.circle:
+        circles.append(role.circle.circle)
+    return circles
 
 
 def sync_circle_holders(circle, day):
@@ -52,9 +117,14 @@ def end_assignment(assignment, day):
 def end_assignments_of(user, day):
     """Somebody leaves (deactivated): their roles end, like removing them
     one by one, a Circle Lead's role in the super-circle too"""
-    for assignment in Assignment.objects.current().filter(user=user):
-        end_assignment(assignment, day)
-        after_change(assignment.role, day)
+    assignments = list(
+        Assignment.objects.current().filter(user=user).select_related("role__circle")
+    )
+    circles = [c for a in assignments for c in affected_circles(a.role)]
+    with announce(circles):
+        for assignment in assignments:
+            end_assignment(assignment, day)
+            after_change(assignment.role, day)
 
 
 def after_change(role, day):
@@ -122,7 +192,7 @@ def assignments(request, pk):
     elif request.method == "POST":
         raise PermissionDenied
     if form and form.is_valid():
-        with transaction.atomic():
+        with transaction.atomic(), announce(affected_circles(role)):
             day = timezone.localdate()
             form.instance.starts_on = day
             assignment = form.save()
@@ -173,7 +243,7 @@ def assignment_end(request, pk):
         Assignment.objects.current().select_related("role__circle", "user"), pk=pk
     )
     role = assignable_role(request, assignment.role_id, check=can_end_assignment)
-    with transaction.atomic():
+    with transaction.atomic(), announce(affected_circles(role)):
         day = timezone.localdate()
         end_assignment(assignment, day)
         after_change(role, day)
