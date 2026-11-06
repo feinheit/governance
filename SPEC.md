@@ -553,25 +553,15 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (second round of 2026-11-06), open:
-  - Bugs: editing a role or policy and then moving it makes the draft
-    unadoptable (the move goes before the edits); holders of roles
-    inside a removed circle and the core roles of a circle turned back
-    from above get no mail; sub-circles following their super-circle's
-    Circle Leads aren't in the membership mails (`affected_circles()`);
-    `revert_after_meeting()` records the step in a later proposal
-    renaming the circle; the API fails (500) on a `from` that isn't a
-    text; admins outside a circle see "New proposal" but get a 403.
-  - Decided: proposers get a mail when closing a circle or role withdraws
-    their proposals; a plain role's page shows its circle's policies and
-    the pending proposals for its inside; clear simplifications (one
-    helper for a core role's holders, a governing-circle property, dead
-    code, `is_circle` branches without need).
   - Judgement calls, to decide: merging the name/purpose and
     title/body branches of `Applier.apply_one`; one helper for the
     stand-in chains (meeting secretary, election reminders); one link for
     tactical meetings on the role page; `RoleQuerySet` method for "a
     circle or a role with an inside"; one walk of sub-circles
-    (`mails.domain_policy_changed()`, `drafting.sub_circles_of()`).
+    (`mails.domain_policy_changed()`, `mails.inside()`,
+    `drafting.sub_circles_of()`, `assignments.affected_circles()`). Kept
+    on purpose for readability: the plain-role branch of `members()` and
+    the `is_circle` condition of `role_items()`.
   - Untested risks: deep moves in the history (`Change`, `structure_on()`)
     and mails to the target circle's members; assignments deleted on the
     day they started missing from meeting outputs; a Rep becoming Circle
