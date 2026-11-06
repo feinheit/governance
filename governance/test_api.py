@@ -195,6 +195,25 @@ class APITest(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
+    def test_proposal_inside_a_role(self):
+        """Holders add roles inside their role (1.3.1), also through the API
+        like on the role's page"""
+        response = self.api(
+            "post",
+            "/api/proposals/",
+            {
+                "circle_id": self.cook.pk,
+                "role_id": self.cook.pk,
+                "tension": "Too much to do",
+                "instructions": [
+                    {"op": "add", "path": "/roles/n1"},
+                    {"op": "add", "path": "/roles/n1/name", "value": "Sous"},
+                ],
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["problems"], [])
+
     def test_only_proposers_change_proposals(self):
         """The secretary amends in a running meeting's page, not through the
         API: scripts only change their user's own drafts"""

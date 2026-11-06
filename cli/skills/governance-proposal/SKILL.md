@@ -152,6 +152,10 @@ Then create the draft, the scratch files in a temporary directory:
     gov proposals create --circle <circle_id> --role <role_id> \
       --tension - --instructions <scratchpad>/instructions.yaml < <scratchpad>/tension.md
 
+To break down one of the user's roles into roles (1.3.1), the role is the
+circle too (`--circle <role_id> --role <role_id>`): adopting the first
+role makes it a circle with its holders as Circle Leads.
+
 `gov` shows the readable changes and the **problems** which would prevent
 adopting it. Fix them with
 

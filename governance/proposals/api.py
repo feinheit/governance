@@ -192,7 +192,10 @@ def proposal_detail(request, pk: int):
 @router.post("proposals/", response=ProposalOut)
 def proposal_create(request, data: ProposalIn):
     """A draft; ``problems`` lists what would prevent adopting it"""
-    circle = get_object_or_404(Role.objects.active().circles(), pk=data.circle_id)
+    # A circle, or a role whose holders add roles inside it (1.3.1)
+    circle = get_object_or_404(
+        Role.objects.active().filter(core_role=""), pk=data.circle_id
+    )
     role = proposer_roles(request.user, circle).filter(pk=data.role_id).first()
     if role is None:
         raise HttpError(403, "Propose from one of your roles in the circle.")
