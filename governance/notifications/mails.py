@@ -221,6 +221,20 @@ def elections_due(day=None):
     return sent
 
 
+def inside(circle):
+    """The IDs of all roles inside the circle, also archived ones"""
+    from governance.roles.models import Role
+
+    found, parents = set(), {circle.pk}
+    while parents:
+        parents = (
+            set(Role.objects.filter(circle__in=parents).values_list("pk", flat=True))
+            - found
+        )
+        found |= parents
+    return found
+
+
 def meeting_ended(meeting):
     """The outputs of a meeting: adopted proposals and elections, or the
     outcomes of a tactical meeting's tensions"""
@@ -238,12 +252,15 @@ def meeting_ended(meeting):
         from governance.roles.models import Assignment
 
         proposals = [entry["proposal"] for entry in outputs["proposals"]]
+        started = timezone.localdate(meeting.started_at)
         users |= Q(
             pk__in=Assignment.objects
-            .filter(role__changed_by_proposals__in=proposals)
             .filter(
-                Q(ends_on=None) | Q(ends_on__gte=timezone.localdate(meeting.started_at))
+                # Also roles archived with them, e.g. inside a removed circle
+                Q(role__changed_by_proposals__in=proposals)
+                | Q(role__archived_on__gte=started, role__in=inside(meeting.circle))
             )
+            .filter(Q(ends_on=None) | Q(ends_on__gte=started))
             .values("user")
         )
     return send(

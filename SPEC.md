@@ -364,7 +364,8 @@ the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away), domain policy changes (section 3), and when a meeting ends
 its outputs (adopted proposals, elections, minutes, tactical outcomes;
 also to the attendees and, like adopting async, the holders of roles
-the adopted proposals changed, removed or moved away). Like GlassFrog, assignments, removals, elections
+the adopted proposals changed, removed or moved away, also deeper inside:
+roles of a removed circle, core roles of a circle turned back). Like GlassFrog, assignments, removals, elections
 and deactivations (`roles.assignments.announce()`) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and

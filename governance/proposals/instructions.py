@@ -93,6 +93,7 @@ class Applier:
         # Roles and circles removed, also those inside removed circles
         self.removed = []
         self.made_circles = []  # Automatically, by adding roles inside
+        self.ended_users = set()
 
     def problem(self, message, **kwargs):
         # Once, even if several instructions refer to the missing role
@@ -364,11 +365,16 @@ class Applier:
         for child in role.roles.active():
             self.archive(child)
         for assignment in Assignment.objects.current().filter(role=role):
-            end_assignment(assignment, self.day)
+            self.end_assignment(assignment)
         role.archived_on = self.day
         role.save(update_fields=["archived_on"])
         role.policies.active().update(archived_on=self.day)
         self.removed.append(role)
+
+    def end_assignment(self, assignment):
+        # Those losing roles hear about the proposal, also deeper inside
+        self.ended_users.add(assignment.user_id)
+        end_assignment(assignment, self.day)
 
     def make_circle(self, role):
         """Turns the role into a circle if needed, once"""
@@ -413,10 +419,10 @@ class Applier:
         )
         for assignment in Assignment.objects.current().filter(role=role):
             if assignment.user_id not in leads:
-                end_assignment(assignment, self.day)
+                self.end_assignment(assignment)
         for core_role in role.roles.active():
             for assignment in Assignment.objects.current().filter(role=core_role):
-                end_assignment(assignment, self.day)
+                self.end_assignment(assignment)
             core_role.archived_on = self.day
             core_role.save(update_fields=["archived_on"])
         # The circle's policies go: a role only has policies for its domains
@@ -558,6 +564,7 @@ def adopt(proposal):
     update_changes(since=timezone.localdate())
     if not (proposal.meeting and proposal.meeting.is_running):
         # The meeting mails its outputs together when it ends
+        before = [*before, *applier.ended_users]
         transaction.on_commit(lambda: proposal_adopted(proposal, before))
     return proposal
 

@@ -103,3 +103,91 @@ class AssignmentMailsTest(TestCase):
         self.assertEqual(
             self.outbox(), [("bob@example.com", "Members of Kitchen: Eve left")]
         )
+
+
+class AdoptedMailsTest(TestCase):
+    """People losing roles through an adopted proposal hear about it, also
+    deeper inside: roles of a removed circle, the core roles of a circle
+    turned back into a role"""
+
+    def setUp(self):
+        self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        self.bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        self.eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        self.kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        self.kitchen.create_core_roles()
+        Assignment.objects.create(
+            role=Role.objects.create(name="Cook", circle=self.kitchen), user=self.ada
+        )
+        self.bakery = Role.objects.create(
+            name="Bakery", is_circle=True, circle=self.kitchen
+        )
+        self.bakery.create_core_roles()
+        self.baker = Role.objects.create(name="Baker", circle=self.bakery)
+        started = dt.date(2026, 1, 1)
+        Assignment.objects.create(role=self.baker, user=self.bob, starts_on=started)
+        Assignment.objects.create(
+            role=self.bakery.roles.get(core_role="facilitator"),
+            user=self.eve,
+            starts_on=started,
+        )
+
+    def proposal(self, instructions, **kwargs):
+        from governance.proposals.models import Proposal
+
+        return Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            tension="Smaller",
+            created_at=timezone.now(),
+            instructions=instructions,
+            **kwargs,
+        )
+
+    def test_async(self):
+        from governance.proposals.instructions import adopt
+
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(self.proposal([{"op": "remove", "path": f"/roles/{self.bakery.pk}"}]))
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox),
+            ["ada@example.com", "bob@example.com", "eve@example.com"],
+        )
+
+    def test_turned_back_from_above(self):
+        from governance.proposals.instructions import adopt
+
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(
+                self.proposal([
+                    {
+                        "op": "move",
+                        "from": f"/circles/{self.bakery.pk}/roles/{self.baker.pk}",
+                        "path": f"/roles/{self.baker.pk}",
+                    }
+                ])
+            )
+        self.assertIn("eve@example.com", [m.to[0] for m in mail.outbox])
+
+    def test_meeting(self):
+        from governance.meetings.activity import end_meeting
+        from governance.proposals.instructions import adopt
+        from governance.proposals.models import Proposal
+
+        meeting = Meeting.objects.create(
+            circle=self.kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        meeting.attendees.set([self.ada])
+        adopt(
+            self.proposal(
+                [{"op": "remove", "path": f"/roles/{self.bakery.pk}"}],
+                status=Proposal.IN_MEETING,
+                meeting=meeting,
+            )
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(meeting)
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox),
+            ["ada@example.com", "bob@example.com", "eve@example.com"],
+        )
