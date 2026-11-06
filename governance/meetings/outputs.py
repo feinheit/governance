@@ -19,8 +19,19 @@ def meeting_outputs(meeting):
         if meeting.started_at
         else []
     )
+    # Discarded in the meeting (5.3.1, 5.3.4) or withdrawn by their proposers
+    withdrawn = (
+        list(
+            meeting.proposals.filter(
+                status="withdrawn", decided_at__gte=meeting.started_at
+            ).order_by("decided_at")
+        )
+        if meeting.started_at
+        else []
+    )
     return {
         "proposals": proposals,
+        "withdrawn": withdrawn,
         "elections": list(meeting.elections.select_related("role", "user")),
         "outcomes": [
             item

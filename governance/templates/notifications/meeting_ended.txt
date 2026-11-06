@@ -2,6 +2,8 @@
 {% for entry in proposals %}
 {% translate "Adopted" %}: {{ entry.proposal }}
 {% include "notifications/_changes.txt" with changes=entry.changes %}
+{% endfor %}{% for proposal in withdrawn %}
+{% translate "Withdrawn" %}: {{ proposal }}
 {% endfor %}{% for item in outcomes %}
 * {{ item }}{% if item.owner %} ({{ item.owner }}){% endif %}{% if item.outcome %}
   {{ item.outcome }}{% endif %}{% if item.link %}

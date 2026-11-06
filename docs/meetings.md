@@ -29,7 +29,9 @@ makes it a circle, with them as its Circle Leads.
 - **Process**: the facilitator chooses an agenda item; the steps of the
   integrative decision-making process guide, but don't enforce anything.
 - **Proposal**: only the secretary captures it from a tension and changes
-  it.
+  it. "Discard" withdraws it (e.g. it isn't valid, or its proposer is
+  gone); its proposer may "Draft again" on the proposal's page. "Done"
+  without adopting or discarding keeps it waiting for the next meeting.
 - **Objections** are recorded with the person and the role, the
   facilitator tests them. "Adopt" only works once every objection is
   tested and the valid ones are integrated. The change applies right

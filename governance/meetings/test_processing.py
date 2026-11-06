@@ -1,3 +1,4 @@
+from django.core import mail
 from django.test import TestCase
 from django.utils import timezone
 
@@ -187,6 +188,43 @@ class ProcessingTest(TestCase):
         self.client.post(f"/agenda/{self.item.pk}/adopt/")
         self.proposal.refresh_from_db()
         self.assertEqual(self.proposal.status, Proposal.IN_MEETING)
+
+    def test_discard(self):
+        """The meeting discards a proposal (5.3.1, 5.3.4): it's withdrawn and
+        in the outputs, its proposer drafts it again"""
+        self.client.force_login(self.ada)
+        self.client.post(f"/agenda/{self.item.pk}/process/")
+        self.assertContains(self.client.get(self.meeting.get_absolute_url()), "Discard")
+        self.client.post(f"/agenda/{self.item.pk}/discard/")
+        self.proposal.refresh_from_db()
+        self.item.refresh_from_db()
+        self.assertEqual(
+            (self.proposal.status, self.item.is_completed), (Proposal.WITHDRAWN, True)
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/meetings/{self.meeting.pk}/end/")
+        self.assertIn("Withdrawn: Better name", mail.outbox[0].body)
+
+        self.client.force_login(self.eve)
+        response = self.client.get(self.proposal.get_absolute_url())
+        self.assertContains(response, "Draft again")
+        response = self.client.post(f"/proposals/{self.proposal.pk}/draft-again/")
+        draft = Proposal.objects.latest("pk")
+        self.assertRedirects(response, draft.get_absolute_url())
+        self.assertEqual(
+            (draft.status, draft.tension, draft.instructions, draft.role),
+            (
+                Proposal.DRAFT,
+                "Better name",
+                self.proposal.instructions,
+                self.cook,
+            ),
+        )
+        self.client.force_login(self.ada)  # Only the proposer
+        self.assertEqual(
+            self.client.post(f"/proposals/{self.proposal.pk}/draft-again/").status_code,
+            403,
+        )
 
     def test_objection_left_open(self):
         """A meeting ends with an untested objection: the next meeting

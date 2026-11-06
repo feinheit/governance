@@ -26,6 +26,12 @@
         </ul>
       </li>
     {% endfor %}
+    {% for proposal in outputs.withdrawn %}
+      <li class="list-group-item">
+        <span class="badge {{ proposal.status|tone }}">{% translate "Withdrawn" %}</span>
+        <a href="{{ proposal.get_absolute_url }}">{{ proposal }}</a>
+      </li>
+    {% endfor %}
     {% for election in outputs.elections %}
       <li class="list-group-item">
         <span class="badge wb-tone-core">{% translate "Election" %}</span>
@@ -44,7 +50,7 @@
         {% if item.link %}<a href="{{ item.link }}" rel="noopener">{{ item.link }}</a>{% endif %}
       </li>
     {% endfor %}
-    {% if not outputs.proposals and not outputs.elections and not outputs.outcomes %}
+    {% if not outputs.proposals and not outputs.withdrawn and not outputs.elections and not outputs.outcomes %}
       <li class="list-group-item text-body-secondary">
         {% translate "No proposals adopted, no elections, no outcomes." %}
       </li>

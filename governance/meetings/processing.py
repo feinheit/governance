@@ -20,7 +20,7 @@ from governance.meetings.access import can_run
 from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting, Objection
 from governance.proposals.instructions import ProposalError, adopt
 from governance.proposals.models import Proposal
-from governance.proposals.process import check_role
+from governance.proposals.process import check_role, withdraw
 from governance.roles.permissions import proposer_roles
 
 
@@ -175,6 +175,21 @@ def item_adopt(request, pk):
             messages.error(request, problem)
     else:
         messages.success(request, gettext("The proposal is adopted."))
+    return redirect(item.meeting)
+
+
+@require_POST
+def item_discard(request, pk):
+    """The meeting discards the item's proposal (5.3.1, 5.3.4): withdrawn,
+    its proposer may draft it again"""
+    item = running_item(request, pk)
+    proposal = item.proposal
+    if proposal is None or proposal.status != Proposal.IN_MEETING:
+        raise PermissionDenied
+    with transaction.atomic():
+        withdraw(proposal)
+        complete(item)
+    messages.success(request, gettext("The proposal has been withdrawn."))
     return redirect(item.meeting)
 
 

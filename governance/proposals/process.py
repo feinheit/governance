@@ -177,6 +177,22 @@ def back_to_draft(proposal):
     transaction.on_commit(lambda: mails.proposal_back_to_draft(proposal))
 
 
+def draft_again(proposal):
+    """A new draft of a withdrawn proposal for its proposer, e.g. one the
+    meeting discarded"""
+    if proposal.status != Proposal.WITHDRAWN or proposal.circle.archived_on:
+        raise ProposalError([_("Only withdrawn proposals are drafted again.")])
+    return Proposal.objects.create(
+        circle=proposal.circle,
+        proposer=proposal.proposer,
+        role=proposal.role,
+        tension=proposal.tension,
+        instructions=proposal.instructions,
+        names=proposal.names,
+        created_at=timezone.now(),
+    )
+
+
 def withdraw(proposal):
     proposal.status = Proposal.WITHDRAWN
     proposal.decided_at = timezone.now()

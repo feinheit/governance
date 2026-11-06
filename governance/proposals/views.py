@@ -161,6 +161,11 @@ def proposal_detail(request, pk):
                 is_proposer=proposal.proposer_id == request.user.pk,
             )
         context["can_withdraw"] = proposal.proposer_id == request.user.pk
+    context["can_draft_again"] = (
+        proposal.status == Proposal.WITHDRAWN
+        and proposal.proposer_id == request.user.pk
+        and not proposal.circle.archived_on
+    )
     return render(request, "proposals/proposal_detail.html", context)
 
 
@@ -205,6 +210,18 @@ def proposal_back_to_draft(request, pk):
         ),
     )
     return redirect(proposal)
+
+
+@require_POST
+def proposal_draft_again(request, pk):
+    proposal = own_proposal(request, pk, [Proposal.WITHDRAWN])
+    try:
+        draft = process.draft_again(proposal)
+    except ProposalError as exc:
+        for problem in exc.problems:
+            messages.error(request, problem)
+        return redirect(proposal)
+    return redirect(draft)
 
 
 @require_POST

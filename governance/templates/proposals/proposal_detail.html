@@ -52,6 +52,13 @@
           <button type="submit" class="btn btn-sm btn-quiet">{% translate "Delete the draft" %}</button>
         </form>
       </div>
+    {% elif can_draft_again %}
+      <div class="wb-page-actions">
+        <form method="post" action="{% url 'proposal_draft_again' proposal.pk %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-quiet">{% translate "Draft again" %}</button>
+        </form>
+      </div>
     {% elif can_withdraw %}
       <div class="wb-page-actions">
         {% if proposal.status == "published" %}

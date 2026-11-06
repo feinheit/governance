@@ -131,6 +131,12 @@
               <button type="submit" class="btn btn-sm btn-primary">{% translate "Adopt" %}</button>
             </form>
           {% endif %}
+          {% if can_run and proposal.status == "in_meeting" %}
+            <form method="post" action="{% url 'item_discard' current.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Discard" %}</button>
+            </form>
+          {% endif %}
         </div>
       </div>
       {% if can_amend %}

@@ -42,6 +42,11 @@ urlpatterns = [
         name="proposal_back_to_draft",
     ),
     path(
+        "proposals/<int:pk>/draft-again/",
+        views.proposal_draft_again,
+        name="proposal_draft_again",
+    ),
+    path(
         "proposals/<int:pk>/withdraw/",
         views.proposal_withdraw,
         name="proposal_withdraw",

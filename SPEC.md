@@ -312,7 +312,10 @@ proposal (waiting for a meeting, published async ones, which ends their
 acceptance period, or their own drafts). The facilitator processes items
 in any order; buttons for the six steps of integrative decision-making
 guide without enforcing them. Only the secretary amends, with the drafting
-controls in a panel, and captures a proposal from a tension. Objections
+controls in a panel, and captures a proposal from a tension. "Discard"
+withdraws the item's proposal (5.3.1, 5.3.4), the outputs list it, its
+proposer gets a new draft of it with "Draft again"; "Done" leaves it
+waiting for the next meeting. Objections
 are recorded with who raised them for which of their roles, the
 facilitator's test and whether they were integrated; adopting needs every
 objection tested and every valid one integrated, and a proposer still
