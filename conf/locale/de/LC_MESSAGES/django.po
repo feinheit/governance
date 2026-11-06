@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 09:35+0100\n"
+"POT-Creation-Date: 2026-11-06 11:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2573,10 +2573,6 @@ msgid "Join the running meeting"
 msgstr "Zum laufenden Meeting"
 
 #: governance/templates/roles/role_detail.html
-msgid "Tactical meeting with selected roles…"
-msgstr "Tactical Meeting mit ausgewählten Rollen…"
-
-#: governance/templates/roles/role_detail.html
 msgid "Core roles"
 msgstr "Kernrollen"
 
@@ -2632,3 +2628,6 @@ msgstr "Nichts gefunden."
 #: governance/templates/start.html
 msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
 msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+
+#~ msgid "Tactical meeting with selected roles…"
+#~ msgstr "Tactical Meeting mit ausgewählten Rollen…"

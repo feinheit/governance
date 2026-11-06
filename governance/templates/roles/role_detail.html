@@ -54,7 +54,7 @@
           class="btn btn-sm btn-quiet d-none d-sm-inline-block"
           href="{% url 'circle_browser' %}?circle={{ role.pk }}"
         >{% translate "Circle browser" %}</a>{% endif %}
-      {% if not role.archived_on and role.circle and not role.is_circle %}<a
+      {% if not role.archived_on %}<a
           class="btn btn-sm btn-quiet"
           href="{% url 'tactical_call' %}?role={{ role.pk }}"
         >{% translate "Call a tactical meeting" %}</a>{% endif %}
@@ -219,12 +219,6 @@
                     </button>
                   {% endif %}
                 </form>
-              {% endif %}
-              {% if role.is_circle %}
-                <a
-                  class="btn btn-sm btn-quiet{% if not can_start_meeting and not running_meeting %} ms-auto{% endif %}"
-                  href="{% url 'tactical_call' %}?role={{ role.pk }}"
-                >{% translate "Tactical meeting with selected roles…" %}</a>
               {% endif %}
             </li>
           </ul>

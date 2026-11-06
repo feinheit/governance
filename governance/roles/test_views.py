@@ -48,6 +48,20 @@ class ViewsTest(TestCase):
             html=True,
         )
 
+    def test_one_link_for_tactical_meetings(self):
+        """Circles and roles link to an ad-hoc tactical meeting once"""
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        for role in [anchor, kitchen, cook]:
+            with self.subTest(role=role):
+                response = self.client.get(role.get_absolute_url())
+                self.assertContains(
+                    response, f"/meetings/tactical/new/?role={role.pk}", count=1
+                )
+                self.assertContains(response, "Call a tactical meeting", count=1)
+
     def test_person_earlier_roles_show_more(self):
         anchor = Role.objects.create(name="Example Ltd", is_circle=True)
         for day in range(1, 9):
