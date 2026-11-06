@@ -223,6 +223,55 @@ class AffectedTest(TestCase):
             end_meeting(meeting)
         self.assertEqual(sorted(m.to[0] for m in mail.outbox), expected)
 
+    def test_moved_out_of_a_sub_circle(self):
+        """Like moving into it: the sub-circle's Secretary and Circle Leads
+        hear about it"""
+        from governance.proposals.instructions import adopt
+
+        ada, sam, lou, hal = (
+            User.objects.create_user(f"{name}@example.com", full_name=name)
+            for name in ["ada", "sam", "lou", "hal"]
+        )
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        Assignment.objects.create(
+            role=Role.objects.create(name="Cook", circle=kitchen), user=ada
+        )
+        bakery = Role.objects.create(name="Bakery", circle=kitchen, is_circle=True)
+        bakery.create_core_roles()
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="secretary"), user=sam
+        )
+        Assignment.objects.create(role=bakery.roles.get(core_role="lead"), user=lou)
+        Role.objects.create(name="Baker", circle=bakery)
+        oven = Role.objects.create(name="Oven", circle=bakery)
+        Assignment.objects.create(role=oven, user=hal)
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(
+                Proposal.objects.create(
+                    circle=kitchen,
+                    proposer=ada,
+                    tension="Ovens",
+                    created_at=timezone.now(),
+                    instructions=[
+                        {
+                            "op": "move",
+                            "path": f"/roles/{oven.pk}",
+                            "from": f"/circles/{bakery.pk}/roles/{oven.pk}",
+                        }
+                    ],
+                )
+            )
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox),
+            [
+                "ada@example.com",
+                "hal@example.com",
+                "lou@example.com",
+                "sam@example.com",
+            ],
+        )
+
     def test_nothing_for_people_who_left(self):
         from governance.proposals.instructions import adopt
 

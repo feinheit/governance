@@ -373,7 +373,7 @@ async proposals, those taken back, adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves
-roles or policies into, `mails.moved_into()`), domain policy changes (section 3), and when a meeting ends
+roles or policies into or out of, `mails.moved_between()`), domain policy changes (section 3), and when a meeting ends
 its outputs (adopted proposals, elections, minutes, tactical outcomes;
 also to the attendees and, like adopting async, the holders of roles
 the adopted proposals changed, removed or moved away, also deeper inside:
@@ -568,8 +568,7 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (third round of 2026-11-06), open:
-  - Decided: moves out of a sub-circle mail its Secretary and Circle
-    Leads like moves into one; only the role changes its policies for its
+  - Decided: only the role changes its policies for its
     domains (proposals may remove the domain); imported open proposals
     become adoptable with the switchover.
   - Untested risks: re-elections (a new term, same person) don't show in
