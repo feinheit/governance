@@ -610,6 +610,25 @@ a.wb-row-title:hover {
   }
 }
 
+/* Phones and tablets: the sidebar's parts are the row's, the heading
+   above the steps and the flow, the agenda and the rest below */
+@media (max-width: 991.98px) {
+  .wb-meeting-side {
+    display: contents;
+  }
+
+  .wb-meeting-side > * {
+    order: 2;
+    width: calc(100% - var(--bs-gutter-x));
+    margin-inline: calc(var(--bs-gutter-x) * 0.5);
+  }
+
+  .wb-meeting-side > .wb-meeting-head {
+    order: -1;
+    margin-bottom: calc(var(--bs-gutter-y) * -0.5);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .wb-flow {
     scroll-behavior: smooth;
@@ -735,8 +754,9 @@ a.wb-row-title:hover {
   padding-block: 1.5rem;
 }
 
-/* Compact agenda rows: "description – short name" */
+/* Compact agenda rows: "description – short name", rows on phones too */
 .wb-agenda-row {
+  flex-direction: row;
   align-items: center;
   padding-block: 0.4rem;
 }

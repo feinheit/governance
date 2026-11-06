@@ -99,21 +99,24 @@
         {% endblock main %}
       </div>
       {# While it runs, both columns fit the window and scroll on their own (wide screens) #}
-      <div class="col-lg-4 order-lg-1{% if meeting.is_running %} wb-fit{% endif %}" data-fit="sidebar">
+      {# On phones its parts are the row's (wb-meeting-side): the heading first, the rest below the flow #}
+      <div class="col-lg-4 order-lg-1 wb-meeting-side{% if meeting.is_running %} wb-fit{% endif %}" data-fit="sidebar">
         {% if meeting.is_running %}
           {# The heading beside the steps and results, which start right below the navigation #}
-          {% include "roles/_breadcrumbs.html" %}
-          <h1 class="wb-title h3">
-            {{ meeting.get_kind_display }}
-            <span class="badge wb-tone-success fs-6">{% translate "running" %}</span>
-          </h1>
-          {% if can_take_over|elevated %}
-            {# Admins who aren't members, "Take over" is marked #}
-            <div class="alert alert-warning">
-              {% translate "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed." %}
-            </div>
-          {% endif %}
-          <div class="mb-3">{% include "meetings/_meta.html" %}</div>
+          <div class="wb-meeting-head">
+            {% include "roles/_breadcrumbs.html" %}
+            <h1 class="wb-title h3">
+              {{ meeting.get_kind_display }}
+              <span class="badge wb-tone-success fs-6">{% translate "running" %}</span>
+            </h1>
+            {% if can_take_over|elevated %}
+              {# Admins who aren't members, "Take over" is marked #}
+              <div class="alert alert-warning">
+                {% translate "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed." %}
+              </div>
+            {% endif %}
+            <div class="mb-3">{% include "meetings/_meta.html" %}</div>
+          </div>
         {% endif %}
         {# The agenda beside the item being processed #}
         <section class="card mb-4" id="agenda">

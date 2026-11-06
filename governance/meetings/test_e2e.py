@@ -629,6 +629,32 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_url(f"**{self.ada.get_absolute_url()}")
         self.assertEqual(self.errors, [])
 
+    def test_phone(self):
+        """On phones the heading comes first, then the steps and the item
+        being processed, the agenda below; its rows stay rows"""
+        item = AgendaItem.objects.create(meeting=self.meeting, label="Knives")
+        self.meeting.current_item = item
+        self.meeting.step = "agenda"
+        self.meeting.save()
+        page = self.page
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+
+        def top(selector):
+            return page.locator(selector).first.bounding_box()["y"]
+
+        self.assertLess(top("h1"), top("nav[aria-label=Steps]"))
+        self.assertLess(top("nav[aria-label=Steps]"), top("#current"))
+        self.assertLess(top("#current"), top("#agenda"))
+        row = page.locator("#agenda li", has_text="Knives")
+        handle = row.locator("[data-agenda-handle]").bounding_box()
+        remove = row.locator("form[action$='/remove/'] button").bounding_box()
+        self.assertLess(row.bounding_box()["height"], 50)
+        self.assertLess(abs(handle["y"] - remove["y"]), 10)
+        self.assertGreater(remove["x"], 300)
+        self.assertEqual(page.evaluate("document.documentElement.scrollWidth"), 390)
+        self.assertEqual(self.errors, [])
+
     def test_take_over_as_secretary(self):
         """Somebody who isn't the circle's Secretary confirms taking over the
         meeting's secretary, dismissing changes nothing"""

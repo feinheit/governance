@@ -353,7 +353,10 @@ column). Left: the secretary ("Take over"), the agenda (compact rows
 meeting" in its heading) (adding items as its last line, completed items
 struck through, "End the meeting" at its bottom), for ad-hoc tactical
 meetings the invited roles, elections, proposals. On wide screens both columns fit the window down to its lower edge and
-scroll on their own, the page doesn't (`.wb-fit`, `fitFlow()`).
+scroll on their own, the page doesn't (`.wb-fit`, `fitFlow()`). On
+phones and tablets one column, the page scrolls: the heading and the
+secretary first, then the rounds and the flow, the agenda and the rest
+below (the left column is `display: contents` there, `.wb-meeting-side`).
 Right: the rounds, then one column (`.wb-flow`; in the closing round
 only the notes and a large "End the meeting"): in tactical meetings the results of the
 completed items while processing the tensions (a card each,
@@ -683,9 +686,6 @@ Deliberately not modelled:
 
 ## Backlog
 
-- **The meeting page on phones**: the running meeting's layout (columns
-  fitting the window, the sidebar with heading and agenda) is made for
-  wide screens and quite broken on phones.
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
