@@ -1,20 +1,17 @@
 {% load i18n %}
-{# The results of a tactical meeting's completed items, stacked beside the agenda: scrolled to the newest (column-reverse), earlier ones above #}
-<section class="card mb-4" id="results">
-  <div class="card-header"><h2 class="h6 mb-0">{% translate "Results" %}</h2></div>
-  <div class="wb-results">
-    <ul class="list-group list-group-flush">
-      {% for item in results %}
-        <li class="list-group-item">
-          <div class="wb-row-title">{{ item }}</div>
-          {% if item.outcome %}<div class="small">{{ item.outcome|linebreaksbr }}</div>{% endif %}
-          {% if item.link %}<a
-              class="small"
-              href="{{ item.link }}"
-              rel="noopener"
-            >{{ item.link|truncatechars:60 }}</a>{% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-</section>
+{# The results of a tactical meeting's completed items, a card each, above the item being processed (in .wb-flow, scrolled to the item) #}
+<div id="results">
+  {% for item in results %}
+    <section class="card mb-3">
+      <div class="card-header"><h2 class="h6 mb-0">{{ item }}</h2></div>
+      <div class="card-body">
+        {% if item.outcome %}<div>{{ item.outcome|linebreaksbr }}</div>{% endif %}
+        {% if item.link %}<a
+            class="small"
+            href="{{ item.link }}"
+            rel="noopener"
+          >{{ item.link|truncatechars:60 }}</a>{% endif %}
+      </div>
+    </section>
+  {% endfor %}
+</div>

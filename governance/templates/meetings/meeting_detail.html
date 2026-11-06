@@ -127,10 +127,17 @@
           {% elif meeting.is_running and shown_step == "progress" %}
             {% include "meetings/_progress.html" %}
           {% endif %}
-          {% if results %}{% include "meetings/_results.html" %}{% endif %}
-          {% if current %}{% include "meetings/_current.html" %}{% endif %}
-          {% if outputs %}{% include "meetings/_outputs.html" %}{% endif %}
-          {% include "meetings/_notes.html" %}
+          {% if meeting.is_running %}
+            {# One scrolling column (wide screens): the results, the item being processed, the notes; meeting.js scrolls to the item when it changes #}
+            <div class="wb-flow">
+              {% if results %}{% include "meetings/_results.html" %}{% endif %}
+              {% if current %}{% include "meetings/_current.html" %}{% endif %}
+              {% include "meetings/_notes.html" %}
+            </div>
+          {% else %}
+            {% if outputs %}{% include "meetings/_outputs.html" %}{% endif %}
+            {% include "meetings/_notes.html" %}
+          {% endif %}
         {% endblock main %}
       </div>
       <div class="col-lg-4 order-lg-1">

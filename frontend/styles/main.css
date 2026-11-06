@@ -554,13 +554,20 @@ a.wb-row-title:hover {
   font-weight: 600;
 }
 
-/* A tactical meeting's results (meetings/_results.html): scrolled to the
-   newest, earlier ones above; completed agenda items struck through */
-.wb-results {
-  display: flex;
-  flex-direction: column-reverse;
-  max-height: 22rem;
-  overflow-y: auto;
+/* The running meeting's column (meetings/meeting_detail.html): the
+   results, the item being processed, the notes, scrolling on their own on
+   wide screens (meeting.js scrolls to the item); completed agenda items
+   struck through */
+.wb-flow {
+  position: relative;
+}
+
+@media (min-width: 992px) {
+  .wb-flow {
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding-inline-end: 0.25rem;
+  }
 }
 
 .wb-completed {

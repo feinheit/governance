@@ -66,3 +66,38 @@ document.addEventListener("focusout", (event) => {
   const form = event.target.closest?.("form[data-autosave]")
   if (form && autosaveTimers.has(form)) autosave(form)
 })
+
+// The running meeting's column (.wb-flow: results, the item being
+// processed, notes) scrolls to the item when another one is processed, for
+// the secretary and those following, and when its agenda row is clicked
+let shownItem
+
+function scrollToCurrent(force = false) {
+  const flow = document.querySelector(".wb-flow")
+  const current = flow?.querySelector("#current")
+  if (!current) {
+    shownItem = undefined
+    return
+  }
+  if (!force && current.dataset.item === shownItem) return
+  shownItem = current.dataset.item
+  if (flow.scrollHeight > flow.clientHeight) {
+    flow.scrollTo({
+      top: current.offsetTop,
+      behavior: force ? "smooth" : "auto",
+    })
+  } else if (force) {
+    current.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+}
+
+scrollToCurrent()
+document.addEventListener("htmx:after:settle", () => scrollToCurrent())
+document.addEventListener("click", (event) => {
+  if (
+    event.target.closest("#agenda li.wb-current") &&
+    !event.target.closest("a, button, input, [data-agenda-handle]")
+  ) {
+    scrollToCurrent(true)
+  }
+})

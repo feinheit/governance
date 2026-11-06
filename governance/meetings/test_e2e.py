@@ -224,6 +224,40 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertFalse(page.locator("#meeting-paused").is_visible())
         self.assertEqual(self.errors, [])
 
+    def test_flow_scrolls_to_the_current_item(self):
+        """Long results above: the column scrolls to the item being
+        processed, also when another one is processed"""
+        Meeting.objects.filter(pk=self.meeting.pk).update(ended_at=timezone.now())
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.ada,
+        )
+        for position in range(1, 4):
+            AgendaItem.objects.create(
+                meeting=meeting,
+                label=f"Done {position}",
+                position=position,
+                outcome="Long\n" * 40,
+                is_completed=True,
+            )
+        first = AgendaItem.objects.create(meeting=meeting, label="First", position=4)
+        AgendaItem.objects.create(meeting=meeting, label="Second", position=5)
+        meeting.current_item = first
+        meeting.save()
+        page = self.page
+        page.set_viewport_size({"width": 1280, "height": 800})
+        page.goto(f"{self.live_server_url}{meeting.get_absolute_url()}")
+        visible = "(() => { const f = document.querySelector('.wb-flow').getBoundingClientRect(), c = document.querySelector('#current').getBoundingClientRect(); return c.top >= f.top - 1 && c.top < f.bottom })()"
+        self.assertTrue(page.evaluate(visible))
+        page.locator(".wb-flow").evaluate("flow => flow.scrollTo(0, 0)")
+        self.assertFalse(page.evaluate(visible))
+        page.locator("#agenda li", has_text="Second").click()
+        page.wait_for_selector("#current >> text=Second")
+        page.wait_for_function(visible)
+        self.assertEqual(self.errors, [])
+
     def test_paused_notice(self):
         """Updates paused for longer than a moment (typing, something open):
         a notice says so until it continues"""

@@ -1,5 +1,5 @@
 {% load governance i18n %}
-<section class="card mb-4 wb-current">
+<section class="card mb-4 wb-current" id="current" data-item="{{ current.pk }}">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h2 class="h6 mb-0">{% translate "Now" %}: {{ current }}</h2>
     {% if current.proposal and not can_run %}
