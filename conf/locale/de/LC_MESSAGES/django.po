@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 11:54+0100\n"
+"POT-Creation-Date: 2026-11-06 12:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2643,6 +2643,10 @@ msgstr "Alle Vorschläge zu dieser Rolle"
 #: governance/templates/roles/role_detail.html
 msgid "All proposals of this circle"
 msgstr "Alle Vorschläge dieses Kreises"
+
+#: governance/templates/roles/role_detail.html
+msgid "All proposals inside this role"
+msgstr "Alle Vorschläge innerhalb dieser Rolle"
 
 #: governance/templates/search/search.html
 #, python-format

@@ -62,6 +62,24 @@ class ViewsTest(TestCase):
                 )
                 self.assertContains(response, "Call a tactical meeting", count=1)
 
+    def test_proposals_inside_a_role(self):
+        """A role links to the proposals inside it, e.g. from its time as a
+        circle"""
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        bakery = Role.objects.create(name="Bakery", circle=anchor)
+        url = f"/proposals/?circle={bakery.pk}"
+        self.assertNotContains(self.client.get(bakery.get_absolute_url()), url)
+        Proposal.objects.create(
+            circle=bakery,
+            proposer=self.user,
+            tension="Bread",
+            status=Proposal.ADOPTED,
+            created_at=timezone.now(),
+        )
+        response = self.client.get(bakery.get_absolute_url())
+        self.assertContains(response, url)
+        self.assertContains(response, "All proposals inside this role")
+
     def test_person_earlier_roles_show_more(self):
         anchor = Role.objects.create(name="Example Ltd", is_circle=True)
         for day in range(1, 9):

@@ -564,12 +564,6 @@ Deliberately not modelled:
 
 ## Backlog
 
-- **Simplify roles and circles**: every role's inside is a circle now
-  (proposals, governance meetings, members are its holders, 1.3.1), so
-  look for code treating the two separately without need, e.g. the
-  `is_circle` branches in `roles/views.py`, `can_start_meeting()`,
-  `members()`, `proposer_roles()`, the meeting views' lookups and the
-  role page's template.
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).

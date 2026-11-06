@@ -311,9 +311,12 @@
             <a href="{% url 'role_history' role.pk %}">{% translate "Complete history" %}</a> ·
             <a href="{% url 'proposals' %}?role={{ role.pk }}">{% translate "All proposals changing this role" %}</a>
             {% if role.is_circle %}
+              · <a href="{% url 'proposals' %}?circle={{ role.pk }}">{% translate "All proposals of this circle" %}</a>
+            {% elif has_proposals_inside %}
+              {# E.g. from its time as a circle #}
               · <a
                 href="{% url 'proposals' %}?circle={{ role.pk }}"
-              >{% translate "All proposals of this circle" %}</a>{% endif %}
+              >{% translate "All proposals inside this role" %}</a>{% endif %}
           </li>
         </ul>
       </section>

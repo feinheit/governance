@@ -178,6 +178,10 @@ def role_detail(request, pk):
         context["show_meetings"] = role.is_circle or bool(
             context["meetings"] or context["can_start_meeting"]
         )
+    if not role.is_circle:
+        context["has_proposals_inside"] = (
+            Proposal.objects.visible_to(request.user).filter(circle=role).exists()
+        )
     if role.circle_id:
         # Who covers the role while nobody holds it (1.4.2)
         context["leads"] = circle_leads(role.circle).order_by("full_name", "email")
