@@ -331,10 +331,7 @@ def meeting_secretary(request, pk):
             "generic/confirm.html",
             {
                 "question": gettext("Take over as the meeting's secretary?"),
-                "help": gettext(
-                    "You aren't the circle's Secretary. Take over anyway, e.g."
-                    " standing in while they're late?"
-                ),
+                "help": gettext("You aren't the circle's Secretary. Take over anyway?"),
                 "submit_label": gettext("Take over"),
                 "submit_class": "btn-primary",
                 "right": right,

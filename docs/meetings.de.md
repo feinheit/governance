@@ -1,19 +1,18 @@
 # Meetings
 
 Meetings plant ihr im Kalender. Im Tool beginnt ein Meeting, wenn jemand
-es startet; wer nicht Secretary des Kreises ist (oder ihn vertritt),
+es startet; wer nicht Secretary des Kreises ist (oder die Rolle vertritt),
 bestätigt das. Alle folgen auf einem geteilten oder dem eigenen
 Bildschirm und fügen Agendapunkte vom eigenen Gerät aus hinzu; die Seite
 aktualisiert sich von selbst.
 
 - **Wer leitet**: Der Secretary des Meetings hat die Buttons: Schritte,
   Agendapunkte bearbeiten, Einwände, Annehmen, Wahlen, Teilnehmende, das
-  Meeting beenden; er ändert auch die Vorschläge. Das ist der Secretary
-  des Kreises, fehlt er, eine Vertretung (der Facilitator, dann die
-  Circle Leads, Verfassung 5.3.6). "Übernehmen" neben dem Secretary macht
-  jemand anderen zum Secretary, z.B. solange der Secretary sich
-  verspätet; wer nicht als Secretary des Kreises handelt, bestätigt das
-  zuerst.
+  Meeting beenden, dazu das Ändern der Vorschläge. Das ist der Secretary
+  des Kreises, ist die Rolle nicht besetzt, eine Vertretung (der
+  Facilitator, dann die Circle Leads, Verfassung 5.3.6). "Übernehmen"
+  neben dem Secretary macht jemand anderen zum Secretary des Meetings;
+  wer nicht als Secretary des Kreises handelt, bestätigt das zuerst.
 - **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
   hervorgehoben und öffnen den Vorschlag des Punkts mit "Vorschlag
   öffnen". Solange du tippst oder etwas offen hast, aktualisiert sich die

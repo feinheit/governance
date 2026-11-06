@@ -598,8 +598,8 @@ msgid "Take over as the meeting's secretary?"
 msgstr "Als Secretary des Meetings übernehmen?"
 
 #: governance/meetings/views.py
-msgid "You aren't the circle's Secretary. Take over anyway, e.g. standing in while they're late?"
-msgstr "Du bist nicht Secretary des Kreises. Trotzdem übernehmen, z.B. als Vertretung, solange er sich verspätet?"
+msgid "You aren't the circle's Secretary. Take over anyway?"
+msgstr "Du bist nicht Secretary des Kreises. Trotzdem übernehmen?"
 
 #: governance/meetings/views.py
 #: governance/templates/meetings/meeting_detail.html
