@@ -26,7 +26,7 @@ from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
 from governance.proposals.process import current_responses
 from governance.proposals.views import annotate_changes, drafting_context
-from governance.roles.models import Assignment, ChecklistItem, Metric, Role
+from governance.roles.models import Assignment, ChecklistItem, Link, Metric, Role
 from governance.roles.permissions import (
     acting_secretaries,
     asks_before_starting,
@@ -91,6 +91,10 @@ def meeting_detail(request, pk):
     )
 
 
+# The tactical meetings whose outcomes the progress updates show
+EARLIER_MEETINGS = 3
+
+
 def tactical_context(meeting):
     """Checklists and metrics of the invited roles (and the circle's own)"""
     if meeting.kind != Meeting.TACTICAL:
@@ -113,6 +117,32 @@ def tactical_context(meeting):
         .filter(role__in=roles)
         .select_related("role")
         .order_by("role__name", "position"),
+    } | (progress_context(meeting, roles) if meeting.step == "progress" else {})
+
+
+def progress_context(meeting, roles):
+    """Progress updates: where the projects are (the links of the circle and
+    the invited roles), and the outcomes of the circle's last tactical
+    meetings to check on"""
+    earlier = (
+        Meeting.objects
+        .filter(circle=meeting.circle, kind=Meeting.TACTICAL)
+        .exclude(ended_at=None)
+        .exclude(pk=meeting.pk)
+        .order_by("-started_at")[:EARLIER_MEETINGS]
+        if meeting.circle
+        else Meeting.objects.none()
+    )
+    return {
+        "progress_links": Link.objects
+        .filter(role__in=roles)
+        .select_related("role")
+        .order_by("role__name", "position"),
+        "earlier_outcomes": AgendaItem.objects
+        .filter(meeting__in=list(earlier))
+        .exclude(outcome="", link="")
+        .select_related("meeting")
+        .order_by("-meeting__started_at", "position"),
     }
 
 

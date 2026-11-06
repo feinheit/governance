@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:03+0100\n"
+"POT-Creation-Date: 2026-11-06 16:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -329,7 +329,7 @@ msgstr "Checklisten"
 msgid "Metrics review"
 msgstr "Metriken"
 
-#: governance/meetings/models.py
+#: governance/meetings/models.py governance/templates/meetings/_progress.html
 msgid "Progress updates"
 msgstr "Fortschritte"
 
@@ -2131,6 +2131,14 @@ msgstr "Zurückgezogen"
 #: governance/templates/meetings/_outputs.html
 msgid "No proposals adopted, no elections, no outcomes."
 msgstr "Keine angenommenen Vorschläge, keine Wahlen, keine Ergebnisse."
+
+#: governance/templates/meetings/_progress.html
+msgid "No links, e.g. to where the projects and actions are managed."
+msgstr "Keine Links, z.B. dorthin, wo die Projekte und Aktionen verwaltet werden."
+
+#: governance/templates/meetings/_progress.html
+msgid "Outcomes of earlier meetings"
+msgstr "Ergebnisse früherer Meetings"
 
 #: governance/templates/meetings/_running.html
 msgid "Running now:"

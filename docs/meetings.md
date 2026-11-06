@@ -69,7 +69,10 @@ circle.
 - **Ad hoc**: "Call a tactical meeting" on a role's page, with any roles,
   also from other circles.
 
-Steps: check-in, checklists, metrics, updates, agenda, closing. For each
+Steps: check-in, checklists, metrics, updates, agenda, closing. The
+updates show the links of the circle and the invited roles (e.g. to the
+task management tool) and the outcomes of the last three tactical
+meetings, to check on them. For each
 agenda item the secretary may record an "Outcome" and a "Link", "Save and
 done" or just "Done":
 

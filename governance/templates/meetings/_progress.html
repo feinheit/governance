@@ -1,0 +1,42 @@
+{% load governance i18n %}
+{# Progress updates of a tactical meeting (constitution 3.2): where the projects are, and what earlier meetings decided #}
+<section class="card mb-4 wb-current">
+  <div class="card-header"><h2 class="h6 mb-0">{% translate "Progress updates" %}</h2></div>
+  <ul class="list-group list-group-flush">
+    {% for link in progress_links %}
+      <li class="list-group-item">
+        <a href="{{ link.url }}" rel="noopener">{{ link }}</a>
+        <div class="wb-row-meta">
+          <a href="{{ link.role.get_absolute_url }}">{{ link.role }}</a>
+          {% if link.description %}<span>{{ link.description }}</span>{% endif %}
+        </div>
+      </li>
+    {% empty %}
+      <li class="list-group-item text-body-secondary">
+        {% translate "No links, e.g. to where the projects and actions are managed." %}
+      </li>
+    {% endfor %}
+  </ul>
+  {% if earlier_outcomes %}
+    <div class="card-header border-top"><h3 class="h6 mb-0">{% translate "Outcomes of earlier meetings" %}</h3></div>
+    <ul class="list-group list-group-flush">
+      {% regroup earlier_outcomes by meeting as by_meeting %}
+      {% for group in by_meeting %}
+        <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
+          <a href="{{ group.grouper.get_absolute_url }}">{{ group.grouper.started_at|date:"SHORT_DATE_FORMAT" }}</a>
+        </li>
+        {% for item in group.list %}
+          <li class="list-group-item">
+            <div class="wb-row-title">{{ item }}</div>
+            {% if item.outcome %}<div class="small">{{ item.outcome|linebreaksbr }}</div>{% endif %}
+            {% if item.link %}<a
+                class="small"
+                href="{{ item.link }}"
+                rel="noopener"
+              >{{ item.link|truncatechars:60 }}</a>{% endif %}
+          </li>
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>

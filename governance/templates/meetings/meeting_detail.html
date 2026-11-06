@@ -113,6 +113,8 @@
           {% elif meeting.is_running and meeting.step == "metrics" %}
             {% translate "Metrics review" as title %}
             {% include "meetings/_review.html" with items=metrics empty=_("The invited roles have no metrics.") %}
+          {% elif meeting.is_running and meeting.step == "progress" %}
+            {% include "meetings/_progress.html" %}
           {% endif %}
           {% if current %}{% include "meetings/_current.html" %}{% endif %}
           {% if outputs %}{% include "meetings/_outputs.html" %}{% endif %}
