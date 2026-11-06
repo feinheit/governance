@@ -557,3 +557,40 @@ class CircleEmptiedFromAboveScenarioTest(TestCase):
             {"op": "remove", "path": f"/roles/{bakery.pk}/supporting_circle"},
             moving.instructions,
         )
+
+    def test_circle_rep_leaves_the_role(self):
+        """A circle turned back into a role keeps its Circle Leads as holders,
+        not its Circle Rep"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        for core_role, user in [("lead", ada), ("rep", bob)]:
+            Assignment.objects.create(
+                role=bakery.roles.get(core_role=core_role), user=user
+            )
+            Assignment.objects.create(role=bakery, user=user)
+        adopt(
+            Proposal.objects.create(
+                circle=bakery,
+                proposer=ada,
+                tension="Bread",
+                status=Proposal.PUBLISHED,
+                instructions=[{"op": "remove", "path": f"/roles/{baker.pk}"}],
+                created_at=timezone.now(),
+            )
+        )
+        bakery.refresh_from_db()
+        self.assertFalse(bakery.is_circle)
+        self.assertEqual(
+            list(
+                Assignment.objects
+                .current()
+                .filter(role=bakery)
+                .values_list("user", flat=True)
+            ),
+            [ada.pk],
+        )

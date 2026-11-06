@@ -387,6 +387,16 @@ class Applier:
                 _("%(circle)s still has roles, they have to go first."), circle=role
             )
             return
+        # The role stays with its Circle Leads, not with its Circle Rep
+        leads = set(
+            Assignment.objects
+            .current()
+            .filter(role__circle=role, role__core_role=LEAD)
+            .values_list("user", flat=True)
+        )
+        for assignment in Assignment.objects.current().filter(role=role):
+            if assignment.user_id not in leads:
+                end_assignment(assignment, self.day)
         for core_role in role.roles.active():
             for assignment in Assignment.objects.current().filter(role=core_role):
                 end_assignment(assignment, self.day)

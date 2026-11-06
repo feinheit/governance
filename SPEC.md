@@ -206,7 +206,8 @@ accountabilities and domains through its own governance (1.3.3).
   holders propose in the role, adopting makes it a circle with them as
   Circle Leads. With a single holder publishing adopts right away. Moving
   roles into a role is the circle's governance and converts it too.
-- A circle losing its last own roles turns back into a role when
+- A circle losing its last own roles turns back into a role (held by
+  its Circle Leads, no longer by its Circle Rep) when
   adopting, or when its own meeting running meanwhile ends
   (`revert_after_meeting()`): the meeting goes on to its closing round,
   the proposal which left the circle without roles (also one of the
@@ -519,8 +520,7 @@ Deliberately not modelled:
     end assignments of elected roles (resigning, 1.4.1); due-election
     reminders go to the Facilitators (5.3.5); guests in governance
     meetings stay as they are (proposals come from roles).
-  - To decide: whether a circle turned back into a role keeps its Circle
-    Rep as holder; whether a meeting's outputs also reach the members at
+  - To decide: whether a meeting's outputs also reach the members at
     its start (holders of roles removed while absent); the day of the
     steps of a meeting ended later by inactivity (after midnight).
   - Constitution, low: moves only reach direct sub-circles (5.2 allows
