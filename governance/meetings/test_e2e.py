@@ -152,11 +152,12 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("#agenda >> text=From another device", timeout=8000)
         self.assertSamePage()
 
-        # Ending the meeting shows its outputs
-        page.locator("form[action$='/end/'] button").click()
+        # Ending the meeting, asked first (an item is open), shows its outputs
+        page.locator("a[data-modal][href$='/end/']").click()
+        page.wait_for_selector("#modal[open] >> text=End the meeting?")
+        page.locator("#modal button[type=submit]").click()
         page.wait_for_selector("#meeting >> text=Outputs")
         self.assertEqual(page.locator("#meeting >> text=Baker").count() > 0, True)
-        self.assertSamePage()
 
         # Links to other pages navigate as usual
         page.locator(

@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.text import Truncator
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _, ngettext
 from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
@@ -437,9 +437,30 @@ def meeting_secretary(request, pk):
     return redirect(meeting)
 
 
-@require_POST
 def meeting_end(request, pk):
+    """Ending the meeting; with unprocessed agenda items asked first (in a
+    modal)"""
     meeting = runnable_meeting(request, pk, running=False)
+    if request.method != "POST":
+        count = meeting.agenda_items.filter(is_completed=False).count()
+        return render(
+            request,
+            "generic/confirm.html",
+            {
+                "question": gettext("End the meeting?"),
+                "help": ngettext(
+                    "%(count)s agenda item hasn't been processed yet, its"
+                    " proposal waits for the next meeting.",
+                    "%(count)s agenda items haven't been processed yet, their"
+                    " proposals wait for the next meeting.",
+                    count,
+                )
+                % {"count": count},
+                "submit_label": gettext("End the meeting"),
+                "submit_class": "btn-primary",
+                "cancel_url": meeting.get_absolute_url(),
+            },
+        )
     if meeting.is_running:
         end_meeting(meeting)
     return redirect(meeting)
@@ -481,6 +502,8 @@ def agenda_context(request, meeting):
         "results": [item for item in items if item.has_result],
         "can_run": runs,
         "can_take_over": takes_over,
+        # Ending the meeting asks first while some aren't processed
+        "open_items": sum(1 for item in items if not item.is_completed),
         "can_add_items": can_add,
     }
     if can_add and meeting.kind == Meeting.GOVERNANCE:

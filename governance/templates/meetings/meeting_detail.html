@@ -153,13 +153,22 @@
           {% endif %}
           {% if can_run and meeting.is_running %}
             <div class="card-body border-top">
-              <form method="post" action="{% url 'meeting_end' meeting.pk %}">
-                {% csrf_token %}
-                <button type="submit" {% button_class can_run %}>
-                  {% icon "stop-fill" %}
-                  {% translate "End the meeting" %}
-                </button>
-              </form>
+              {% if open_items %}
+                {# Asked first, in a modal #}
+                <a
+                  {% button_class can_run %}
+                  href="{% url 'meeting_end' meeting.pk %}"
+                  data-modal
+                >{% icon "stop-fill" %} {% translate "End the meeting" %}</a>
+              {% else %}
+                <form method="post" action="{% url 'meeting_end' meeting.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" {% button_class can_run %}>
+                    {% icon "stop-fill" %}
+                    {% translate "End the meeting" %}
+                  </button>
+                </form>
+              {% endif %}
             </div>
           {% endif %}
         </section>

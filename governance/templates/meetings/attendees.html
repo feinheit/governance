@@ -53,7 +53,8 @@
         {% if modal %}hx-post="{{ request.path }}" hx-target="#modal" hx-headers='{"HX-Modal": "true"}'{% endif %}
       >
         {% csrf_token %}
-        <select name="user" class="form-select form-select-sm" aria-label="{% translate 'Invite' %}">
+        <select name="user" class="form-select form-select-sm" aria-label="{% translate 'Invite' %}" required>
+          <option value="" selected>{% translate "Choose somebody" %}</option>
           {% for user in invitable %}<option value="{{ user.pk }}">{{ user }}</option>{% endfor %}
         </select>
         <button type="submit" name="action" value="add" class="btn btn-sm btn-quiet text-nowrap">

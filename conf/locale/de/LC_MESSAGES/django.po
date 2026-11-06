@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:59+0100\n"
+"POT-Creation-Date: 2026-11-06 17:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -607,6 +607,22 @@ msgstr "Du bist nicht Secretary des Kreises. Trotzdem übernehmen?"
 #: governance/meetings/views.py governance/templates/meetings/_meta.html
 msgid "Take over"
 msgstr "Übernehmen"
+
+#: governance/meetings/views.py
+msgid "End the meeting?"
+msgstr "Meeting beenden?"
+
+#: governance/meetings/views.py
+#, python-format
+msgid "%(count)s agenda item hasn't been processed yet, its proposal waits for the next meeting."
+msgid_plural "%(count)s agenda items haven't been processed yet, their proposals wait for the next meeting."
+msgstr[0] "%(count)s Agendapunkt ist noch nicht bearbeitet, sein Vorschlag wartet auf das nächste Meeting."
+msgstr[1] "%(count)s Agendapunkte sind noch nicht bearbeitet, ihre Vorschläge warten auf das nächste Meeting."
+
+#: governance/meetings/views.py
+#: governance/templates/meetings/meeting_detail.html
+msgid "End the meeting"
+msgstr "Meeting beenden"
 
 #: governance/notifications/apps.py
 msgid "notifications"
@@ -2193,6 +2209,10 @@ msgid "Invite"
 msgstr "Einladen"
 
 #: governance/templates/meetings/attendees.html
+msgid "Choose somebody"
+msgstr "Jemanden auswählen"
+
+#: governance/templates/meetings/attendees.html
 msgid "Close"
 msgstr "Schliessen"
 
@@ -2291,10 +2311,6 @@ msgstr "Hinzufügen"
 #: governance/templates/meetings/meeting_detail.html
 msgid "Add proposal"
 msgstr "Vorschlag hinzufügen"
-
-#: governance/templates/meetings/meeting_detail.html
-msgid "End the meeting"
-msgstr "Meeting beenden"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "Invited roles"

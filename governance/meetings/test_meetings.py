@@ -167,6 +167,36 @@ class MeetingsTest(TestCase):
         self.client.force_login(self.eve)  # Following
         self.assertEqual(self.client.post(url, {"ids": [items[1].pk]}).status_code, 403)
 
+    def test_ending_with_open_items_asks(self):
+        """Ending a meeting with unprocessed agenda items asks first"""
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        url = f"/meetings/{meeting.pk}/end/"
+        # Nothing open: right away
+        self.assertContains(
+            self.client.get(meeting.get_absolute_url()),
+            f'<form method="post" action="{url}"',
+        )
+        AgendaItem.objects.create(meeting=meeting, label="Tea", position=1)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertRegex(response.content.decode(), rf'href="{url}"\s+data-modal')
+        self.assertContains(self.client.get(url), "1 agenda item hasn")
+        meeting.refresh_from_db()
+        self.assertTrue(meeting.is_running)
+        self.client.post(url)
+        meeting.refresh_from_db()
+        self.assertFalse(meeting.is_running)
+
+    def test_invite_preselects_nobody(self):
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        User.objects.create_user("zoe@example.com", full_name="Zoe")
+        response = self.client.get(f"/meetings/{meeting.pk}/attendees/")
+        self.assertContains(response, '<option value="" selected')
+
+    def test_one_running_meeting_per_circle(self):
         self.client.force_login(self.bob)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
         meeting = Meeting.objects.get()
