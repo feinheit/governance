@@ -76,24 +76,19 @@ def can_lead(user, circle):
     )
 
 
-def can_assign(user, role):
-    """Circle Leads assign the roles of their circle, except elected ones
-
-    The super-circle's Circle Lead assigns a sub-circle's Circle Lead.
-    """
-    if role.archived_on or role.is_circle or role.is_elected or not role.circle:
-        return False
-    circle = role.circle.circle if role.core_role == LEAD else role.circle
-    return user.is_admin or can_lead(user, circle)
-
-
 def can_end_assignment(user, role):
-    """Those who assign end assignments, also of elected roles: their holders
-    resign through them (1.4.1)"""
+    """Circle Leads end assignments of their circle's roles, also of elected
+    roles: their holders resign through them (1.4.1). The super-circle's
+    Circle Leads do it for a sub-circle's Circle Lead."""
     if role.archived_on or role.is_circle or not role.circle:
         return False
     circle = role.circle.circle if role.core_role == LEAD else role.circle
     return user.is_admin or can_lead(user, circle)
+
+
+def can_assign(user, role):
+    """Those who end assignments also assign, except to elected roles"""
+    return not role.is_elected and can_end_assignment(user, role)
 
 
 def members(circle):
