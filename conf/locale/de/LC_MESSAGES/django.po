@@ -307,7 +307,7 @@ msgstr "Checklisten"
 #: governance/meetings/models.py
 #: governance/templates/meetings/meeting_detail.html
 msgid "Metrics review"
-msgstr "Metrics"
+msgstr "Metriken"
 
 #: governance/meetings/models.py
 msgid "Progress updates"
@@ -1337,7 +1337,7 @@ msgstr "Die Circle Leads legen die Strategie ausserhalb der Governance fest."
 #: governance/roles/editing.py
 #, python-format
 msgid "Metric of %(role)s"
-msgstr "Metric von %(role)s"
+msgstr "Metrik von %(role)s"
 
 #: governance/roles/editing.py
 #, python-format
@@ -1480,11 +1480,11 @@ msgstr "Häufigkeit"
 
 #: governance/roles/models.py governance/roles/views.py
 msgid "metric"
-msgstr "Kennzahl"
+msgstr "Metrik"
 
 #: governance/roles/models.py
 msgid "metrics"
-msgstr "Kennzahlen"
+msgstr "Metriken"
 
 #: governance/roles/models.py
 msgid "checklist item"
@@ -2113,7 +2113,7 @@ msgstr "Die eingeladenen Rollen haben keine Checklisten-Punkte."
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "The invited roles have no metrics."
-msgstr "Die eingeladenen Rollen haben keine Kennzahlen."
+msgstr "Die eingeladenen Rollen haben keine Metriken."
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "A tension, in one or two words"
@@ -2733,7 +2733,7 @@ msgstr "Zum laufenden Meeting"
 
 #: governance/templates/roles/role_detail.html
 msgid "Checklists and metrics"
-msgstr "Checklisten und Kennzahlen"
+msgstr "Checklisten und Metriken"
 
 #: governance/templates/roles/role_detail.html
 msgid "Add a checklist item"
@@ -2741,7 +2741,7 @@ msgstr "Checklisten-Punkt hinzufügen"
 
 #: governance/templates/roles/role_detail.html
 msgid "Add a metric"
-msgstr "Metric hinzufügen"
+msgstr "Metrik hinzufügen"
 
 #: governance/templates/roles/role_detail.html
 msgid "Links"

@@ -33,12 +33,12 @@ Auf dem Mac <kbd>Ctrl</kbd> statt <kbd>Alt</kbd>. Fährst du mit der Maus
 
 Ein **Kreis** zeigt Purpose, Strategie, Accountabilities, Domains, seine
 Policies und die der übergeordneten Kreise, seine Rollen mit Besetzung,
-Checklisten und Kennzahlen, Links, offene Vorschläge, Meetings und
+Checklisten und Metriken, Links, offene Vorschläge, Meetings und
 anstehende Wahlen.
 
 Eine **Rolle** zeigt Purpose, Accountabilities, Domains, wer sie hat (mit
 Fokus und Amtszeit, die Circle Leads weisen hier zu und entfernen), ihre Policies und die ihrer Kreise, die auch für sie
-gelten, Checklisten, Kennzahlen und Links.
+gelten, Checklisten, Metriken und Links.
 Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
 unbesetzten Circle Lead die des übergeordneten Kreises.
 

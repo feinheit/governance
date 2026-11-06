@@ -6,7 +6,7 @@ Einiges ändert sich ohne Governance:
 | --- | --- |
 | Zuweisungen und Fokus ("Besetzung" auf der Rollenseite) | Circle Leads |
 | Strategie des Kreises | Circle Leads |
-| Kennzahlen | Circle Leads |
+| Metriken | Circle Leads |
 | Checklisten-Punkte und Links | alle |
 | Policies einer Domain | wer die Rolle mit der Domain hat |
 | Einstellungen (Frist für asynchrone Vorschläge, durch Policy gewählte Rollen) | Secretary |

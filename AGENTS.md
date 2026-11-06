@@ -104,8 +104,8 @@ Edit `conf/locale/de/LC_MESSAGES/django.po` manually. Remove the `#, fuzzy`
 flag before any new entry or it won't be used. The Holacracy terms stay
 English like in the handbook and in GlassFrog (Purpose, Accountabilities,
 Domains, Policies, Tactical and Governance Meeting), as do the core roles'
-names and constitutional texts; circles, roles, proposals and tensions are
-Kreise, Rollen, Vorschläge and Spannungen; a meeting's agenda and its items
+names and constitutional texts; circles, roles, proposals, tensions and
+metrics are Kreise, Rollen, Vorschläge, Spannungen and Metriken; a meeting's agenda and its items
 are Agenda and Agendapunkte like in the German constitution
 (`docs/constitution`), not Traktanden. Tests run in English
 (`LANGUAGE_CODE` when testing), `governance/test_translations.py` checks the

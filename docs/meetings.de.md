@@ -63,7 +63,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 - **Ad hoc**: "Tactical Meeting einberufen" auf einer Rollenseite, mit
   beliebigen Rollen, auch aus anderen Kreisen.
 
-Ablauf: Check-in, Checklisten, Kennzahlen, Updates, Agenda, Abschluss.
+Ablauf: Check-in, Checklisten, Metriken, Updates, Agenda, Abschluss.
 Zu jedem Agendapunkt kann der Secretary ein "Ergebnis" und einen "Link"
 festhalten, "Speichern und erledigt" oder einfach "Erledigt":
 
