@@ -513,6 +513,27 @@ a.wb-row-title:hover {
   font-weight: 600;
 }
 
+/* The meeting's updates paused (meeting.js) */
+.wb-paused {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1030;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--bs-border-radius);
+  background: var(--wb-warning-bg);
+  color: var(--wb-warning-ink);
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.15);
+  font-size: 0.85rem;
+}
+
+.wb-paused[hidden] {
+  display: none;
+}
+
 /* Help pages (docs/, governance/help.py): readable line length */
 .wb-help {
   max-width: 48rem;

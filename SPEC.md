@@ -334,7 +334,8 @@ All state lives on the server, people follow on a shared screen and add
 agenda items from their own devices. **The meeting page** (htmx 4): actions
 replace only `#meeting`, links navigate normally unless marked
 `data-in-meeting`; every five seconds the region is morphed with the
-server's, except while somebody types or has the panel or a section open.
+server's, except while somebody types or has the panel or a section open
+(paused longer than one check, a notice says so, `#meeting-paused`).
 A modal (the minutes) doesn't stop it: it's outside of `#meeting`.
 Left: agenda (adding items as its last line), attendees, elections,
 proposals. Right: the rounds and the item being processed. An ended

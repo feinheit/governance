@@ -166,6 +166,22 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertIsNone(page.evaluate("window.marker"))
         self.assertEqual(self.errors, [])
 
+    def test_paused_notice(self):
+        """Updates paused for longer than a moment (typing, something open):
+        a notice says so until it continues"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        notice = page.locator("#meeting-paused")
+        page.focus("input[name=label]")
+        self.assertFalse(page.evaluate("meetingIsIdle()"))
+        self.assertFalse(notice.is_visible())  # Typing a moment
+        page.evaluate("meetingIsIdle()")
+        self.assertTrue(notice.is_visible())
+        page.locator("h1").click()
+        self.assertTrue(page.evaluate("meetingIsIdle()"))
+        self.assertFalse(notice.is_visible())
+        self.assertEqual(self.errors, [])
+
     def test_remove_circle(self):
         """Moving out of a circle and removing it, in the meeting's panel"""
         bakery = Role.objects.create(name="Bakery", circle=self.kitchen, is_circle=True)

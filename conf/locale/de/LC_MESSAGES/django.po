@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:39+0100\n"
+"POT-Creation-Date: 2026-11-06 16:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2261,6 +2261,10 @@ msgstr "Wahl festhalten"
 #: governance/templates/notifications/meeting_ended.txt
 msgid "Minutes"
 msgstr "Protokoll"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Paused: the meeting doesn't update while you type or have something open. It continues when you're done."
+msgstr "Pausiert: Das Meeting aktualisiert sich nicht, solange du tippst oder etwas offen hast. Es geht weiter, sobald du fertig bist."
 
 #: governance/templates/meetings/meeting_list.html
 #: governance/templates/roles/role_detail.html

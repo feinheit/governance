@@ -11,8 +11,17 @@ document.addEventListener("htmx:before:init", (event) => {
 
 // The meeting's region is merged with the server's every few seconds,
 // except while somebody types, has a form in the panel or a collapsible
-// section open (merging would close it)
-window.meetingIsIdle = () =>
-  !document.hidden &&
-  !document.querySelector("#meeting details[open], #amend > *") &&
-  !document.activeElement?.closest("#meeting form")
+// section open (merging would close it). Paused for more than one check,
+// a notice says so (#meeting-paused, not while typing a moment).
+let busyChecks = 0
+window.meetingIsIdle = () => {
+  if (document.hidden) return false
+  const busy = Boolean(
+    document.querySelector("#meeting details[open], #amend > *") ||
+      document.activeElement?.closest("#meeting form"),
+  )
+  busyChecks = busy ? busyChecks + 1 : 0
+  const notice = document.getElementById("meeting-paused")
+  if (notice) notice.hidden = busyChecks < 2
+  return !busy
+}
