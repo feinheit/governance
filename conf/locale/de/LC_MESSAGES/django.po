@@ -1004,10 +1004,8 @@ msgid "responses"
 msgstr "Antworten"
 
 #: governance/proposals/process.py
-#, fuzzy
-#| msgid "The async response the objection comes from."
 msgid "Choose the role of the proposer the tension comes from."
-msgstr "Die asynchrone Antwort, aus der der Einwand stammt."
+msgstr "Wähle die Rolle der vorschlagenden Person, aus der die Spannung kommt."
 
 #: governance/proposals/process.py
 #, python-format
