@@ -714,3 +714,31 @@ Deliberately not modelled:
   `end_inactive_meetings`), sending mails outside the request.
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
+- **Verification** (round of 2026-11-06, open findings):
+  - Objections aren't recorded anymore (decided 2026-11-06): the
+    facilitator's round tests them, the meeting's notes keep what matters;
+    remove `Objection`, its views, form and the gate of "Adopt".
+  - B1: a published proposal amended in a meeting and then removed from
+    the agenda goes back to async with its old deadline and the old
+    consents, and is adopted as amended without anybody seeing it
+    (`agenda_remove`). To decide.
+  - B2: `proposal.roles`/`policies` are only set when publishing:
+    proposals brought into or created in a meeting don't show as pending
+    on role pages, amended ones keep roles they no longer change (history,
+    the meeting's mail to their holders).
+  - B3: a proposal removed from a running meeting's agenda keeps
+    `meeting` (waiting ones, tensions turned into proposals): its page says
+    it's amended in that meeting.
+  - B4: the app's async process moves proposals imported from GlassFrog
+    to "waiting for a meeting" (the last consent, the deadline) until the
+    nightly import sets them back. To decide, maybe until the switchover.
+  - B5: the history's timeline puts proposals on their UTC day
+    (`decided_at.date()`), changes on the local one.
+  - Untested risks: concurrent adoption without row locks
+    (`select_for_update`), no mail when a due async proposal goes to a
+    meeting because of a conflict, nothing adopted until the deadline when
+    the last member who hadn't consented leaves, `draft_again` of
+    proposals withdrawn because their circle turned back into a role,
+    double mails for a circle emptied by its super-circle while both
+    meetings run, re-elections after midnight dated by the meeting's
+    start (`history/update.py`).
