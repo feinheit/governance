@@ -8,7 +8,7 @@ from governance.accounts.models import User
 from governance.meetings.elections import due_elections
 from governance.meetings.models import Meeting
 from governance.proposals.models import Proposal, Response
-from governance.roles.constitution import FACILITATOR, SECRETARY
+from governance.roles.constitution import FACILITATOR, REP, SECRETARY
 from governance.roles.domain_policies import can_change_domain_policies
 from governance.roles.editing import can_edit_items, can_edit_strategy
 from governance.roles.models import (
@@ -52,7 +52,7 @@ def mark_reps(circles):
     for circle_id, user_id in (
         Assignment.objects
         .current()
-        .filter(role__circle__in=circles, role__core_role="rep", role__archived_on=None)
+        .of_core_role(REP, circles)
         .values_list("role__circle", "user")
     ):
         reps[circle_id].add(user_id)

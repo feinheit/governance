@@ -41,7 +41,7 @@ def holder(circle, core_role):
     assignment = (
         Assignment.objects
         .current()
-        .filter(role__circle=circle, role__core_role=core_role, role__archived_on=None)
+        .of_core_role(core_role, circle)
         .select_related("user")
         .first()
     )

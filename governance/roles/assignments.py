@@ -97,10 +97,7 @@ def sync_circle_holders(circle, day):
     """
     current = Assignment.objects.current(on=day)
     wanted = set(
-        current
-        .filter(role__circle=circle, role__core_role__in=[LEAD, REP])
-        .filter(role__archived_on=None)
-        .values_list("user", flat=True)
+        current.of_core_role([LEAD, REP], circle).values_list("user", flat=True)
     )
     for assignment in current.filter(role=circle):
         if assignment.user_id in wanted:
@@ -173,7 +170,8 @@ class AssignmentForm(ModelForm):
             and role.core_role == LEAD
             and Assignment.objects
             .current()
-            .filter(user=user, role__circle=role.circle_id, role__core_role=REP)
+            .of_core_role(REP, role.circle_id)
+            .filter(user=user)
             .exists()
         ):
             # Constitution 5.1.1, like electing the Rep

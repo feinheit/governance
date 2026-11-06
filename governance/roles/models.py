@@ -272,6 +272,17 @@ class AssignmentQuerySet(models.QuerySet):
             Q(ends_on__isnull=True) | Q(ends_on__gt=day),
         )
 
+    def of_core_role(self, core_role, circle):
+        """Assignments of the circle's core role (both may be lists)"""
+        many = isinstance(core_role, (list, tuple, set))
+        return self.filter(
+            Q(role__core_role__in=core_role) if many else Q(role__core_role=core_role),
+            Q(role__circle__in=circle)
+            if isinstance(circle, (list, tuple, set))
+            else Q(role__circle=circle),
+            role__archived_on=None,
+        )
+
 
 class Assignment(models.Model):
     """A person holding a role, optionally with a focus

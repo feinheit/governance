@@ -414,7 +414,7 @@ class Applier:
         leads = set(
             Assignment.objects
             .current()
-            .filter(role__circle=role, role__core_role=LEAD)
+            .of_core_role(LEAD, role)
             .values_list("user", flat=True)
         )
         for assignment in Assignment.objects.current().filter(role=role):

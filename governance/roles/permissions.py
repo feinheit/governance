@@ -17,12 +17,8 @@ def holds_core_role(user, circle, core_role):
         circle is not None
         and Assignment.objects
         .current()
-        .filter(
-            user=user,
-            role__circle=circle,
-            role__core_role=core_role,
-            role__archived_on=None,
-        )
+        .of_core_role(core_role, circle)
+        .filter(user=user)
         .exists()
     )
 
@@ -41,7 +37,7 @@ def circle_leads(circle):
         leads = User.objects.active().filter(
             pk__in=Assignment.objects
             .current()
-            .filter(role__circle=circle, role__core_role=LEAD, role__archived_on=None)
+            .of_core_role(LEAD, circle)
             .values("user")
         )
         if circle.circle_id is None or leads.exists():

@@ -186,7 +186,7 @@ def members_changed(circle, joined, left):
         User.objects.filter(
             pk__in=Assignment.objects
             .current()
-            .filter(role__circle=circle, role__core_role="secretary")
+            .of_core_role("secretary", circle)
             .values("user")
         ),
         subject,
@@ -217,11 +217,7 @@ def elections_due(day=None):
             users = set(
                 Assignment.objects
                 .current(on=day)
-                .filter(
-                    role__circle=circle,
-                    role__core_role=core_role,
-                    role__archived_on=None,
-                )
+                .of_core_role(core_role, circle)
                 .values_list("user", flat=True)
             )
             if users:
