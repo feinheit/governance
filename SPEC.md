@@ -407,7 +407,8 @@ only setting is `User.notify_all` ("everything in all circles").
   with holders, sub-circles, metrics, checklists, links, pending proposals,
   meetings, due elections, history.
 - **Role page**: purpose, accountabilities, domains, holders with focus and
-  terms, its policies, metrics, checklists, links, history.
+  terms, its policies and those of its circles (5.2.1), pending proposals
+  (also for its inside), metrics, checklists, links, history.
 - **Start page** (`/`, <kbd>Alt-H</kbd>): the own person page, with what
   waits for the person; the anchor circle is `/organization/` (the
   navigation's "Organization", <kbd>Alt-O</kbd>).

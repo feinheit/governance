@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 09:33+0100\n"
+"POT-Creation-Date: 2026-11-06 09:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2540,12 +2540,21 @@ msgid "From the super-circle <a href=\"%(url)s\">%(circle)s</a>, they apply here
 msgstr "Aus dem Super-Kreis <a href=\"%(url)s\">%(circle)s</a>, sie gelten auch hier, ausser sie sagen etwas anderes:"
 
 #: governance/templates/roles/role_detail.html
+#, python-format
+msgid "From the circle <a href=\"%(url)s\">%(circle)s</a>, they apply to this role too unless they say otherwise:"
+msgstr "Aus dem Kreis <a href=\"%(url)s\">%(circle)s</a>, sie gelten auch für diese Rolle, ausser sie sagen etwas anderes:"
+
+#: governance/templates/roles/role_detail.html
 msgid "Details and history"
 msgstr "Details und Geschichte"
 
 #: governance/templates/roles/role_detail.html
 msgid "The circle's own policies:"
 msgstr "Die eigenen Policies des Kreises:"
+
+#: governance/templates/roles/role_detail.html
+msgid "The role's own policies:"
+msgstr "Die eigenen Policies der Rolle:"
 
 #: governance/templates/roles/role_detail.html
 msgid "Add a policy for its domains"

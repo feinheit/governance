@@ -131,21 +131,22 @@ def role_detail(request, pk):
         "policies": role.policies.active().select_related("domain"),
         # A role's policies for its domains, without governance (1.3.2)
         "can_change_domain_policies": can_change_domain_policies(request.user, role),
-        # Policies apply in sub-circles unless they say otherwise (5.2.1)
+        # Policies apply in sub-circles unless they say otherwise (5.2.1),
+        # and to the roles in them
         "inherited_policies": [
             (circle, list(circle.policies.active().select_related("domain")))
-            for circle in (role.ancestors() if role.is_circle else [])
+            for circle in role.ancestors()
             if circle.policies.active().exists()
         ],
         "metrics": role.metrics.all(),
         "checklist_items": role.checklistitems.all(),
         # Checklist items first, then metrics, grouped by their frequency
         "role_items": by_frequency(role_items(request.user, role)),
-        # Published or in a meeting: proposals affecting the role, and for
-        # a circle also its own
+        # Published or in a meeting: proposals affecting the role, and its
+        # own (a circle's, or a role's for its inside, 1.3.1)
         "pending": Proposal.objects
         .filter(status__in=PENDING)
-        .filter(Q(roles=role) | Q(circle=role) if role.is_circle else Q(roles=role))
+        .filter(Q(roles=role) | Q(circle=role))
         .distinct()
         .select_related("proposer"),
         "history": role.changed_by_proposals.filter(status="adopted").select_related(

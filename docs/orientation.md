@@ -36,7 +36,8 @@ checklists and metrics, links, open proposals, meetings and due
 elections.
 
 A **role** shows its purpose, accountabilities, domains, who holds it
-(with focus and term), its policies, checklists, metrics and links.
+(with focus and term), its policies and those of its circles, which
+apply to it too, checklists, metrics and links.
 Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.
 

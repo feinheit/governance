@@ -126,7 +126,7 @@
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Policies" %}</h2></div>
           {% for circle, circle_policies in inherited_policies %}
             <div class="card-body py-2 border-bottom small text-body-secondary">
-              {% blocktranslate with circle=circle.name url=circle.get_absolute_url %}From the super-circle <a href="{{ url }}">{{ circle }}</a>, they apply here too unless they say otherwise:{% endblocktranslate %}
+              {% if role.is_circle %}{% blocktranslate with circle=circle.name url=circle.get_absolute_url %}From the super-circle <a href="{{ url }}">{{ circle }}</a>, they apply here too unless they say otherwise:{% endblocktranslate %}{% else %}{% blocktranslate with circle=circle.name url=circle.get_absolute_url %}From the circle <a href="{{ url }}">{{ circle }}</a>, they apply to this role too unless they say otherwise:{% endblocktranslate %}{% endif %}
             </div>
             <div class="list-group list-group-flush">
               {% for policy in circle_policies %}
@@ -140,7 +140,7 @@
           {% endfor %}
           {% if inherited_policies and policies %}
             <div class="card-body py-2 border-bottom small text-body-secondary">
-              {% translate "The circle's own policies:" %}
+              {% if role.is_circle %}{% translate "The circle's own policies:" %}{% else %}{% translate "The role's own policies:" %}{% endif %}
             </div>
           {% endif %}
           <div class="list-group list-group-flush">

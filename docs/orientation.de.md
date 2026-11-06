@@ -37,7 +37,8 @@ Checklisten und Kennzahlen, Links, offene Vorschläge, Meetings und
 anstehende Wahlen.
 
 Eine **Rolle** zeigt Purpose, Accountabilities, Domains, wer sie hat (mit
-Fokus und Amtszeit), ihre Policies, Checklisten, Kennzahlen und Links.
+Fokus und Amtszeit), ihre Policies und die ihrer Kreise, die auch für sie
+gelten, Checklisten, Kennzahlen und Links.
 Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
 unbesetzten Circle Lead die des übergeordneten Kreises.
 

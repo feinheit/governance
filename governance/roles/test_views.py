@@ -106,6 +106,25 @@ class ViewsTest(TestCase):
         response = self.client.get(facilitator.get_absolute_url())
         self.assertNotContains(response, "as far as no role or process")
 
+    def test_role_page_policies_and_proposals_inside(self):
+        """A role's page shows the policies of its circles, which apply to
+        it, and the pending proposals for its inside (1.3.1)"""
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        Policy.objects.create(role=kitchen, title="Clean up", body="Always")
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        Proposal.objects.create(
+            circle=cook,
+            proposer=self.user,
+            role=cook,
+            tension="Too much to do",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+        )
+        response = self.client.get(cook.get_absolute_url())
+        self.assertContains(response, "Clean up")
+        self.assertContains(response, "Too much to do")
+
     def test_new_proposal_only_for_proposers(self):
         """Admins outside the circle don't get "New proposal", which would
         refuse them"""
