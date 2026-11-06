@@ -308,7 +308,7 @@ a modal): in a role always, cancelling being the default (rarely what
 people want, the role itself changes in its circle); in a circle those
 who aren't its Secretary or standing in for them, starting being the
 default. The meeting's secretary handles its buttons (`can_run()`):
-steps, processing items, objections, adopting, elections, attendees,
+steps, processing items, adopting, elections, attendees,
 the notes, ending it; they also amend proposals. The others follow on
 their own screens: the current step and agenda item are highlighted, the
 item's proposal links to its page and summarizes what it proposes now,
@@ -329,7 +329,7 @@ One meeting at a time per circle (a constraint): starting another one
 joins the running one, the circle page offers it instead. Ad-hoc tactical
 meetings have no circle and may always run.
 Nobody has to remember to end a meeting: changes to it, its agenda,
-attendees, objections, elections and the proposals processed in it set
+attendees, elections and the proposals processed in it set
 `active_at` (`meetings/activity.py`, signals), and meetings inactive for
 three hours end with their last activity (with the outputs mail as
 usual): hourly (`end_inactive_meetings`), in `fairy_tasks` and when
@@ -394,10 +394,10 @@ agenda links proposals to their pages only for those not running it (the
 sidebar's list of the meeting's proposals shows once it isn't running). "Discard"
 withdraws the item's proposal (5.3.1, 5.3.4), the outputs list it, its
 proposer gets a new draft of it with "Draft again"; "Done" leaves it
-waiting for the next meeting. Objections
-are recorded with who raised them for which of their roles, the
-facilitator's test and whether they were integrated; adopting needs every
-objection tested and every valid one integrated, and a proposer still
+waiting for the next meeting. Objections aren't recorded (decided
+2026-11-06): the facilitator asks for and tests them in the objection
+round, the secretary integrates valid ones by amending the proposal, the
+meeting's notes keep what matters. Adopting needs a proposer still
 filling the proposal's role (5.3.1, like publishing): a guest's tension
 needs a member owning it, the secretary chooses the role of proposals
 without one. Concerns of members who
@@ -602,7 +602,7 @@ sees, one file per kind: `people`, `roles` (with accountabilities and
 domains), `assignments`, `policies`, `history` (the `Change`s since
 2018), `proposals` (with responses, anonymous like on the page except
 questions and concerns, without others' drafts), `meetings`
-(with agenda, objections, elections), `metrics`, `checklist_items`,
+(with agenda, elections), `metrics`, `checklist_items`,
 `links`. Lists ordered by ID with the models' field names and GlassFrog
 IDs. `scripts/fetch_backup.py REPO` commits them daily to a git
 repository, like the GlassFrog export before (the backlog has the rest).
@@ -715,9 +715,6 @@ Deliberately not modelled:
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-06, open findings):
-  - Objections aren't recorded anymore (decided 2026-11-06): the
-    facilitator's round tests them, the meeting's notes keep what matters;
-    remove `Objection`, its views, form and the gate of "Adopt".
   - B1: a published proposal amended in a meeting and then removed from
     the agenda goes back to async with its old deadline and the old
     consents, and is adopted as amended without anybody seeing it

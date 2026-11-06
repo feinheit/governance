@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 21:43+0100\n"
+"POT-Creation-Date: 2026-11-06 22:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -494,50 +494,6 @@ msgstr "Agendapunkt"
 msgid "agenda items"
 msgstr "Agendapunkte"
 
-#: governance/meetings/models.py governance/templates/meetings/_current.html
-msgid "raised by"
-msgstr "erhoben von"
-
-#: governance/meetings/models.py
-msgid "role of the objector"
-msgstr "Rolle der einwendenden Person"
-
-#: governance/meetings/models.py
-msgid "An objection is raised for a role the objector represents in the circle (constitution 5.3)."
-msgstr "Ein Einwand wird für eine Rolle erhoben, welche die einwendende Person im Kreis vertritt (Verfassung 5.3)."
-
-#: governance/meetings/models.py
-msgid "reason"
-msgstr "Begründung"
-
-#: governance/meetings/models.py
-msgid "is valid"
-msgstr "gültig"
-
-#: governance/meetings/models.py
-msgid "The facilitator's test, empty until tested."
-msgstr "Die Prüfung durch den Facilitator, leer bis geprüft."
-
-#: governance/meetings/models.py
-msgid "is integrated"
-msgstr "integriert"
-
-#: governance/meetings/models.py governance/templates/meetings/_current.html
-msgid "raised async"
-msgstr "asynchron erhoben"
-
-#: governance/meetings/models.py
-msgid "The async response the objection comes from."
-msgstr "Die asynchrone Antwort, aus der der Einwand stammt."
-
-#: governance/meetings/models.py governance/proposals/models.py
-msgid "objection"
-msgstr "Einwand"
-
-#: governance/meetings/models.py
-msgid "objections"
-msgstr "Einwände"
-
 #: governance/meetings/models.py governance/roles/browser.py
 #: governance/templates/notifications/_changes.txt
 #: governance/templates/proposals/proposal_detail.html
@@ -556,14 +512,6 @@ msgstr "Wahl"
 #: governance/meetings/models.py
 msgid "elections"
 msgstr "Wahlen"
-
-#: governance/meetings/processing.py
-msgid "Who objects, and why?"
-msgstr "Wer hat einen Einwand, und weshalb?"
-
-#: governance/meetings/processing.py
-msgid "Test every objection first and integrate the valid ones."
-msgstr "Zuerst alle Einwände prüfen und die gültigen integrieren."
 
 #: governance/meetings/processing.py
 msgid "The proposal is adopted."
@@ -1175,6 +1123,10 @@ msgstr "kein Einwand"
 #: governance/proposals/models.py
 msgid "discuss in a meeting"
 msgstr "im Meeting besprechen"
+
+#: governance/proposals/models.py
+msgid "objection"
+msgstr "Einwand"
 
 #: governance/proposals/models.py governance/roles/models.py
 msgid "text"
@@ -2081,58 +2033,6 @@ msgid "Concerns from the async process"
 msgstr "Bedenken aus dem asynchronen Prozess"
 
 #: governance/templates/meetings/_current.html
-msgid "Objections are raised in the objection round, then tested."
-msgstr "Einwände werden in der Einwandrunde erhoben und dann getestet."
-
-#: governance/templates/meetings/_current.html
-msgid "Objections"
-msgstr "Einwände"
-
-#: governance/templates/meetings/_current.html
-msgid "not tested, doesn't block if the objector isn't there"
-msgstr "nicht geprüft, blockiert nicht, wenn die Person nicht dabei ist"
-
-#: governance/templates/meetings/_current.html
-msgid "not tested yet"
-msgstr "noch nicht geprüft"
-
-#: governance/templates/meetings/_current.html
-msgid "integrated"
-msgstr "integriert"
-
-#: governance/templates/meetings/_current.html
-msgid "valid, to integrate"
-msgstr "gültig, zu integrieren"
-
-#: governance/templates/meetings/_current.html
-msgid "not valid"
-msgstr "nicht gültig"
-
-#: governance/templates/meetings/_current.html
-msgid "Valid"
-msgstr "Gültig"
-
-#: governance/templates/meetings/_current.html
-msgid "Not valid"
-msgstr "Nicht gültig"
-
-#: governance/templates/meetings/_current.html
-msgid "Integrated"
-msgstr "Integriert"
-
-#: governance/templates/meetings/_current.html
-msgid "No objections."
-msgstr "Keine Einwände."
-
-#: governance/templates/meetings/_current.html
-msgid "Reason"
-msgstr "Begründung"
-
-#: governance/templates/meetings/_current.html
-msgid "Record objection"
-msgstr "Einwand festhalten"
-
-#: governance/templates/meetings/_current.html
 msgid "Adopt"
 msgstr "Annehmen"
 
@@ -2996,6 +2896,81 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "raised by"
+#~ msgstr "erhoben von"
+
+#~ msgid "role of the objector"
+#~ msgstr "Rolle der einwendenden Person"
+
+#~ msgid "An objection is raised for a role the objector represents in the circle (constitution 5.3)."
+#~ msgstr "Ein Einwand wird für eine Rolle erhoben, welche die einwendende Person im Kreis vertritt (Verfassung 5.3)."
+
+#~ msgid "reason"
+#~ msgstr "Begründung"
+
+#~ msgid "is valid"
+#~ msgstr "gültig"
+
+#~ msgid "The facilitator's test, empty until tested."
+#~ msgstr "Die Prüfung durch den Facilitator, leer bis geprüft."
+
+#~ msgid "is integrated"
+#~ msgstr "integriert"
+
+#~ msgid "raised async"
+#~ msgstr "asynchron erhoben"
+
+#~ msgid "The async response the objection comes from."
+#~ msgstr "Die asynchrone Antwort, aus der der Einwand stammt."
+
+#~ msgid "objections"
+#~ msgstr "Einwände"
+
+#~ msgid "Who objects, and why?"
+#~ msgstr "Wer hat einen Einwand, und weshalb?"
+
+#~ msgid "Test every objection first and integrate the valid ones."
+#~ msgstr "Zuerst alle Einwände prüfen und die gültigen integrieren."
+
+#~ msgid "Objections are raised in the objection round, then tested."
+#~ msgstr "Einwände werden in der Einwandrunde erhoben und dann getestet."
+
+#~ msgid "Objections"
+#~ msgstr "Einwände"
+
+#~ msgid "not tested, doesn't block if the objector isn't there"
+#~ msgstr "nicht geprüft, blockiert nicht, wenn die Person nicht dabei ist"
+
+#~ msgid "not tested yet"
+#~ msgstr "noch nicht geprüft"
+
+#~ msgid "integrated"
+#~ msgstr "integriert"
+
+#~ msgid "valid, to integrate"
+#~ msgstr "gültig, zu integrieren"
+
+#~ msgid "not valid"
+#~ msgstr "nicht gültig"
+
+#~ msgid "Valid"
+#~ msgstr "Gültig"
+
+#~ msgid "Not valid"
+#~ msgstr "Nicht gültig"
+
+#~ msgid "Integrated"
+#~ msgstr "Integriert"
+
+#~ msgid "No objections."
+#~ msgstr "Keine Einwände."
+
+#~ msgid "Reason"
+#~ msgstr "Begründung"
+
+#~ msgid "Record objection"
+#~ msgstr "Einwand festhalten"
 
 #~ msgid "completed"
 #~ msgstr "erledigt"

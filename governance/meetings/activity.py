@@ -1,6 +1,6 @@
 """When running meetings were last active, and ending the inactive ones
 
-Changes to the meeting, its attendees, agenda, objections and elections
+Changes to the meeting, its attendees, agenda and elections
 and to the proposals processed in it are activity; following it on the
 screen isn't. Nobody has to remember to end a meeting: fairy_tasks ends
 those inactive for hours, starting a meeting in the circle too.
@@ -13,7 +13,7 @@ from django.db.models import Q
 from django.db.models.signals import m2m_changed, post_delete, post_save
 from django.utils import timezone
 
-from governance.meetings.models import AgendaItem, Election, Meeting, Objection
+from governance.meetings.models import AgendaItem, Election, Meeting
 from governance.notifications.mails import meeting_ended
 from governance.proposals.models import Proposal
 
@@ -44,7 +44,7 @@ def proposal_changed(sender, instance, **kwargs):
 def connect():
     post_save.connect(meeting_changed, sender=Meeting)
     m2m_changed.connect(meeting_changed, sender=Meeting.attendees.through)
-    for model in [AgendaItem, Objection, Election]:
+    for model in [AgendaItem, Election]:
         post_save.connect(part_changed, sender=model)
         post_delete.connect(part_changed, sender=model)
     post_save.connect(proposal_changed, sender=Proposal)

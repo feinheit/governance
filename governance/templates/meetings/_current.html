@@ -177,72 +177,10 @@
               <div class="wb-markdown">{{ concern.text|markdown }}</div>
             </li>
           {% endfor %}
-          <li class="list-group-item small text-body-secondary">
-            {% translate "Objections are raised in the objection round, then tested." %}
-          </li>
         </ul>
       {% endif %}
-      <div class="card-header border-top"><h3 class="h6 mb-0">{% translate "Objections" %}</h3></div>
-      <ul class="list-group list-group-flush">
-        {% for objection in objections %}
-          <li class="list-group-item">
-            <div class="wb-row-meta">
-              <span class="fw-semibold">{{ objection.user }}</span>
-              {% if objection.role %}<span>{{ objection.role }}</span>{% endif %}
-              {% if objection.response_id %}<span
-                  class="badge wb-tone-neutral"
-                >{% translate "raised async" %}</span>{% endif %}
-              <span>
-                {% if objection.is_valid is None and objection.response_id %}{% translate "not tested, doesn't block if the objector isn't there" %}{% elif objection.is_valid is None %}{% translate "not tested yet" %}{% elif objection.is_valid %}{% if objection.is_integrated %}{% translate "integrated" %}{% else %}{% translate "valid, to integrate" %}{% endif %}{% else %}{% translate "not valid" %}{% endif %}
-              </span>
-            </div>
-            <div class="wb-markdown">{{ objection.text|markdown }}</div>
-            {% if can_run and objection.is_open or can_run and objection.is_valid is None %}
-              <form method="post" action="{% url 'objection_update' objection.pk %}" class="d-flex gap-1 mt-1">
-                {% csrf_token %}
-                {% if objection.is_valid is None %}
-                  <button type="submit" name="action" value="valid" class="btn btn-sm btn-quiet">
-                    {% translate "Valid" %}
-                  </button>
-                  <button type="submit" name="action" value="invalid" class="btn btn-sm btn-quiet">
-                    {% translate "Not valid" %}
-                  </button>
-                {% else %}
-                  <button type="submit" name="action" value="integrated" class="btn btn-sm btn-quiet">
-                    {% translate "Integrated" %}
-                  </button>
-                {% endif %}
-              </form>
-            {% endif %}
-          </li>
-        {% empty %}
-          <li class="list-group-item text-body-secondary">{% translate "No objections." %}</li>
-        {% endfor %}
-        {% if can_run %}
-          <li class="list-group-item">
-            <form method="post" action="{% url 'objection_add' current.pk %}" class="d-flex flex-wrap gap-1">
-              {% csrf_token %}
-              <select
-                name="objector"
-                class="form-select form-select-sm w-auto"
-                aria-label="{% translate 'raised by' %}"
-              >
-                {% for value, label in objectors %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
-              </select>
-              <input
-                type="text"
-                name="text"
-                class="form-control form-control-sm flex-grow-1 w-auto"
-                placeholder="{% translate 'Reason' %}"
-                aria-label="{% translate 'Reason' %}"
-              >
-              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Record objection" %}</button>
-            </form>
-          </li>
-        {% endif %}
-      </ul>
       {% if can_run and proposal.status == "in_meeting" %}
-        {# After the objections, not to be clicked by accident #}
+        {# Last, not to be clicked by accident #}
         <div class="card-body border-top d-flex flex-wrap gap-1">
           {% if proposal.instructions %}
             <form method="post" action="{% url 'item_adopt' current.pk %}">

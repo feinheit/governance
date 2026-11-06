@@ -30,16 +30,6 @@ urlpatterns = [
     ),
     path("agenda/<int:pk>/adopt/", processing.item_adopt, name="item_adopt"),
     path(
-        "agenda/<int:pk>/objections/",
-        processing.objection_add,
-        name="objection_add",
-    ),
-    path(
-        "objections/<int:pk>/",
-        processing.objection_update,
-        name="objection_update",
-    ),
-    path(
         "meetings/<int:pk>/elections/",
         elections.election_add,
         name="election_add",

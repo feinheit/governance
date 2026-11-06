@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from governance.meetings.models import AgendaItem, Election, Meeting, Objection
+from governance.meetings.models import AgendaItem, Election, Meeting
 
 
 class AgendaItemInline(admin.TabularInline):
@@ -14,13 +14,6 @@ class ElectionInline(admin.TabularInline):
     model = Election
     extra = 0
     raw_id_fields = ["role", "user"]
-
-
-class ObjectionInline(admin.TabularInline):
-    model = Objection
-    extra = 0
-    fields = ["proposal", "user", "role", "text", "is_valid", "is_integrated"]
-    raw_id_fields = ["proposal", "user", "role"]
 
 
 @admin.register(Meeting)
@@ -37,7 +30,7 @@ class MeetingAdmin(admin.ModelAdmin):
         "invited_roles",
         "attendees",
     ]
-    inlines = [AgendaItemInline, ElectionInline, ObjectionInline]
+    inlines = [AgendaItemInline, ElectionInline]
 
 
 @admin.register(AgendaItem)
@@ -46,14 +39,6 @@ class AgendaItemAdmin(admin.ModelAdmin):
     list_filter = ["is_completed"]
     search_fields = ["label", "outcome"]
     raw_id_fields = ["meeting", "owner", "proposal"]
-
-
-@admin.register(Objection)
-class ObjectionAdmin(admin.ModelAdmin):
-    list_display = ["proposal", "user", "role", "is_valid", "is_integrated"]
-    list_filter = ["is_valid", "is_integrated"]
-    search_fields = ["text", "user__full_name"]
-    raw_id_fields = ["proposal", "meeting", "user", "role", "response"]
 
 
 @admin.register(Election)

@@ -7,7 +7,7 @@ shared screen or their own and adds agenda items from their own device;
 the page updates by itself.
 
 - **Who leads**: the meeting's secretary has the buttons: steps,
-  processing items, objections, adopting, elections, attendees, ending
+  processing items, adopting, elections, attendees, ending
   the meeting; they also change proposals. It's whoever starts the
   meeting: usually the circle's Secretary, if missing a stand-in (the
   Facilitator, then the Circle Leads, constitution 5.3.6); the tool asks
@@ -58,11 +58,11 @@ circle.
   "Discard" withdraws it (e.g. it isn't valid, or its proposer is
   gone); its proposer may "Draft again" on the proposal's page. "Done"
   without adopting or discarding keeps it waiting for the next meeting.
-- **Objections** are recorded with the person and the role, the
-  facilitator tests them, the secretary records it. "Adopt" (below the objections, like
-  "Discard") only works once every objection is
-  tested and the valid ones are integrated. The change applies right
-  away, the mail comes at the end of the meeting.
+- **Objections** aren't recorded: the facilitator asks for them in the
+  objection round and tests them, the secretary integrates the valid
+  ones by amending the proposal; the notes keep what matters. "Adopt"
+  (at the bottom, like "Discard") applies the change right away, the
+  mail comes at the end of the meeting.
 - **The same role several times**: if a proposal adopted earlier changed
   a role or policy the current one changes too, the meeting shows the
   conflict before adopting. The secretary opens the role in the proposal

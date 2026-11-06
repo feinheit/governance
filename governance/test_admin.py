@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from governance.accounts.models import APIToken, User
-from governance.meetings.models import AgendaItem, Election, Meeting, Objection
+from governance.meetings.models import AgendaItem, Election, Meeting
 from governance.proposals.models import Proposal, Response
 from governance.roles.models import (
     Accountability,
@@ -36,12 +36,9 @@ class AdminTest(TestCase):
         proposal = Proposal.objects.create(
             circle=kitchen, proposer=ada, tension="Soup", created_at=timezone.now()
         )
-        response = Response.objects.create(proposal=proposal, user=ada, kind="comment")
+        Response.objects.create(proposal=proposal, user=ada, kind="comment")
         meeting = Meeting.objects.create(circle=kitchen, kind=Meeting.GOVERNANCE)
         AgendaItem.objects.create(meeting=meeting, position=1, label="Bread")
-        Objection.objects.create(
-            proposal=proposal, meeting=meeting, user=ada, response=response
-        )
         Election.objects.create(
             meeting=meeting, role=cook, user=ada, term_ends_on=timezone.localdate()
         )

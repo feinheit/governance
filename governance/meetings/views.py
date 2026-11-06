@@ -40,7 +40,6 @@ from governance.roles.permissions import (
     asks_before_starting,
     can_start_meeting,
     members,
-    proposer_roles,
 )
 
 
@@ -199,13 +198,6 @@ def current_context(request, meeting):
             "changes": changes,
             # What it proposes now, while the secretary amends it
             "summary": summarize(changes),
-            "objections": proposal.objections.select_related("user", "role"),
-            # Who may object for which role (constitution 5.3)
-            "objectors": [
-                (f"{member.pk}:{role.pk}", f"{member} – {role}")
-                for member in members(meeting.circle)
-                for role in proposer_roles(member, meeting.circle)
-            ],
             # Concerns of the members who requested the meeting
             "concerns": current_responses(proposal)
             .filter(kind__in=[Response.MEETING, Response.OBJECTION])

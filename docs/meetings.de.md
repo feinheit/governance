@@ -7,7 +7,7 @@ Bildschirm und fügen Agendapunkte vom eigenen Gerät aus hinzu; die Seite
 aktualisiert sich von selbst.
 
 - **Wer leitet**: Der Secretary des Meetings hat die Buttons: Schritte,
-  Agendapunkte bearbeiten, Einwände, Annehmen, Wahlen, Teilnehmende, das
+  Agendapunkte bearbeiten, Annehmen, Wahlen, Teilnehmende, das
   Meeting beenden, dazu das Ändern der Vorschläge. Das ist, wer das
   Meeting startet: meist der Secretary des Kreises, ist die Rolle nicht
   besetzt, eine Vertretung (der Facilitator, dann die Circle Leads,
@@ -61,11 +61,11 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   oder die vorschlagende Person ist nicht mehr da); die vorschlagende
   Person kann ihn auf der Seite des Vorschlags "Neu entwerfen". "Erledigt"
   ohne Annehmen oder Verwerfen lässt ihn auf das nächste Meeting warten.
-- **Einwände** werden mit Person und Rolle festgehalten, der Facilitator
-  prüft sie, der Secretary hält es fest. "Annehmen" (unter den Einwänden, wie
-  "Verwerfen") geht erst, wenn alle Einwände geprüft
-  und die gültigen integriert sind. Die Änderung gilt sofort, die Mail
-  kommt am Ende des Meetings.
+- **Einwände** werden nicht festgehalten: Der Facilitator fragt in der
+  Einwandrunde danach und prüft sie, der Secretary arbeitet die
+  gültigen in den Vorschlag ein; die Notizen halten fest, was wichtig
+  ist. "Annehmen" (zuunterst, wie "Verwerfen") wendet die
+  Änderung sofort an, die Mail kommt am Ende des Meetings.
 - **Dieselbe Rolle mehrmals**: hat ein früher angenommener Vorschlag eine
   Rolle oder Policy geändert, die auch der aktuelle ändert, zeigt das
   Meeting den Konflikt vor dem Annehmen. Der Secretary öffnet die Rolle

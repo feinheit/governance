@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from governance.accounts.models import User
-from governance.meetings.models import AgendaItem, Meeting, Objection
+from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
 from governance.proposals.process import adopt_due_proposals
 from governance.roles.models import Accountability, Assignment, Role
@@ -80,23 +80,15 @@ class ProcessingTest(TestCase):
         self.assertContains(response, "Open the proposal")
         self.client.force_login(self.bob)
 
+        # The facilitator asks for objections, the app doesn't record them
         self.client.post(f"/agenda/{self.item.pk}/step/", {"step": "objections"})
-        self.client.post(
-            f"/agenda/{self.item.pk}/objections/",
-            {"objector": f"{self.eve.pk}:{self.cook.pk}", "text": "Chefs are bossy"},
-        )
-        objection = Objection.objects.get()
-        # Adopting and discarding come last, after the objections
-        html = self.client.get(self.meeting.get_absolute_url()).content.decode()
-        self.assertLess(html.index("Record objection"), html.index("/adopt/"))
-        self.assertLess(html.index("Record objection"), html.index("/discard/"))
-        self.client.post(f"/agenda/{self.item.pk}/adopt/")
-        self.proposal.refresh_from_db()
-        self.assertEqual(self.proposal.status, Proposal.IN_MEETING)  # Untested
-
-        self.client.post(f"/objections/{objection.pk}/", {"action": "valid"})
         self.item.refresh_from_db()
-        self.assertEqual(self.item.step, "integration")
+        self.assertEqual(self.item.step, "objections")
+        # Adopting and discarding come last, after amending the proposal
+        html = self.client.get(self.meeting.get_absolute_url()).content.decode()
+        self.assertNotIn("Record objection", html)
+        self.assertLess(html.index("Propose changes"), html.index("/adopt/"))
+        self.assertLess(html.index("Propose changes"), html.index("/discard/"))
 
         # The secretary amends the proposal
         self.client.force_login(self.bob)
@@ -139,7 +131,6 @@ class ProcessingTest(TestCase):
             self.client.post(f"/proposals/{self.proposal.pk}/delete/").status_code,
             403,
         )
-        self.client.post(f"/objections/{objection.pk}/", {"action": "integrated"})
         self.client.post(f"/agenda/{self.item.pk}/adopt/")
         self.proposal.refresh_from_db()
         self.cook.refresh_from_db()
@@ -174,7 +165,7 @@ class ProcessingTest(TestCase):
         self.client.force_login(self.bob)
         for meeting in [regular, called]:
             item = AgendaItem.objects.create(meeting=meeting, label="Soup")
-            for action in ["proposal", "adopt", "discard", "step", "objections"]:
+            for action in ["proposal", "adopt", "discard", "step"]:
                 with self.subTest(meeting=meeting, action=action):
                     response = self.client.post(f"/agenda/{item.pk}/{action}/")
                     self.assertEqual(response.status_code, 403)
@@ -379,36 +370,6 @@ class ProcessingTest(TestCase):
             403,
         )
 
-    def test_objection_left_open(self):
-        """A meeting ends with an untested objection: the next meeting
-        processing the proposal tests it"""
-        self.client.force_login(self.bob)  # The secretary
-        self.client.post(f"/agenda/{self.item.pk}/process/")
-        self.client.post(
-            f"/agenda/{self.item.pk}/objections/",
-            {"objector": f"{self.eve.pk}:{self.cook.pk}", "text": "Chefs are bossy"},
-        )
-        objection = Objection.objects.get()
-        self.client.post(f"/meetings/{self.meeting.pk}/end/")
-
-        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
-        meeting = Meeting.objects.running().get()
-        self.client.post(
-            f"/meetings/{meeting.pk}/agenda/add/", {"proposal": self.proposal.pk}
-        )
-        item = AgendaItem.objects.get(meeting=meeting)
-        self.client.post(f"/agenda/{item.pk}/process/")
-        response = self.client.post(
-            f"/objections/{objection.pk}/", {"action": "invalid"}
-        )
-        self.assertRedirects(response, meeting.get_absolute_url())
-        objection.refresh_from_db()
-        self.assertFalse(objection.is_valid)
-        self.assertIsNotNone(objection.is_valid)
-        self.client.post(f"/agenda/{item.pk}/adopt/")
-        self.proposal.refresh_from_db()
-        self.assertEqual(self.proposal.status, Proposal.ADOPTED)
-
     def test_tension(self):
         item = AgendaItem.objects.create(
             meeting=self.meeting, label="Noise", owner=self.eve, position=2
@@ -578,8 +539,7 @@ class ProcessingTest(TestCase):
         self.assertIn("max@example.com", [m.to[0] for m in mail.outbox])
 
     def test_async_concerns(self):
-        """Concerns from requesting a meeting are context, objections are
-        raised in the meeting"""
+        """Concerns from requesting a meeting are context"""
         from governance.proposals.models import Response
 
         self.proposal.status = Proposal.PUBLISHED
@@ -593,20 +553,6 @@ class ProcessingTest(TestCase):
 
         self.client.force_login(self.bob)
         self.client.post(f"/agenda/{self.item.pk}/process/")
-        self.assertFalse(Objection.objects.exists())
         response = self.client.get(self.meeting.get_absolute_url())
         self.assertContains(response, "Concerns from the async process")
         self.assertContains(response, "Too bossy")
-        self.assertContains(response, f"{self.eve.pk}:{self.cook.pk}")  # Eve – Cook
-
-        # Only for a role the objector represents
-        self.client.post(
-            f"/agenda/{self.item.pk}/objections/",
-            {"objector": f"{self.eve.pk}:{self.kitchen.pk}", "text": "No"},
-        )
-        self.assertFalse(Objection.objects.exists())
-        self.client.post(
-            f"/agenda/{self.item.pk}/objections/",
-            {"objector": f"{self.eve.pk}:{self.cook.pk}", "text": "Too bossy"},
-        )
-        self.assertEqual(Objection.objects.get().role, self.cook)

@@ -10,7 +10,7 @@ from collections import defaultdict
 
 from governance.accounts.models import User
 from governance.history.models import Change
-from governance.meetings.models import AgendaItem, Election, Meeting, Objection
+from governance.meetings.models import AgendaItem, Election, Meeting
 from governance.proposals.models import Proposal, Response
 from governance.roles.models import (
     Accountability,
@@ -148,20 +148,6 @@ def meetings():
                 "is_completed",
                 "outcome",
                 "link",
-            ),
-        ),
-        objections=by(
-            "meeting",
-            rows(
-                Objection.objects.all(),
-                "meeting",
-                "proposal",
-                "user",
-                "role",
-                "text",
-                "is_valid",
-                "is_integrated",
-                "created_at",
             ),
         ),
         elections=by(

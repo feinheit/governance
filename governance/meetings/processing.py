@@ -2,9 +2,9 @@
 
 The facilitator and the secretary go through the steps of integrative
 decision-making; the app guides them but doesn't enforce the steps. The
-secretary amends the proposal (``drafting.can_edit``), objections are
-recorded with the facilitator's test. Adopting needs every objection
-tested and every valid one integrated.
+secretary amends the proposal (``drafting.can_edit``). Objections aren't
+recorded: the facilitator tests them in the objection round, the meeting's
+notes keep what matters.
 """
 
 from django.contrib import messages
@@ -16,9 +16,8 @@ from django.utils import timezone
 from django.utils.translation import gettext
 from django.views.decorators.http import require_POST
 
-from governance.accounts.models import User
 from governance.meetings.access import autosaving, can_run
-from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting, Objection
+from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting
 from governance.proposals.instructions import ProposalError, adopt
 from governance.proposals.models import Proposal
 from governance.proposals.process import check_role, withdraw
@@ -120,69 +119,11 @@ def item_to_proposal(request, pk):
 
 
 @require_POST
-def objection_add(request, pk):
-    item = running_item(request, pk, governance=True)
-    # "user:role": objections are raised for a role the objector represents
-    user_id, _sep, role_id = request.POST.get("objector", "").partition(":")
-    user = User.objects.active().filter(pk=user_id or None).first()
-    role = (
-        proposer_roles(user, item.meeting.circle).filter(pk=role_id or None).first()
-        if user
-        else None
-    )
-    text = request.POST.get("text", "").strip()
-    if item.proposal and user and role and text:
-        Objection.objects.create(
-            proposal=item.proposal,
-            meeting=item.meeting,
-            user=user,
-            role=role,
-            text=text,
-        )
-        if item.step != "integration":
-            item.step = "objections"
-            item.save(update_fields=["step"])
-    else:
-        messages.error(request, gettext("Who objects, and why?"))
-    return redirect(item.meeting)
-
-
-@require_POST
-def objection_update(request, pk):
-    """The facilitator's test, and integrating the objection"""
-    objection = get_object_or_404(Objection, pk=pk)
-    # In the meeting processing the proposal now: an objection left open
-    # when a meeting ended is tested in the next one
-    item = AgendaItem.objects.filter(
-        proposal=objection.proposal, meeting__in=Meeting.objects.running()
-    ).first()
-    if item is None:
-        raise PermissionDenied
-    item = running_item(request, item.pk, governance=True)
-    action = request.POST.get("action")
-    if action in {"valid", "invalid"}:
-        objection.is_valid = action == "valid"
-    elif action == "integrated":
-        objection.is_integrated = True
-    objection.save(update_fields=["is_valid", "is_integrated"])
-    if objection.is_valid and not objection.is_integrated:
-        item.step = "integration"
-        item.save(update_fields=["step"])
-    return redirect(item.meeting)
-
-
-@require_POST
 def item_adopt(request, pk):
     item = running_item(request, pk, governance=True)
     proposal = item.proposal
     if proposal is None or proposal.status == Proposal.ADOPTED:
         raise PermissionDenied
-    if any(objection.is_open for objection in proposal.objections.all()):
-        messages.error(
-            request,
-            gettext("Test every objection first and integrate the valid ones."),
-        )
-        return redirect(item.meeting)
     try:
         with transaction.atomic():
             # Proposals come from roles, also those of guests (5.3.1)
