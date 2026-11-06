@@ -21,7 +21,7 @@ the page updates by itself.
   updates) on their own screen by clicking it, "Back to the meeting"
   returns.
   While you type or have something open, the page doesn't update; a
-  notice at the top says so.
+  notice at the top says so (not while the secretary amends the proposal).
 - **Notes** at the bottom: what doesn't belong to an agenda item, e.g. a
   special meeting's intent. The secretary writes them, they save
   themselves; the outputs mail includes them.

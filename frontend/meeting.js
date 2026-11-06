@@ -24,9 +24,14 @@ window.meetingIsIdle = () => {
   )
   busyChecks = busy ? busyChecks + 1 : 0
   // Not while writing what saves itself (the secretary's outcome, notes)
+  // or amending the proposal in the panel: the secretary knows, saving
+  // reloads the meeting
   const notice = document.getElementById("meeting-paused")
   if (notice) {
-    notice.hidden = busyChecks < 2 || Boolean(form?.matches("[data-autosave]"))
+    notice.hidden =
+      busyChecks < 2 ||
+      Boolean(form?.matches("[data-autosave]")) ||
+      Boolean(document.querySelector("#amend > *"))
   }
   return !busy
 }

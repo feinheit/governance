@@ -349,6 +349,11 @@ class MeetingE2ETest(LiveServerTestCase):
             " return top >= 0 && top < window.innerHeight / 2 })()",
             timeout=2000,
         )
+        # Paused while editing, which the secretary knows: no notice
+        page.evaluate("document.activeElement?.blur()")
+        page.evaluate("meetingIsIdle()")
+        self.assertFalse(page.evaluate("meetingIsIdle()"))
+        self.assertFalse(page.locator("#meeting-paused").is_visible())
         self.assertEqual(self.errors, [])
 
     def test_paused_notice(self):

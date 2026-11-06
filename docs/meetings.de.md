@@ -21,7 +21,8 @@ aktualisiert sich von selbst.
   öffnen". In Tactical Meetings schauen sie sich mit einem Klick eine
   andere Übersicht (Checklisten, Metriken, Updates) auf dem eigenen
   Bildschirm an, "Zurück zum Meeting" kehrt zurück. Solange du tippst oder etwas offen hast, aktualisiert sich die
-  Seite nicht; ein Hinweis oben sagt es.
+  Seite nicht; ein Hinweis oben sagt es (nicht, während der Secretary den
+  Vorschlag ändert).
 - **Notizen** unten: was zu keinem Agendapunkt gehört, z.B. die Absicht
   eines speziellen Meetings. Der Secretary schreibt sie, sie speichern
   sich selbst; die Mail mit den Ergebnissen enthält sie.

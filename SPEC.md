@@ -341,7 +341,8 @@ agenda items from their own devices. **The meeting page** (htmx 4): actions
 replace only `#meeting`, links navigate normally unless marked
 `data-in-meeting`; every five seconds the region is morphed with the
 server's, except while somebody types or has the panel or a section open
-(paused longer than one check, a notice says so, `#meeting-paused`).
+(paused longer than one check, a notice says so, `#meeting-paused`, but
+not to the secretary amending the proposal in the panel).
 Modals don't stop it: they're outside of `#meeting`.
 While it runs the heading is in the left column, so that the right one
 starts right below the navigation (an ended meeting has the usual
