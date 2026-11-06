@@ -62,6 +62,7 @@ Veröffentlichte Vorschläge lassen sich nicht ändern: "Zurück zum Entwurf"
   Policies auf der Rollenseite fest ("Policy für die Domains
   hinzufügen"). Das Tool hält die Änderung als angenommenen Vorschlag fest
   und schickt eine Mail. Die Policies ziehen mit der Rolle um; wird die
-  Domain, die Rolle oder ihr Kreis entfernt, gehen sie mit.
+  Domain, die Rolle oder ihr Kreis entfernt, gehen sie mit. Vorschläge
+  des Kreises ändern sie nicht, sie können die Domain entfernen.
 - **Rechtschreibung** läuft über Governance: der Secretary korrigiert in
   einem Governance Meeting.

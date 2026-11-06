@@ -128,6 +128,16 @@ class Applier:
                 object=self.proposal.names.get(f"{kind}/{key}") or f"{kind}/{key}",
             )
             return None
+        if kind == "policies" and not obj.role.is_circle:
+            # Removing the domain archives them (apply_to_text())
+            self.problem(
+                _(
+                    "%(policy)s is a policy of %(role)s for its domains, the role changes it."
+                ),
+                policy=obj,
+                role=obj.role,
+            )
+            return None
         if kind == "roles":
             # The anchor circle governs its own purpose and accountabilities
             # (constitution 1.3.3), other roles are governed by their circle
@@ -383,10 +393,9 @@ class Applier:
             self.shrunk.add(obj.circle)
             obj.circle = target
             obj.save(update_fields=["circle"])
-        elif not obj.role.is_circle:
-            # Policies of roles for their domains go with the role
-            self.problem(_("%(policy)s can't be moved."), policy=obj)
         else:
+            # Policies of roles for their domains go with the role, get()
+            # refuses them
             obj.role = target
             obj.save(update_fields=["role"])
 

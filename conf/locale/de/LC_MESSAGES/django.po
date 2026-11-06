@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:04+0100\n"
+"POT-Creation-Date: 2026-11-06 13:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -836,6 +836,11 @@ msgstr "%(object)s existiert nicht mehr."
 
 #: governance/proposals/instructions.py
 #, python-format
+msgid "%(policy)s is a policy of %(role)s for its domains, the role changes it."
+msgstr "%(policy)s ist eine Policy von %(role)s für seine Domains, die Rolle ändert sie."
+
+#: governance/proposals/instructions.py
+#, python-format
 msgid "%(object)s isn't governed by %(circle)s."
 msgstr "%(object)s gehört nicht zur Governance von %(circle)s."
 
@@ -891,11 +896,6 @@ msgstr "%(role)s ist kein Kreis."
 #, python-format
 msgid "%(role)s can't be moved."
 msgstr "%(role)s kann nicht verschoben werden."
-
-#: governance/proposals/instructions.py
-#, python-format
-msgid "%(policy)s can't be moved."
-msgstr "%(policy)s kann nicht verschoben werden."
 
 #: governance/proposals/instructions.py
 #, python-format
@@ -2675,6 +2675,10 @@ msgstr "Nichts gefunden."
 #: governance/templates/start.html
 msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
 msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+
+#, python-format
+#~ msgid "%(policy)s can't be moved."
+#~ msgstr "%(policy)s kann nicht verschoben werden."
 
 #~ msgid "Tactical meeting with selected roles…"
 #~ msgstr "Tactical Meeting mit ausgewählten Rollen…"

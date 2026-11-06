@@ -58,6 +58,7 @@ starts over afterwards) or "Withdraw".
   policies on the role's page ("Add a policy for its domains"). The tool
   records the change as an adopted proposal and sends a mail. The policies
   move with the role; removing the domain, the role or its circle removes
-  them too.
+  them too. Proposals of the circle don't change them, they may remove the
+  domain.
 - **Spelling** goes through governance: the secretary corrects it in a
   governance meeting.

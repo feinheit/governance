@@ -248,7 +248,8 @@ rule.
   members of the role's circle and all its sub-circles, `notify_all`
   users and the person making the change. They move with their role,
   and are archived with it, with its circle or with their domain (the
-  proposal removing the domain lists them).
+  proposal removing the domain lists them). Only the role changes them:
+  the circle's proposals don't, they may remove the domain.
 - **Assignments** are operational: the Circle Leads assign and remove
   people and their focus (the super-circle's Circle Leads for a
   sub-circle's Circle Leads, admins for the anchor's). Elected roles aren't
@@ -568,9 +569,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (third round of 2026-11-06), open:
-  - Decided: only the role changes its policies for its
-    domains (proposals may remove the domain); imported open proposals
-    become adoptable with the switchover.
   - Untested risks: re-elections (a new term, same person) don't show in
     the history (`history/changes.py`); `stand_ins(day=…)` falls back to
     today's Circle Leads.

@@ -2,7 +2,6 @@ from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.formats import date_format
 from django.utils.translation import gettext, gettext_lazy as _
@@ -138,9 +137,8 @@ def drafting_context(proposal):
         + list(
             circle.roles.active().exclude(core_role=LEAD).order_by("position", "name")
         ),
-        "circle_policies": Policy.objects.active().filter(
-            Q(role=circle) | Q(role__circle=circle)
-        ),
+        # Its roles change their policies for their domains themselves (1.3.2)
+        "circle_policies": Policy.objects.active().filter(role=circle),
     }
 
 

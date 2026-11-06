@@ -736,6 +736,39 @@ class DraftingTest(TestCase):
         ]
         self.assertEqual(problems(proposal), [])
 
+    def test_domain_policies_stay_with_the_role(self):
+        """Only the role changes its policies for its domains (1.3.2): the
+        circle's proposals may remove the domain, which archives them"""
+        knives = Domain.objects.create(role=self.cook, text="Knives")
+        sharp = Policy.objects.create(role=self.cook, domain=knives, title="Sharp")
+        proposal = self.draft()
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertNotContains(response, "Sharp")
+        self.assertEqual(
+            self.client.get(
+                f"/proposals/{proposal.pk}/policies/{sharp.pk}/"
+            ).status_code,
+            404,
+        )
+        for instruction in [
+            {"op": "replace", "path": f"/policies/{sharp.pk}/title", "value": "Dull"},
+            {"op": "remove", "path": f"/policies/{sharp.pk}"},
+        ]:
+            with self.subTest(instruction=instruction):
+                proposal.instructions = [instruction]
+                self.assertEqual(
+                    problems(proposal),
+                    ["Sharp is a policy of Cook for its domains, the role changes it."],
+                )
+        proposal.instructions = [
+            {
+                "op": "remove",
+                "path": f"/roles/{self.cook.pk}/domains/{knives.pk}",
+                "original_value": "Knives",
+            }
+        ]
+        self.assertEqual(problems(proposal), [])
+
     def test_roles_inside_a_role(self):
         """The role's holders add roles inside it, which makes it a circle"""
         self.assertContains(

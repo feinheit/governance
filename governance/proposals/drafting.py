@@ -535,11 +535,10 @@ def get_policy(proposal, key):
         if not instructions_of(proposal, f"policies/{key}"):
             raise PermissionDenied
         return None
+    # Not the policies of its roles for their domains, they change them
+    # themselves (1.3.2)
     return get_object_or_404(
-        Policy.objects.active().filter(
-            Q(role=proposal.circle) | Q(role__circle=proposal.circle)
-        ),
-        pk=key,
+        Policy.objects.active().filter(role=proposal.circle), pk=key
     )
 
 
