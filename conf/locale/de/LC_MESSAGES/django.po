@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:06+0100\n"
+"POT-Creation-Date: 2026-11-06 16:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -329,7 +329,7 @@ msgstr "Checklisten"
 msgid "Metrics review"
 msgstr "Metriken"
 
-#: governance/meetings/models.py governance/templates/meetings/_progress.html
+#: governance/meetings/models.py
 msgid "Progress updates"
 msgstr "Fortschritte"
 
@@ -2133,6 +2133,11 @@ msgid "No proposals adopted, no elections, no outcomes."
 msgstr "Keine angenommenen Vorschläge, keine Wahlen, keine Ergebnisse."
 
 #: governance/templates/meetings/_progress.html
+#: governance/templates/roles/role_detail.html
+msgid "Links"
+msgstr "Links"
+
+#: governance/templates/meetings/_progress.html
 msgid "No links, e.g. to where the projects and actions are managed."
 msgstr "Keine Links, z.B. dorthin, wo die Projekte und Aktionen verwaltet werden."
 
@@ -2865,10 +2870,6 @@ msgstr "Checklisten-Punkt hinzufügen"
 #: governance/templates/roles/role_detail.html
 msgid "Add a metric"
 msgstr "Metrik hinzufügen"
-
-#: governance/templates/roles/role_detail.html
-msgid "Links"
-msgstr "Links"
 
 #: governance/templates/roles/role_detail.html
 msgid "E.g. where the projects and actions are managed."

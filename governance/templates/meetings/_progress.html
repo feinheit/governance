@@ -1,7 +1,7 @@
 {% load governance i18n %}
-{# Progress updates of a tactical meeting (constitution 3.2): where the projects are, and what earlier meetings decided #}
+{# Progress updates of a tactical meeting (constitution 3.2), two cards: where the projects are, and what earlier meetings decided #}
 <section class="card mb-4 wb-current">
-  <div class="card-header"><h2 class="h6 mb-0">{% translate "Progress updates" %}</h2></div>
+  <div class="card-header"><h2 class="h6 mb-0">{% translate "Links" %}</h2></div>
   <ul class="list-group list-group-flush">
     {% for link in progress_links %}
       <li class="list-group-item">
@@ -17,8 +17,10 @@
       </li>
     {% endfor %}
   </ul>
-  {% if earlier_outcomes %}
-    <div class="card-header border-top"><h3 class="h6 mb-0">{% translate "Outcomes of earlier meetings" %}</h3></div>
+</section>
+{% if earlier_outcomes %}
+  <section class="card mb-4 wb-current">
+    <div class="card-header"><h2 class="h6 mb-0">{% translate "Outcomes of earlier meetings" %}</h2></div>
     <ul class="list-group list-group-flush">
       {% regroup earlier_outcomes by meeting as by_meeting %}
       {% for group in by_meeting %}
@@ -38,5 +40,5 @@
         {% endfor %}
       {% endfor %}
     </ul>
-  {% endif %}
-</section>
+  </section>
+{% endif %}
