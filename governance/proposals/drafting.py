@@ -229,7 +229,9 @@ class TensionForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["role"].queryset = roles
         self.fields["role"].required = True
-        self.fields["role"].empty_label = None
+        if self.instance.role_id:
+            self.fields["role"].empty_label = None
+        # New ones: the proposer chooses, none is preselected
         self.fields["role"].label = _("From my role")
         self.fields["tension"].required = True
         self.fields["tension"].help_text = _(

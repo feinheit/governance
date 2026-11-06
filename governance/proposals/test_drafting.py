@@ -43,6 +43,9 @@ class DraftingTest(TestCase):
         response = self.client.get(f"/roles/{self.kitchen.pk}/proposals/new/")
         self.assertContains(response, "Continue")
         self.assertContains(response, "## An example of a past or current situation")
+        # The proposer chooses the role, none is preselected
+        self.assertContains(response, '<option value="" selected>', html=False)
+        self.assertNotContains(response, f'<option value="{self.cook.pk}" selected>')
         proposal = self.draft()
         self.assertEqual(
             (proposal.circle, proposal.proposer, proposal.status, proposal.tension),
