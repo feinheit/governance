@@ -189,6 +189,32 @@ class AdoptedMailsTest(TestCase):
             )
         self.assertIn("eve@example.com", [m.to[0] for m in mail.outbox])
 
+    def test_turned_back_from_above_at_its_meetings_end(self):
+        """The circle's own meeting ran: it turns back when the meeting ends,
+        the super-circle's mail went out before"""
+        from governance.meetings.activity import end_meeting
+        from governance.proposals.instructions import adopt
+
+        meeting = Meeting.objects.create(
+            circle=self.bakery, kind=Meeting.TACTICAL, started_at=timezone.now()
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(
+                self.proposal([
+                    {
+                        "op": "move",
+                        "from": f"/circles/{self.bakery.pk}/roles/{self.baker.pk}",
+                        "path": f"/roles/{self.baker.pk}",
+                    }
+                ])
+            )
+        self.assertTrue(Assignment.objects.current().filter(user=self.eve).exists())
+        mail.outbox = []
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(meeting)
+        self.assertFalse(Assignment.objects.current().filter(user=self.eve).exists())
+        self.assertEqual([m.to[0] for m in mail.outbox], ["eve@example.com"])
+
     def test_meeting(self):
         from governance.meetings.activity import end_meeting
         from governance.proposals.instructions import adopt

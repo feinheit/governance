@@ -12,6 +12,7 @@ constitution's rules raise ``ProposalError`` with all problems found.
 """
 
 import re
+from contextlib import nullcontext
 
 from django.db import transaction
 from django.utils import timezone
@@ -21,6 +22,7 @@ from governance.history.update import update_changes
 from governance.notifications.mails import proposal_adopted, proposal_withdrawn
 from governance.proposals.models import Proposal
 from governance.roles.assignments import (
+    announce,
     end_assignment,
     new_reps_leading,
     reps_leading_their_circle,
@@ -524,7 +526,12 @@ def revert_after_meeting(meeting):
         .first()
     )
     applier = Applier(proposal or Proposal(circle=circle))
-    applier.convert(circle, to_circle=False)
+    # The meeting's outputs tell those losing the core roles about its own
+    # proposals; a super-circle's proposal was mailed before, so they hear
+    # about it like from an assignment
+    own = proposal is not None and proposal.meeting_id == meeting.pk
+    with nullcontext() if own else announce([circle, circle.circle]):
+        applier.convert(circle, to_circle=False)
     if proposal:
         proposal.instructions.append({
             "op": "remove",

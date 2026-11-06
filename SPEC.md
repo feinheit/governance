@@ -378,7 +378,10 @@ its outputs (adopted proposals, elections, minutes, tactical outcomes;
 also to the attendees and, like adopting async, the holders of roles
 the adopted proposals changed, removed or moved away, also deeper inside:
 roles of a removed circle, core roles of a circle turned back, and the
-sub-circles' Secretaries and Circle Leads like adopting async). Like GlassFrog, assignments, removals, elections
+sub-circles' Secretaries and Circle Leads like adopting async). A
+circle emptied by its super-circle while its own meeting ran turns back
+when that meeting ends: those losing its core roles get the mail about
+their roles then. Like GlassFrog, assignments, removals, elections
 and deactivations (`roles.assignments.announce()`) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
@@ -565,13 +568,12 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (third round of 2026-11-06), open:
-  - Bugs: losing core roles when a circle turns back at its meeting's
-    end after the super-circle emptied it isn't mailed; names, titles
-    and texts can be emptied (API); tactical meetings take governance
-    through hand-made requests (an ad-hoc one fails); an ended meeting's
-    outputs list proposals withdrawn later; links on imported open
-    proposals use GlassFrog IDs; a role's holder with two focuses
-    becomes Circle Lead twice when it turns into a circle.
+  - Bugs: names, titles and texts can be emptied (API); tactical
+    meetings take governance through hand-made requests (an ad-hoc one
+    fails); an ended meeting's outputs list proposals withdrawn later;
+    links on imported open proposals use GlassFrog IDs; a role's holder
+    with two focuses becomes Circle Lead twice when it turns into a
+    circle.
   - Decided: moves out of a sub-circle mail its Secretary and Circle
     Leads like moves into one; only the role changes its policies for its
     domains (proposals may remove the domain); imported open proposals

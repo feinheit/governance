@@ -392,6 +392,8 @@ class CircleEndsItselfScenarioTest(TestCase):
         self.assertEqual(
             sorted(m.to[0] for m in outputs), ["ada@example.com", "bob@example.com"]
         )
+        # The outputs tell them, no mail about their roles besides
+        self.assertFalse([m for m in mail.outbox if m.subject.startswith("Your roles")])
         # Bob's other proposal was withdrawn with the bakery
         self.assertIn(
             ("bob@example.com", "Withdrawn: Ovens"),
