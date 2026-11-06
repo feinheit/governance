@@ -329,7 +329,8 @@ server's, except while somebody types or has the panel or a section open.
 A modal (the minutes) doesn't stop it: it's outside of `#meeting`.
 Left: agenda (adding items as its last line), attendees, elections,
 proposals. Right: the rounds and the item being processed. An ended
-meeting shows its outputs like its mail (`meetings/outputs.py`).
+meeting shows its outputs like its mail (`meetings/outputs.py`) and
+doesn't change anymore (`runnable_meeting()`).
 `meetings/test_e2e.py` covers it in a browser.
 
 **Governance meetings**: check-in, agenda, closing (5.4.3). Members and
@@ -629,8 +630,7 @@ Deliberately not modelled:
 - **Verification** (fourth round, 2026-11-06), open:
   - Bug: removing a proposal from the agenda leaves it `in_meeting` (a
     draft becomes public, an async proposal loses its deadline).
-  - Risks: ended meetings' minutes, steps and attendees change through
-    the views (the page doesn't offer it); making a role elected while people
+  - Risks: making a role elected while people
     hold it (no term, never due); elections accept a term end in the past.
   - Decisions: a mail when the proposer withdraws a published proposal?
     The JSON backup names who responded (responses are anonymous

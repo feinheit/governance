@@ -153,9 +153,13 @@ def current_context(request, meeting):
     return context
 
 
-def runnable_meeting(request, pk):
+def runnable_meeting(request, pk, *, running=True):
+    """A meeting the user runs; changes only while it runs, after its end
+    (and its mail) it stays as it was"""
     meeting = get_object_or_404(Meeting.objects.select_related("circle"), pk=pk)
     if not can_run(request.user, meeting):
+        raise PermissionDenied
+    if running and not meeting.is_running:
         raise PermissionDenied
     return meeting
 
@@ -317,7 +321,7 @@ def meeting_update(request, pk):
 def meeting_secretary(request, pk):
     """Somebody running the meeting takes over as its secretary, e.g. standing
     in for a late Secretary (5.3.6); the page warns those who aren't"""
-    meeting = runnable_meeting(request, pk)
+    meeting = runnable_meeting(request, pk, running=False)
     if meeting.is_running:
         meeting.secretary = request.user
         meeting.save(update_fields=["secretary"])
@@ -326,7 +330,7 @@ def meeting_secretary(request, pk):
 
 @require_POST
 def meeting_end(request, pk):
-    meeting = runnable_meeting(request, pk)
+    meeting = runnable_meeting(request, pk, running=False)
     if meeting.is_running:
         end_meeting(meeting)
     return redirect(meeting)
@@ -419,7 +423,7 @@ def agenda_move(request, pk):
         AgendaItem.objects.select_related("meeting__circle"), pk=pk
     )
     meeting = item.meeting
-    if not can_run(request.user, meeting):
+    if not meeting.is_running or not can_run(request.user, meeting):
         raise PermissionDenied
     items = list(meeting.agenda_items.all())
     index = items.index(item)

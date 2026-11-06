@@ -125,6 +125,29 @@ class MeetingsTest(TestCase):
         Role.objects.filter(pk=self.kitchen.pk).update(archived_on=timezone.localdate())
         self.assertNotContains(self.client.get(url), "Start a governance meeting")
 
+    def test_ended_meetings_stay(self):
+        """After the end (and its mail) the minutes, the step, the attendees
+        and the agenda's order don't change anymore"""
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        first = AgendaItem.objects.create(meeting=meeting, label="Tea", position=1)
+        AgendaItem.objects.create(meeting=meeting, label="Cake", position=2)
+        zoe = User.objects.create_user("zoe@example.com", full_name="Zoe")
+        self.client.post(f"/meetings/{meeting.pk}/end/")
+        for url, data in [
+            (f"/meetings/{meeting.pk}/edit/", {"minutes": "Later"}),
+            (f"/meetings/{meeting.pk}/step/", {"step": "closing"}),
+            (f"/meetings/{meeting.pk}/attendees/", {"user": zoe.pk}),
+            (f"/agenda/{first.pk}/move/", {"direction": "down"}),
+        ]:
+            with self.subTest(url=url):
+                self.assertEqual(self.client.post(url, data).status_code, 403)
+        meeting.refresh_from_db()
+        first.refresh_from_db()
+        self.assertEqual((meeting.minutes, meeting.step, first.position), ("", "", 1))
+        self.assertFalse(meeting.attendees.filter(pk=zoe.pk).exists())
+
     def test_one_running_meeting_per_circle(self):
         self.client.force_login(self.bob)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
