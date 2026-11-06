@@ -56,7 +56,8 @@ Zustimmungen und Meeting-Wünsche werden nur gezählt ("3 von 7"), Fragen
 und Bedenken stehen mit Namen.
 
 Veröffentlichte Vorschläge lassen sich nicht ändern: "Zurück zum Entwurf"
-(der Kreis beginnt danach von vorne) oder "Zurückziehen".
+(der Kreis beginnt danach von vorne) oder "Zurückziehen". Beides erfahren
+die Mitglieder des Kreises per Mail.
 
 ## Ohne Vorschlag
 

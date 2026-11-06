@@ -200,6 +200,13 @@ def withdraw(proposal):
     proposal.save(update_fields=["status", "decided_at"])
 
 
+def retract(proposal):
+    """The proposer withdraws a published proposal or one waiting for a
+    meeting; everybody learns where it went, also those who consented"""
+    withdraw(proposal)
+    transaction.on_commit(lambda: mails.proposal_retracted(proposal))
+
+
 def adopt_due_proposals(now=None):
     """Adopts the published proposals whose deadline passed (daily task)"""
     due = Proposal.objects.filter(

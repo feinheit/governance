@@ -83,6 +83,18 @@ def proposal_back_to_draft(proposal):
     )
 
 
+def proposal_retracted(proposal):
+    return send(
+        everybody(proposal),
+        lambda: (
+            _("Withdrawn in %(circle)s: %(proposal)s")
+            % {"circle": proposal.circle, "proposal": proposal}
+        ),
+        "notifications/proposal_retracted.txt",
+        proposal_context(proposal),
+    )
+
+
 def response_given(response):
     """Questions and comments go to the proposer, the proposer's answers to
     those who asked; requests for a meeting to the proposer and the

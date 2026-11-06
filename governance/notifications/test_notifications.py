@@ -5,7 +5,13 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.notifications.mails import recipients
 from governance.proposals.models import Proposal, Response
-from governance.proposals.process import back_to_draft, publish, respond
+from governance.proposals.process import (
+    back_to_draft,
+    draft_again,
+    publish,
+    respond,
+    retract,
+)
 from governance.roles.models import Assignment, Role
 
 
@@ -67,6 +73,19 @@ class NotificationsTest(TestCase):
             back_to_draft(proposal)
         self.assertEqual(len(mail.outbox), 3)
         self.assertIn("back to the draft", mail.outbox[0].body)
+
+        # Withdrawn by its proposer: everybody learns where it went
+        with self.captureOnCommitCallbacks(execute=True):
+            publish(proposal)
+        mail.outbox = []
+        with self.captureOnCommitCallbacks(execute=True):
+            retract(proposal)
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox),
+            ["ada@example.com", "bob@example.com", "eve@example.com"],
+        )
+        self.assertIn("has withdrawn", mail.outbox[0].body)
+        proposal = draft_again(proposal)
 
         mail.outbox = []
         with self.captureOnCommitCallbacks(execute=True):

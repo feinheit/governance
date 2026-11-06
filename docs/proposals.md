@@ -52,7 +52,8 @@ Consents and requests for a meeting are only counted ("3 of 7"),
 questions and concerns show their author.
 
 Published proposals can't be changed: "Back to the draft" (the circle
-starts over afterwards) or "Withdraw".
+starts over afterwards) or "Withdraw". Both tell the circle's members by
+mail.
 
 ## Without a proposal
 

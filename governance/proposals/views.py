@@ -242,7 +242,7 @@ def proposal_withdraw(request, pk):
                 "cancel_url": proposal.get_absolute_url(),
             },
         )
-    process.withdraw(proposal)
+    process.retract(proposal)
     messages.success(request, gettext("The proposal has been withdrawn."))
     return redirect(proposal)
 

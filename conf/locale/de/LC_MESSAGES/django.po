@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:31+0100\n"
+"POT-Creation-Date: 2026-11-06 15:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -606,6 +606,11 @@ msgstr "Vorschlag in %(circle)s: %(proposal)s"
 #, python-format
 msgid "Back to the draft in %(circle)s: %(proposal)s"
 msgstr "Zurück zum Entwurf in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Withdrawn in %(circle)s: %(proposal)s"
+msgstr "Zurückgezogen in %(circle)s: %(proposal)s"
 
 #: governance/notifications/mails.py
 #, python-format
@@ -2209,6 +2214,7 @@ msgstr "Eine Spannung, in ein bis zwei Wörtern"
 #: governance/templates/notifications/proposal_adopted.txt
 #: governance/templates/notifications/proposal_back_to_draft.txt
 #: governance/templates/notifications/proposal_published.txt
+#: governance/templates/notifications/proposal_retracted.txt
 #: governance/templates/notifications/response_given.txt
 #: governance/templates/proposals/proposal_detail.html
 msgid "Tension"
@@ -2361,6 +2367,11 @@ msgstr "%(proposer)s schlägt eine Änderung in %(circle)s vor."
 #, python-format
 msgid "The proposal is adopted on %(date)s unless somebody requests a meeting to discuss it. Questions and requests:"
 msgstr "Der Vorschlag wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen. Fragen und Meetings:"
+
+#: governance/templates/notifications/proposal_retracted.txt
+#, python-format
+msgid "%(proposer)s has withdrawn the proposal in %(circle)s. The circle doesn't decide it anymore, also not with the responses given so far."
+msgstr "%(proposer)s hat den Vorschlag in %(circle)s zurückgezogen. Der Kreis entscheidet nicht mehr darüber, auch nicht mit den bisherigen Reaktionen."
 
 #: governance/templates/notifications/proposal_withdrawn.txt
 #, python-format

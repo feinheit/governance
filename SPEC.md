@@ -385,7 +385,8 @@ Open meetings are listed on the attendees' person pages.
 
 Plain text mails per active recipient in their language (none for
 people who left, also as proposers), after the transaction commits (`notifications/mails.py`), to the circle's members: published
-async proposals, those taken back, adopted ones with the diff (also to
+async proposals, those taken back, those their proposer withdraws
+(published or waiting for a meeting, `process.retract()`), adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves
@@ -631,8 +632,7 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (fourth round, 2026-11-06), open:
-  - Decisions: a mail when the proposer withdraws a published proposal?
-    The JSON backup names who responded (responses are anonymous
+  - Decisions: the JSON backup names who responded (responses are anonymous
     elsewhere). A role's domain policies when it becomes a circle.
   - Meetings: the secretary handles the meeting's buttons, attendees
     see where the meeting is and read the proposal themselves.
