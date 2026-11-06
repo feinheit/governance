@@ -21,14 +21,19 @@
           >{{ proposal.get_status_display }}</span></span>
         <span><span class="wb-meta-label">{% translate "created" %}</span>
           {{ proposal.created_at|date:"SHORT_DATE_FORMAT" }}</span>
-        {% if proposal.decided_at %}<span><span class="wb-meta-label">{% translate "adopted" %}</span>
-            {{ proposal.decided_at|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
+        {# In their order; publishing doesn't matter anymore once decided #}
+        {% if proposal.published_at and not proposal.decided_at %}<span><span
+              class="wb-meta-label"
+            >{% translate "published (async)" %}</span>
+            {{ proposal.published_at|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
         {% if proposal.deadline and proposal.status == "published" %}<span><span
               class="wb-meta-label"
             >{% translate "to be adopted on" %}</span>
             {{ proposal.adopted_on|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
-        {% if proposal.published_at %}<span><span class="wb-meta-label">{% translate "published (async)" %}</span>
-            {{ proposal.published_at|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
+        {% if proposal.decided_at %}<span><span
+              class="wb-meta-label"
+            >{% if proposal.status == "withdrawn" %}{% translate "withdrawn" %}{% else %}{% translate "adopted" %}{% endif %}</span>
+            {{ proposal.decided_at|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
         {% if proposal.meeting %}<span><span class="wb-meta-label">{% translate "meeting" %}</span>
             <a
               href="{{ proposal.meeting.get_absolute_url }}"

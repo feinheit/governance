@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:40+0100\n"
+"POT-Creation-Date: 2026-11-06 13:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -983,6 +983,7 @@ msgid "adopted"
 msgstr "angenommen"
 
 #: governance/proposals/models.py
+#: governance/templates/proposals/proposal_detail.html
 msgid "withdrawn"
 msgstr "zurückgezogen"
 
@@ -2290,12 +2291,12 @@ msgid "created"
 msgstr "erstellt"
 
 #: governance/templates/proposals/proposal_detail.html
-msgid "to be adopted on"
-msgstr "wird angenommen am"
-
-#: governance/templates/proposals/proposal_detail.html
 msgid "published (async)"
 msgstr "veröffentlicht (asynchron)"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "to be adopted on"
+msgstr "wird angenommen am"
 
 #: governance/templates/proposals/proposal_detail.html
 msgid "Publish (async)"

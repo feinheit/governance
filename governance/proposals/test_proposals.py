@@ -196,6 +196,41 @@ class ImportedOpenProposalTest(TestCase):
         self.assertNotContains(response, baker.get_absolute_url())
 
 
+class DatesTest(TestCase):
+    def test_dates_in_order(self):
+        """Created, published while open, then adopted or withdrawn"""
+        import re
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        now = timezone.now()
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="Bread",
+            status=Proposal.PUBLISHED,
+            created_at=now - dt.timedelta(days=3),
+            published_at=now - dt.timedelta(days=2),
+            deadline=now + dt.timedelta(days=5),
+        )
+        self.client.force_login(ada)
+
+        def labels():
+            html = self.client.get(proposal.get_absolute_url()).content.decode()
+            return re.findall(r'class="wb-meta-label"\s*>([^<]+)<', html)[1:]
+
+        self.assertEqual(
+            labels(),
+            ["proposer", "status", "created", "published (async)", "to be adopted on"],
+        )
+        proposal.status, proposal.decided_at = Proposal.ADOPTED, now
+        proposal.save()
+        self.assertEqual(labels(), ["proposer", "status", "created", "adopted"])
+        proposal.status = Proposal.WITHDRAWN
+        proposal.save()
+        self.assertEqual(labels(), ["proposer", "status", "created", "withdrawn"])
+
+
 class ProposalTitleTest(TestCase):
     def test_without_tension(self):
         """Imported elections have no tension, the title can't be empty"""
