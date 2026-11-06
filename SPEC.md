@@ -555,8 +555,7 @@ Deliberately not modelled:
 - **Verification** (second round of 2026-11-06), open:
   - Judgement calls, to decide: one helper for the stand-in chains
     (meeting secretary, election reminders); one link for tactical
-    meetings on the role page; `RoleQuerySet` method for "a
-    circle or a role with an inside"; one walk of sub-circles
+    meetings on the role page; one walk of sub-circles
     (`mails.domain_policy_changed()`, `mails.inside()`,
     `drafting.sub_circles_of()`, `assignments.affected_circles()`). Kept
     on purpose for readability: the plain-role branch of `members()`, the

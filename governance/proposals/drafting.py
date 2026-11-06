@@ -456,8 +456,7 @@ def editable_proposal(request, pk):
 
 
 def proposal_create(request, pk):
-    # A circle, or a role whose holders add roles inside it
-    circle = get_object_or_404(Role.objects.active().filter(core_role=""), pk=pk)
+    circle = get_object_or_404(Role.objects.active().with_inside(), pk=pk)
     roles = proposer_roles(request.user, circle)
     if not roles.exists():
         # Proposals address tensions of the proposer's roles in the circle

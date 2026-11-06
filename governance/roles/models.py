@@ -28,6 +28,12 @@ class RoleQuerySet(models.QuerySet):
     def circles(self):
         return self.filter(is_circle=True)
 
+    def with_inside(self):
+        """Circles, and roles whose holders may break them down in their
+        inner circle (proposals, governance meetings, constitution 1.3.1):
+        all roles except the core roles"""
+        return self.filter(core_role="")
+
     def depth_first(self):
         """The circles in depth-first order, with their ``depth``"""
         children = defaultdict(list)
