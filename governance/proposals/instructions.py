@@ -169,120 +169,127 @@ class Applier:
         if self.problems:
             raise ProposalError(self.problems)
 
-    def apply_one(self, instruction):  # noqa: C901
+    def apply_one(self, instruction):
+        """Applies one instruction, according to what its path refers to"""
         op, path = instruction["op"], instruction["path"]
-        value = instruction.get("value")
-
         if op == "move":
             self.move(instruction)
-            return
-
-        if match := re.fullmatch(rf"/(roles|policies)/{KEY}", path):
-            kind, key = match[1], match[2]
-            if op == "test":
-                self.get(kind, key)
-            elif op == "add":
-                if kind == "roles":
-                    # Roles inside a role make it a circle (constitution
-                    # 1.3.1), recorded when adopting
-                    self.make_circle(self.circle)
-                    obj = Role.objects.create(circle=self.circle, name="")
-                    self.roles.add(obj)
-                else:
-                    obj = Policy.objects.create(role=self.circle, title="")
-                    self.policies.add(obj)
-                self.created[f"{kind}/{key}"] = obj
-            elif op == "remove":
-                obj = self.get(kind, key)
-                if obj is not None:
-                    self.remove(obj)
-            else:
-                self.unsupported(path)
-            return
-
-        if match := re.fullmatch(rf"/roles/{KEY}/(name|aim)", path):
-            role = self.get("roles", match[1])
-            if role is None:
-                return
-            if role.core_role:
-                self.problem(_("The constitution defines %(role)s."), role=role)
-                return
-            field = ROLE_FIELDS[match[2]]
-            label = f"{role}: {field}"
-            if self.check_value(label, value) and self.check_original(
-                label, getattr(role, field), instruction
-            ):
-                setattr(role, field, value or "")
-                role.save(update_fields=[field])
-            return
-
-        if match := re.fullmatch(rf"/policies/{KEY}/(title|body)", path):
-            policy = self.get("policies", match[1])
-            if policy is None:
-                return
-            field = POLICY_FIELDS[match[2]]
-            label = f"{policy}: {field}"
-            if self.check_value(label, value) and self.check_original(
-                label, getattr(policy, field), instruction
-            ):
-                setattr(policy, field, value or "")
-                policy.save(update_fields=[field])
-            return
-
-        if match := re.fullmatch(
+        elif match := re.fullmatch(rf"/(roles|policies)/{KEY}", path):
+            self.apply_to_object(instruction, match[1], match[2])
+        elif match := re.fullmatch(rf"/roles/{KEY}/(name|aim)", path):
+            self.apply_to_role_field(instruction, match[1], ROLE_FIELDS[match[2]])
+        elif match := re.fullmatch(rf"/policies/{KEY}/(title|body)", path):
+            self.apply_to_policy_field(instruction, match[1], POLICY_FIELDS[match[2]])
+        elif match := re.fullmatch(
             rf"/roles/{KEY}/(accountabilities|domains)/{KEY}(?:/description)?", path
         ):
-            role = self.get("roles", match[1])
-            if role is None:
-                return
-            if role.core_role == LEAD:
-                # Additions would apply to all sub-circles' Circle Leads
-                # (constitution 1.4.5); the app leaves the Circle Lead as
-                # the constitution defines it, on purpose
-                self.problem(_("The Circle Lead gets no accountabilities or domains."))
-                return
-            model = TEXTS[match[2]]
-            if not self.check_value(str(role), value):
-                return
-            if op == "add":
-                obj = model.objects.create(
-                    role=role,
-                    text=value or "",
-                    position=role_texts_count(model, role),
-                )
-                self.created[f"{match[2]}/{match[3]}"] = obj
-                return
-            obj = model.objects.filter(pk=match[3], role=role).first()
-            if obj is None:
-                self.problem(
-                    _("%(text)s doesn't exist anymore."),
-                    text=instruction.get("original_value") or path,
-                )
-            elif self.check_original(f"{role}: {obj}", obj.text, instruction):
-                if op == "remove":
-                    if model is Domain:
-                        # The role's policies regulating it go with it
-                        policies = obj.policies.active()
-                        self.policies.update(policies)
-                        policies.update(archived_on=self.day)
-                    obj.delete()
-                elif op == "replace":
-                    obj.text = value or ""
-                    obj.save(update_fields=["text"])
-                else:
-                    self.unsupported(path)
-            return
+            self.apply_to_text(instruction, match[1], match[2], match[3])
+        elif (
+            match := re.fullmatch(rf"/roles/{KEY}/supporting_circle", path)
+        ) and op in {"add", "remove"}:
+            self.apply_to_supporting_circle(instruction, match[1])
+        else:
+            self.unsupported(path)
 
-        if (match := re.fullmatch(rf"/roles/{KEY}/supporting_circle", path)) and op in {
-            "add",
-            "remove",
-        }:
-            role = self.get("roles", match[1])
-            if role is not None:
-                self.convert(role, to_circle=op == "add")
-            return
+    def apply_to_object(self, instruction, kind, key):
+        """Adds, removes or checks a role or a policy (``/roles/123``)"""
+        op = instruction["op"]
+        if op == "test":
+            self.get(kind, key)
+        elif op == "add":
+            # Empty until the following instructions set its name or title
+            if kind == "roles":
+                # Roles inside a role make it a circle (constitution
+                # 1.3.1), recorded when adopting
+                self.make_circle(self.circle)
+                obj = Role.objects.create(circle=self.circle, name="")
+                self.roles.add(obj)
+            else:
+                obj = Policy.objects.create(role=self.circle, title="")
+                self.policies.add(obj)
+            self.created[f"{kind}/{key}"] = obj
+        elif op == "remove":
+            if (obj := self.get(kind, key)) is not None:
+                self.remove(obj)
+        else:
+            self.unsupported(instruction["path"])
 
-        self.unsupported(path)
+    def apply_to_role_field(self, instruction, key, field):
+        """Sets a role's name or purpose (``/roles/123/aim``)"""
+        role = self.get("roles", key)
+        if role is None:
+            return
+        if role.core_role:
+            self.problem(_("The constitution defines %(role)s."), role=role)
+            return
+        self.set_field(role, field, instruction)
+
+    def apply_to_policy_field(self, instruction, key, field):
+        """Sets a policy's title or body (``/policies/123/body``)"""
+        policy = self.get("policies", key)
+        if policy is not None:
+            self.set_field(policy, field, instruction)
+
+    def set_field(self, obj, field, instruction):
+        value = instruction.get("value")
+        label = f"{obj}: {field}"
+        if self.check_value(label, value) and self.check_original(
+            label, getattr(obj, field), instruction
+        ):
+            setattr(obj, field, value or "")
+            obj.save(update_fields=[field])
+
+    def apply_to_text(self, instruction, role_key, kind, key):
+        """Adds, changes or removes an accountability or a domain of a role
+        (``/roles/123/domains/456``)"""
+        op, value = instruction["op"], instruction.get("value")
+        role = self.get("roles", role_key)
+        if role is None:
+            return
+        if role.core_role == LEAD:
+            # Additions would apply to all sub-circles' Circle Leads
+            # (constitution 1.4.5); the app leaves the Circle Lead as
+            # the constitution defines it, on purpose
+            self.problem(_("The Circle Lead gets no accountabilities or domains."))
+            return
+        model = TEXTS[kind]
+        if not self.check_value(str(role), value):
+            return
+        if op == "add":
+            obj = model.objects.create(
+                role=role,
+                text=value or "",
+                position=role_texts_count(model, role),
+            )
+            self.created[f"{kind}/{key}"] = obj
+            return
+        obj = model.objects.filter(pk=key, role=role).first()
+        if obj is None:
+            self.problem(
+                _("%(text)s doesn't exist anymore."),
+                text=instruction.get("original_value") or instruction["path"],
+            )
+            return
+        if not self.check_original(f"{role}: {obj}", obj.text, instruction):
+            return
+        if op == "remove":
+            if model is Domain:
+                # The role's policies regulating it go with it
+                policies = obj.policies.active()
+                self.policies.update(policies)
+                policies.update(archived_on=self.day)
+            obj.delete()
+        elif op == "replace":
+            obj.text = value or ""
+            obj.save(update_fields=["text"])
+        else:
+            self.unsupported(instruction["path"])
+
+    def apply_to_supporting_circle(self, instruction, key):
+        """Turns a role into a circle (``add``) or back (``remove``)"""
+        role = self.get("roles", key)
+        if role is not None:
+            self.convert(role, to_circle=instruction["op"] == "add")
 
     def move(self, instruction):
         """Moves a role or policy into a sub-circle, or out of one"""

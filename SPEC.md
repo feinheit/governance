@@ -553,15 +553,15 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (second round of 2026-11-06), open:
-  - Judgement calls, to decide: merging the name/purpose and
-    title/body branches of `Applier.apply_one`; one helper for the
-    stand-in chains (meeting secretary, election reminders); one link for
-    tactical meetings on the role page; `RoleQuerySet` method for "a
+  - Judgement calls, to decide: one helper for the stand-in chains
+    (meeting secretary, election reminders); one link for tactical
+    meetings on the role page; `RoleQuerySet` method for "a
     circle or a role with an inside"; one walk of sub-circles
     (`mails.domain_policy_changed()`, `mails.inside()`,
     `drafting.sub_circles_of()`, `assignments.affected_circles()`). Kept
-    on purpose for readability: the plain-role branch of `members()` and
-    the `is_circle` condition of `role_items()`.
+    on purpose for readability: the plain-role branch of `members()`, the
+    `is_circle` condition of `role_items()` and the separate cases of
+    `Applier.apply_one`, one method for each kind of path (`apply_to_…`).
   - Untested risks: deep moves in the history (`Change`, `structure_on()`)
     and mails to the target circle's members; assignments deleted on the
     day they started missing from meeting outputs; a Rep becoming Circle
