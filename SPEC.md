@@ -390,7 +390,9 @@ invited roles, the outcomes and links of the circle's last three
 tactical meetings having some, "Show earlier meetings" ten, then ten
 more, `?earlier=`, which the page's updates keep; `progress_context()`),
 agenda, processing tensions,
-closing. An item may record an outcome and a link, both optional: many
+closing. An item may record an outcome and a link, both optional, saved
+while the secretary types (`data-autosave`, `X-Autosave`, the others
+see it with their next update; "Save and done" completes the item): many
 items end with information, next actions and projects live in the task
 management tool (several of them are one link to a to-do list), and a
 governance tension is captured by its owner as a tension of their own

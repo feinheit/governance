@@ -10,6 +10,7 @@ tested and every valid one integrated.
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.translation import gettext
@@ -198,14 +199,27 @@ def item_discard(request, pk):
 
 @require_POST
 def item_outcome(request, pk):
-    """The outcome of a tension in a tactical meeting"""
+    """The outcome of a tension in a tactical meeting; saved while typing
+    (``autosaving()``, the others see it), "Save and done" completes it"""
     item = running_item(request, pk)
     item.outcome = request.POST.get("outcome", "").strip()
     link = request.POST.get("link", "").strip()
-    if link and not link.startswith(("https://", "http://")):
+    valid = not link or link.startswith(("https://", "http://"))
+    if autosaving(request):
+        fields = ["outcome", "link"] if valid else ["outcome"]
+        item.link = link[:1000]
+        item.save(update_fields=fields)
+        return HttpResponse(status=204)
+    if not valid:
         messages.error(request, gettext("The link has to start with https://."))
         return redirect(item.meeting)
     item.link = link[:1000]
     item.save(update_fields=["outcome", "link"])
     complete(item)
     return redirect(item.meeting)
+
+
+def autosaving(request):
+    """Forms with ``data-autosave`` (frontend/meeting.js) post while typing:
+    saving only, nothing else happens"""
+    return request.headers.get("X-Autosave") == "true"

@@ -16,14 +16,18 @@ document.addEventListener("htmx:before:init", (event) => {
 let busyChecks = 0
 window.meetingIsIdle = () => {
   if (document.hidden) return false
+  const form = document.activeElement?.closest("#meeting form")
   const busy = Boolean(
     document.querySelector(
       "#meeting details[open], #amend > *, .sortable-chosen",
-    ) || document.activeElement?.closest("#meeting form"),
+    ) || form,
   )
   busyChecks = busy ? busyChecks + 1 : 0
+  // Not while writing what saves itself (the secretary's outcome, notes)
   const notice = document.getElementById("meeting-paused")
-  if (notice) notice.hidden = busyChecks < 2
+  if (notice) {
+    notice.hidden = busyChecks < 2 || Boolean(form?.matches("[data-autosave]"))
+  }
   return !busy
 }
 
@@ -31,3 +35,34 @@ window.meetingIsIdle = () => {
 if (document.getElementById("meeting")) {
   import(/* webpackChunkName: "agenda" */ "./agenda.js")
 }
+
+// Forms with data-autosave (the outcome, the notes) save themselves a
+// moment after typing and when leaving a field; the server only saves
+// (X-Autosave), the others see it with their next update
+const autosaveTimers = new WeakMap()
+
+async function autosave(form) {
+  clearTimeout(autosaveTimers.get(form))
+  autosaveTimers.delete(form)
+  const response = await fetch(form.action, {
+    method: "POST",
+    body: new FormData(form),
+    headers: { "X-Autosave": "true" },
+  })
+  form.classList.toggle("wb-autosave-failed", !response.ok)
+}
+
+document.addEventListener("input", (event) => {
+  const form = event.target.closest?.("form[data-autosave]")
+  if (!form) return
+  clearTimeout(autosaveTimers.get(form))
+  autosaveTimers.set(
+    form,
+    setTimeout(() => autosave(form), 1000),
+  )
+})
+
+document.addEventListener("focusout", (event) => {
+  const form = event.target.closest?.("form[data-autosave]")
+  if (form && autosaveTimers.has(form)) autosave(form)
+})

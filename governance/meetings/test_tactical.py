@@ -192,6 +192,43 @@ class TacticalTest(TestCase):
             self.client.get(f"{url}?step=closing"), "the meeting is at"
         )
 
+    def test_outcome_autosaved(self):
+        """The secretary's outcome saves itself while typing (without
+        completing the item), the others see it"""
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.ada,
+        )
+        item = AgendaItem.objects.create(meeting=meeting, label="Knives")
+        meeting.current_item = item
+        meeting.save()
+        self.client.force_login(self.ada)
+        response = self.client.post(
+            f"/agenda/{item.pk}/outcome/",
+            {"outcome": "Bob buys", "link": "https://tasks.example.com/4"},
+            headers={"X-Autosave": "true"},
+        )
+        self.assertEqual(response.status_code, 204)
+        item.refresh_from_db()
+        self.assertEqual(
+            (item.outcome, item.link, item.is_completed),
+            ("Bob buys", "https://tasks.example.com/4", False),
+        )
+        self.client.force_login(self.bob)  # Following
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "Bob buys")
+        self.assertContains(response, 'href="https://tasks.example.com/4"')
+        self.assertEqual(
+            self.client.post(
+                f"/agenda/{item.pk}/outcome/",
+                {"outcome": "Mine"},
+                headers={"X-Autosave": "true"},
+            ).status_code,
+            403,
+        )
+
     def test_no_proposals(self):
         """Tactical meetings don't process proposals, not even crafted"""
         from governance.proposals.models import Proposal

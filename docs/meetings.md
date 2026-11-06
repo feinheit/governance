@@ -77,8 +77,9 @@ Steps: check-in, checklists, metrics, updates, agenda, closing. The
 updates show the links of the circle and the invited roles (e.g. to the
 task management tool) and the outcomes of the last three tactical
 meetings, to check on them ("Show earlier meetings" for more). For each
-agenda item the secretary may record an "Outcome" and a "Link", "Save and
-done" or just "Done":
+agenda item the secretary may record an "Outcome" and a "Link", which
+save themselves while typing (the others see them), "Save and done" or
+just "Done":
 
 - **Nothing** is fine: many items end with information or a short
   discussion.

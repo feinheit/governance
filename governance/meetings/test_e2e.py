@@ -197,6 +197,33 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertEqual(self.meeting.current_item.label, "Cake")
         self.assertEqual(self.errors, [])
 
+    def test_outcome_autosaved(self):
+        """The secretary's outcome saves itself a moment after typing, the
+        item stays open"""
+        Meeting.objects.filter(pk=self.meeting.pk).update(ended_at=timezone.now())
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.ada,
+        )
+        item = AgendaItem.objects.create(meeting=meeting, label="Knives")
+        meeting.current_item = item
+        meeting.save()
+        page = self.page
+        page.goto(f"{self.live_server_url}{meeting.get_absolute_url()}")
+        page.fill("textarea[name=outcome]", "Bob buys new knives")
+        for _attempt in range(30):
+            item.refresh_from_db()
+            if item.outcome:
+                break
+            page.wait_for_timeout(100)
+        self.assertEqual(
+            (item.outcome, item.is_completed), ("Bob buys new knives", False)
+        )
+        self.assertFalse(page.locator("#meeting-paused").is_visible())
+        self.assertEqual(self.errors, [])
+
     def test_paused_notice(self):
         """Updates paused for longer than a moment (typing, something open):
         a notice says so until it continues"""

@@ -79,7 +79,8 @@ Updates zeigen die Links des Kreises und der eingeladenen Rollen (z.B.
 zum Aufgaben-Tool) und die Ergebnisse der letzten drei Tactical Meetings,
 um nachzufragen ("Frühere Meetings anzeigen" für mehr).
 Zu jedem Agendapunkt kann der Secretary ein "Ergebnis" und einen "Link"
-festhalten, "Speichern und erledigt" oder einfach "Erledigt":
+festhalten, die sich beim Tippen speichern (die anderen sehen sie),
+"Speichern und erledigt" oder einfach "Erledigt":
 
 - **Nichts** ist in Ordnung: viele Punkte enden mit einer Information
   oder einer kurzen Diskussion.

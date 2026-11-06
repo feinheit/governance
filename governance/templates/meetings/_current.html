@@ -19,7 +19,8 @@
   {% if meeting.kind == "tactical" %}
     <div class="card-body">
       {% if can_run %}
-        <form method="post" action="{% url 'item_outcome' current.pk %}">
+        {# Saved while typing (data-autosave, meeting.js), the others see it #}
+        <form method="post" action="{% url 'item_outcome' current.pk %}" data-autosave>
           {% csrf_token %}
           <div class="mb-2">
             <label class="form-label" for="outcome">{% translate "Outcome" %}</label>
@@ -43,6 +44,14 @@
           </div>
           <button type="submit" class="btn btn-sm btn-primary">{% translate "Save and done" %}</button>
         </form>
+      {% elif current.outcome or current.link %}
+        {# What the secretary has written so far #}
+        {% if current.outcome %}<div>{{ current.outcome|linebreaksbr }}</div>{% endif %}
+        {% if current.link %}<a
+            class="small"
+            href="{{ current.link }}"
+            rel="noopener"
+          >{{ current.link|truncatechars:60 }}</a>{% endif %}
       {% else %}
         <p class="text-body-secondary mb-0">{% translate "The secretary captures the outcome." %}</p>
       {% endif %}
