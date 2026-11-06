@@ -133,6 +133,30 @@ class AssignmentsTest(TestCase):
             Assignment.objects.filter(role=self.kitchen_lead, user=self.eve).exists()
         )
 
+    def test_circle_rep_of_a_sub_circle_led_from_above(self):
+        """The Circle Lead also leads the sub-circles nobody leads (1.4.2),
+        so their Circle Rep isn't assigned either"""
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        Assignment.objects.create(role=bakery.roles.get(core_role="rep"), user=self.eve)
+        self.client.force_login(self.ada)
+        response = self.client.post(
+            f"/roles/{self.kitchen_lead.pk}/assignments/", {"user": self.eve.pk}
+        )
+        self.assertContains(response, "A Circle Lead can&#x27;t be the Circle Rep.")
+
+        # Unless the sub-circle has a Circle Lead of its own
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="lead"), user=self.bob
+        )
+        self.client.post(
+            f"/roles/{self.kitchen_lead.pk}/assignments/", {"user": self.eve.pk}
+        )
+        self.assertTrue(
+            Assignment.objects.filter(role=self.kitchen_lead, user=self.eve).exists()
+        )
+
     def test_resigning_from_elected_roles(self):
         """Circle Leads end assignments of elected roles (resigning, 1.4.1),
         they don't assign them"""

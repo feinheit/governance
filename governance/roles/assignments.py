@@ -162,18 +162,30 @@ class AssignmentForm(ModelForm):
                 _("%(user)s already holds this role with this focus.") % {"user": user}
             )
         role = self.instance.role
-        if (
-            user
-            and role.core_role == LEAD
-            and Assignment.objects
-            .current()
-            .of_core_role(REP, role.circle_id)
-            .filter(user=user)
-            .exists()
-        ):
+        if user and role.core_role == LEAD and represents(user, role.circle):
             # Constitution 5.1.1, like electing the Rep
             self.add_error("user", _("A Circle Lead can't be the Circle Rep."))
         return data
+
+
+def represents(user, circle):
+    """Whether the person is the Circle Rep of the circle, or of a sub-circle
+    which the circle's Circle Leads lead because nobody else does (1.4.2)"""
+    reps = (
+        Assignment.objects
+        .current()
+        .filter(user=user, role__core_role=REP, role__archived_on=None)
+        .select_related("role__circle")
+    )
+    for rep in reps:
+        represented = rep.role.circle
+        while represented is not None:
+            if represented == circle:
+                return True
+            if Assignment.objects.current().of_core_role(LEAD, represented).exists():
+                break  # Led by its own Circle Lead
+            represented = represented.circle
+    return False
 
 
 def assignable_role(request, pk, check=can_assign):
