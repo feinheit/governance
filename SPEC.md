@@ -380,7 +380,11 @@ is active, `Meeting.active_item_id`), orders them with drag handles (`agenda_ord
 JavaScript arrows)
 in any order; buttons for the six steps of integrative decision-making
 guide without enforcing them. Only the secretary amends, with the drafting
-controls in a panel, and captures a proposal from a tension. "Discard"
+controls in a panel, and captures a proposal from a tension. While the
+meeting runs, its proposals are amended there only: the proposal's page
+points to the meeting instead of offering the drafting controls, the
+agenda links proposals to their pages only for those not running it (the
+sidebar's list of the meeting's proposals shows once it isn't running). "Discard"
 withdraws the item's proposal (5.3.1, 5.3.4), the outputs list it, its
 proposer gets a new draft of it with "Draft again"; "Done" leaves it
 waiting for the next meeting. Objections

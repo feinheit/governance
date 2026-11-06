@@ -41,6 +41,9 @@ everything else, it does nothing on pages without `hx-` attributes;
 (`hx-target:inherited` etc.), the meeting's region `#meeting` is boosted,
 links only when marked `data-in-meeting` (`meeting.js`), and the drafting
 views go back to `?next=` (`drafting.done()`, `HX-Location` for htmx).
+While a meeting runs, the secretary amends its proposals only there (the
+proposal's page points to the meeting); don't add links leading those
+running it out of the meeting.
 
 Short forms open in a modal: `data-modal` on the link (`modal.js`, a
 `<dialog>` outside of `#meeting`, loaded by htmx with `HX-Modal`). Views
