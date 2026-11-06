@@ -185,17 +185,18 @@ class MeetingE2ETest(LiveServerTestCase):
         soup.locator("[data-agenda-handle]").drag_to(
             tea, target_position={"x": 20, "y": 5}
         )
-        page.wait_for_function(
-            "document.querySelector('#agenda [data-agenda-item]').textContent.includes('Soup')"
-        )
-        self.assertEqual(
-            list(self.meeting.agenda_items.values_list("label", flat=True)),
-            ["Soup", "Tea", "Cake"],
-        )
+        # The list changes right away in the browser, the server saves it
+        # a moment later: wait for the database
+        for _attempt in range(50):
+            order = list(self.meeting.agenda_items.values_list("label", flat=True))
+            if order[0] == "Soup":
+                break
+            page.wait_for_timeout(100)
+        self.assertEqual(order, ["Soup", "Tea", "Cake"])
 
-        cake = page.locator("#agenda [data-agenda-item]", has_text="Cake")
-        box = cake.bounding_box()
-        page.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+        # The reordered list swapped in, then clicking a row
+        page.wait_for_load_state("networkidle")
+        page.locator("#agenda [data-agenda-item]", has_text="Cake").click()
         page.wait_for_selector("#agenda .wb-current >> text=Cake")
         self.meeting.refresh_from_db()
         self.assertEqual(self.meeting.current_item.label, "Cake")
