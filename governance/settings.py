@@ -16,7 +16,10 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[])
 # Redirects to the canonical domain (and to HTTPS), see django-canonical-domain
 SECURE_SSL_HOST = env("SECURE_SSL_HOST", default=None)
 SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT", default=False)
-ADMINS = MANAGERS = [("Matthias Kestenholz", "mk@feinheit.ch")]
+ADMINS = MANAGERS = [
+    ("Matthias Kestenholz", "mk@feinheit.ch"),
+    ("Fabian Germann", "fg@feinheit.ch"),
+]
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = env(
     "DEFAULT_FROM_EMAIL", default="governance@feinheit.ch"
 )
