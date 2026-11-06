@@ -57,7 +57,8 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   Person kann ihn auf der Seite des Vorschlags "Neu entwerfen". "Erledigt"
   ohne Annehmen oder Verwerfen lässt ihn auf das nächste Meeting warten.
 - **Einwände** werden mit Person und Rolle festgehalten, der Facilitator
-  prüft sie, der Secretary hält es fest. "Annehmen" geht erst, wenn alle Einwände geprüft
+  prüft sie, der Secretary hält es fest. "Annehmen" (unter den Einwänden, wie
+  "Verwerfen") geht erst, wenn alle Einwände geprüft
   und die gültigen integriert sind. Die Änderung gilt sofort, die Mail
   kommt am Ende des Meetings.
 - **Dieselbe Rolle mehrmals**: hat ein früher angenommener Vorschlag eine

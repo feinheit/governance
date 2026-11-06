@@ -85,6 +85,10 @@ class ProcessingTest(TestCase):
             {"objector": f"{self.eve.pk}:{self.cook.pk}", "text": "Chefs are bossy"},
         )
         objection = Objection.objects.get()
+        # Adopting and discarding come last, after the objections
+        html = self.client.get(self.meeting.get_absolute_url()).content.decode()
+        self.assertLess(html.index("Record objection"), html.index("/adopt/"))
+        self.assertLess(html.index("Record objection"), html.index("/discard/"))
         self.client.post(f"/agenda/{self.item.pk}/adopt/")
         self.proposal.refresh_from_db()
         self.assertEqual(self.proposal.status, Proposal.IN_MEETING)  # Untested

@@ -55,7 +55,8 @@ circle.
   gone); its proposer may "Draft again" on the proposal's page. "Done"
   without adopting or discarding keeps it waiting for the next meeting.
 - **Objections** are recorded with the person and the role, the
-  facilitator tests them, the secretary records it. "Adopt" only works once every objection is
+  facilitator tests them, the secretary records it. "Adopt" (below the objections, like
+  "Discard") only works once every objection is
   tested and the valid ones are integrated. The change applies right
   away, the mail comes at the end of the meeting.
 - **The same role several times**: if a proposal adopted earlier changed
