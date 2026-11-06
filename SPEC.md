@@ -240,7 +240,9 @@ Responses are anonymous: consents and requests are only counted ("3 of 7
 without objection"); questions and concerns show their author because they
 are answered and discussed with them. A published proposal can't be
 edited: the proposer takes it back to its draft (responses since
-republishing count) or withdraws it. Role and policy pages show pending
+republishing count) or withdraws it. Somebody leaving the circle doesn't adopt a proposal early, even when
+everybody remaining has consented: it waits for its deadline like
+announced (decided 2026-11-06). Role and policy pages show pending
 proposals (published or in a meeting): `Proposal.save()` keeps their
 `roles` and `policies` those the instructions change now, also when
 brought into or amended in a meeting; `adopt()` adds those it creates or
@@ -729,10 +731,3 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
   `end_inactive_meetings`), sending mails outside the request.
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
-- **Verification** (round of 2026-11-06, open findings):
-  - Checked: `draft_again` of a proposal
-    withdrawn because its circle turned back into a role is fine (a role
-    may be broken down inside, 1.3.1; the draft lists its stale changes as
-    problems, publishing refuses them). Decided
-    2026-11-06: nothing adopted early when the last member who hadn't
-    consented leaves, it waits for the deadline like announced.
