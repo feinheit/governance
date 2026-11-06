@@ -448,9 +448,17 @@ class Applier:
             self.converted.append(role)
             # The role's holders lead the new circle
             lead = role.roles.active().get(core_role=LEAD)
-            for assignment in Assignment.objects.current().filter(role=role):
+            holders = (
+                Assignment.objects
+                .current()
+                .filter(role=role)
+                .order_by()  # Distinct users, not assignments
+                .values_list("user", flat=True)
+                .distinct()
+            )
+            for user_id in holders:  # Once, also with several focuses
                 Assignment.objects.create(
-                    role=lead, user=assignment.user, starts_on=self.day
+                    role=lead, user_id=user_id, starts_on=self.day
                 )
             return
         if role.roles.active().exclude(core_role__in=CORE).exists():
