@@ -125,6 +125,41 @@ class AffectedTest(TestCase):
             sorted(m.to[0] for m in mail.outbox), ["ada@example.com", "eve@example.com"]
         )
 
+    def test_holders_since_today_of_roles_removed_in_a_meeting(self):
+        """Who got the role today and loses it in a meeting gets its outputs
+        too, like adopting async"""
+        from governance.meetings.activity import end_meeting
+        from governance.meetings.models import Meeting
+        from governance.proposals.instructions import adopt
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        dishwasher = Role.objects.create(name="Dishwasher", circle=kitchen)
+        Assignment.objects.create(role=cook, user=ada)
+        Assignment.objects.create(
+            role=dishwasher, user=eve, starts_on=timezone.localdate()
+        )
+        meeting = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        meeting.attendees.set([ada])
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="Machines",
+            created_at=timezone.now(),
+            meeting=meeting,
+            instructions=[{"op": "remove", "path": f"/roles/{dishwasher.pk}"}],
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            adopt(proposal)
+            end_meeting(meeting)
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox), ["ada@example.com", "eve@example.com"]
+        )
+
     def test_nothing_for_people_who_left(self):
         from governance.proposals.instructions import adopt
 

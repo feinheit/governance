@@ -119,6 +119,16 @@ class Proposal(models.Model):
             " ran; they turn back into roles when it ends."
         ),
     )
+    ended_holders = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="+",
+        verbose_name=_("holders losing roles"),
+        help_text=_(
+            "Whose assignments the adopted proposal ended, for the mails;"
+            " assignments started the same day are deleted."
+        ),
+    )
     policies = models.ManyToManyField(
         "roles.Policy",
         blank=True,

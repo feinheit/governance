@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 11:36+0100\n"
+"POT-Creation-Date: 2026-11-06 11:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1009,6 +1009,14 @@ msgstr "Kreise, die nach ihrem Meeting wieder zu Rollen werden"
 #: governance/proposals/models.py
 msgid "Circles the proposal left without roles while their own meeting ran; they turn back into roles when it ends."
 msgstr "Kreise, die der Vorschlag ohne Rollen liess, während ihr eigenes Meeting lief; sie werden wieder zu Rollen, wenn es endet."
+
+#: governance/proposals/models.py
+msgid "holders losing roles"
+msgstr "Personen, die Rollen verlieren"
+
+#: governance/proposals/models.py
+msgid "Whose assignments the adopted proposal ended, for the mails; assignments started the same day are deleted."
+msgstr "Wessen Zuweisungen der angenommene Vorschlag beendet hat, für die Mails; am selben Tag begonnene Zuweisungen werden gelöscht."
 
 #: governance/proposals/models.py
 msgid "affected policies"

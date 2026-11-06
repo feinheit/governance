@@ -266,7 +266,9 @@ rule.
   the constitution's stand-ins (5.3.6); the app gives them no rights in
   meetings the other members don't have, except the secretary amending. An
   assignment removed on the day it started was a mistake and is deleted.
-  A circle's role follows its Circle Leads and Reps. Nobody leading a
+  Adopted proposals record whose assignments they ended
+  (`Proposal.ended_holders`), so that the meeting's outputs reach them
+  too. A circle's role follows its Circle Leads and Reps. Nobody leading a
   circle, also from above, is its Circle Rep (5.1.1): neither elected nor
   assigned as Circle Lead (`assignments.represents()`).
 
@@ -555,12 +557,12 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (second round of 2026-11-06), open:
-  - Untested risks: deep moves in the history (`Change`, `structure_on()`)
-    and mails to the target circle's members; assignments deleted on the
-    day they started missing from meeting outputs; a sub-circle's own
-    Circle Lead ending while its Circle Rep leads the super-circle; "Draft again" twice, or into a circle
-    turned back into a role; a meeting reverting its circle mailing its
-    outputs to the members of the role it became.
+  - Moving a role or policy into a sub-circle (any depth) mails the
+    target circle's Secretary (it may need inviting) and Circle Leads
+    too, one mail per person.
+  - A Circle Rep who leads the circle from above (assigned Circle Lead of
+    the super-circle, or the circle's own Circle Lead ending): to decide.
+    Assigning is refused for now.
 
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so

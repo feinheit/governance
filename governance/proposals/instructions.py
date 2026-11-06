@@ -503,6 +503,7 @@ def revert_after_meeting(meeting):
         proposal.save(update_fields=["instructions", "names"])
         proposal.roles.add(circle)
         proposal.policies.add(*applier.policies)
+        proposal.ended_holders.add(*applier.ended_users)
     close_circles([circle], proposal)
     update_changes(since=timezone.localdate())
 
@@ -567,6 +568,8 @@ def adopt(proposal):
     proposal.roles.add(*applier.roles, *applier.deferred)
     proposal.reverting_circles.add(*applier.deferred)
     proposal.policies.add(*applier.policies)
+    # For the meeting's mail: assignments started today are deleted
+    proposal.ended_holders.add(*applier.ended_users)
     close_circles([*applier.removed, *applier.reverted], proposal)
     update_changes(since=timezone.localdate())
     if not (proposal.meeting and proposal.meeting.is_running):
