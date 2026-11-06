@@ -66,11 +66,6 @@
               {% translate "End the meeting" %}
             </button>
           </form>
-          <a
-            {% button_class can_run %}
-            href="{% url 'meeting_update' meeting.pk %}"
-            data-modal
-          >{% icon "pencil" %} {% translate "Edit" %}</a>
         </div>
       {% endif %}
     </div>
@@ -132,8 +127,10 @@
           {% elif meeting.is_running and shown_step == "progress" %}
             {% include "meetings/_progress.html" %}
           {% endif %}
+          {% if results %}{% include "meetings/_results.html" %}{% endif %}
           {% if current %}{% include "meetings/_current.html" %}{% endif %}
           {% if outputs %}{% include "meetings/_outputs.html" %}{% endif %}
+          {% include "meetings/_notes.html" %}
         {% endblock main %}
       </div>
       <div class="col-lg-4 order-lg-1">
@@ -251,12 +248,6 @@
           <section class="card mb-4">
             <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposals" %}</h2></div>
             <ul class="list-group list-group-flush">{% include "proposals/_proposal_rows.html" %}</ul>
-          </section>
-        {% endif %}
-        {% if meeting.minutes %}
-          <section class="card mb-4">
-            <div class="card-header"><h2 class="h6 mb-0">{% translate "Minutes" %}</h2></div>
-            <div class="card-body wb-markdown">{{ meeting.minutes|markdown }}</div>
           </section>
         {% endif %}
       </div>

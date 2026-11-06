@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:28+0100\n"
+"POT-Creation-Date: 2026-11-06 16:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -587,6 +587,11 @@ msgstr "Alle Partner:innen dürfen ein Tactical Meeting einberufen und die nöti
 #: governance/meetings/views.py governance/templates/roles/role_detail.html
 msgid "Call a tactical meeting"
 msgstr "Tactical Meeting einberufen"
+
+#: governance/meetings/views.py governance/templates/meetings/_notes.html
+#: governance/templates/notifications/meeting_ended.txt
+msgid "Notes"
+msgstr "Notizen"
 
 #: governance/meetings/views.py
 #, python-format
@@ -1802,6 +1807,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: governance/templates/generic/object_form.html
+#: governance/templates/meetings/_notes.html
 #: governance/templates/roles/person_detail.html
 msgid "Save"
 msgstr "Speichern"
@@ -2001,7 +2007,6 @@ msgid "into"
 msgstr "nach"
 
 #: governance/templates/meetings/_current.html
-#: governance/templates/meetings/meeting_detail.html
 #: governance/templates/proposals/proposal_detail.html
 #: governance/templates/roles/_role_item.html
 #: governance/templates/roles/role_detail.html
@@ -2117,6 +2122,10 @@ msgstr "noch nicht begonnen"
 msgid "running"
 msgstr "läuft"
 
+#: governance/templates/meetings/_notes.html
+msgid "What doesn't belong to an agenda item, e.g. a special meeting's intent."
+msgstr "Was zu keinem Agendapunkt gehört, z.B. die Absicht eines speziellen Meetings."
+
 #: governance/templates/meetings/_outputs.html
 msgid "Outputs"
 msgstr "Ergebnisse"
@@ -2152,6 +2161,10 @@ msgstr "Ergebnisse früherer Meetings"
 #: governance/templates/meetings/_progress.html
 msgid "Show earlier meetings"
 msgstr "Frühere Meetings anzeigen"
+
+#: governance/templates/meetings/_results.html
+msgid "Results"
+msgstr "Ergebnisse"
 
 #: governance/templates/meetings/_running.html
 msgid "Running now:"
@@ -2291,11 +2304,6 @@ msgstr "Wahlen"
 #: governance/templates/meetings/meeting_detail.html
 msgid "Record the election"
 msgstr "Wahl festhalten"
-
-#: governance/templates/meetings/meeting_detail.html
-#: governance/templates/notifications/meeting_ended.txt
-msgid "Minutes"
-msgstr "Protokoll"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "Paused: the meeting doesn't update while you type or have something open. It continues when you're done."
@@ -2936,6 +2944,9 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "Minutes"
+#~ msgstr "Protokoll"
 
 #, python-format
 #~ msgid "%(policy)s can't be moved."

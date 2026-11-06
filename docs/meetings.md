@@ -20,6 +20,9 @@ the page updates by itself.
   returns.
   While you type or have something open, the page doesn't update; a
   notice at the top says so.
+- **Notes** at the bottom: what doesn't belong to an agenda item, e.g. a
+  special meeting's intent. The secretary writes them, they save
+  themselves; the outputs mail includes them.
 - **Attendees** are the circle's members at the start; members invite
   others or remove them.
 - **One meeting per circle**: starting a second one leads to the running
@@ -79,7 +82,8 @@ task management tool) and the outcomes of the last three tactical
 meetings, to check on them ("Show earlier meetings" for more). For each
 agenda item the secretary may record an "Outcome" and a "Link", which
 save themselves while typing (the others see them), "Save and done" or
-just "Done":
+just "Done". The results of the completed items stack up on the right
+(scroll up for earlier ones), the agenda strikes them through:
 
 - **Nothing** is fine: many items end with information or a short
   discussion.

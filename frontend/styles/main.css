@@ -554,6 +554,20 @@ a.wb-row-title:hover {
   font-weight: 600;
 }
 
+/* A tactical meeting's results (meetings/_results.html): scrolled to the
+   newest, earlier ones above; completed agenda items struck through */
+.wb-results {
+  display: flex;
+  flex-direction: column-reverse;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+.wb-completed {
+  text-decoration: line-through;
+  color: var(--bs-secondary-color);
+}
+
 /* Autosaving failed (meeting.js): the fields say so */
 .wb-autosave-failed :is(textarea, input:not([type="hidden"])) {
   border-color: var(--wb-danger-ink);

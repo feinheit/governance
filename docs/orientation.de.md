@@ -63,7 +63,7 @@ immer den aktuellen Namen der Rolle.
 
 Kurze Formulare (Strategie, Metriken, Checklisten-Punkte, Links, Policies
 einer Domain, Einstellungen, Zuweisen, Fokus und Entfernen, die Spannung
-eines Entwurfs, das Protokoll eines Meetings) öffnen sich über der Seite.
+eines Entwurfs) öffnen sich über der Seite.
 Escape schliesst sie; sobald etwas eingegeben ist, erst beim zweiten Mal.
 
 ## Mails

@@ -348,17 +348,16 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("main >> text=Sharpen the knives", state="detached")
         self.assertFalse(ChecklistItem.objects.exists())
 
-        # In a meeting its updates continue behind the modal
+        # In a meeting its updates continue behind the modal ("Take over",
+        # somebody else is the secretary)
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        Meeting.objects.filter(pk=self.meeting.pk).update(secretary=bob)
         page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
-        page.locator("a[data-modal][href$='/edit/']").click()
-        page.fill("#modal[open] textarea[name=minutes]", "Short and sweet")
+        page.locator("a[data-modal][href$='/secretary/']").click()
+        page.wait_for_selector("#modal[open]")
         AgendaItem.objects.create(meeting=self.meeting, label="Meanwhile", position=9)
         page.wait_for_selector("#agenda >> text=Meanwhile", timeout=8000)
-        self.assertEqual(
-            page.input_value("#modal textarea[name=minutes]"), "Short and sweet"
-        )
-        page.locator("#modal button[type=submit]").click()
-        page.wait_for_selector("#meeting >> text=Short and sweet")
+        self.assertEqual(page.locator("#modal[open]").count(), 1)
         self.assertEqual(self.errors, [])
 
     def test_domain_policies(self):

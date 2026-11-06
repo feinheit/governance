@@ -3,6 +3,7 @@ from urllib.parse import urlencode
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.text import Truncator
@@ -11,7 +12,12 @@ from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
 from governance.forms import ModelForm
-from governance.meetings.access import can_add_items, can_run, can_take_over
+from governance.meetings.access import (
+    autosaving,
+    can_add_items,
+    can_run,
+    can_take_over,
+)
 from governance.meetings.activity import end_inactive_meetings, end_meeting
 from governance.meetings.elections import ElectionForm
 from governance.meetings.models import (
@@ -362,13 +368,17 @@ class MeetingForm(ModelForm):
     class Meta:
         model = Meeting
         fields = ["minutes"]
+        labels = {"minutes": _("Notes")}
 
 
 def meeting_update(request, pk):
+    """The meeting's notes, saved while the secretary types (autosaving())"""
     meeting = runnable_meeting(request, pk)
     form = MeetingForm(request.POST or None, instance=meeting)
     if form.is_valid():
         form.save()
+        if autosaving(request):
+            return HttpResponse(status=204)
         return redirect(meeting)
     return render(
         request,
@@ -440,6 +450,12 @@ def agenda_context(request, meeting):
     context = {
         "meeting": meeting,
         "agenda": items,
+        # Tactical meetings stack the completed items' results (_results.html)
+        "results": [
+            item for item in items if item.is_completed and (item.outcome or item.link)
+        ]
+        if meeting.kind == Meeting.TACTICAL and meeting.is_running
+        else [],
         "can_run": runs,
         "can_take_over": takes_over,
         "can_add_items": can_add,

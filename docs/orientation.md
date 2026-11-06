@@ -62,7 +62,7 @@ role's current name.
 
 Short forms (strategy, metrics, checklist items, links, policies of a
 domain, settings, assigning, a holder's focus and removing them, the
-tension of a draft, a meeting's minutes) open above the page. Escape closes them; once something has
+tension of a draft) open above the page. Escape closes them; once something has
 been entered, only when pressed twice.
 
 ## Mails

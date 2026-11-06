@@ -19,6 +19,9 @@ aktualisiert sich von selbst.
   andere Übersicht (Checklisten, Metriken, Updates) auf dem eigenen
   Bildschirm an, "Zurück zum Meeting" kehrt zurück. Solange du tippst oder etwas offen hast, aktualisiert sich die
   Seite nicht; ein Hinweis oben sagt es.
+- **Notizen** unten: was zu keinem Agendapunkt gehört, z.B. die Absicht
+  eines speziellen Meetings. Der Secretary schreibt sie, sie speichern
+  sich selbst; die Mail mit den Ergebnissen enthält sie.
 - **Teilnehmende** sind die Mitglieder des Kreises beim Start; Mitglieder
   laden weitere ein oder entfernen sie.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.
@@ -80,7 +83,9 @@ zum Aufgaben-Tool) und die Ergebnisse der letzten drei Tactical Meetings,
 um nachzufragen ("Frühere Meetings anzeigen" für mehr).
 Zu jedem Agendapunkt kann der Secretary ein "Ergebnis" und einen "Link"
 festhalten, die sich beim Tippen speichern (die anderen sehen sie),
-"Speichern und erledigt" oder einfach "Erledigt":
+"Speichern und erledigt" oder einfach "Erledigt". Die Ergebnisse der
+erledigten Punkte stapeln sich rechts (hochscrollen für frühere), die
+Agenda streicht sie durch:
 
 - **Nichts** ist in Ordnung: viele Punkte enden mit einer Information
   oder einer kurzen Diskussion.

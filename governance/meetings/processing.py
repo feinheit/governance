@@ -17,7 +17,7 @@ from django.utils.translation import gettext
 from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
-from governance.meetings.access import can_run
+from governance.meetings.access import autosaving, can_run
 from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting, Objection
 from governance.proposals.instructions import ProposalError, adopt
 from governance.proposals.models import Proposal
@@ -217,9 +217,3 @@ def item_outcome(request, pk):
     item.save(update_fields=["outcome", "link"])
     complete(item)
     return redirect(item.meeting)
-
-
-def autosaving(request):
-    """Forms with ``data-autosave`` (frontend/meeting.js) post while typing:
-    saving only, nothing else happens"""
-    return request.headers.get("X-Autosave") == "true"

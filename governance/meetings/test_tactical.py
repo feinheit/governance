@@ -229,6 +229,46 @@ class TacticalTest(TestCase):
             403,
         )
 
+    def test_results_and_notes(self):
+        """The results stack up beside the agenda (not in it, completed items
+        are struck through there), the notes below save themselves"""
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.ada,
+        )
+        AgendaItem.objects.create(
+            meeting=meeting,
+            label="Knives",
+            position=1,
+            outcome="Bob buys knives",
+            is_completed=True,
+        )
+        forks = AgendaItem.objects.create(meeting=meeting, label="Forks", position=2)
+        meeting.current_item = forks
+        meeting.save()
+        url = meeting.get_absolute_url()
+        self.client.force_login(self.ada)
+        response = self.client.get(url)
+        self.assertContains(response, 'id="results"')
+        self.assertContains(response, "Bob buys knives", count=1)  # Not in the agenda
+        self.assertContains(response, "wb-completed")
+        self.assertRegex(
+            response.content.decode(),
+            r'<form[^>]*action="/meetings/\d+/edit/"[^>]*data-autosave',
+        )
+        response = self.client.post(
+            f"/meetings/{meeting.pk}/edit/",
+            {"minutes": "Everybody was there"},
+            headers={"X-Autosave": "true"},
+        )
+        self.assertEqual(response.status_code, 204)
+        self.client.force_login(self.bob)  # Following
+        response = self.client.get(url)
+        self.assertContains(response, "Everybody was there")
+        self.assertNotContains(response, 'name="minutes"')
+
     def test_no_proposals(self):
         """Tactical meetings don't process proposals, not even crafted"""
         from governance.proposals.models import Proposal

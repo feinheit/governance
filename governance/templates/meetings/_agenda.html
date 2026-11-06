@@ -13,7 +13,7 @@
           title="{% translate 'Drag to reorder' %}"
         >{% icon "grip-vertical" %}</span>{% endif %}
       <div class="wb-row-main">
-        <span class="wb-row-title">
+        <span class="wb-row-title{% if item.is_completed %} wb-completed{% endif %}">
           {% if item.proposal %}<a
               href="{{ item.proposal.get_absolute_url }}"
             >{{ item }}</a>{% else %}{{ item }}{% endif %}
@@ -23,8 +23,6 @@
           {% if item.proposal %}<span>{{ item.proposal.get_status_display }}</span>{% endif %}
           {% if item.is_completed %}<span>{% translate "completed" %}</span>{% endif %}
         </div>
-        {% if item.outcome %}<div class="small mt-1">{{ item.outcome|linebreaksbr }}</div>{% endif %}
-        {% if item.link %}<a class="small" href="{{ item.link }}">{{ item.link|truncatechars:60 }}</a>{% endif %}
       </div>
       {% if not meeting.ended_at %}
         <div class="d-flex gap-1 flex-shrink-0">

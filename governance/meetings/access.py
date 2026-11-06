@@ -38,3 +38,9 @@ def can_add_items(user, meeting):
         .filter(user=user, role__in=meeting.invited_roles.all())
         .exists()
     )
+
+
+def autosaving(request):
+    """Forms with ``data-autosave`` (frontend/meeting.js) post while typing:
+    saving only, nothing else happens"""
+    return request.headers.get("X-Autosave") == "true"

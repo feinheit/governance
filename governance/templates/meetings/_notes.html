@@ -1,0 +1,26 @@
+{% load governance i18n %}
+{# The meeting's notes below everything: what doesn't belong to an agenda item (e.g. a special meeting's intent, a process breakdown). The secretary writes them, saved while typing (data-autosave, meeting.js), without JavaScript with "Save" #}
+{% if can_run and meeting.is_running %}
+  <section class="card mb-4">
+    <div class="card-header"><h2 class="h6 mb-0">{% translate "Notes" %}</h2></div>
+    <div class="card-body">
+      <form method="post" action="{% url 'meeting_update' meeting.pk %}" data-autosave>
+        {% csrf_token %}
+        <textarea
+          name="minutes"
+          rows="4"
+          class="form-control"
+          aria-label="{% translate 'Notes' %}"
+          placeholder="{% translate "What doesn't belong to an agenda item, e.g. a special meeting's intent." %}"
+          data-mentions
+        >{{ meeting.minutes }}</textarea>
+        <button type="submit" class="btn btn-sm btn-quiet mt-2 wb-no-js">{% translate "Save" %}</button>
+      </form>
+    </div>
+  </section>
+{% elif meeting.minutes %}
+  <section class="card mb-4">
+    <div class="card-header"><h2 class="h6 mb-0">{% translate "Notes" %}</h2></div>
+    <div class="card-body wb-markdown">{{ meeting.minutes|markdown }}</div>
+  </section>
+{% endif %}

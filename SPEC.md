@@ -295,7 +295,8 @@ removed; its corrections stay in the history.
 ## 4. Meetings
 
 **`Meeting`**: circle, kind, started and ended, secretary,
-`called_by`, `invited_roles` (tactical), attendees, minutes, current item
+`called_by`, `invited_roles` (tactical), attendees, minutes (the notes,
+GlassFrog's scratch pad), current item
 and step. Starting is calling: there is no prepared state, scheduling and
 announcing happen in the calendar. Any circle member (and admins) starts
 one (`can_start_meeting()`, not in archived circles; the list of
@@ -307,7 +308,7 @@ people want, the role itself changes in its circle); in a circle those
 who aren't its Secretary or standing in for them, starting being the
 default. The meeting's secretary handles its buttons (`can_run()`):
 steps, processing items, objections, adopting, elections, attendees,
-the minutes, ending it; they also amend proposals. The others follow on
+the notes, ending it; they also amend proposals. The others follow on
 their own screens: the current step and agenda item are highlighted, the
 item's proposal links to its page; in tactical meetings they look at
 another review on their own screen (`?step=`, `REVIEW_STEPS`). The app doesn't record who
@@ -337,9 +338,14 @@ replace only `#meeting`, links navigate normally unless marked
 `data-in-meeting`; every five seconds the region is morphed with the
 server's, except while somebody types or has the panel or a section open
 (paused longer than one check, a notice says so, `#meeting-paused`).
-A modal (the minutes) doesn't stop it: it's outside of `#meeting`.
-Left: agenda (adding items as its last line), attendees, elections,
-proposals. Right: the rounds and the item being processed. An ended
+Modals don't stop it: they're outside of `#meeting`.
+Left: agenda (adding items as its last line, completed items struck
+through), attendees, elections, proposals. Right: the rounds, in
+tactical meetings the results of the completed items (a scrolling stack
+anchored at the newest, `_results.html`), the item being processed, and
+the notes at the bottom (what doesn't belong to an agenda item, e.g. a
+special meeting's intent; the secretary's textarea saves itself,
+`data-autosave`). An ended
 meeting shows its outputs like its mail (`meetings/outputs.py`) and
 doesn't change anymore (`runnable_meeting()`).
 `meetings/test_e2e.py` covers it in a browser.
@@ -410,7 +416,7 @@ the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves
 roles or policies into or out of, `mails.moved_between()`), domain policy changes (section 3), and when a meeting ends
-its outputs (adopted proposals, elections, minutes, tactical outcomes;
+its outputs (adopted proposals, elections, notes, tactical outcomes;
 also to the attendees and, like adopting async, the holders of roles
 the adopted proposals changed, removed or moved away, also deeper inside:
 roles of a removed circle, core roles of a circle turned back, and the
@@ -504,7 +510,7 @@ only setting is `User.notify_all` ("everything in all circles").
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
   policies of a domain and settings on the role's page, a holder's focus,
-  a draft's tension, a meeting's minutes, and a role's holders (a card
+  a draft's tension, and a role's holders (a card
   on its page: assigning, the focus and removing, confirmed first, back
   to the page with `?next=`; a circle's page lists its roles' holders,
   changed on their pages), and the confirmations of deleting metrics,
@@ -635,7 +641,7 @@ Deliberately not modelled:
   always elects among the members and one Rep.
 - **Special governance meetings** (5.4): a meeting requested for a
   stated intent, limited to certain changes; the request goes into the
-  calendar and the minutes, the app doesn't limit what it adopts.
+  calendar and the notes, the app doesn't limit what it adopts.
 - **The anchor circle's own governance** (1.3.3): the constitution only
   lets the anchor change its purpose and clarify its accountabilities,
   by policy; here the board of directors decides, the app lets the
@@ -648,7 +654,7 @@ Deliberately not modelled:
   end meetings explicitly.
 - **Process breakdowns** (5.5): rare; the super-circle's Facilitator
   stands in, an admin assigns an additional Circle Lead, the declaration
-  goes into the minutes.
+  goes into the notes.
 
 ## Backlog
 
