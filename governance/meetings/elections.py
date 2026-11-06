@@ -77,7 +77,8 @@ def _record_election(meeting, role, user, term_ends_on):
 
 def due_elections(circles, *, day=None):
     """``(role, assignment)`` of elected roles whose term ends within 30 days
-    or which nobody holds (``assignment`` is None then)"""
+    or which nobody holds (``assignment`` is None then); holders without a
+    term (the role became elected while they held it) too"""
     day = day or timezone.localdate()
     limit = day + dt.timedelta(days=REMINDER_DAYS)
     result = []
@@ -90,7 +91,7 @@ def due_elections(circles, *, day=None):
         result.extend(
             (role, assignment)
             for assignment in assignments
-            if assignment.elected_until and assignment.elected_until <= limit
+            if not assignment.elected_until or assignment.elected_until <= limit
         )
     return result
 
@@ -113,6 +114,12 @@ class ElectionForm(ModelForm):
             days=365
         )
         self.fields["term_ends_on"].help_text = _("The day the term ends.")
+
+    def clean_term_ends_on(self):
+        term_ends_on = self.cleaned_data["term_ends_on"]
+        if term_ends_on <= timezone.localdate():
+            raise forms.ValidationError(_("The term ends in the future."))
+        return term_ends_on
 
     def clean(self):
         data = super().clean()

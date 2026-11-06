@@ -141,6 +141,36 @@ class ElectionsTest(TestCase):
         self.client.force_login(outsider)  # Not a member of the circle
         self.assertEqual(self.client.post(url, {}).status_code, 403)
 
+    def test_held_without_a_term(self):
+        """A role becoming elected while somebody holds it: its holder has no
+        term, the role is due for an election"""
+        cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        Assignment.objects.create(role=cook, user=self.bob)
+        Role.objects.filter(pk=cook.pk).update(is_elected_by_policy=True)
+        self.assertIn(
+            (cook, self.bob),
+            [(role, a and a.user) for role, a in due_elections([self.kitchen])],
+        )
+        self.client.force_login(self.ada)
+        self.assertContains(
+            self.client.get(self.kitchen.get_absolute_url()), "not elected yet"
+        )
+
+    def test_term_in_the_future(self):
+        self.client.force_login(self.ada)
+        self.client.post(
+            f"/meetings/{self.meeting.pk}/elections/",
+            {
+                "role": self.secretary.pk,
+                "user": self.bob.pk,
+                "term_ends_on": "2026-12-07",
+            },
+        )
+        self.assertFalse(Election.objects.exists())
+        self.assertEqual(
+            Assignment.objects.current().get(role=self.secretary).user, self.ada
+        )
+
     def test_elected_by_policy(self):
         cook = Role.objects.create(name="Cook", circle=self.kitchen)
         self.assertFalse(cook.is_elected)

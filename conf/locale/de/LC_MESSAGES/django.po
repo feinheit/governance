@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:12+0100\n"
+"POT-Creation-Date: 2026-11-06 15:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -301,6 +301,10 @@ msgstr "Meetings"
 #: governance/meetings/elections.py
 msgid "The day the term ends."
 msgstr "Der letzte Tag der Amtszeit."
+
+#: governance/meetings/elections.py
+msgid "The term ends in the future."
+msgstr "Die Amtszeit endet in der Zukunft."
 
 #: governance/meetings/elections.py
 msgid "A Circle Lead can't be the Circle Rep."
@@ -2062,6 +2066,10 @@ msgid "term ends on %(date)s"
 msgstr "Amtszeit endet am %(date)s"
 
 #: governance/templates/meetings/_due_elections.html
+msgid "not elected yet"
+msgstr "noch nicht gewählt"
+
+#: governance/templates/meetings/_due_elections.html
 #: governance/templates/notifications/elections_due.txt
 msgid "nobody elected"
 msgstr "niemand gewählt"
@@ -2258,6 +2266,11 @@ msgid "Tactical Meetings"
 msgstr "Tactical Meetings"
 
 #: governance/templates/meetings/meeting_list.html
+#: governance/templates/roles/role_detail.html
+msgid "Join the running meeting"
+msgstr "Zum laufenden Meeting"
+
+#: governance/templates/meetings/meeting_list.html
 msgid "No meetings."
 msgstr "Keine Meetings."
 
@@ -2301,6 +2314,11 @@ msgstr "Diese gewählten Rollen brauchen bald eine Wahl in einem Governance Meet
 #, python-format
 msgid "%(user)s, term ends on %(date)s"
 msgstr "%(user)s, Amtszeit endet am %(date)s"
+
+#: governance/templates/notifications/elections_due.txt
+#, python-format
+msgid "%(user)s, not elected yet"
+msgstr "%(user)s, noch nicht gewählt"
 
 #: governance/templates/notifications/meeting_ended.txt
 #, python-format
@@ -2799,10 +2817,6 @@ msgstr "Die Rolle regelt ihre Domains selbst, ohne Governance-Prozess. Alle Betr
 #: governance/templates/roles/role_detail.html
 msgid "All meetings"
 msgstr "Alle Meetings"
-
-#: governance/templates/roles/role_detail.html
-msgid "Join the running meeting"
-msgstr "Zum laufenden Meeting"
 
 #: governance/templates/roles/role_detail.html
 msgid "Checklists and metrics"

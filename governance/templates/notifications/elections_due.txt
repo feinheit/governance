@@ -1,5 +1,5 @@
 {% load i18n %}{% autoescape off %}{% translate "These elected roles need an election in a governance meeting soon:" %}
 {% for role, assignment in due %}
-* {{ role }} ({{ role.circle }}): {% if assignment %}{% blocktranslate with user=assignment.user date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}{{ user }}, term ends on {{ date }}{% endblocktranslate %}{% else %}{% translate "nobody elected" %}{% endif %}
+* {{ role }} ({{ role.circle }}): {% if assignment.elected_until %}{% blocktranslate with user=assignment.user date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}{{ user }}, term ends on {{ date }}{% endblocktranslate %}{% elif assignment %}{% blocktranslate with user=assignment.user %}{{ user }}, not elected yet{% endblocktranslate %}{% else %}{% translate "nobody elected" %}{% endif %}
   {{ base_url }}{{ role.get_absolute_url }}{% endfor %}
 {% endautoescape %}

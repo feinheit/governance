@@ -359,7 +359,9 @@ roles elected by policy. Only circle members are candidates, Circle
 Leads aren't the Rep: an unfilled Circle Rep is nobody's (not held by the
 Circle Leads like other unfilled roles, not a role to propose from). Re-electing changes the term, electing somebody else
 ends the previous assignment, a Rep also holds the circle's role in the
-super-circle. Due elections (within 30 days, or nobody elected) show on
+super-circle. Due elections (within 30 days, nobody elected, or held without a
+term, e.g. a role made elected by policy while held; terms end in the
+future) show on
 the circle page and the Facilitator's and Secretary's person pages;
 Facilitators (5.3.5; else Secretaries, else Circle Leads) get a mail
 on Mondays.
@@ -630,8 +632,6 @@ Deliberately not modelled:
 - **Verification** (fourth round, 2026-11-06), open:
   - Bug: removing a proposal from the agenda leaves it `in_meeting` (a
     draft becomes public, an async proposal loses its deadline).
-  - Risks: making a role elected while people
-    hold it (no term, never due); elections accept a term end in the past.
   - Decisions: a mail when the proposer withdraws a published proposal?
     The JSON backup names who responded (responses are anonymous
     elsewhere). A role's domain policies when it becomes a circle.
