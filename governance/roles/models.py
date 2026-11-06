@@ -193,6 +193,8 @@ class Role(models.Model):
                     position=position,
                 )
 
+    create_core_roles.alters_data = True
+
 
 class Accountability(models.Model):
     role = models.ForeignKey(

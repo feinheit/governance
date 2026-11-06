@@ -305,6 +305,9 @@ the apps' initial migrations).
   `cli/skills/` has Claude Code skills using `gov` (e.g.
   `governance-proposal`, a draft from a tension); `governance/test_skills.py`
   checks that their examples of instructions are what the server takes.
+- Model methods changing data without required arguments get
+  `alters_data = True`: templates must not call them (overridden
+  `save()` and `delete()` keep Django's, its `AltersData` copies it).
 - Use `speckenv` to load `.env` files in standalone Python scripts.
 - Pre-commit hooks (via `prek`, not `pre-commit`) run on commit, ruff
   included, and auto-fix formatting. If a commit fails due to formatting,
