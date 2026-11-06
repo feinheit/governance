@@ -977,7 +977,7 @@ body:has(.wb-modal[open]) {
   margin-bottom: 1rem;
 }
 
-.wb-modal h1 {
+.wb-modal .wb-form-page h1 {
   font-size: 1.25rem;
 }
 
