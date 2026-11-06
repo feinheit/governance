@@ -633,6 +633,19 @@ class MeetingE2ETest(LiveServerTestCase):
         """On phones the heading comes first, then the steps and the item
         being processed, the agenda below; its rows stay rows"""
         item = AgendaItem.objects.create(meeting=self.meeting, label="Knives")
+        long = AgendaItem.objects.create(
+            meeting=self.meeting, label="Who sharpens the tools " * 4, position=2
+        )
+        self.meeting.current_item = long
+        self.meeting.step = "agenda"
+        self.meeting.save()
+        page = self.page
+        page.set_viewport_size({"width": 390, "height": 844})
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        # Buttons with an icon don't wrap beside a long text
+        done = page.locator("#current button", has_text="Done").bounding_box()
+        self.assertLess(done["height"], 35)
+
         self.meeting.current_item = item
         self.meeting.step = "agenda"
         self.meeting.save()

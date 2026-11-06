@@ -22,6 +22,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Buttons with an icon keep it beside their label, also beside long
+   texts squeezing them */
+.btn:has(> .bi) {
+  white-space: nowrap;
+}
+
 /* Beside a button's label */
 .btn .bi + span,
 .btn span + .bi {
