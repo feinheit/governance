@@ -623,6 +623,25 @@ Deliberately not modelled:
 
 ## Backlog
 
+- **Verification** (fourth round, 2026-11-06), open:
+  - Bug: the Facilitator is skipped as the Secretary's stand-in (5.3.6 b)
+    in `asks_before_starting()`, the meeting request mail
+    (`notifications/mails.py`) and the start confirmation's names;
+    `meeting_create` gets it right. The "Take over" warning only checks
+    whether a Secretary is assigned.
+  - Bug: removing a proposal from the agenda leaves it `in_meeting` (a
+    draft becomes public, an async proposal loses its deadline).
+  - Bug: an archived circle's meeting list offers starting a meeting,
+    which answers 404; `circle_leads()` of archived circles walks up.
+  - Risks: ended meetings' minutes, steps and attendees change through
+    the views (the page doesn't offer it); the meeting list offers
+    starting while a meeting runs; making a role elected while people
+    hold it (no term, never due); elections accept a term end in the past.
+  - Decisions: a mail when the proposer withdraws a published proposal?
+    The JSON backup names who responded (responses are anonymous
+    elsewhere). A role's domain policies when it becomes a circle.
+  - Meetings: the secretary handles the meeting's buttons, attendees
+    see where the meeting is and read the proposal themselves.
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
