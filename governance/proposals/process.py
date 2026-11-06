@@ -149,6 +149,7 @@ def respond(proposal, user, kind, text=""):
     response = Response.objects.create(
         proposal=proposal, user=user, kind=kind, text=text
     )
+    transaction.on_commit(lambda: mails.response_given(response))
     if kind in {Response.MEETING, Response.OBJECTION}:
         to_meeting(proposal)
     elif kind == Response.CONSENT and everybody_consented(proposal):

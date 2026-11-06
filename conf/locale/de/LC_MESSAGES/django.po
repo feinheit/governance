@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 14:44+0100\n"
+"POT-Creation-Date: 2026-11-06 14:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -582,6 +582,21 @@ msgstr "Vorschlag in %(circle)s: %(proposal)s"
 #, python-format
 msgid "Back to the draft in %(circle)s: %(proposal)s"
 msgstr "Zurück zum Entwurf in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Question or comment in %(circle)s: %(proposal)s"
+msgstr "Frage oder Kommentar in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Answer in %(circle)s: %(proposal)s"
+msgstr "Antwort in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "To discuss in a meeting in %(circle)s: %(proposal)s"
+msgstr "Im Meeting besprechen in %(circle)s: %(proposal)s"
 
 #: governance/notifications/mails.py
 #, python-format
@@ -2108,6 +2123,7 @@ msgstr "Eine Spannung, in ein bis zwei Wörtern"
 #: governance/templates/notifications/proposal_adopted.txt
 #: governance/templates/notifications/proposal_back_to_draft.txt
 #: governance/templates/notifications/proposal_published.txt
+#: governance/templates/notifications/response_given.txt
 #: governance/templates/proposals/proposal_detail.html
 msgid "Tension"
 msgstr "Spannung"
@@ -2259,6 +2275,21 @@ msgstr "%(circle)s wurde entfernt, dein Vorschlag darin wurde zurückgezogen:"
 #, python-format
 msgid "%(circle)s has turned back into a role, your proposal in it has been withdrawn:"
 msgstr "%(circle)s ist wieder eine Rolle, dein Vorschlag darin wurde zurückgezogen:"
+
+#: governance/templates/notifications/response_given.txt
+#, python-format
+msgid "%(user)s wants to discuss the proposal in %(circle)s in a governance meeting. It's not adopted async anymore and waits for the next governance meeting."
+msgstr "%(user)s möchte den Vorschlag in %(circle)s in einem Governance Meeting besprechen. Er wird nicht mehr asynchron angenommen und wartet auf das nächste Governance Meeting."
+
+#: governance/templates/notifications/response_given.txt
+#, python-format
+msgid "%(user)s asks or comments on your proposal in %(circle)s:"
+msgstr "%(user)s fragt oder kommentiert zu deinem Vorschlag in %(circle)s:"
+
+#: governance/templates/notifications/response_given.txt
+#, python-format
+msgid "%(user)s answers on the proposal in %(circle)s you asked about or commented on:"
+msgstr "%(user)s antwortet zum Vorschlag in %(circle)s, zu dem du gefragt oder kommentiert hast:"
 
 #: governance/templates/notifications/roles_changed.txt
 #, python-format

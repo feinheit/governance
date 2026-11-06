@@ -7,7 +7,7 @@ from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.translation import gettext as _, override
+from django.utils.translation import gettext as _, gettext_noop, override
 
 from governance.accounts.models import User
 from governance.proposals.describe import describe
@@ -75,6 +75,40 @@ def proposal_back_to_draft(proposal):
         ),
         "notifications/proposal_back_to_draft.txt",
         proposal_context(proposal),
+    )
+
+
+def response_given(response):
+    """Questions and comments go to the proposer, the proposer's answers to
+    those who asked; requests for a meeting to the proposer and the
+    circle's Secretary (or who stands in), who prepares the meeting.
+    Consents stay silent, adopting sends its own mail."""
+    from governance.proposals.models import Response
+
+    proposal = response.proposal
+    asking = response.user_id != proposal.proposer_id
+    if response.kind == Response.COMMENT and asking:
+        users = User.objects.filter(pk=proposal.proposer_id)
+        subject = gettext_noop("Question or comment in %(circle)s: %(proposal)s")
+    elif response.kind == Response.COMMENT:
+        users = User.objects.filter(
+            pk__in=proposal.responses.filter(kind=Response.COMMENT).values("user")
+        )
+        subject = gettext_noop("Answer in %(circle)s: %(proposal)s")
+    elif response.kind == Response.MEETING:
+        users = User.objects.filter(
+            Q(pk=proposal.proposer_id)
+            | Q(pk__in=stand_ins(proposal.circle, [SECRETARY]))
+        )
+        subject = gettext_noop("To discuss in a meeting in %(circle)s: %(proposal)s")
+    else:
+        return 0
+    return send(
+        users.exclude(pk=response.user_id),
+        # In each recipient's language
+        lambda: _(subject) % {"circle": proposal.circle, "proposal": proposal},
+        "notifications/response_given.txt",
+        proposal_context(proposal) | {"response": response, "asking": asking},
     )
 
 

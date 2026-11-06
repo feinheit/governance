@@ -37,9 +37,11 @@ long as you still hold the role the tension comes from).
 Until the deadline the circle sets, they respond:
 
 - **no objection**
-- **question or comment**: you answer it.
+- **question or comment**: you get a mail and answer it; your answer
+  goes by mail to those who asked or commented.
 - **discuss in a meeting**, if needed with the concern. The proposal then
-  waits for the next governance meeting.
+  waits for the next governance meeting; you and the circle's Secretary
+  get a mail.
 
 When everybody else has no objection, the proposal is adopted right away,
 otherwise in the night after the deadline ("to be adopted on").

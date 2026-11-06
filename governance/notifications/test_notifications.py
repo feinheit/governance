@@ -82,6 +82,54 @@ class NotificationsTest(TestCase):
             ["ada@example.com", "bob@example.com", "eve@example.com"],
         )
 
+    def test_responses(self):
+        """Questions go to the proposer, their answers to those who asked;
+        requests for a meeting to the proposer and the Secretary, who
+        prepares it. Consents stay silent."""
+        secretary = self.kitchen.roles.create(name="Secretary", core_role="secretary")
+        Assignment.objects.create(role=secretary, user=self.zoe)
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            tension="Better name",
+            created_at=timezone.now(),
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{self.cook.pk}/name",
+                    "original_value": "Cook",
+                    "value": "Chef",
+                }
+            ],
+            names={f"roles/{self.cook.pk}": "Cook"},
+        )
+        publish(proposal)
+
+        def sent(user, kind, text=""):
+            mail.outbox = []
+            with self.captureOnCommitCallbacks(execute=True):
+                respond(proposal, user, kind, text)
+            return {m.to[0]: m for m in mail.outbox}
+
+        to = sent(self.ada, Response.COMMENT, "Why Chef?")
+        self.assertEqual(list(to), ["eve@example.com"])
+        self.assertIn("Ada", to["eve@example.com"].body)
+        self.assertIn("Why Chef?", to["eve@example.com"].body)
+        self.assertIn(f"/proposals/{proposal.pk}/", to["eve@example.com"].body)
+
+        # The proposer's answer goes to everybody who asked
+        sent(self.bob, Response.COMMENT, "And when?")
+        to = sent(self.eve, Response.COMMENT, "Shorter, and now.")
+        self.assertEqual(sorted(to), ["ada@example.com", "bob@example.com"])
+        self.assertIn("Shorter, and now.", to["ada@example.com"].body)
+        self.assertIn("Antwort", to["bob@example.com"].subject)  # German
+
+        self.assertEqual(sent(self.ada, Response.CONSENT), {})
+
+        to = sent(self.bob, Response.MEETING, "Too short")
+        self.assertEqual(sorted(to), ["eve@example.com", "zoe@example.com"])
+        self.assertIn("Too short", to["zoe@example.com"].body)
+
     def test_setting(self):
         self.client.force_login(self.zoe)
         response = self.client.get(f"/people/{self.zoe.pk}/")

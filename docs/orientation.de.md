@@ -72,7 +72,9 @@ Rolle hast (auch als Circle Lead oder Circle Rep eines Sub-Kreises):
 veröffentlichte und angenommene Vorschläge, geänderte Policies einer
 Domain und die Ergebnisse von Meetings. Du erfährst auch von Rollen, die
 du erhältst oder abgibst, und als Secretary, wer deinem Kreis beitritt
-oder ihn verlässt. Auf deiner Personenseite kannst du dich über alles in
+oder ihn verlässt. Wer einen Vorschlag macht, erfährt von Fragen und
+Wünschen nach einem Meeting, der Secretary von letzteren, und auf deine
+Fragen kommt die Antwort per Mail. Auf deiner Personenseite kannst du dich über alles in
 allen Kreisen informieren lassen.
 
 ## API

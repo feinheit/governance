@@ -41,9 +41,11 @@ Spannung kommt). Bis zur Frist, die der Kreis festlegt, antworten
 sie:
 
 - **kein Einwand**
-- **Frage oder Kommentar**: du beantwortest sie.
+- **Frage oder Kommentar**: du erhältst eine Mail und beantwortest sie;
+  deine Antwort geht per Mail an alle, die gefragt oder kommentiert haben.
 - **im Meeting besprechen**, wenn nötig mit dem Bedenken. Der Vorschlag
-  wartet dann auf das nächste Governance Meeting.
+  wartet dann auf das nächste Governance Meeting; du und der Secretary des
+  Kreises erhalten eine Mail.
 
 Sind alle anderen ohne Einwand, ist der Vorschlag sofort angenommen,
 sonst in der Nacht nach der Frist ("wird angenommen am"). Einwände gibt es
