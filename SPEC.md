@@ -381,7 +381,9 @@ empty ones). Others' proposals wait for their proposers, whom members ask
 by requesting a meeting; only those running the meeting also bring
 others' waiting and async proposals, in an optgroup of their own (the
 proposer asked them and isn't there). The select starts empty. Removing
-the item puts them back (`AgendaItem.proposal_status`); an async proposal
+the item puts them back (`AgendaItem.proposal_status`, waiting ones and
+tensions turned into proposals wait for the next meeting, none of them
+points to this one anymore); an async proposal
 the meeting processed (`AgendaItem.step`, maybe amended) becomes its
 proposer's draft instead, publishing it again starts a new round with a
 new deadline: the old consents were to another version (5.3). The secretary processes items (clicking
@@ -722,9 +724,6 @@ Deliberately not modelled:
     proposals brought into or created in a meeting don't show as pending
     on role pages, amended ones keep roles they no longer change (history,
     the meeting's mail to their holders).
-  - B3: a proposal removed from a running meeting's agenda keeps
-    `meeting` (waiting ones, tensions turned into proposals): its page says
-    it's amended in that meeting.
   - B4: the app's async process moves proposals imported from GlassFrog
     to "waiting for a meeting" (the last consent, the deadline) until the
     nightly import sets them back. To decide, maybe until the switchover.

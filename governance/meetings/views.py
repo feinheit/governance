@@ -580,17 +580,15 @@ def agenda_remove(request, pk):
     if not next((i.can_remove for i in context["agenda"] if i.pk == item.pk), False):
         raise PermissionDenied
     proposal = item.proposal
-    if (
-        proposal
-        and proposal.status == Proposal.IN_MEETING
-        and item.proposal_status in {Proposal.DRAFT, Proposal.PUBLISHED}
-    ):
-        # Back where it was: a draft stays private, an async proposal
+    if proposal and proposal.status == Proposal.IN_MEETING:
+        # Back where it was, not amended in this meeting anymore: a draft
+        # stays private, one waiting for a meeting (also a tension turned
+        # into a proposal here) waits for the next one, an async proposal
         # continues with its deadline unless the meeting processed (maybe
         # amended) it: then its proposer gets it as a draft, publishing it
         # again starts a new round (brought to a meeting, it left the async
         # process, 5.3)
-        proposal.status = item.proposal_status
+        proposal.status = item.proposal_status or Proposal.IN_MEETING
         if proposal.status == Proposal.PUBLISHED and item.step:
             proposal.status = Proposal.DRAFT
             proposal.published_at = proposal.deadline = None

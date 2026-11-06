@@ -332,6 +332,10 @@ class ProcessingTest(TestCase):
             self.assertEqual(proposal.status, status)
         self.assertEqual(published.deadline, deadline)
         self.assertIsNone(draft.meeting)
+        # Not amended in this meeting anymore, its page doesn't point there
+        self.assertIsNone(self.proposal.meeting)
+        response = self.client.get(self.proposal.get_absolute_url())
+        self.assertNotIn("amended_in", response.context)
 
     def test_removed_after_processing(self):
         """An async proposal the meeting processed (and maybe amended) isn't
