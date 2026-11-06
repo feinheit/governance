@@ -113,10 +113,14 @@ class DomainPoliciesTest(TestCase):
         )
         self.assertEqual(Proposal.objects.count(), 2)
 
+        # Asked first, e.g. in a modal
+        remove_url = f"/roles/{self.admin.pk}/domain-policies/{policy.pk}/remove/"
+        self.assertContains(
+            self.client.get(remove_url), "Remove the policy Server access?"
+        )
+        self.assertEqual(Proposal.objects.count(), 2)
         with self.captureOnCommitCallbacks(execute=True):
-            self.client.post(
-                f"/roles/{self.admin.pk}/domain-policies/{policy.pk}/remove/"
-            )
+            self.client.post(remove_url)
         policy.refresh_from_db()
         self.assertIsNotNone(policy.archived_on)
         self.assertEqual(Proposal.objects.latest("pk").instructions[0]["op"], "remove")

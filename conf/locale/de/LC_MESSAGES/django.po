@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:01+0100\n"
+"POT-Creation-Date: 2026-11-06 15:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1325,6 +1325,27 @@ msgstr "Neue Policy von %(role)s"
 msgid "The role regulates its domains with its own policies, without a governance process (constitution 1.3.2). Everybody in %(circle)s and its sub-circles is informed."
 msgstr "Die Rolle regelt ihre Domains mit eigenen Policies, ohne Governance-Prozess (Verfassung 1.3.2). Alle in %(circle)s und seinen Sub-Kreisen werden informiert."
 
+#: governance/roles/domain_policies.py
+#, python-format
+msgid "Remove the policy %(policy)s?"
+msgstr "Policy %(policy)s entfernen?"
+
+#: governance/roles/domain_policies.py
+#, python-format
+msgid "Everybody in %(circle)s and its sub-circles is informed."
+msgstr "Alle in %(circle)s und seinen Sub-Kreisen werden informiert."
+
+#: governance/roles/domain_policies.py
+#: governance/templates/meetings/_agenda.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/proposals/_drafting.html
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignment_end.html
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/role_detail.html
+msgid "Remove"
+msgstr "Entfernen"
+
 #: governance/roles/editing.py
 #, python-format
 msgid "Strategy of %(circle)s"
@@ -1348,6 +1369,24 @@ msgstr "Checklisten-Punkt von %(role)s"
 #, python-format
 msgid "Link of %(role)s"
 msgstr "Link von %(role)s"
+
+#: governance/roles/editing.py
+msgid "Delete this metric?"
+msgstr "Diese Metrik löschen?"
+
+#: governance/roles/editing.py
+msgid "Delete this checklist item?"
+msgstr "Diesen Checklistenpunkt löschen?"
+
+#: governance/roles/editing.py
+msgid "Delete this link?"
+msgstr "Diesen Link löschen?"
+
+#: governance/roles/editing.py governance/templates/accounts/api_tokens.html
+#: governance/templates/roles/_role_item.html
+#: governance/templates/roles/role_detail.html
+msgid "Delete"
+msgstr "Löschen"
 
 #: governance/roles/models.py
 msgid "name"
@@ -1611,12 +1650,6 @@ msgid "Copy the token now, it will not be shown again:"
 msgstr "Kopiere das Token jetzt, es wird nicht mehr angezeigt:"
 
 #: governance/templates/accounts/api_tokens.html
-#: governance/templates/roles/_role_item.html
-#: governance/templates/roles/role_detail.html
-msgid "Delete"
-msgstr "Löschen"
-
-#: governance/templates/accounts/api_tokens.html
 msgid "No API tokens."
 msgstr "Keine API-Tokens."
 
@@ -1831,16 +1864,6 @@ msgstr "Nach oben"
 #: governance/templates/meetings/_agenda.html
 msgid "Move down"
 msgstr "Nach unten"
-
-#: governance/templates/meetings/_agenda.html
-#: governance/templates/meetings/meeting_detail.html
-#: governance/templates/proposals/_drafting.html
-#: governance/templates/roles/_holders_card.html
-#: governance/templates/roles/assignment_end.html
-#: governance/templates/roles/assignments.html
-#: governance/templates/roles/role_detail.html
-msgid "Remove"
-msgstr "Entfernen"
 
 #: governance/templates/meetings/_agenda.html
 msgid "Nothing on the agenda."

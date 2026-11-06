@@ -15,7 +15,6 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext
-from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
 from governance.history.update import update_today
@@ -167,13 +166,29 @@ def domain_policy_edit(request, pk, policy_pk=None):
     )
 
 
-@require_POST
 @transaction.atomic
 def domain_policy_remove(request, pk, policy_pk):
+    """Removing a policy, confirmed first (in a modal on the role's page)"""
     role = get_object_or_404(Role, pk=pk)
-    if not can_change_domain_policies(request.user, role):
+    if not (right := can_change_domain_policies(request.user, role)):
         raise PermissionDenied
     policy = get_object_or_404(Policy.objects.active(), pk=policy_pk, role=role)
+    if request.method != "POST":
+        return render(
+            request,
+            "generic/confirm.html",
+            {
+                "question": gettext("Remove the policy %(policy)s?")
+                % {"policy": policy},
+                "help": gettext(
+                    "Everybody in %(circle)s and its sub-circles is informed."
+                )
+                % {"circle": role.circle},
+                "submit_label": gettext("Remove"),
+                "right": right,
+                "role": role,
+            },
+        )
     policy.archived_on = timezone.localdate()
     policy.save(update_fields=["archived_on"])
     record(

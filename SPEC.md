@@ -478,7 +478,9 @@ only setting is `User.notify_all` ("everything in all circles").
   a draft's tension, a meeting's minutes, and a role's holders (a card
   on its page: assigning, the focus and removing, confirmed first, back
   to the page with `?next=`; a circle's page lists its roles' holders,
-  changed on their pages). A `<dialog>` loaded by htmx
+  changed on their pages), and the confirmations of deleting metrics,
+  checklist items and links and of removing a domain's policy
+  (`generic/confirm.html`, GET asks, POST does it). A `<dialog>` loaded by htmx
   with the `HX-Modal` header (`frontend/modal.js`,
   `governance/modals.py`), the views stay as they are:
   `generic/object_form.html` renders only the form, redirects become

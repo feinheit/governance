@@ -267,6 +267,13 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertEqual(page.locator("#modal[open]").count(), 0)
         self.assertEqual(ChecklistItem.objects.get().description, "Sharpen the knives")
 
+        # Deleting asks first
+        page.locator("a[data-modal][href$='/delete/']").click()
+        page.wait_for_selector("#modal[open] >> text=Delete this checklist item?")
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("main >> text=Sharpen the knives", state="detached")
+        self.assertFalse(ChecklistItem.objects.exists())
+
         # In a meeting its updates continue behind the modal
         page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
         page.locator("a[data-modal][href$='/edit/']").click()

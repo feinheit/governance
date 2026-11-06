@@ -5,7 +5,6 @@ from django import forms
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext
-from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
 from governance.roles.models import ChecklistItem, Link, Metric, Role
@@ -109,13 +108,31 @@ def item_edit(request, kind, pk=None, role_pk=None):
     )
 
 
-@require_POST
 def item_delete(request, kind, pk):
+    """Deleting a metric, checklist item or link, confirmed first (in a
+    modal on the role's page)"""
     model = MODELS.get(kind)
     if model is None:
         raise PermissionDenied
     item = get_object_or_404(model.objects.select_related("role"), pk=pk)
-    if not can_edit_items(request.user, item.role, model):
+    if not (right := can_edit_items(request.user, item.role, model)):
         raise PermissionDenied
-    item.delete()
-    return redirect(item.role)
+    if request.method == "POST":
+        item.delete()
+        return redirect(item.role)
+    return render(
+        request,
+        "generic/confirm.html",
+        {
+            "question": {
+                Metric: gettext("Delete this metric?"),
+                ChecklistItem: gettext("Delete this checklist item?"),
+                Link: gettext("Delete this link?"),
+            }[model],
+            "help": item.role,
+            "text": item,
+            "submit_label": gettext("Delete"),
+            "right": right,
+            "role": item.role,
+        },
+    )

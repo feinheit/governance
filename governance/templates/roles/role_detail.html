@@ -146,12 +146,11 @@
                       href="{% url 'domain_policy' role.pk policy.pk %}"
                       data-modal
                     >{% translate "Change" %}</a>
-                    <form method="post" action="{% url 'domain_policy_remove' role.pk policy.pk %}">
-                      {% csrf_token %}
-                      <button type="submit" {% button_class can_change_domain_policies "btn-destructive" %}>
-                        {% translate "Remove" %}
-                      </button>
-                    </form>
+                    <a
+                      {% button_class can_change_domain_policies "btn-destructive" %}
+                      href="{% url 'domain_policy_remove' role.pk policy.pk %}"
+                      data-modal
+                    >{% translate "Remove" %}</a>
                   {% endif %}
                 </div>
               </details>
@@ -262,12 +261,11 @@
                       href="{% url 'role_item' 'links' link.pk %}"
                       data-modal
                     >{% translate "Edit" %}</a>
-                    <form method="post" action="{% url 'role_item_delete' 'links' link.pk %}">
-                      {% csrf_token %}
-                      <button type="submit" {% button_class can_edit_links "btn-destructive" %}>
-                        {% translate "Delete" %}
-                      </button>
-                    </form>
+                    <a
+                      {% button_class can_edit_links "btn-destructive" %}
+                      href="{% url 'role_item_delete' 'links' link.pk %}"
+                      data-modal
+                    >{% translate "Delete" %}</a>
                   </div>
                 {% endif %}
               </li>

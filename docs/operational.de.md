@@ -33,7 +33,8 @@ Einiges ändert sich ohne Governance:
   Buttons für das, was die Verfassung anderen überlässt, sind für Admins
   und den stellvertretenden Secretary gelb ("Als Admin" beim Darüberfahren),
   und ihre Formulare sagen es: Nur verwenden, wenn du weisst, dass es nötig
-  ist. Buttons, die etwas löschen oder entfernen, sind rot.
+  ist. Buttons, die etwas löschen oder entfernen, sind rot und fragen
+  zuerst nach.
 - Die Einstellungen setzen um, was Policies des Kreises festlegen.
   Sub-Kreise ohne eigene Frist für asynchrone Vorschläge verwenden die
   des übergeordneten Kreises, deshalb sollte die Policy, die sie

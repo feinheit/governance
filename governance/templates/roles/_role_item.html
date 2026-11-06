@@ -11,10 +11,11 @@
   {% if can_edit %}
     <div class="d-flex gap-1 flex-shrink-0">
       <a {% button_class can_edit %} href="{% url 'role_item' kind item.pk %}" data-modal>{% translate "Edit" %}</a>
-      <form method="post" action="{% url 'role_item_delete' kind item.pk %}">
-        {% csrf_token %}
-        <button type="submit" {% button_class can_edit "btn-destructive" %}>{% translate "Delete" %}</button>
-      </form>
+      <a
+        {% button_class can_edit "btn-destructive" %}
+        href="{% url 'role_item_delete' kind item.pk %}"
+        data-modal
+      >{% translate "Delete" %}</a>
     </div>
   {% endif %}
 </li>

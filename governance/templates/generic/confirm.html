@@ -1,0 +1,37 @@
+{% extends modal|yesno:"modal.html,base.html" %}
+{% load i18n %}
+{% comment %}
+  Confirming something destructive (deleting, removing), e.g. in a modal
+  opened from the role's page (governance/modals.py): ``question``, the
+  object's ``text``, a ``help`` line, ``submit_label`` and the ``right`` of
+  roles.permissions; cancelling goes back to ``role``.
+{% endcomment %}
+{% block title %}{{ question }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0" {% if modal %}id="modal-title"{% endif %}>{{ question }}</h1>
+        {% if help %}<div class="wb-meta"><span>{{ help }}</span></div>{% endif %}
+      </div>
+    </div>
+    {% if text %}<div class="wb-description mb-3">{{ text }}</div>{% endif %}
+    {% include "generic/_right.html" %}
+    <form
+      method="post"
+      action="{{ request.get_full_path }}"
+      {% if modal %}
+        hx-post="{{ request.get_full_path }}"
+        hx-target="#modal"
+        hx-headers='{"HX-Modal": "true"}'
+      {% endif %}
+    >
+      {% csrf_token %}
+      <div class="wb-form-actions">
+        <button type="submit" class="btn btn-danger">{{ submit_label }}</button>
+        {% include "meetings/_confirm_cancel.html" with class="btn-quiet" %}
+      </div>
+    </form>
+  </div>
+{% endblock content %}

@@ -64,6 +64,12 @@ class EditingTest(TestCase):
             self.client.post(f"/items/metrics/{metric.pk}/delete/").status_code, 403
         )
         self.client.force_login(self.bob)
+        # Asked first, e.g. in a modal
+        self.assertContains(
+            self.client.get(f"/items/metrics/{metric.pk}/delete/"),
+            "Delete this metric?",
+        )
+        self.assertTrue(Metric.objects.exists())
         self.client.post(f"/items/metrics/{metric.pk}/delete/")
         self.assertFalse(Metric.objects.exists())
 
