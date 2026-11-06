@@ -318,6 +318,39 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("#current >> text=Done 1")
         self.assertEqual(self.errors, [])
 
+    def test_amending_scrolls_to_the_form(self):
+        """The form opened below a long list of roles comes into view"""
+        for number in range(30):
+            Role.objects.create(name=f"Role {number:02}", circle=self.kitchen)
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            role=self.cook,
+            tension="Roles",
+            status=Proposal.IN_MEETING,
+            meeting=self.meeting,
+            created_at=timezone.now(),
+        )
+        AgendaItem.objects.create(
+            meeting=self.meeting, proposal=proposal, label="Roles"
+        )
+        page = self.page
+        page.set_viewport_size({"width": 1280, "height": 800})
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        page.locator("#agenda li.wb-row-link").first.click()  # Processing it
+        page.wait_for_selector(".wb-amend-area")
+        page.locator(".wb-amend-area summary", has_text="role").click()
+        page.locator(".wb-amend-area li", has_text="Role 05").locator(
+            "a.btn", has_text="Change"
+        ).click()
+        page.wait_for_selector("#amend form")
+        page.wait_for_function(
+            "(() => { const top = document.querySelector('#amend').getBoundingClientRect().top;"
+            " return top >= 0 && top < window.innerHeight / 2 })()",
+            timeout=2000,
+        )
+        self.assertEqual(self.errors, [])
+
     def test_paused_notice(self):
         """Updates paused for longer than a moment (typing, something open):
         a notice says so until it continues"""

@@ -171,12 +171,12 @@
       </div>
       {% if can_amend %}
         {# The secretary amends the proposal here: the forms open in the #}
-        {# panel, saving reloads the meeting (drafting.done()) #}
+        {# panel and scroll into view, saving reloads the meeting (drafting.done()) #}
         <div
           class="card-body border-top wb-amend-area"
           hx-target:inherited="#amend"
           hx-select:inherited=".wb-form-page"
-          hx-swap:inherited="innerHTML show:none"
+          hx-swap:inherited="innerHTML show:top"
           hx-push-url:inherited="false"
         >
           {% include "proposals/_drafting.html" with in_meeting=True %}
