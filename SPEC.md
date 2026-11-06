@@ -476,7 +476,8 @@ constitution doesn't say so. Superusers set things up.
 
 django-ninja at `/api/` (docs at `/api/docs`), the same rules as the web
 interface, session or personal tokens (`APIToken`, read only or read and
-write, 90 days, created on the API tokens page): `GET circles/`, `GET
+write, valid until 30 days after their last use, created on the API
+tokens page): `GET circles/`, `GET
 roles/{id}/`, `GET search/`, `GET proposals/` and `proposals/{id}/`, `POST
 proposals/` (a draft), `PATCH proposals/{id}/`, `POST
 proposals/{id}/publish/`, `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET me/`
@@ -587,13 +588,12 @@ Deliberately not modelled:
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
-- **JSON backup**: convert every commit of the GlassFrog export to the
-  backup's format (prepared, not run), then run `scripts/fetch_backup.py`
-  daily on the fetcher's server instead of `fetch_glassfrog.py`. API
-  tokens expire after 90 days: renew the backup's token, or let tokens
-  in use extend themselves.
 - **Switchover**: a final import, update the handbook's links, cancel
-  GlassFrog, then stop the nightly `import_glassfrog --api`. Let the
+  GlassFrog, then stop the nightly `import_glassfrog --api`. Run
+  `scripts/fetch_backup.py` daily on the fetcher's server (with a read
+  only token) instead of `fetch_glassfrog.py`, into a new repository: to
+  consider then or afterwards, converting the GlassFrog export's commits
+  into the backup's format. Let the
   open imported proposals be adopted (`adopt()` refuses every proposal
   with a `glassfrog_id` until then). Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog

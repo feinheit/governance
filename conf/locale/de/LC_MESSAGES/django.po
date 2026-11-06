@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:51+0100\n"
+"POT-Creation-Date: 2026-11-06 13:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1615,8 +1615,8 @@ msgstr "Das Kommandozeilen-Tool <code>gov</code> möchte in deinem Namen auf die
 
 #: governance/templates/accounts/cli_login.html
 #, python-format
-msgid "The access expires after %(days)s days, <code>gov</code> will ask you to authorize it again."
-msgstr "Der Zugriff läuft nach %(days)s Tagen ab, <code>gov</code> bittet dich dann, es erneut zu berechtigen."
+msgid "The access expires %(days)s days after its last use, <code>gov</code> will ask you to authorize it again then."
+msgstr "Der Zugriff läuft %(days)s Tage nach der letzten Verwendung ab, <code>gov</code> bittet dich dann, es erneut zu berechtigen."
 
 #: governance/templates/accounts/cli_login.html
 msgid "gov can create, change and publish proposals in your name."

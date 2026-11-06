@@ -20,7 +20,8 @@ for tools and agents which only answer questions:
     gov login https://governance.feinheit.ch --read
 
 Check it with `gov me`, which also lists your roles with their IDs. Access
-expires after 90 days; `gov` then opens the browser again by itself. On
+expires 30 days after its last use; `gov` then opens the browser again by
+itself. On
 computers without a browser, create a token on the "API tokens" page and
 use `gov login URL --token`.
 

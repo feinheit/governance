@@ -73,7 +73,8 @@ allen Kreisen informieren lassen.
 ## API
 
 Für Skripte und andere Tools: unter "API" erstellst du ein Token (nur
-lesen oder lesen und schreiben, 90 Tage gültig). Die API liest die
+lesen oder lesen und schreiben, gültig bis 30 Tage nach der letzten
+Verwendung). Die API liest die
 Struktur und Vorschläge und legt Entwürfe an; ihre Dokumentation steht
 unter `/api/docs`.
 

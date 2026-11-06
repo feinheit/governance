@@ -71,7 +71,7 @@ can choose to be informed about everything in all circles.
 ## API
 
 For scripts and other tools: under "API" you create a token (read only,
-or read and write, valid for 90 days). The API reads the structure and
+or read and write, valid until 30 days after its last use). The API reads the structure and
 proposals and creates drafts; its documentation is at `/api/docs`.
 
 The command line tool `gov` uses the API and gets its token by itself

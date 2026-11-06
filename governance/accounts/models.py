@@ -78,8 +78,10 @@ class User(AbstractBaseUser):
 
 
 # Created on the API tokens page or by `gov login` (/cli-login/), which asks
-# for a new one through the browser when the old one expired
-API_TOKEN_LIFETIME = dt.timedelta(days=90)
+# for a new one through the browser when the old one expired. Each use
+# extends it: a token in use (e.g. of the daily backup) stays valid, one
+# nobody uses expires.
+API_TOKEN_LIFETIME = dt.timedelta(days=30)
 
 
 def _api_token_expiry():
@@ -105,7 +107,10 @@ class APITokenQuerySet(models.QuerySet):
         )
         if not token:
             return None
-        self.filter(pk=token.pk).update(last_used_at=timezone.now())
+        now = timezone.now()
+        self.filter(pk=token.pk).update(
+            last_used_at=now, expires_at=now + API_TOKEN_LIFETIME
+        )
         return token
 
 

@@ -36,6 +36,29 @@ class APITest(TestCase):
             headers={"authorization": f"Bearer {secret or self.secret}"},
         )
 
+    def test_tokens_extend_themselves(self):
+        """A token in use stays valid, one nobody uses expires after 30 days"""
+        import datetime as dt
+
+        import time_machine
+        from django.utils import timezone
+
+        token = APIToken.objects.for_secret(self.read_secret)
+        start = timezone.now()
+        self.assertEqual((token.expires_at - start).days, 29)
+        with time_machine.travel(start + dt.timedelta(days=20)):
+            self.assertEqual(
+                self.api("get", "/api/me/", secret=self.read_secret).status_code, 200
+            )
+        with time_machine.travel(start + dt.timedelta(days=45)):
+            self.assertEqual(
+                self.api("get", "/api/me/", secret=self.read_secret).status_code, 200
+            )
+        with time_machine.travel(start + dt.timedelta(days=80)):
+            self.assertEqual(
+                self.api("get", "/api/me/", secret=self.read_secret).status_code, 401
+            )
+
     def test_tokens_page(self):
         self.assertRedirects(
             self.client.get("/accounts/api-tokens/"),
