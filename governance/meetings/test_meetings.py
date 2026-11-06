@@ -398,51 +398,63 @@ class MeetingsTest(TestCase):
             published_at=timezone.now(),
             deadline=timezone.now(),
         )
+        # An empty draft has nothing to bring
+        Proposal.objects.create(
+            circle=self.kitchen, proposer=self.eve, created_at=timezone.now()
+        )
         url = f"/meetings/{meeting.pk}/agenda/add/"
         self.client.force_login(self.eve)
-        self.assertContains(self.client.get(meeting.get_absolute_url()), "Async")
+        # Only her own proposals: others' wait for their proposers (5.3,
+        # members request a meeting), Ada's draft is private anyway
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "More salt")
+        self.assertNotContains(response, "Async")
+        self.assertNotContains(response, "Objected")
+        self.assertNotContains(response, "<optgroup")
+        self.assertNotContains(response, "(no tension)")
+        # Nothing chosen at first
+        self.assertContains(response, '<option value="">Proposal …</option>')
+        self.assertEqual(
+            self.client.post(url, {"proposal": published.pk}).status_code, 404
+        )
+        self.client.post(url, {"label": "Dishes"})
+        self.client.post(url, {"proposal": draft.pk})
+        draft.refresh_from_db()
+        self.assertEqual((draft.status, draft.meeting), (Proposal.IN_MEETING, meeting))
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "Dishes")
+        # The secretary handles the meeting's buttons, not Eve
+        self.assertNotContains(response, "Move up")
+
+        # The secretary also brings others' proposals, set apart
+        self.client.force_login(self.bob)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertNotContains(response, "Your proposals")  # Bob has none
+        self.assertRegex(
+            response.content.decode(),
+            r'<optgroup label="Others\' proposals">\s*<option[^>]*>Objected'
+            r" \(waiting for a meeting, Ada\)</option>\s*<option[^>]*>Async",
+        )
         self.client.post(url, {"proposal": published.pk})
         published.refresh_from_db()
         # Brought into the meeting, the async process ends
         self.assertEqual(
             (published.status, published.meeting), (Proposal.IN_MEETING, meeting)
         )
-        meeting.agenda_items.all().delete()
-        response = self.client.get(meeting.get_absolute_url())
-        self.assertContains(response, "More salt")  # Her own draft
-        self.assertContains(response, "Objected")
-        self.client.post(url, {"label": "Dishes"})
-        self.client.post(url, {"proposal": draft.pk})
         self.client.post(url, {"proposal": waiting.pk})
-        draft.refresh_from_db()
-        self.assertEqual((draft.status, draft.meeting), (Proposal.IN_MEETING, meeting))
         self.assertEqual(
             list(meeting.agenda_items.values_list("label", "position")),
-            [("Dishes", 1), ("More salt", 2), ("Objected", 3)],
+            [("Dishes", 1), ("More salt", 2), ("Async", 3), ("Objected", 4)],
         )
-        response = self.client.get(meeting.get_absolute_url())
-        self.assertContains(response, "Dishes")
-        # The secretary handles the meeting's buttons, not Eve
-        self.assertNotContains(response, "Move up")
 
-        # Ada's own draft isn't offered to Eve
-        other = Proposal.objects.create(
-            circle=self.kitchen,
-            proposer=self.ada,
-            tension="Secret",
-            created_at=timezone.now(),
-        )
-        self.assertEqual(self.client.post(url, {"proposal": other.pk}).status_code, 404)
-
-        self.client.force_login(self.bob)  # The Secretary
         items = list(meeting.agenda_items.all())
-        self.client.post(f"/agenda/{items[2].pk}/move/", {"direction": "up"})
+        self.client.post(f"/agenda/{items[3].pk}/move/", {"direction": "up"})
         self.assertEqual(
             list(meeting.agenda_items.values_list("label", flat=True)),
-            ["Dishes", "Objected", "More salt"],
+            ["Dishes", "More salt", "Objected", "Async"],
         )
         self.client.post(f"/agenda/{items[0].pk}/remove/")
-        self.assertEqual(meeting.agenda_items.count(), 2)
+        self.assertEqual(meeting.agenda_items.count(), 3)
 
         # Not a member
         outsider = User.objects.create_user("zoe@example.com")

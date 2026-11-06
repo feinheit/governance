@@ -136,13 +136,39 @@
                 >
                 <button type="submit" class="btn btn-sm btn-primary text-nowrap">{% translate "Add" %}</button>
               </form>
-              {% if addable_proposals %}
+              {% if own_proposals or others_proposals %}
+                {# One's own proposals; the secretary also sees others', set apart #}
                 <form method="post" action="{% url 'agenda_add' meeting.pk %}" class="d-flex gap-1 mt-2">
                   {% csrf_token %}
-                  <select name="proposal" class="form-select form-select-sm" aria-label="{% translate 'Proposal' %}">
-                    {% for proposal in addable_proposals %}
-                      <option value="{{ proposal.pk }}">{{ proposal }} ({{ proposal.get_status_display }})</option>
-                    {% endfor %}
+                  <select
+                    name="proposal"
+                    class="form-select form-select-sm"
+                    aria-label="{% translate 'Proposal' %}"
+                    required
+                  >
+                    <option value="">{% translate "Proposal" %} …</option>
+                    {% if others_proposals %}
+                      {% if own_proposals %}
+                        <optgroup label="{% translate 'Your proposals' %}">
+                          {% for proposal in own_proposals %}
+                            <option value="{{ proposal.pk }}">
+                              {{ proposal }} ({{ proposal.get_status_display }})
+                            </option>
+                          {% endfor %}
+                        </optgroup>
+                      {% endif %}
+                      <optgroup label="{% translate "Others' proposals" %}">
+                        {% for proposal in others_proposals %}
+                          <option value="{{ proposal.pk }}">
+                            {{ proposal }} ({{ proposal.get_status_display }}, {{ proposal.proposer }})
+                          </option>
+                        {% endfor %}
+                      </optgroup>
+                    {% else %}
+                      {% for proposal in own_proposals %}
+                        <option value="{{ proposal.pk }}">{{ proposal }} ({{ proposal.get_status_display }})</option>
+                      {% endfor %}
+                    {% endif %}
                   </select>
                   <button type="submit" class="btn btn-sm btn-quiet text-nowrap">
                     {% translate "Add proposal" %}

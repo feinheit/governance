@@ -375,9 +375,13 @@ doesn't change anymore (`runnable_meeting()`).
 
 **Governance meetings**: check-in, agenda, closing (5.4.3). Members and
 attendees add items while it runs (5.4.4): a tension in a few words, or a
-proposal (waiting for a meeting, published async ones, which ends their
-acceptance period, or their own drafts; removing the item puts them back,
-`AgendaItem.proposal_status`). The secretary processes items (clicking
+proposal: their own, waiting for a meeting, published async (which ends
+the acceptance period: re-proposed at the meeting, 5.3) or drafts (not
+empty ones). Others' proposals wait for their proposers, whom members ask
+by requesting a meeting; only those running the meeting also bring
+others' waiting and async proposals, in an optgroup of their own (the
+proposer asked them and isn't there). The select starts empty. Removing
+the item puts them back (`AgendaItem.proposal_status`). The secretary processes items (clicking
 the row, which also goes to the step processing them: only there an item
 is active, `Meeting.active_item_id`), orders them with drag handles (`agenda_order`, without
 JavaScript arrows)

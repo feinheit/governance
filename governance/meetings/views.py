@@ -520,18 +520,29 @@ def agenda_context(request, meeting):
     }
     if can_add and meeting.kind == Meeting.GOVERNANCE:
         on_agenda = [item.proposal_id for item in items if item.proposal_id]
-        context["addable_proposals"] = (
+        # One's own proposals, also async ones (re-proposed at the meeting,
+        # 5.3): others ask their proposers by requesting a meeting. Those
+        # running the meeting also bring others' proposals waiting for one
+        # or async, set apart (the proposer asked them, isn't there)
+        waiting = Q(status__in=[Proposal.IN_MEETING, Proposal.PUBLISHED])
+        own = Q(proposer=request.user) & (waiting | Q(status=Proposal.DRAFT))
+        addable = (
             Proposal.objects
             .filter(circle=circle)
-            .filter(
-                Q(status=Proposal.IN_MEETING)
-                # Async proposals too: like requesting a meeting (5.3)
-                | Q(status=Proposal.PUBLISHED)
-                | Q(status=Proposal.DRAFT, proposer=request.user)
-            )
+            .filter(own | waiting if runs else own)
             .exclude(pk__in=on_agenda)
+            # Empty drafts have nothing to bring, the tension's field adds one
+            .exclude(status=Proposal.DRAFT, tension="", instructions=[])
+            .select_related("proposer")
             .order_by("status", "-created_at")
         )
+        context["addable_proposals"] = addable
+        context["own_proposals"] = [
+            p for p in addable if p.proposer_id == request.user.pk
+        ]
+        context["others_proposals"] = [
+            p for p in addable if p.proposer_id != request.user.pk
+        ]
     return context
 
 

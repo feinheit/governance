@@ -43,8 +43,10 @@ makes it a circle, with them as its Circle Leads. The tool asks first,
 cancelling is the default: changing the role itself is proposed in its
 circle.
 
-- **Agenda**: a tension in one or two words, or a proposal (waiting,
-  published async, your drafts). "Remove" puts a proposal back: a draft
+- **Agenda**: a tension in one or two words, or one of your proposals
+  (waiting, published async, drafts); the secretary also sees
+  "Others' proposals", listed apart (others ask you to bring yours with
+  "discuss in a meeting"). "Remove" puts a proposal back: a draft
   stays yours, an async proposal keeps its deadline.
 - **Process**: the facilitator chooses an agenda item, the secretary
   clicks it ("Process") and drags the items by their handles to reorder
