@@ -27,6 +27,7 @@ from governance.meetings.models import (
     Meeting,
 )
 from governance.meetings.outputs import meeting_outputs
+from governance.modals import is_modal
 from governance.proposals.drafting import can_edit
 from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
@@ -352,16 +353,35 @@ def meeting_step(request, pk):
     return redirect(meeting)
 
 
-@require_POST
 def meeting_attendees(request, pk):
-    """Inviting somebody, or removing them from the attendees"""
-    meeting = runnable_meeting(request, pk)
-    user = get_object_or_404(User.objects.active(), pk=request.POST.get("user"))
-    if request.POST.get("action") == "remove":
-        meeting.attendees.remove(user)
-    else:
-        meeting.attendees.add(user)
-    return redirect(meeting)
+    """The attendees (e.g. in a modal); the secretary invites somebody or
+    removes them, the modal shows the list again"""
+    if request.method == "POST":
+        meeting = runnable_meeting(request, pk)
+        user = get_object_or_404(User.objects.active(), pk=request.POST.get("user"))
+        if request.POST.get("action") == "remove":
+            meeting.attendees.remove(user)
+        else:
+            meeting.attendees.add(user)
+        if not is_modal(request):
+            return redirect(meeting)
+    meeting = get_object_or_404(Meeting.objects.select_related("circle"), pk=pk)
+    runs = meeting.is_running and can_run(request.user, meeting)
+    return render(
+        request,
+        "meetings/attendees.html",
+        {
+            "meeting": meeting,
+            "attendees": meeting.attendees.order_by("full_name", "email"),
+            "can_run": runs,
+            "invitable": User.objects
+            .active()
+            .exclude(pk__in=meeting.attendees.values("pk"))
+            .order_by("full_name", "email")
+            if runs
+            else None,
+        },
+    )
 
 
 class MeetingForm(ModelForm):

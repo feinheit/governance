@@ -339,11 +339,13 @@ replace only `#meeting`, links navigate normally unless marked
 server's, except while somebody types or has the panel or a section open
 (paused longer than one check, a notice says so, `#meeting-paused`).
 Modals don't stop it: they're outside of `#meeting`.
-Left: agenda (adding items as its last line, completed items struck
-through), attendees (collapsed, staying open across the updates once
-opened, `data-stay-open`), for ad-hoc tactical meetings the invited
-roles, elections, proposals. Right: the rounds, then one column scrolling on its own
-on wide screens (`.wb-flow`): in tactical meetings the results of the
+The header only has the heading (the circle is in the breadcrumbs).
+Left: who called it, the secretary ("Take over"), the attendees (a
+modal), the agenda (adding items as its last line, completed items
+struck through, "End the meeting" at its bottom), for ad-hoc tactical
+meetings the invited roles, elections, proposals. Right: the rounds, then one column scrolling on its own
+on wide screens, filling the window below its top so that the page only
+scrolls for the left column (`.wb-flow`, `fitFlow()`): in tactical meetings the results of the
 completed items (a card each, `_results.html`), the item being
 processed, and the notes at the bottom (what doesn't belong to an agenda
 item, e.g. a special meeting's intent; the secretary's textarea saves

@@ -69,8 +69,7 @@ class TacticalTest(TestCase):
         self.assertNotContains(response, "Add proposal")
         # All of the circle's roles, the circle says it
         self.assertNotContains(response, "Invited roles")
-        # Collapsed, with their number
-        self.assertContains(response, 'id="attendees" data-stay-open>')
+        # In a modal, with their number
         self.assertContains(response, "Attendees (2)")
         self.assertNotContains(response, "Fridge cleaned")  # Only in its step
 

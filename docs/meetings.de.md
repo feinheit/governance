@@ -22,8 +22,9 @@ aktualisiert sich von selbst.
 - **Notizen** unten: was zu keinem Agendapunkt gehört, z.B. die Absicht
   eines speziellen Meetings. Der Secretary schreibt sie, sie speichern
   sich selbst; die Mail mit den Ergebnissen enthält sie.
-- **Teilnehmende** sind die Mitglieder des Kreises beim Start; Mitglieder
-  laden weitere ein oder entfernen sie.
+- **Teilnehmende** ("Teilnehmende" neben der Agenda) sind die Mitglieder
+  des Kreises beim Start; der Secretary lädt dort weitere ein oder
+  entfernt sie. "Meeting beenden" steht unter der Agenda.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.
 - **Ende**: "Meeting beenden", oder von selbst drei Stunden nach der
   letzten Änderung. Dann erhalten Mitglieder und Teilnehmende die

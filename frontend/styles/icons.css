@@ -58,6 +58,9 @@
 .bi-pencil::before {
   content: "\f4cb";
 }
+.bi-people::before {
+  content: "\f4d0";
+}
 .bi-person-check::before {
   content: "\f4d6";
 }

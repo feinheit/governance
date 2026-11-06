@@ -1,0 +1,29 @@
+{% load governance i18n %}
+{# Who calls and records the meeting, beside the agenda while it runs (wrapping there), below the heading once it ended; the circle is in the breadcrumbs #}
+<div class="wb-meta">
+  {% if meeting.ended_at %}<span><span class="wb-meta-label">{% translate "ended" %}</span>
+      {{ meeting.ended_at|date:"SHORT_DATETIME_FORMAT" }}</span>{% endif %}
+  {% if meeting.called_by %}<span><span class="wb-meta-label">{% translate "called by" %}</span>
+      {{ meeting.called_by }}</span>{% endif %}
+  {% if meeting.secretary %}<span><span class="wb-meta-label">{% translate "secretary" %}</span>
+      {{ meeting.secretary }}</span>{% endif %}
+  {% if can_take_over and meeting.is_running and meeting.secretary != request.user %}
+    {# Standing in, e.g. for a late Secretary (5.3.6); others than the #}
+    {# acting Secretary are asked first, in a modal #}
+    {% if is_acting_secretary %}
+      <form method="post" action="{% url 'meeting_secretary' meeting.pk %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" {% button_class can_take_over size="btn-sm py-0" %}>
+          {% icon "person-check" %}
+          {% translate "Take over" %}
+        </button>
+      </form>
+    {% else %}
+      <a
+        {% button_class can_take_over size="btn-sm py-0" %}
+        href="{% url 'meeting_secretary' meeting.pk %}"
+        data-modal
+      >{% icon "person-check" %} {% translate "Take over" %}</a>
+    {% endif %}
+  {% endif %}
+</div>

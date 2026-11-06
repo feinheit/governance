@@ -25,49 +25,8 @@
               class="badge wb-tone-success fs-6"
             >{% translate "running" %}</span>{% endif %}
         </h1>
-        <div class="wb-meta">
-          {% if meeting.circle %}<span><span class="wb-meta-label">{% translate "circle" %}</span>
-              <a href="{{ meeting.circle.get_absolute_url }}">{{ meeting.circle }}</a></span>{% endif %}
-          <span><span class="wb-meta-label">{% translate "started" %}</span>
-            {{ meeting.started_at|date:"SHORT_DATETIME_FORMAT"|default:_("not started yet") }}</span>
-          {% if meeting.ended_at %}<span><span class="wb-meta-label">{% translate "ended" %}</span>
-              {{ meeting.ended_at|date:"SHORT_DATETIME_FORMAT" }}</span>{% endif %}
-          {% if meeting.called_by %}<span><span class="wb-meta-label">{% translate "called by" %}</span>
-              {{ meeting.called_by }}</span>{% endif %}
-          {% if meeting.secretary %}<span><span class="wb-meta-label">{% translate "secretary" %}</span>
-              {{ meeting.secretary }}</span>{% endif %}
-          {% if can_take_over and meeting.is_running and meeting.secretary != request.user %}
-            {# Standing in, e.g. for a late Secretary (5.3.6); others than the #}
-            {# acting Secretary are asked first, in a modal #}
-            {% if is_acting_secretary %}
-              <form method="post" action="{% url 'meeting_secretary' meeting.pk %}" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" {% button_class can_take_over size="btn-sm py-0" %}>
-                  {% icon "person-check" %}
-                  {% translate "Take over" %}
-                </button>
-              </form>
-            {% else %}
-              <a
-                {% button_class can_take_over size="btn-sm py-0" %}
-                href="{% url 'meeting_secretary' meeting.pk %}"
-                data-modal
-              >{% icon "person-check" %} {% translate "Take over" %}</a>
-            {% endif %}
-          {% endif %}
-        </div>
+        {% if not meeting.is_running %}{% include "meetings/_meta.html" %}{% endif %}
       </div>
-      {% if can_run and not meeting.ended_at %}
-        <div class="wb-page-actions">
-          <form method="post" action="{% url 'meeting_end' meeting.pk %}">
-            {% csrf_token %}
-            <button type="submit" {% button_class can_run %}>
-              {% icon "stop-fill" %}
-              {% translate "End the meeting" %}
-            </button>
-          </form>
-        </div>
-      {% endif %}
     </div>
 
     {% if can_take_over|elevated and not meeting.ended_at %}
@@ -141,6 +100,24 @@
         {% endblock main %}
       </div>
       <div class="col-lg-4 order-lg-1">
+        {% if meeting.is_running %}
+          <div class="mb-3">
+            {% include "meetings/_meta.html" %}
+            <a
+              class="btn btn-sm btn-quiet mt-2"
+              href="{% url 'meeting_attendees' meeting.pk %}"
+              data-modal
+            >{% icon "people" %}
+              {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}</a>
+          </div>
+        {% elif attendees %}
+          <a
+            class="btn btn-sm btn-quiet mb-3"
+            href="{% url 'meeting_attendees' meeting.pk %}"
+            data-modal
+          >{% icon "people" %}
+            {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}</a>
+        {% endif %}
         {# The agenda beside the item being processed #}
         <section class="card mb-4" id="agenda">
           {% include "meetings/_agenda.html" %}
@@ -174,6 +151,17 @@
               {% endif %}
             </div>
           {% endif %}
+          {% if can_run and meeting.is_running %}
+            <div class="card-body border-top">
+              <form method="post" action="{% url 'meeting_end' meeting.pk %}">
+                {% csrf_token %}
+                <button type="submit" {% button_class can_run %}>
+                  {% icon "stop-fill" %}
+                  {% translate "End the meeting" %}
+                </button>
+              </form>
+            </div>
+          {% endif %}
         </section>
 
         {% if tactical_steps and not meeting.circle %}
@@ -192,45 +180,6 @@
               {% endfor %}
             </ul>
           </section>
-        {% endif %}
-        {% if attendees or can_run and not meeting.ended_at %}
-          {# Collapsed, open across the updates once opened (data-stay-open, meeting.js) #}
-          <details class="card mb-4 wb-details-card" id="attendees" data-stay-open>
-            <summary class="card-header">
-              <h2 class="h6 mb-0 d-inline">
-                {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}
-              </h2>
-            </summary>
-            <ul class="list-group list-group-flush">
-              {% for attendee in attendees %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <a href="{{ attendee.get_absolute_url }}">{{ attendee }}</a>
-                  {% if can_run and not meeting.ended_at %}
-                    <form method="post" action="{% url 'meeting_attendees' meeting.pk %}">
-                      {% csrf_token %}
-                      <input type="hidden" name="user" value="{{ attendee.pk }}">
-                      <button type="submit" name="action" value="remove" class="btn btn-sm btn-quiet">
-                        {% translate "Remove" %}
-                      </button>
-                    </form>
-                  {% endif %}
-                </li>
-              {% endfor %}
-              {% if can_run and not meeting.ended_at and invitable %}
-                <li class="list-group-item">
-                  <form method="post" action="{% url 'meeting_attendees' meeting.pk %}" class="d-flex gap-1">
-                    {% csrf_token %}
-                    <select name="user" class="form-select form-select-sm" aria-label="{% translate 'Invite' %}">
-                      {% for user in invitable %}<option value="{{ user.pk }}">{{ user }}</option>{% endfor %}
-                    </select>
-                    <button type="submit" name="action" value="add" class="btn btn-sm btn-quiet">
-                      {% translate "Invite" %}
-                    </button>
-                  </form>
-                </li>
-              {% endif %}
-            </ul>
-          </details>
         {% endif %}
         {% if elections or election_form %}
           <section class="card mb-4">

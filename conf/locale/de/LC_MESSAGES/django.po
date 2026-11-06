@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:55+0100\n"
+"POT-Creation-Date: 2026-11-06 16:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -358,7 +358,7 @@ msgid "tactical meeting"
 msgstr "Tactical Meeting"
 
 #: governance/meetings/models.py governance/proposals/models.py
-#: governance/roles/models.py governance/templates/meetings/meeting_detail.html
+#: governance/roles/models.py
 #: governance/templates/proposals/proposal_detail.html
 #: governance/templates/roles/policy_detail.html
 msgid "circle"
@@ -384,13 +384,11 @@ msgstr "zuletzt aktiv am"
 msgid "minutes"
 msgstr "Protokoll"
 
-#: governance/meetings/models.py
-#: governance/templates/meetings/meeting_detail.html
+#: governance/meetings/models.py governance/templates/meetings/_meta.html
 msgid "secretary"
 msgstr "Secretary"
 
-#: governance/meetings/models.py
-#: governance/templates/meetings/meeting_detail.html
+#: governance/meetings/models.py governance/templates/meetings/_meta.html
 msgid "called by"
 msgstr "einberufen von"
 
@@ -606,8 +604,7 @@ msgstr "Als Secretary des Meetings übernehmen?"
 msgid "You aren't the circle's Secretary. Take over anyway?"
 msgstr "Du bist nicht Secretary des Kreises. Trotzdem übernehmen?"
 
-#: governance/meetings/views.py
-#: governance/templates/meetings/meeting_detail.html
+#: governance/meetings/views.py governance/templates/meetings/_meta.html
 msgid "Take over"
 msgstr "Übernehmen"
 
@@ -1412,7 +1409,7 @@ msgstr "Alle in %(circle)s und seinen Sub-Kreisen werden informiert."
 
 #: governance/roles/domain_policies.py
 #: governance/templates/meetings/_agenda.html
-#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/meetings/attendees.html
 #: governance/templates/proposals/_drafting.html
 #: governance/templates/roles/_holders_card.html
 #: governance/templates/roles/assignment_end.html
@@ -2110,7 +2107,6 @@ msgid "nobody elected"
 msgstr "niemand gewählt"
 
 #: governance/templates/meetings/_meeting_rows.html
-#: governance/templates/meetings/meeting_detail.html
 #: governance/templates/proposals/proposal_detail.html
 #: governance/templates/roles/person_detail.html
 msgid "not started yet"
@@ -2121,6 +2117,10 @@ msgstr "noch nicht begonnen"
 #: governance/templates/roles/person_detail.html
 msgid "running"
 msgstr "läuft"
+
+#: governance/templates/meetings/_meta.html
+msgid "ended"
+msgstr "beendet"
 
 #: governance/templates/meetings/_notes.html
 msgid "What doesn't belong to an agenda item, e.g. a special meeting's intent."
@@ -2180,6 +2180,27 @@ msgstr "Governance Meeting starten"
 msgid "Start a tactical meeting"
 msgstr "Tactical Meeting starten"
 
+#: governance/templates/meetings/attendees.html
+msgid "Attendees"
+msgstr "Teilnehmende"
+
+#: governance/templates/meetings/attendees.html
+msgid "Nobody."
+msgstr "Niemand."
+
+#: governance/templates/meetings/attendees.html
+msgid "Invite"
+msgstr "Einladen"
+
+#: governance/templates/meetings/attendees.html
+msgid "Close"
+msgstr "Schliessen"
+
+#: governance/templates/meetings/attendees.html
+#: governance/templates/meetings/meeting_detail.html
+msgid "Back to the meeting"
+msgstr "Zurück zum Meeting"
+
 #: governance/templates/meetings/meeting_confirm.html
 msgid "Start a meeting"
 msgstr "Meeting starten"
@@ -2226,18 +2247,6 @@ msgid "Start the governance meeting"
 msgstr "Governance Meeting starten"
 
 #: governance/templates/meetings/meeting_detail.html
-msgid "started"
-msgstr "begonnen"
-
-#: governance/templates/meetings/meeting_detail.html
-msgid "ended"
-msgstr "beendet"
-
-#: governance/templates/meetings/meeting_detail.html
-msgid "End the meeting"
-msgstr "Meeting beenden"
-
-#: governance/templates/meetings/meeting_detail.html
 msgid "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed."
 msgstr "Du nimmst als Admin an diesem Meeting teil, nicht als Mitglied des Kreises. Übernimm nur, wenn du weisst, dass es nötig ist."
 
@@ -2247,16 +2256,19 @@ msgid "You're looking at another step on your screen, the meeting is at: %(step)
 msgstr "Du schaust dir auf deinem Bildschirm einen anderen Schritt an, das Meeting ist bei: %(step)s."
 
 #: governance/templates/meetings/meeting_detail.html
-msgid "Back to the meeting"
-msgstr "Zurück zum Meeting"
-
-#: governance/templates/meetings/meeting_detail.html
 msgid "The invited roles have no checklist items."
 msgstr "Die eingeladenen Rollen haben keine Checklisten-Punkte."
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "The invited roles have no metrics."
 msgstr "Die eingeladenen Rollen haben keine Metriken."
+
+#: governance/templates/meetings/meeting_detail.html
+#, python-format
+msgid "Attendees (%(count)s)"
+msgid_plural "Attendees (%(count)s)"
+msgstr[0] "Teilnehmende (%(count)s)"
+msgstr[1] "Teilnehmende (%(count)s)"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "A tension, in one or two words"
@@ -2281,23 +2293,16 @@ msgid "Add proposal"
 msgstr "Vorschlag hinzufügen"
 
 #: governance/templates/meetings/meeting_detail.html
+msgid "End the meeting"
+msgstr "Meeting beenden"
+
+#: governance/templates/meetings/meeting_detail.html
 msgid "Invited roles"
 msgstr "Eingeladene Rollen"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "Not recorded."
 msgstr "Nicht erfasst."
-
-#: governance/templates/meetings/meeting_detail.html
-#, python-format
-msgid "Attendees (%(count)s)"
-msgid_plural "Attendees (%(count)s)"
-msgstr[0] "Teilnehmende (%(count)s)"
-msgstr[1] "Teilnehmende (%(count)s)"
-
-#: governance/templates/meetings/meeting_detail.html
-msgid "Invite"
-msgstr "Einladen"
 
 #: governance/templates/meetings/meeting_detail.html
 #: governance/templates/notifications/meeting_ended.txt
@@ -2947,6 +2952,9 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "started"
+#~ msgstr "begonnen"
 
 #~ msgid "Minutes"
 #~ msgstr "Protokoll"

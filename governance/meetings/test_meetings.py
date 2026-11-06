@@ -432,7 +432,17 @@ class MeetingsTest(TestCase):
         self.client.post(url, {"user": guest.pk, "action": "add"})
         self.client.post(url, {"user": self.eve.pk, "action": "remove"})
         self.assertEqual(set(meeting.attendees.all()), {self.ada, self.bob, guest})
-        self.assertContains(self.client.get(meeting.get_absolute_url()), "Zoe")
+        # In a modal, opened from the sidebar
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertRegex(response.content.decode(), rf'href="{url}"\s+data-modal')
+        self.assertContains(response, "Attendees (3)")
+        response = self.client.get(url, headers={"HX-Modal": "true"})
+        self.assertContains(response, "Zoe")
+        self.assertContains(response, "Invite")
+        # The page's header only has the heading, the rest is in the sidebar
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertNotContains(response, 'wb-meta-label">started')
+        self.assertContains(response, "End the meeting")
 
         # Guests add agenda items too
         self.client.force_login(guest)

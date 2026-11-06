@@ -249,6 +249,10 @@ class MeetingE2ETest(LiveServerTestCase):
         page = self.page
         page.set_viewport_size({"width": 1280, "height": 800})
         page.goto(f"{self.live_server_url}{meeting.get_absolute_url()}")
+        # Only the column scrolls, not the page
+        self.assertLessEqual(
+            page.evaluate("document.documentElement.scrollHeight"), 800
+        )
         visible = "(() => { const f = document.querySelector('.wb-flow').getBoundingClientRect(), c = document.querySelector('#current').getBoundingClientRect(); return c.top >= f.top - 1 && c.top < f.bottom })()"
         self.assertTrue(page.evaluate(visible))
         page.locator(".wb-flow").evaluate("flow => flow.scrollTo(0, 0)")
@@ -267,20 +271,6 @@ class MeetingE2ETest(LiveServerTestCase):
             "button", has_text="Reopen"
         ).click()
         page.wait_for_selector("#current >> text=Done 1")
-        self.assertEqual(self.errors, [])
-
-    def test_attendees_stay_open(self):
-        """The attendees are collapsed; opened, they stay open while the
-        meeting updates"""
-        page = self.page
-        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
-        self.assertFalse(page.locator("#attendees li").first.is_visible())
-        page.locator("#attendees summary").click()
-        self.assertTrue(page.locator("#attendees li").first.is_visible())
-        AgendaItem.objects.create(meeting=self.meeting, label="Meanwhile", position=9)
-        page.wait_for_selector("#agenda >> text=Meanwhile", timeout=8000)
-        page.wait_for_timeout(200)
-        self.assertTrue(page.locator("#attendees li").first.is_visible())
         self.assertEqual(self.errors, [])
 
     def test_paused_notice(self):

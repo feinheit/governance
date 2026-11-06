@@ -19,7 +19,7 @@ window.meetingIsIdle = () => {
   const form = document.activeElement?.closest("#meeting form")
   const busy = Boolean(
     document.querySelector(
-      "#meeting details[open]:not([data-stay-open]), #amend > *, .sortable-chosen",
+      "#meeting details[open], #amend > *, .sortable-chosen",
     ) || form,
   )
   busyChecks = busy ? busyChecks + 1 : 0
@@ -91,28 +91,34 @@ function scrollToCurrent(force = false) {
   }
 }
 
+// On wide screens the column fills the window below its top: the page only
+// scrolls when the agenda's column needs it
+function fitFlow() {
+  const flow = document.querySelector(".wb-flow")
+  if (!flow) return
+  if (!matchMedia("(min-width: 992px)").matches) {
+    flow.style.maxHeight = ""
+    return
+  }
+  const top = flow.getBoundingClientRect().top + window.scrollY
+  const main = getComputedStyle(document.querySelector("main"))
+  const below =
+    Number.parseFloat(main.paddingBottom) + Number.parseFloat(main.marginBottom)
+  flow.style.maxHeight = `${Math.max(window.innerHeight - top - below, 240)}px`
+}
+
+fitFlow()
 scrollToCurrent()
-document.addEventListener("htmx:after:settle", () => scrollToCurrent())
+window.addEventListener("resize", fitFlow)
+document.addEventListener("htmx:after:settle", () => {
+  fitFlow()
+  scrollToCurrent()
+})
 document.addEventListener("click", (event) => {
   if (
     event.target.closest("#agenda li.wb-current") &&
     !event.target.closest("a, button, input, [data-agenda-handle]")
   ) {
     scrollToCurrent(true)
-  }
-})
-
-// Collapsible sections with data-stay-open (the attendees) stay open across
-// the meeting's updates, which would close them (the server's are closed)
-let openSections = []
-document.addEventListener("htmx:before:swap", () => {
-  openSections = [
-    ...document.querySelectorAll("details[data-stay-open][open]"),
-  ].map((details) => details.id)
-})
-document.addEventListener("htmx:after:settle", () => {
-  for (const id of openSections) {
-    const details = document.getElementById(id)
-    if (details) details.open = true
   }
 })
