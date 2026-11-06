@@ -1,6 +1,6 @@
 {% load i18n %}
 {# The end of a meeting, celebrated once (?celebrate=1 after ending it): an emoji, confetti (meeting.js), a thank you; from Workbench's logbook #}
 <div class="wb-celebration" aria-hidden="true">
-  <span class="wb-celebration-emoji">🎉</span>
+  <span class="wb-celebration-emoji">{{ "🎈✨🎉"|make_list|random }}</span>
   <span class="wb-celebration-message">{% translate "Meeting ended – thank you!" %}</span>
 </div>
