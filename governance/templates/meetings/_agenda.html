@@ -15,7 +15,7 @@
 <ul class="list-group list-group-flush" {% if can_run and meeting.is_running %}data-agenda-sortable{% endif %}>
   {% for item in agenda %}
     <li
-      class="list-group-item wb-row wb-agenda-row{% if item.pk == meeting.current_item_id %} wb-current{% endif %}{% if item.can_process or item.has_result %} wb-row-link{% endif %}"
+      class="list-group-item wb-row wb-agenda-row{% if item.pk == meeting.active_item_id %} wb-current{% endif %}{% if item.can_process or item.has_result %} wb-row-link{% endif %}"
       data-agenda-item="{{ item.pk }}"
     >
       {% if can_run and meeting.is_running %}<span

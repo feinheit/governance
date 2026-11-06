@@ -204,6 +204,7 @@ class TacticalTest(TestCase):
             kind=Meeting.TACTICAL,
             started_at=timezone.now(),
             secretary=self.ada,
+            step="tensions",
         )
         item = AgendaItem.objects.create(meeting=meeting, label="Knives")
         meeting.current_item = item
@@ -330,6 +331,29 @@ class TacticalTest(TestCase):
             Meeting.objects.filter(pk=meeting.pk).update(step=step)
             response = self.client.get(meeting.get_absolute_url())
             self.assertEqual("Bob buys" in response.content.decode(), shown, step)
+
+    def test_active_item_only_while_processing(self):
+        """Outside "Triage issues" no agenda item is active; processing one
+        goes there"""
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.ada,
+            step="check_in",
+        )
+        knives = AgendaItem.objects.create(meeting=meeting, label="Knives", position=1)
+        forks = AgendaItem.objects.create(meeting=meeting, label="Forks", position=2)
+        meeting.current_item = knives
+        meeting.save()
+        self.client.force_login(self.ada)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertNotContains(response, 'id="current"')
+        self.assertNotContains(response, "wb-current")
+        self.client.post(f"/agenda/{forks.pk}/process/")
+        meeting.refresh_from_db()
+        self.assertEqual((meeting.step, meeting.current_item), ("tensions", forks))
+        self.assertContains(self.client.get(meeting.get_absolute_url()), 'id="current"')
 
     def test_no_proposals(self):
         """Tactical meetings don't process proposals, not even crafted"""

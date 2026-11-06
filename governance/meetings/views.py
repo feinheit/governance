@@ -189,9 +189,9 @@ def progress_context(meeting, roles, count):
 
 def current_context(request, meeting):
     """The agenda item being processed"""
-    item = meeting.current_item
-    if item is None or not meeting.is_running:
+    if meeting.active_item_id is None:
         return {}
+    item = meeting.current_item
     context = {"current": item, "steps": STEP_CHOICES}
     if proposal := item.proposal:
         changes = annotate_changes(proposal)
@@ -488,7 +488,7 @@ def agenda_context(request, meeting):
             runs
             and meeting.is_running
             and not item.is_completed
-            and item.pk != meeting.current_item_id
+            and item.pk != meeting.active_item_id
         )
         # A completed item's row leads to its result (_results.html), shown
         # while processing the tensions

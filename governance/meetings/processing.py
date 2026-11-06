@@ -44,10 +44,12 @@ def running_item(request, pk, *, governance=False):
 
 @require_POST
 def item_process(request, pk):
-    """Makes the item the current one"""
+    """Makes the item the current one, in the step processing the agenda"""
     item = running_item(request, pk)
-    item.meeting.current_item = item
-    item.meeting.save(update_fields=["current_item"])
+    meeting = item.meeting
+    meeting.current_item = item
+    meeting.step = meeting.processing_step
+    meeting.save(update_fields=["current_item", "step"])
     if item.proposal and not item.step:
         item.step = STEPS[0]
         item.save(update_fields=["step"])
@@ -79,8 +81,10 @@ def item_reopen(request, pk):
     item = running_item(request, pk)
     item.is_completed = False
     item.save(update_fields=["is_completed"])
-    item.meeting.current_item = item
-    item.meeting.save(update_fields=["current_item"])
+    meeting = item.meeting
+    meeting.current_item = item
+    meeting.step = meeting.processing_step
+    meeting.save(update_fields=["current_item", "step"])
     return redirect(item.meeting)
 
 

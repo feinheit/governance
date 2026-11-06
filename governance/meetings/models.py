@@ -137,6 +137,19 @@ class Meeting(models.Model):
         )
 
     @property
+    def processing_step(self):
+        """The step processing the agenda's items: only then an item is
+        active (the current one)"""
+        return "tensions" if self.kind == self.TACTICAL else "agenda"
+
+    @property
+    def active_item_id(self):
+        """The current item, while the meeting processes the agenda"""
+        if self.is_running and self.step == self.processing_step:
+            return self.current_item_id
+        return None
+
+    @property
     def is_running(self):
         return bool(self.started_at and not self.ended_at)
 
