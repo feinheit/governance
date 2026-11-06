@@ -513,25 +513,43 @@ a.wb-row-title:hover {
   font-weight: 600;
 }
 
-/* The meeting's updates paused (meeting.js) */
+/* The meeting's updates paused (meeting.js): at the top, sliding in */
 .wb-paused {
   position: fixed;
-  bottom: 1rem;
+  top: 0.75rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1030;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   width: max-content;
   max-width: calc(100vw - 2rem);
-  padding: 0.4rem 0.9rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--wb-warning-ink);
   border-radius: var(--bs-border-radius);
   background: var(--wb-warning-bg);
   color: var(--wb-warning-ink);
-  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.15);
-  font-size: 0.85rem;
+  box-shadow: 0 4px 16px rgba(16, 24, 40, 0.2);
+  font-weight: 600;
+  animation: wb-paused-in 0.25s ease-out;
 }
 
 .wb-paused[hidden] {
   display: none;
+}
+
+@keyframes wb-paused-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-paused {
+    animation: none;
+  }
 }
 
 /* Help pages (docs/, governance/help.py): readable line length */

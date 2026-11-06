@@ -318,13 +318,29 @@ def meeting_update(request, pk):
     )
 
 
-@require_POST
 def meeting_secretary(request, pk):
-    """Somebody running the meeting takes over as its secretary, e.g. standing
-    in for a late Secretary (5.3.6); the page warns those who aren't"""
+    """Somebody taking part takes over as the meeting's secretary, e.g.
+    standing in for a late Secretary (5.3.6); those who aren't acting as
+    the circle's Secretary are asked first (in a modal)"""
     meeting = get_object_or_404(Meeting.objects.select_related("circle"), pk=pk)
-    if not can_take_over(request.user, meeting):
+    if not (right := can_take_over(request.user, meeting)):
         raise PermissionDenied
+    if request.method != "POST":
+        return render(
+            request,
+            "generic/confirm.html",
+            {
+                "question": gettext("Take over as the meeting's secretary?"),
+                "help": gettext(
+                    "You aren't the circle's Secretary. Take over anyway, e.g."
+                    " standing in while they're late?"
+                ),
+                "submit_label": gettext("Take over"),
+                "submit_class": "btn-primary",
+                "right": right,
+                "cancel_url": meeting.get_absolute_url(),
+            },
+        )
     if meeting.is_running:
         meeting.secretary = request.user
         meeting.save(update_fields=["secretary"])

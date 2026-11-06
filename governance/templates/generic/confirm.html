@@ -3,7 +3,8 @@
 {% comment %}
   Confirming something destructive (deleting, removing), e.g. in a modal
   opened from the role's page (governance/modals.py): ``question``, the
-  object's ``text``, a ``help`` line, ``submit_label`` and the ``right`` of
+  object's ``text``, a ``help`` line, ``submit_label`` (``submit_class``,
+  btn-danger by default) and the ``right`` of
   roles.permissions; cancelling closes the modal, else goes back to
   ``cancel_url``.
 {% endcomment %}
@@ -30,7 +31,7 @@
     >
       {% csrf_token %}
       <div class="wb-form-actions">
-        <button type="submit" class="btn btn-danger">{{ submit_label }}</button>
+        <button type="submit" class="btn {{ submit_class|default:"btn-danger" }}">{{ submit_label }}</button>
         {% if modal %}<button
             type="button"
             class="btn btn-quiet"

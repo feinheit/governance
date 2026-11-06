@@ -449,19 +449,19 @@ class MeetingE2ETest(LiveServerTestCase):
         Meeting.objects.filter(pk=self.meeting.pk).update(secretary=bob)
         page = self.page
         page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
-        page.evaluate("window.marker = 1")
-        take_over = page.locator("form[action$='/secretary/'] button")
+        take_over = page.locator("a[data-modal][href$='/secretary/']")
 
-        page.once("dialog", lambda dialog: dialog.dismiss())
+        # Asked in a modal, cancelling changes nothing
         take_over.click()
-        page.wait_for_timeout(300)
+        page.wait_for_selector("#modal[open] >> text=You aren't the circle's Secretary")
+        page.locator("#modal [data-modal-close]").click()
+        page.wait_for_selector("#modal[open]", state="detached")
         self.meeting.refresh_from_db()
         self.assertEqual(self.meeting.secretary, bob)
 
-        page.once("dialog", lambda dialog: dialog.accept())
         take_over.click()
-        page.wait_for_selector("form[action$='/secretary/']", state="detached")
+        page.locator("#modal[open] button[type=submit]").click()
+        page.wait_for_selector("a[href$='/secretary/']", state="detached")
         self.meeting.refresh_from_db()
         self.assertEqual(self.meeting.secretary, self.ada)
-        self.assertSamePage()
         self.assertEqual(self.errors, [])

@@ -17,7 +17,7 @@ aktualisiert sich von selbst.
 - **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
   hervorgehoben und öffnen den Vorschlag des Punkts mit "Vorschlag
   öffnen". Solange du tippst oder etwas offen hast, aktualisiert sich die
-  Seite nicht; ein Hinweis unten sagt es.
+  Seite nicht; ein Hinweis oben sagt es.
 - **Teilnehmende** sind die Mitglieder des Kreises beim Start; Mitglieder
   laden weitere ein oder entfernen sie.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.

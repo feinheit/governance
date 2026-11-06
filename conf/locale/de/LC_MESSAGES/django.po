@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:00+0100\n"
+"POT-Creation-Date: 2026-11-06 16:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -592,6 +592,19 @@ msgstr "Tactical Meeting einberufen"
 #, python-format
 msgid "Edit %(meeting)s"
 msgstr "%(meeting)s bearbeiten"
+
+#: governance/meetings/views.py
+msgid "Take over as the meeting's secretary?"
+msgstr "Als Secretary des Meetings übernehmen?"
+
+#: governance/meetings/views.py
+msgid "You aren't the circle's Secretary. Take over anyway, e.g. standing in while they're late?"
+msgstr "Du bist nicht Secretary des Kreises. Trotzdem übernehmen, z.B. als Vertretung, solange er sich verspätet?"
+
+#: governance/meetings/views.py
+#: governance/templates/meetings/meeting_detail.html
+msgid "Take over"
+msgstr "Übernehmen"
 
 #: governance/notifications/apps.py
 msgid "notifications"
@@ -2185,14 +2198,6 @@ msgstr "begonnen"
 #: governance/templates/meetings/meeting_detail.html
 msgid "ended"
 msgstr "beendet"
-
-#: governance/templates/meetings/meeting_detail.html
-msgid "You aren't the circle's Secretary. Take over as the meeting's secretary anyway, e.g. standing in?"
-msgstr "Du bist nicht Secretary des Kreises. Trotzdem den Secretary des Meetings übernehmen, z.B. als Vertretung?"
-
-#: governance/templates/meetings/meeting_detail.html
-msgid "Take over"
-msgstr "Übernehmen"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "End the meeting"

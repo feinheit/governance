@@ -16,7 +16,7 @@ the page updates by itself.
 - **Following**: the others see the current step and agenda item
   highlighted, and open the item's proposal with "Open the proposal".
   While you type or have something open, the page doesn't update; a
-  notice at the bottom says so.
+  notice at the top says so.
 - **Attendees** are the circle's members at the start; members invite
   others or remove them.
 - **One meeting per circle**: starting a second one leads to the running

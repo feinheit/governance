@@ -37,20 +37,22 @@
           {% if meeting.secretary %}<span><span class="wb-meta-label">{% translate "secretary" %}</span>
               {{ meeting.secretary }}</span>{% endif %}
           {% if can_take_over and meeting.is_running and meeting.secretary != request.user %}
-            {# Standing in, e.g. for a late Secretary (5.3.6) #}
-            <form
-              method="post"
-              action="{% url 'meeting_secretary' meeting.pk %}"
-              class="d-inline"
-              {% if not is_acting_secretary %}
-                hx-confirm="{% translate "You aren't the circle's Secretary. Take over as the meeting's secretary anyway, e.g. standing in?" %}"
-              {% endif %}
-            >
-              {% csrf_token %}
-              <button type="submit" {% button_class can_take_over size="btn-sm py-0" %}>
-                {% translate "Take over" %}
-              </button>
-            </form>
+            {# Standing in, e.g. for a late Secretary (5.3.6); others than the #}
+            {# acting Secretary are asked first, in a modal #}
+            {% if is_acting_secretary %}
+              <form method="post" action="{% url 'meeting_secretary' meeting.pk %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" {% button_class can_take_over size="btn-sm py-0" %}>
+                  {% translate "Take over" %}
+                </button>
+              </form>
+            {% else %}
+              <a
+                {% button_class can_take_over size="btn-sm py-0" %}
+                href="{% url 'meeting_secretary' meeting.pk %}"
+                data-modal
+              >{% translate "Take over" %}</a>
+            {% endif %}
           {% endif %}
         </div>
       </div>
@@ -245,6 +247,10 @@
   {% if meeting.is_running %}
     {# meeting.js shows it while the updates are paused #}
     <div id="meeting-paused" class="wb-paused" role="status" hidden>
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+        <rect x="3" y="2" width="3.5" height="12" rx="1" />
+        <rect x="9.5" y="2" width="3.5" height="12" rx="1" />
+      </svg>
       {% translate "Paused: the meeting doesn't update while you type or have something open. It continues when you're done." %}
     </div>
     {# Others change the meeting from their devices: merging keeps focus, #}
