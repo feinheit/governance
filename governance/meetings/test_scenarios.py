@@ -549,9 +549,30 @@ class CircleEmptiedFromAboveScenarioTest(TestCase):
         bakery.refresh_from_db()
         self.assertTrue(bakery.is_circle)
 
+        # A later proposal renaming the bakery doesn't record it
+        renaming = adopt(
+            Proposal.objects.create(
+                circle=kitchen,
+                proposer=ada,
+                tension="Name",
+                status=Proposal.PUBLISHED,
+                instructions=[
+                    {
+                        "op": "replace",
+                        "path": f"/roles/{bakery.pk}/name",
+                        "original_value": "Bakery",
+                        "value": "Bread",
+                    }
+                ],
+                created_at=timezone.now(),
+            )
+        )
+
         end_meeting(meeting)
         bakery.refresh_from_db()
         moving.refresh_from_db()
+        renaming.refresh_from_db()
+        self.assertEqual(len(renaming.instructions), 1)
         self.assertFalse(bakery.is_circle)
         self.assertIn(
             {"op": "remove", "path": f"/roles/{bakery.pk}/supporting_circle"},

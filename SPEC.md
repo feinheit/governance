@@ -214,7 +214,7 @@ accountabilities and domains through its own governance (1.3.3).
   adopting, or when its own meeting running meanwhile ends
   (`revert_after_meeting()`): the meeting goes on to its closing round,
   the proposal which left the circle without roles (also one of the
-  super-circle) records the step; its core roles are archived and their assignments end, its
+  super-circle, `Proposal.reverting_circles`) records the step; its core roles are archived and their assignments end, its
   policies are archived (a role only has policies for its domains, 1.3.2;
   the same proposal may move them up). Drafts say so beforehand, the
   adopted proposal records the steps.

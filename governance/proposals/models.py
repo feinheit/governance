@@ -109,6 +109,16 @@ class Proposal(models.Model):
         related_name="changed_by_proposals",
         verbose_name=_("affected roles"),
     )
+    reverting_circles = models.ManyToManyField(
+        "roles.Role",
+        blank=True,
+        related_name="reverted_by_proposals",
+        verbose_name=_("circles turning back when their meeting ends"),
+        help_text=_(
+            "Circles the proposal left without roles while their own meeting"
+            " ran; they turn back into roles when it ends."
+        ),
+    )
     policies = models.ManyToManyField(
         "roles.Policy",
         blank=True,
