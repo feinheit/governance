@@ -70,6 +70,9 @@ def _record_election(meeting, role, user, term_ends_on):
     if role.core_role == REP:
         sync_circle_holders(role.circle, day)
     update_today()
+    # Recorded again in the meeting (a correction, a second vote): the
+    # latest result replaces the earlier one, the role has one holder
+    meeting.elections.filter(role=role).delete()
     return Election.objects.create(
         meeting=meeting, role=role, user=user, term_ends_on=term_ends_on
     )

@@ -141,6 +141,34 @@ class ElectionsTest(TestCase):
         self.client.force_login(outsider)  # Not a member of the circle
         self.assertEqual(self.client.post(url, {}).status_code, 403)
 
+    def test_recorded_again(self):
+        """Recording the same role again in the meeting (a correction, a
+        second vote) keeps only the latest result"""
+        cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        Assignment.objects.create(role=cook, user=self.ada)  # Stays a member
+        self.client.force_login(self.ada)
+        url = f"/meetings/{self.meeting.pk}/elections/"
+        for user, term in [(self.bob, "2027-12-31"), (self.ada, "2027-06-30")]:
+            self.client.post(
+                url,
+                {"role": self.secretary.pk, "user": user.pk, "term_ends_on": term},
+            )
+        self.assertEqual(
+            list(self.meeting.elections.values_list("user", "term_ends_on")),
+            [(self.ada.pk, dt.date(2027, 6, 30))],
+        )
+        # Bob's assignment of a moment was a mistake, Ada holds the role
+        self.assertEqual(
+            [
+                (a.user, a.elected_until)
+                for a in Assignment.objects.current().filter(role=self.secretary)
+            ],
+            [(self.ada, dt.date(2027, 6, 30))],
+        )
+        self.assertFalse(
+            Assignment.objects.filter(role=self.secretary, user=self.bob).exists()
+        )
+
     def test_held_without_a_term(self):
         """A role becoming elected while somebody holds it: its holder has no
         term, the role is due for an election"""

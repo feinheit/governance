@@ -75,7 +75,8 @@ circle.
   current state.
 - **Elections**: the facilitator runs the election, the secretary's
   "Record the election" saves the person and the end of the term (Facilitator,
-  Secretary, Circle Rep and roles elected by policy). Due elections are
+  Secretary, Circle Rep and roles elected by policy). Recording the same
+  role again in the meeting replaces the earlier result. Due elections are
   shown on the circle's page, facilitators get a reminder on Mondays.
 
 ## Tactical meeting

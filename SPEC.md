@@ -410,8 +410,10 @@ result (person, term end) for Facilitator, Secretary, Circle Rep and
 roles elected by policy. Only circle members are candidates, Circle
 Leads aren't the Rep: an unfilled Circle Rep is nobody's (not held by the
 Circle Leads like other unfilled roles, not a role to propose from). Re-electing changes the term, electing somebody else
-ends the previous assignment, a Rep also holds the circle's role in the
-super-circle. Due elections (within 30 days, nobody elected, or held without a
+ends the previous assignment (removed if it only started today), a Rep
+also holds the circle's role in the super-circle. Elected roles have one
+holder: recording the same role again in the meeting (a correction, a
+second vote) replaces the earlier result. Due elections (within 30 days, nobody elected, or held without a
 term, e.g. a role made elected by policy while held; terms end in the
 future) show on
 the circle page and the Facilitator's and Secretary's person pages;
