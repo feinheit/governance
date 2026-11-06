@@ -327,7 +327,8 @@ class MeetingE2ETest(LiveServerTestCase):
         page.locator("#amend li", has_text="Noise").locator("button").click()
         page.wait_for_selector("#amend form", state="detached")
         self.assertIn(
-            "from Bakery", page.locator("#meeting ul.list-unstyled").inner_text()
+            "from Bakery",
+            page.locator("#meeting ul.list-unstyled:not(.wb-summary)").inner_text(),
         )
 
         # Removing the bakery: the policy moves out already, Baker too

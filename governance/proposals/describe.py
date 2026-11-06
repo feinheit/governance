@@ -202,3 +202,48 @@ def describe(instructions, names):  # noqa: C901
         )
 
     return changes
+
+
+@dataclass
+class Summary:
+    """What a proposal does to one role or policy"""
+
+    action: str  # added, changed, removed, moved
+    kind: str  # Role, Policy
+    name: str
+    target: str = ""  # Where a role or policy moves to
+
+
+ACTION_ORDER = ["added", "removed", "moved", "changed"]
+
+
+def summarize(changes):
+    """The roles and policies a proposal adds, changes, removes or moves,
+    one each in their order, e.g. for those following a meeting while the
+    secretary amends it"""
+    result = {}
+    for change in changes:
+        if not change.subject_key or change.action == "elected":
+            continue
+        kind = str(
+            _("Role") if change.subject_key.startswith("roles/") else _("Policy")
+        )
+        name = change.subject
+        # The role or policy itself, not e.g. an accountability added to it
+        itself = change.label == kind
+        action = change.action if itself else "changed"
+        if itself and action == "added":
+            labels = {str(FIELD_LABELS["name"]), str(FIELD_LABELS["title"])}
+            name = next(
+                (text for label, text in change.details if label in labels), name
+            )
+        summary = result.get(change.subject_key)
+        if summary is None:
+            result[change.subject_key] = Summary(
+                action, kind, name, change.new if action == "moved" else ""
+            )
+        elif ACTION_ORDER.index(action) < ACTION_ORDER.index(summary.action):
+            summary.action = action
+            if action == "moved":
+                summary.target = change.new
+    return list(result.values())

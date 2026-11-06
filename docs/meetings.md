@@ -14,7 +14,8 @@ the page updates by itself.
   else the secretary, e.g. while the Secretary is late; the tool asks
   those who aren't acting as the circle's Secretary to confirm.
 - **Following**: the others see the current step and agenda item
-  highlighted, and open the item's proposal with "Open the proposal".
+  highlighted, a summary of what the proposal changes (updated while the
+  secretary amends it), and open it with "Open the proposal".
   In tactical meetings they look at another review (checklists, metrics,
   updates) on their own screen by clicking it, "Back to the meeting"
   returns.

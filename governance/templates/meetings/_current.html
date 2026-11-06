@@ -82,6 +82,20 @@
           {% endfor %}
         </nav>
         <div class="wb-markdown mb-2">{{ proposal.tension|markdown }}</div>
+        {% if summary %}
+          {# What it proposes now, updated while the secretary amends it #}
+          <ul class="list-unstyled mb-3 wb-summary" aria-label="{% translate 'Proposed' %}">
+            {% for entry in summary %}
+              <li>
+                <span
+                  class="badge {{ entry.action|tone }}"
+                >{% if entry.action == "added" %}{% translate "added" %}{% elif entry.action == "removed" %}{% translate "removed" %}{% elif entry.action == "moved" %}{% translate "moved" %}{% else %}{% translate "changed" %}{% endif %}</span>
+                {{ entry.kind }} <strong>{{ entry.name }}</strong>{% if entry.target %}
+                  → {{ entry.target }}{% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
         {% include "proposals/_consequences.html" %}
 
         {% if problems %}

@@ -14,7 +14,8 @@ aktualisiert sich von selbst.
   neben dem Secretary macht jemand anderen zum Secretary des Meetings;
   wer nicht als Secretary des Kreises handelt, bestätigt das zuerst.
 - **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
-  hervorgehoben und öffnen den Vorschlag des Punkts mit "Vorschlag
+  hervorgehoben, eine Übersicht, was der Vorschlag ändert (aktualisiert,
+  während der Secretary ihn anpasst), und öffnen ihn mit "Vorschlag
   öffnen". In Tactical Meetings schauen sie sich mit einem Klick eine
   andere Übersicht (Checklisten, Metriken, Updates) auf dem eigenen
   Bildschirm an, "Zurück zum Meeting" kehrt zurück. Solange du tippst oder etwas offen hast, aktualisiert sich die

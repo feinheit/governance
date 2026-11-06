@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:03+0100\n"
+"POT-Creation-Date: 2026-11-06 17:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1999,6 +1999,36 @@ msgid "Steps"
 msgstr "Schritte"
 
 #: governance/templates/meetings/_current.html
+#: governance/templates/roles/policy_detail.html
+#: governance/templates/roles/role_detail.html
+msgid "Proposed"
+msgstr "Vorgeschlagen"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "added"
+msgstr "hinzugefügt"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "removed"
+msgstr "entfernt"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "moved"
+msgstr "verschoben"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/notifications/_changes.txt
+#: governance/templates/proposals/proposal_detail.html
+msgid "changed"
+msgstr "geändert"
+
+#: governance/templates/meetings/_current.html
 #: governance/templates/proposals/proposal_detail.html
 msgid "The proposal can't be adopted like this:"
 msgstr "So kann der Vorschlag nicht angenommen werden:"
@@ -2358,26 +2388,6 @@ msgstr "Zum laufenden Meeting"
 #: governance/templates/meetings/meeting_list.html
 msgid "No meetings."
 msgstr "Keine Meetings."
-
-#: governance/templates/notifications/_changes.txt
-#: governance/templates/proposals/proposal_detail.html
-msgid "added"
-msgstr "hinzugefügt"
-
-#: governance/templates/notifications/_changes.txt
-#: governance/templates/proposals/proposal_detail.html
-msgid "removed"
-msgstr "entfernt"
-
-#: governance/templates/notifications/_changes.txt
-#: governance/templates/proposals/proposal_detail.html
-msgid "moved"
-msgstr "verschoben"
-
-#: governance/templates/notifications/_changes.txt
-#: governance/templates/proposals/proposal_detail.html
-msgid "changed"
-msgstr "geändert"
 
 #: governance/templates/notifications/domain_policy_changed.txt
 #, python-format
@@ -2834,11 +2844,6 @@ msgstr "Sprache"
 #, python-format
 msgid "archived on %(date)s"
 msgstr "archiviert am %(date)s"
-
-#: governance/templates/roles/policy_detail.html
-#: governance/templates/roles/role_detail.html
-msgid "Proposed"
-msgstr "Vorgeschlagen"
 
 #: governance/templates/roles/role_detail.html
 #, python-format

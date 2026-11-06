@@ -70,8 +70,12 @@ class ProcessingTest(TestCase):
         self.assertContains(response, "Clarifying questions")
         self.assertNotContains(response, f"/agenda/{self.item.pk}/step/")
         self.assertNotContains(response, "Propose changes")
-        # Where the meeting is, and the proposal to read
+        # Where the meeting is, what the proposal does, the proposal to read
         self.assertContains(response, 'aria-current="step"')
+        self.assertRegex(
+            response.content.decode(),
+            r'class="list-unstyled mb-3 wb-summary"[\s\S]*changed</span>\s*Role <strong>Cook</strong>',
+        )
         self.assertContains(response, "Open the proposal")
         self.client.force_login(self.bob)
 

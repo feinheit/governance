@@ -28,6 +28,7 @@ from governance.meetings.models import (
 )
 from governance.meetings.outputs import meeting_outputs
 from governance.modals import is_modal
+from governance.proposals.describe import summarize
 from governance.proposals.drafting import can_edit
 from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
@@ -193,8 +194,11 @@ def current_context(request, meeting):
         return {}
     context = {"current": item, "steps": STEP_CHOICES}
     if proposal := item.proposal:
+        changes = annotate_changes(proposal)
         context |= {
-            "changes": annotate_changes(proposal),
+            "changes": changes,
+            # What it proposes now, while the secretary amends it
+            "summary": summarize(changes),
             "objections": proposal.objections.select_related("user", "role"),
             # Who may object for which role (constitution 5.3)
             "objectors": [
