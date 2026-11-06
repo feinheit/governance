@@ -15,6 +15,9 @@ the page updates by itself.
   those who aren't acting as the circle's Secretary to confirm.
 - **Following**: the others see the current step and agenda item
   highlighted, and open the item's proposal with "Open the proposal".
+  In tactical meetings they look at another review (checklists, metrics,
+  updates) on their own screen by clicking it, "Back to the meeting"
+  returns.
   While you type or have something open, the page doesn't update; a
   notice at the top says so.
 - **Attendees** are the circle's members at the start; members invite

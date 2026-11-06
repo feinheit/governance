@@ -15,7 +15,9 @@ aktualisiert sich von selbst.
   wer nicht als Secretary des Kreises handelt, bestätigt das zuerst.
 - **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
   hervorgehoben und öffnen den Vorschlag des Punkts mit "Vorschlag
-  öffnen". Solange du tippst oder etwas offen hast, aktualisiert sich die
+  öffnen". In Tactical Meetings schauen sie sich mit einem Klick eine
+  andere Übersicht (Checklisten, Metriken, Updates) auf dem eigenen
+  Bildschirm an, "Zurück zum Meeting" kehrt zurück. Solange du tippst oder etwas offen hast, aktualisiert sich die
   Seite nicht; ein Hinweis oben sagt es.
 - **Teilnehmende** sind die Mitglieder des Kreises beim Start; Mitglieder
   laden weitere ein oder entfernen sie.

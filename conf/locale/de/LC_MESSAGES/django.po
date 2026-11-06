@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:14+0100\n"
+"POT-Creation-Date: 2026-11-06 16:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2223,6 +2223,15 @@ msgstr "Meeting beenden"
 #: governance/templates/meetings/meeting_detail.html
 msgid "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed."
 msgstr "Du nimmst als Admin an diesem Meeting teil, nicht als Mitglied des Kreises. Übernimm nur, wenn du weisst, dass es nötig ist."
+
+#: governance/templates/meetings/meeting_detail.html
+#, python-format
+msgid "You're looking at another step on your screen, the meeting is at: %(step)s."
+msgstr "Du schaust dir auf deinem Bildschirm einen anderen Schritt an, das Meeting ist bei: %(step)s."
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Back to the meeting"
+msgstr "Zurück zum Meeting"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "The invited roles have no checklist items."

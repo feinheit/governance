@@ -165,6 +165,33 @@ class TacticalTest(TestCase):
         self.assertNotContains(response, "Show earlier meetings")  # All of them
         self.assertContains(response, f'hx-get="{url}?earlier=10"')
 
+    def test_followers_look_at_other_reviews(self):
+        """Following, people look at another review on their own screen; the
+        meeting stays where it is"""
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            step="agenda",
+            secretary=self.ada,
+        )
+        url = meeting.get_absolute_url()
+        self.client.force_login(self.bob)  # Following
+        response = self.client.get(url)
+        self.assertContains(response, 'href="?step=metrics"')
+        self.assertNotContains(response, 'href="?step=agenda"')  # No review
+        self.assertNotContains(response, "Meals served")
+        response = self.client.get(f"{url}?step=metrics")
+        self.assertContains(response, "Meals served")
+        self.assertContains(response, "the meeting is at")
+        self.assertContains(response, f'hx-get="{url}?step=metrics"')
+        meeting.refresh_from_db()
+        self.assertEqual(meeting.step, "agenda")
+        # Only reviews
+        self.assertNotContains(
+            self.client.get(f"{url}?step=closing"), "the meeting is at"
+        )
+
     def test_no_proposals(self):
         """Tactical meetings don't process proposals, not even crafted"""
         from governance.proposals.models import Proposal

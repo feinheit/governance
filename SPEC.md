@@ -309,7 +309,8 @@ default. The meeting's secretary handles its buttons (`can_run()`):
 steps, processing items, objections, adopting, elections, attendees,
 the minutes, ending it; they also amend proposals. The others follow on
 their own screens: the current step and agenda item are highlighted, the
-item's proposal links to its page. The app doesn't record who
+item's proposal links to its page; in tactical meetings they look at
+another review on their own screen (`?step=`, `REVIEW_STEPS`). The app doesn't record who
 facilitates. The secretary is the Secretary, else the stand-ins of 5.3.6
 (`acting_secretaries()`: the Facilitator, then the Circle Leads, also
 for asking before starting, "Take over" and the requests for a meeting),

@@ -44,7 +44,7 @@
         <li class="list-group-item">
           <a
             class="btn btn-sm btn-quiet"
-            href="?earlier={{ earlier_more }}#earlier-outcomes"
+            href="?{% if shown_step != meeting.step %}step={{ shown_step }}&amp;{% endif %}earlier={{ earlier_more }}#earlier-outcomes"
           >{% translate "Show earlier meetings" %}</a>
         </li>
       {% endif %}
