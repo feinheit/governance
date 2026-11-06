@@ -192,7 +192,8 @@
             </ul>
           </section>
         {% endif %}
-        {% if proposals %}
+        {% if proposals and not meeting.is_running %}
+          {# While it runs, the agenda has them #}
           <section class="card mb-4">
             <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposals" %}</h2></div>
             <ul class="list-group list-group-flush">{% include "proposals/_proposal_rows.html" %}</ul>

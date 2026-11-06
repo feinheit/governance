@@ -53,7 +53,9 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   eine andere Reihenfolge; die Schritte des
   integrativen Entscheidungsprozesses leiten, erzwingen aber nichts.
 - **Vorschlag**: nur der Secretary hält ihn aus einer Spannung fest und
-  ändert ihn. "Verwerfen" zieht ihn zurück (z.B. ist er nicht gültig,
+  ändert ihn, im Meeting: solange es läuft, verweist die Seite des
+  Vorschlags dorthin, und die Agenda führt nur die anderen zu den Seiten
+  der Vorschläge. "Verwerfen" zieht ihn zurück (z.B. ist er nicht gültig,
   oder die vorschlagende Person ist nicht mehr da); die vorschlagende
   Person kann ihn auf der Seite des Vorschlags "Neu entwerfen". "Erledigt"
   ohne Annehmen oder Verwerfen lässt ihn auf das nächste Meeting warten.

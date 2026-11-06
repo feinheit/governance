@@ -31,7 +31,7 @@
               <span class="wb-agenda-owner">– {{ item.owner.get_short_name }}</span>{% endif %}</a>
         {% else %}
           <span class="wb-row-title{% if item.is_completed %} wb-completed{% endif %}">
-            {% if item.proposal %}<a
+            {% if item.proposal and item.links_out %}<a
                 href="{{ item.proposal.get_absolute_url }}"
               >{{ item }}</a>{% else %}{{ item }}{% endif %}{% if item.owner %}
               <span class="wb-agenda-owner" title="{{ item.owner }}">– {{ item.owner.get_short_name }}</span>{% endif %}

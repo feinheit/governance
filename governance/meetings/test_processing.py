@@ -257,6 +257,23 @@ class ProcessingTest(TestCase):
         response = self.client.get(self.proposal.get_absolute_url())
         self.assertContains(response, self.cook.get_absolute_url())
 
+    def test_amended_in_the_meeting(self):
+        """While the meeting runs, the secretary amends the proposal there,
+        not on its page; the agenda doesn't lead out of the meeting either"""
+        undo = f"/proposals/{self.proposal.pk}/roles/{self.cook.pk}/undo/"
+        self.client.force_login(self.bob)
+        self.client.post(f"/agenda/{self.item.pk}/process/")
+        response = self.client.get(self.meeting.get_absolute_url())
+        self.assertContains(response, undo)
+        self.assertNotContains(response, f'href="{self.proposal.get_absolute_url()}"')
+        response = self.client.get(self.proposal.get_absolute_url())
+        self.assertNotContains(response, undo)
+        self.assertContains(response, "The secretary amends it in the meeting.")
+        # The attendees read it on its page
+        self.client.force_login(self.eve)
+        response = self.client.get(self.meeting.get_absolute_url())
+        self.assertContains(response, f'href="{self.proposal.get_absolute_url()}"')
+
     def test_proposals_come_from_roles(self):
         """A guest's tension becomes a proposal without a role, which isn't
         adopted (5.3.1), like a proposal from a role its proposer left"""
@@ -410,7 +427,9 @@ class ProcessingTest(TestCase):
             (proposal.proposer, proposal.status, proposal.meeting, proposal.tension),
             (self.eve, Proposal.IN_MEETING, self.meeting, "Noise"),
         )
-        self.assertContains(self.client.get(proposal.get_absolute_url()), "Add a role")
+        self.assertContains(
+            self.client.get(self.meeting.get_absolute_url()), "Add a role"
+        )
 
         self.client.post(f"/agenda/{item.pk}/complete/")
         item.refresh_from_db()

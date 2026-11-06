@@ -51,7 +51,9 @@ circle.
   them; the steps of the
   integrative decision-making process guide, but don't enforce anything.
 - **Proposal**: only the secretary captures it from a tension and changes
-  it. "Discard" withdraws it (e.g. it isn't valid, or its proposer is
+  it, in the meeting: while it runs, the proposal's page points there,
+  and the agenda leads to the proposals' pages only for the others.
+  "Discard" withdraws it (e.g. it isn't valid, or its proposer is
   gone); its proposer may "Draft again" on the proposal's page. "Done"
   without adopting or discarding keeps it waiting for the next meeting.
 - **Objections** are recorded with the person and the role, the

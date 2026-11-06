@@ -87,6 +87,12 @@
       </div>
     {% endif %}
   </div>
+  {% if amended_in %}
+    <div class="alert alert-info">
+      {% translate "The proposal is being processed in a governance meeting. The secretary amends it in the meeting." %}
+      <a href="{{ amended_in.get_absolute_url }}">{% translate "Go to the meeting" %}</a>
+    </div>
+  {% endif %}
   {% include "proposals/_consequences.html" %}
   {% if problems %}
     <div class="alert alert-warning">

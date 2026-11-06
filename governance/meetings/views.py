@@ -490,6 +490,9 @@ def agenda_context(request, meeting):
             and not item.is_completed
             and item.pk != meeting.active_item_id
         )
+        # Those running the meeting stay in it, the attendees read the
+        # proposal on its page
+        item.links_out = bool(item.proposal) and not (runs and meeting.is_running)
         # A completed item's row leads to its result (_results.html), shown
         # while processing the tensions
         item.has_result = (

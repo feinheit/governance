@@ -155,7 +155,11 @@ def proposal_detail(request, pk):
         pk=pk,
     )
     context = {"proposal": proposal, "changes": annotate_changes(proposal)}
-    if can_edit(request.user, proposal):
+    meeting = proposal.meeting
+    if proposal.status == Proposal.IN_MEETING and meeting and meeting.is_running:
+        # The secretary amends it in the meeting, the others see it there
+        context["amended_in"] = meeting
+    elif can_edit(request.user, proposal):
         context |= drafting_context(proposal)
     if proposal.status in {Proposal.PUBLISHED, Proposal.IN_MEETING}:
         members = circle_members(proposal.circle)

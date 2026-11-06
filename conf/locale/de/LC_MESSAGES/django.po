@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 18:03+0100\n"
+"POT-Creation-Date: 2026-11-06 18:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2594,6 +2594,14 @@ msgstr "Neu entwerfen"
 #: governance/templates/proposals/proposal_detail.html
 msgid "Back to the draft"
 msgstr "Zurück zum Entwurf"
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "The proposal is being processed in a governance meeting. The secretary amends it in the meeting."
+msgstr "Der Vorschlag wird in einem Governance Meeting behandelt. Der Secretary passt ihn im Meeting an."
+
+#: governance/templates/proposals/proposal_detail.html
+msgid "Go to the meeting"
+msgstr "Zum Meeting"
 
 #: governance/templates/proposals/proposal_detail.html
 msgid "Responses"
