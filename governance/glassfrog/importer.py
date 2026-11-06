@@ -323,8 +323,12 @@ class Importer:
                 continue
             user = User.objects.filter(email=email).first()
             if user is None:
+                # German first, people change it in their settings
                 user = User.objects.create_user(
-                    email, full_name=person["name"], is_active=person_id in current
+                    email,
+                    full_name=person["name"],
+                    is_active=person_id in current,
+                    language="de",
                 )
                 self.stats["users created"] += 1
                 if not user.is_active:
@@ -341,7 +345,9 @@ class Importer:
 
         # The admins of the installation administer it from the start
         for _name, email in settings.ADMINS:
-            user, created = User.objects.get_or_create(email=email.lower())
+            user, created = User.objects.get_or_create(
+                email=email.lower(), defaults={"language": "de"}
+            )
             if created or not (user.is_admin and user.is_active):
                 user.is_admin = user.is_active = True
                 user.save(update_fields=["is_admin", "is_active"])

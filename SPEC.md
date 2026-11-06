@@ -441,7 +441,8 @@ the user's decision.
 `./manage.py import_glassfrog ~/projects/glassfrog`, idempotent (by
 `glassfrog_id` and date):
 
-1. Users (see section 2); `settings.ADMINS` become superusers.
+1. Users (see section 2), created with German as their language (they
+   change it on their page); `settings.ADMINS` become superusers.
 2. The current structure of live circles from the newest files.
    Circles with only core roles become roles (`normalize()`).
 3. Proposals, tensions and meetings. Adopted proposals keep their

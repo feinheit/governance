@@ -537,6 +537,8 @@ class ImportTest(TestCase):
         self.assertEqual(
             (ada.is_active, bob.full_name, bob.is_active), (True, "Bob Example", False)
         )
+        # German first: the importer creates people with German as language
+        self.assertEqual((ada.language, bob.language), ("de", "de"))
         self.assertFalse(User.objects.filter(full_name="Removed").exists())
         admin = User.objects.get(email="root@example.com")
         self.assertTrue(admin.is_admin)
