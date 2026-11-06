@@ -99,8 +99,9 @@ class Applier:
         if (problem := message % kwargs) not in self.problems:
             self.problems.append(problem)
 
-    def get(self, kind, key, *, allow_archived=False, circle=None):
-        """The role or policy of a path, checked against the circle"""
+    def get(self, kind, key, *, allow_archived=False, circle=None, deep=False):
+        """The role or policy of a path, checked against the circle (``deep``:
+        also a circle in any sub-circle thereof, 5.2)"""
         circle = circle or self.circle
         if NEW_KEY.fullmatch(key):
             obj = self.created.get(f"{kind}/{key}")
@@ -123,7 +124,12 @@ class Applier:
             owner = obj.pk if obj.circle_id is None else obj.circle_id
         else:
             owner = obj.role_id if obj.role.is_circle else obj.role.circle_id
-        if owner != circle.pk:
+        if owner != circle.pk and not (
+            deep
+            and kind == "roles"
+            and obj.is_circle
+            and circle.pk in {c.pk for c in obj.ancestors()}
+        ):
             self.problem(
                 _("%(object)s isn't governed by %(circle)s."),
                 object=obj,
@@ -283,7 +289,8 @@ class Applier:
         if match := re.fullmatch(
             rf"/roles/{KEY}/supporting_circle/(roles|policies)/{KEY}", path
         ):
-            target = self.get("roles", match[1])
+            # Into a sub-circle or any sub-circle thereof (5.2)
+            target = self.get("roles", match[1], deep=True)
             obj = self.get(match[2], match[3])
             kind = match[2]
         elif (match := re.fullmatch(rf"/(roles|policies)/{KEY}", path)) and (
@@ -292,7 +299,7 @@ class Applier:
             )
         ):
             kind = match[1]
-            source_circle = self.get("roles", source_match[1])
+            source_circle = self.get("roles", source_match[1], deep=True)
             if source_circle is None:
                 return
             if not source_circle.is_circle:
@@ -305,13 +312,23 @@ class Applier:
             return
         if target is None or obj is None:
             return
-        if not target.is_circle and kind == "roles" and not target.core_role:
+        if (
+            not target.is_circle
+            and kind == "roles"
+            and not target.core_role
+            and target.circle_id == self.circle.pk
+        ):
             # Moving roles into a role makes it a circle
             self.make_circle(target)
         if not target.is_circle:
             self.problem(_("%(role)s isn't a circle."), role=target)
         elif kind == "roles":
-            if obj.core_role or obj == target or obj.circle_id is None:
+            if (
+                obj.core_role
+                or obj.circle_id is None
+                # Not into its own inside
+                or obj.pk in {target.pk, *(c.pk for c in target.ancestors())}
+            ):
                 self.problem(_("%(role)s can't be moved."), role=obj)
                 return
             self.shrunk.add(obj.circle)

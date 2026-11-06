@@ -11,8 +11,8 @@
     <input type="hidden" name="kind" value="{{ kind }}">
     <input type="hidden" name="key" value="{{ obj.pk }}">
     <select name="target" class="form-select form-select-sm" aria-label="{% translate 'Sub-circle' %}">
-      {% for sub in options %}{% if sub != obj %}<option value="{{ sub.pk }}">
-            {{ sub }}
+      {% for sub in options %}{% if sub != obj and obj.pk not in sub.ancestor_pks %}<option value="{{ sub.pk }}">
+            {% firstof sub.label sub %}
           </option>{% endif %}{% endfor %}
     </select>
     <button type="submit" class="btn btn-sm btn-quiet">{% translate "Move" %}</button>

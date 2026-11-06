@@ -12,7 +12,8 @@ Without changes the draft stays a **tension** only you see (on your
 page). You can work it out later or bring it to a meeting.
 
 Under "Propose changes" you add, change or remove roles and policies,
-move them between circles, or turn a role into a circle and back. The
+move them into a sub-circle (also deeper down) or out of one into the
+circle, or turn a role into a circle and back. The
 draft shows everything as a comparison, together with what adopting it
 would cause or why it can't be adopted like this.
 

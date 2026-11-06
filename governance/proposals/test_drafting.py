@@ -706,6 +706,51 @@ class DraftingTest(TestCase):
         waiter.refresh_from_db()
         self.assertEqual((self.cook.is_circle, waiter.circle), (True, self.cook))
 
+    def test_move_deep(self):
+        """The circle moves roles and policies into any sub-circle thereof and
+        out of it in one step (5.2), not into a role's own inside"""
+        bakery = Role.objects.create(name="Bakery", circle=self.kitchen, is_circle=True)
+        bakery.create_core_roles()
+        ovens = Role.objects.create(name="Ovens", circle=bakery, is_circle=True)
+        ovens.create_core_roles()
+        stoker = Role.objects.create(name="Stoker", circle=ovens)
+        heat = Policy.objects.create(role=ovens, title="Heat")
+        proposal = self.draft()
+        response = self.client.get(f"/proposals/{proposal.pk}/move/")
+        self.assertContains(response, "Bakery › Ovens")
+        for data in [
+            {"kind": "roles", "key": self.cook.pk, "target": ovens.pk},
+            {"kind": "policies", "key": self.tea.pk, "target": ovens.pk},
+            {"kind": "roles", "key": stoker.pk},
+            {"kind": "policies", "key": heat.pk},
+        ]:
+            self.client.post(f"/proposals/{proposal.pk}/move/", data)
+        proposal.refresh_from_db()
+        self.assertEqual(problems(proposal), [])
+        adopt(proposal)
+        for obj in [self.cook, self.tea, stoker, heat]:
+            obj.refresh_from_db()
+        self.assertEqual(
+            (self.cook.circle, self.tea.role, stoker.circle, heat.role),
+            (ovens, ovens, self.kitchen, self.kitchen),
+        )
+
+        # Not into its own inside
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            tension="Loop",
+            created_at=dt.datetime(2026, 12, 1, tzinfo=dt.UTC),
+            instructions=[
+                {
+                    "op": "move",
+                    "path": f"/roles/{ovens.pk}/supporting_circle/roles/{bakery.pk}",
+                    "from": f"/roles/{bakery.pk}",
+                }
+            ],
+        )
+        self.assertEqual(problems(proposal), ["Bakery can't be moved."])
+
     def test_convert(self):
         proposal = self.draft()
         url = f"/proposals/{proposal.pk}/roles/{self.cook.pk}/convert/"

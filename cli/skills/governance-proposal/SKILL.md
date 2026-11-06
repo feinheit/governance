@@ -109,7 +109,8 @@ before they're used:
 - op: remove
   path: /roles/37/supporting_circle
 
-# Moving a role (or policy) into a sub-circle, and out of one
+# Moving a role (or policy) into a sub-circle (also any sub-circle
+# thereof), and out of one into the circle
 - op: move
   from: /roles/38
   path: /roles/39/supporting_circle/roles/38

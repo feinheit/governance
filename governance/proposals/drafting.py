@@ -758,16 +758,41 @@ def subject_undo(request, pk, kind, key):
     return done(request, proposal)
 
 
+def sub_circles_of(circle):
+    """The sub-circles and any sub-circles thereof (5.2), depth-first, with
+    their path from the circle (``label``) and the circles containing them
+    (``ancestor_pks``)"""
+    circles = Role.objects.depth_first()
+    by_pk = {c.pk: c for c in circles}
+    result = []
+    for sub in circles:
+        path, parent = [sub], by_pk.get(sub.circle_id)
+        while parent is not None and parent.pk != circle.pk:
+            path.insert(0, parent)
+            parent = by_pk.get(parent.circle_id)
+        if parent is None:
+            continue  # Not inside the circle
+        sub.label = " › ".join(c.name for c in path)
+        sub.ancestor_pks = [c.pk for c in path[:-1]]
+        result.append(sub)
+    return result
+
+
 def movable(circle):
-    """Roles and policies of the circle and of its sub-circles"""
-    sub_circles = list(circle.roles.active().circles().order_by("position", "name"))
+    """Roles and policies of the circle and of its sub-circles (also any
+    sub-circles thereof, 5.2)"""
+    sub_circles = sub_circles_of(circle)
     for sub in sub_circles:
         sub.movable_roles = sub.roles.active().filter(core_role="").order_by("name")
         sub.movable_policies = Policy.objects.active().filter(role=sub)
+    deeper = [sub for sub in sub_circles if sub.circle_id != circle.pk]
+    roles = list(circle.roles.active().filter(core_role="").order_by("name"))
+    for role in roles:
+        role.ancestor_pks = []
     return {
         "sub_circles": sub_circles,
-        # Moving roles into a role makes it a circle
-        "targets": circle.roles.active().filter(core_role="").order_by("name"),
+        # Moving roles into a role makes it a circle; deeper only circles
+        "targets": [*roles, *deeper],
         "roles": circle.roles.active().filter(core_role="").order_by("name"),
         "policies": Policy.objects.active().filter(role=circle),
     }
@@ -791,7 +816,12 @@ def proposal_move(request, pk):
         owner = obj.circle_id if kind == "roles" else obj.role_id
         if owner == circle.pk:
             target = targets.get(request.POST.get("target", ""))
-            if target is None or target == obj:
+            if (
+                target is None
+                or target == obj
+                # Not into its own inside
+                or obj.pk in getattr(target, "ancestor_pks", ())
+            ):
                 raise PermissionDenied
             new = [
                 {"op": "test", "path": f"/{kind}/{obj.pk}"},

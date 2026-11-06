@@ -191,7 +191,10 @@ turned into proposals get the owner's first role, the secretary changes
 it if needed.
 
 **What drafts change**: add, change, remove and move roles and policies of
-the circle, convert roles and circles. Removing a circle moves the
+the circle, convert roles and circles. Moves go into a sub-circle or any
+sub-circle thereof and out of them into the circle, in one step (5.2;
+moving roles into a role makes it a circle only for the circle's own
+roles), not into a role's own inside. Removing a circle moves the
 selected roles and policies to the super-circle and archives the rest
 (like GlassFrog). Circles and roles removed (also inside a removed
 circle) and circles turned back into roles close: their open proposals
@@ -542,9 +545,6 @@ Deliberately not modelled:
   goes into the minutes.
 
 ## Backlog
-
-- **Verification** (round of 2026-11-06), open: moves into any sub-circle thereof and out of it (5.2), not only direct
-  ones.
 
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so
