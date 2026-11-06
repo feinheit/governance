@@ -142,6 +142,11 @@ class NotificationsTest(TestCase):
         self.assertEqual(sorted(to), ["ada@example.com", "bob@example.com"])
         self.assertIn("Shorter, and now.", to["ada@example.com"].body)
         self.assertIn("Antwort", to["bob@example.com"].subject)  # German
+        # Not to those who left the circle meanwhile
+        Assignment.objects.filter(user=self.bob).update(ends_on=timezone.localdate())
+        to = sent(self.eve, Response.COMMENT, "Tomorrow.")
+        self.assertEqual(sorted(to), ["ada@example.com"])
+        Assignment.objects.filter(user=self.bob).update(ends_on=None)
 
         self.assertEqual(sent(self.ada, Response.CONSENT), {})
 

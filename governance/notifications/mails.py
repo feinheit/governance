@@ -108,9 +108,11 @@ def response_given(response):
         users = User.objects.filter(pk=proposal.proposer_id)
         subject = gettext_noop("Question or comment in %(circle)s: %(proposal)s")
     elif response.kind == Response.COMMENT:
+        # Those who asked or commented, also in an earlier round (they may
+        # be invested), unless they left the circle meanwhile
         users = User.objects.filter(
             pk__in=proposal.responses.filter(kind=Response.COMMENT).values("user")
-        )
+        ).filter(pk__in=members(proposal.circle).values("pk"))
         subject = gettext_noop("Answer in %(circle)s: %(proposal)s")
     elif response.kind == Response.MEETING:
         users = User.objects.filter(

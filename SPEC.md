@@ -414,7 +414,8 @@ follows the core roles), and the circle's Secretaries who joined and
 left the circle; changes by adopted proposals are in their mails, the
 nightly GlassFrog import announces nothing. Responses to proposals
 (`mails.response_given()`): questions and comments go to the proposer,
-the proposer's answers to everybody who asked or commented, requests for
+the proposer's answers to everybody who asked or commented (also in an
+earlier round, unless they left the circle), requests for
 a meeting to the proposer and the circle's Secretary (else who stands
 in), who prepares the meeting; consents stay silent until adopting.
 Not configurable, people filter their mails; the
