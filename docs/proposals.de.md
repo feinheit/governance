@@ -20,7 +20,8 @@ und zurück. Der Entwurf zeigt alles als Vergleich, dazu,
 was das Annehmen bewirken würde oder weshalb es so nicht geht.
 
 Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; ihre Inhaber:innen
-schlagen das selbst vor. Ein Kreis ohne eigene Rollen wird beim Annehmen
+schlagen das selbst vor. Policies kommen erst danach: Eine Rolle legt die
+Policies für ihre Domains auf ihrer Seite fest. Ein Kreis ohne eigene Rollen wird beim Annehmen
 wieder zur Rolle, oder, wenn das eigene Meeting des Kreises seine letzten
 Rollen entfernt hat, wenn dieses Meeting endet (nach der
 Abschlussrunde); seine Policies werden archiviert, ausser derselbe

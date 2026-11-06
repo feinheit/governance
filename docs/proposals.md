@@ -19,7 +19,8 @@ draft shows everything as a comparison, together with what adopting it
 would cause or why it can't be adopted like this.
 
 Adding roles inside a role makes it a circle; its holders propose that
-themselves. A circle without roles of its own turns back into a role when
+themselves. Policies come only after that: a role sets the policies for
+its domains on its page. A circle without roles of its own turns back into a role when
 the proposal is adopted, or, when the circle's own meeting removed its
 last roles, when that meeting ends (after its closing round); its
 policies are archived unless the same proposal moves them up (the draft

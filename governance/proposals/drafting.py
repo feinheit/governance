@@ -574,6 +574,8 @@ def role_edit(request, pk, key=None):
 def policy_edit(request, pk, key=None):
     proposal = editable_proposal(request, pk)
     is_existing = key is not None
+    if not is_existing and not proposal.circle.is_circle:
+        raise PermissionDenied  # Only policies for its domains (1.3.2)
     key = key or new_key(proposal.instructions)
     policy = get_policy(proposal, key) if is_existing else None
     values = proposed_values(

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 12:45+0100\n"
+"POT-Creation-Date: 2026-11-06 13:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -852,6 +852,11 @@ msgstr "%(label)s wurde seit dem Entwurf des Vorschlags geändert."
 #: governance/proposals/instructions.py
 msgid "A new role or policy needs a name."
 msgstr "Eine neue Rolle oder Policy braucht einen Namen."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(role)s only has policies for its domains."
+msgstr "%(role)s hat nur Policies für seine Domains."
 
 #: governance/proposals/instructions.py
 #, python-format

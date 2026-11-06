@@ -112,12 +112,12 @@ class Applier:
         also a circle in any sub-circle thereof, 5.2)"""
         circle = circle or self.circle
         if NEW_KEY.fullmatch(key):
-            obj = self.created.get(f"{kind}/{key}")
-            if obj is None:
+            if f"{kind}/{key}" not in self.created:
                 self.problem(
                     _("The proposal refers to %(key)s before adding it."), key=key
                 )
-            return obj
+            # None if adding it was refused, which is the problem
+            return self.created.get(f"{kind}/{key}")
         model = Role if kind == "roles" else Policy
         obj = model.objects.filter(pk=key).first()
         if obj is None or (obj.archived_on and not allow_archived):
@@ -172,7 +172,11 @@ class Applier:
         for instruction in instructions:
             self.apply_one(instruction)
         for kind, obj in self.created.items():
-            if kind.startswith(("roles/", "policies/")) and not str(obj).strip():
+            if (
+                obj is not None
+                and kind.startswith(("roles/", "policies/"))
+                and not str(obj).strip()
+            ):
                 self.problem(_("A new role or policy needs a name."))
         if self.problems:
             raise ProposalError(self.problems)
@@ -213,6 +217,14 @@ class Applier:
                 obj = Role.objects.create(circle=self.circle, name="")
                 self.roles.add(obj)
             else:
+                if not self.circle.is_circle:
+                    # Set on its page, without governance (1.3.2)
+                    self.problem(
+                        _("%(role)s only has policies for its domains."),
+                        role=self.circle,
+                    )
+                    self.created[f"{kind}/{key}"] = None
+                    return
                 obj = Policy.objects.create(role=self.circle, title="")
                 self.policies.add(obj)
             self.created[f"{kind}/{key}"] = obj

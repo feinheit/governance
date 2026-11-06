@@ -703,6 +703,39 @@ class DraftingTest(TestCase):
             1,
         )
 
+    def test_no_policies_inside_a_role(self):
+        """A role only has policies for its domains, which it sets itself
+        (1.3.2): proposals inside it add roles, not policies"""
+        proposal = Proposal.objects.create(
+            circle=self.cook,
+            role=self.cook,
+            proposer=self.ada,
+            tension="Knives",
+            created_at=dt.datetime(2026, 12, 1, tzinfo=dt.UTC),
+        )
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(response, "Add a role")
+        self.assertNotContains(response, "Add a policy")
+        self.assertEqual(
+            self.client.post(
+                f"/proposals/{proposal.pk}/policies/new/", {"title": "Knife rule"}
+            ).status_code,
+            403,
+        )
+        proposal.instructions = [
+            {"op": "add", "path": "/policies/n1"},
+            {"op": "add", "path": "/policies/n1/title", "value": "Knife rule"},
+        ]
+        self.assertEqual(
+            problems(proposal), ["Cook only has policies for its domains."]
+        )
+        # Once it's a circle, by adding roles first, it has policies
+        proposal.instructions[:0] = [
+            {"op": "add", "path": "/roles/n1"},
+            {"op": "add", "path": "/roles/n1/name", "value": "Knife keeper"},
+        ]
+        self.assertEqual(problems(proposal), [])
+
     def test_roles_inside_a_role(self):
         """The role's holders add roles inside it, which makes it a circle"""
         self.assertContains(

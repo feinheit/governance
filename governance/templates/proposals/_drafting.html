@@ -18,11 +18,12 @@
         class="btn btn-sm btn-primary"
         href="{% url 'proposal_role_add' proposal.pk %}{{ next_query }}"
       >{% translate "Add a role" %}</a>
-      <a
-        data-in-meeting
-        class="btn btn-sm btn-primary"
-        href="{% url 'proposal_policy_add' proposal.pk %}{{ next_query }}"
-      >{% translate "Add a policy" %}</a>
+      {# A role only has policies for its domains, set on its page (1.3.2) #}
+      {% if proposal.circle.is_circle %}<a
+          data-in-meeting
+          class="btn btn-sm btn-primary"
+          href="{% url 'proposal_policy_add' proposal.pk %}{{ next_query }}"
+        >{% translate "Add a policy" %}</a>{% endif %}
       <a
         data-in-meeting
         class="btn btn-sm btn-quiet"
