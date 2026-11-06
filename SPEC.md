@@ -568,12 +568,11 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (third round of 2026-11-06), open:
-  - Bugs: names, titles and texts can be emptied (API); tactical
-    meetings take governance through hand-made requests (an ad-hoc one
-    fails); an ended meeting's outputs list proposals withdrawn later;
-    links on imported open proposals use GlassFrog IDs; a role's holder
-    with two focuses becomes Circle Lead twice when it turns into a
-    circle.
+  - Bugs: tactical meetings take governance through hand-made requests
+    (an ad-hoc one fails); an ended meeting's outputs list proposals
+    withdrawn later; links on imported open proposals use GlassFrog IDs;
+    a role's holder with two focuses becomes Circle Lead twice when it
+    turns into a circle.
   - Decided: moves out of a sub-circle mail its Secretary and Circle
     Leads like moves into one; only the role changes its policies for its
     domains (proposals may remove the domain); imported open proposals

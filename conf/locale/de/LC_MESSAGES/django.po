@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:00+0100\n"
+"POT-Creation-Date: 2026-11-06 13:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -864,8 +864,18 @@ msgid "The constitution defines %(role)s."
 msgstr "Die Verfassung definiert %(role)s."
 
 #: governance/proposals/instructions.py
+#, python-format
+msgid "%(label)s can't be empty."
+msgstr "%(label)s darf nicht leer sein."
+
+#: governance/proposals/instructions.py
 msgid "The Circle Lead gets no accountabilities or domains."
 msgstr "Der Circle Lead erhält keine Accountabilities oder Domains."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "Accountabilities and domains of %(role)s can't be empty."
+msgstr "Accountabilities und Domains von %(role)s dürfen nicht leer sein."
 
 #: governance/proposals/instructions.py
 #, python-format

@@ -56,6 +56,32 @@ class ProblemsTest(TestCase):
         )
         self.assertEqual(problems(proposal), ["Baker doesn't exist anymore."])
 
+    def test_no_empty_names(self):
+        """Names, titles, accountabilities and domains aren't emptied, e.g.
+        from the API; purposes and policies' bodies may be empty"""
+        from governance.proposals.instructions import problems
+        from governance.roles.models import Policy
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        tea = Policy.objects.create(role=kitchen, title="Tea")
+        for instruction in [
+            {"op": "replace", "path": f"/roles/{cook.pk}/name", "value": " "},
+            {"op": "replace", "path": f"/policies/{tea.pk}/title"},
+            {"op": "add", "path": f"/roles/{cook.pk}/accountabilities/n1"},
+        ]:
+            with self.subTest(instruction=instruction):
+                proposal = Proposal(circle=kitchen, instructions=[instruction])
+                self.assertEqual(len(problems(proposal)), 1)
+        proposal = Proposal(
+            circle=kitchen,
+            instructions=[
+                {"op": "replace", "path": f"/roles/{cook.pk}/aim", "value": ""},
+                {"op": "replace", "path": f"/policies/{tea.pk}/body", "value": ""},
+            ],
+        )
+        self.assertEqual(problems(proposal), [])
+
     def test_conflict_markers(self):
         """Texts with conflict markers aren't adopted, e.g. from the API"""
         from governance.proposals.instructions import problems

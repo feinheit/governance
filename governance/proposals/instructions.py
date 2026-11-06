@@ -255,6 +255,14 @@ class Applier:
     def set_field(self, obj, field, instruction):
         value = instruction.get("value")
         label = f"{obj}: {field}"
+        if (
+            field in {"name", "title"}
+            and not (value or "").strip()
+            # New ones without a name are reported by apply()
+            and obj not in self.created.values()
+        ):
+            self.problem(_("%(label)s can't be empty."), label=label)
+            return
         if self.check_value(label, value) and self.check_original(
             label, getattr(obj, field), instruction
         ):
@@ -276,6 +284,12 @@ class Applier:
             return
         model = TEXTS[kind]
         if not self.check_value(str(role), value):
+            return
+        if op in {"add", "replace"} and not (value or "").strip():
+            self.problem(
+                _("Accountabilities and domains of %(role)s can't be empty."),
+                role=role,
+            )
             return
         if op == "add":
             obj = model.objects.create(
