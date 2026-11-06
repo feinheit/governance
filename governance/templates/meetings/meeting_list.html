@@ -13,7 +13,14 @@
         <a href="?kind=tactical">{% translate "Tactical Meetings" %}</a>
       </div>
     </div>
-    {% if can_start_meeting %}
+    {% if running_meeting %}
+      <div class="wb-page-actions">
+        <a
+          class="btn btn-sm btn-primary"
+          href="{{ running_meeting.get_absolute_url }}"
+        >{% translate "Join the running meeting" %}</a>
+      </div>
+    {% elif can_start_meeting %}
       <div class="wb-page-actions">{% include "meetings/_start_buttons.html" with role=circle primary=True %}</div>
     {% endif %}
   </div>

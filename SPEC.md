@@ -292,7 +292,8 @@ removed; its corrections stay in the history.
 `called_by`, `invited_roles` (tactical), attendees, minutes, current item
 and step. Starting is calling: there is no prepared state, scheduling and
 announcing happen in the calendar. Any circle member (and admins) starts
-one (`can_start_meeting()`), the holders of a role a governance meeting
+one (`can_start_meeting()`, not in archived circles; the list of
+meetings and the circle's page lead to the running one instead), the holders of a role a governance meeting
 inside it (1.3.1: its inner circle, adding roles makes it a circle; no
 tactical meetings in a role). Starting asks first (`asks_before_starting()`,
 a modal): in a role always, cancelling being the default (rarely what
@@ -628,11 +629,8 @@ Deliberately not modelled:
 - **Verification** (fourth round, 2026-11-06), open:
   - Bug: removing a proposal from the agenda leaves it `in_meeting` (a
     draft becomes public, an async proposal loses its deadline).
-  - Bug: an archived circle's meeting list offers starting a meeting,
-    which answers 404; `circle_leads()` of archived circles walks up.
   - Risks: ended meetings' minutes, steps and attendees change through
-    the views (the page doesn't offer it); the meeting list offers
-    starting while a meeting runs; making a role elected while people
+    the views (the page doesn't offer it); making a role elected while people
     hold it (no term, never due); elections accept a term end in the past.
   - Decisions: a mail when the proposer withdraws a published proposal?
     The JSON backup names who responded (responses are anonymous

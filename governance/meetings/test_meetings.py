@@ -110,6 +110,21 @@ class MeetingsTest(TestCase):
         response = self.client.get(f"/roles/{self.kitchen.pk}/")
         self.assertContains(response, f'<form method="post" action="{url}"')
 
+    def test_no_start_in_archived_circles_or_while_one_runs(self):
+        """The list of meetings offers starting one only when the circle is
+        active and none runs, like the circle's page"""
+        url = f"/roles/{self.kitchen.pk}/meetings/"
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        response = self.client.get(url)
+        self.assertNotContains(response, "Start a governance meeting")
+        self.assertContains(response, "Join the running meeting")
+
+        Meeting.objects.update(ended_at=timezone.now())
+        self.assertContains(self.client.get(url), "Start a governance meeting")
+        Role.objects.filter(pk=self.kitchen.pk).update(archived_on=timezone.localdate())
+        self.assertNotContains(self.client.get(url), "Start a governance meeting")
+
     def test_one_running_meeting_per_circle(self):
         self.client.force_login(self.bob)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")

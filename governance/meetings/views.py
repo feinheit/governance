@@ -50,6 +50,8 @@ def meeting_list(request, pk):
             "page": Paginator(meetings, 50).get_page(request.GET.get("page")),
             "can_start_meeting": can_start_meeting(request.user, circle),
             "asks_before_starting": asks_before_starting(request.user, circle),
+            # One meeting at a time per circle
+            "running_meeting": circle.meetings.running().first(),
         },
     )
 

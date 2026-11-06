@@ -190,8 +190,11 @@ def can_start_meeting(user, circle):
 
     Usually the Facilitator and the Secretary, but anybody may stand in for
     them: the other one of them, the Circle Lead, and finally the first
-    circle member who declares to stand in (constitution 5.3.6).
+    circle member who declares to stand in (constitution 5.3.6). Not in
+    archived circles.
     """
+    if circle.archived_on:
+        return NOT_ALLOWED
     if is_member(user, circle):
         return ALLOWED
     return as_admin(user)
