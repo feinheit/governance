@@ -333,6 +333,40 @@ class ProcessingTest(TestCase):
         self.assertEqual(published.deadline, deadline)
         self.assertIsNone(draft.meeting)
 
+    def test_removed_after_processing(self):
+        """An async proposal the meeting processed (and maybe amended) isn't
+        back in the async process when removed from the agenda: its proposer
+        gets it as a draft, publishing it again starts a new round"""
+        published = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            role=self.cook,
+            tension="Async",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+            published_at=timezone.now(),
+            deadline=timezone.now() + dt.timedelta(days=2),
+            instructions=self.proposal.instructions,
+            names=self.proposal.names,
+        )
+        self.client.force_login(self.bob)  # The secretary
+        self.client.post(
+            f"/meetings/{self.meeting.pk}/agenda/add/", {"proposal": published.pk}
+        )
+        item = self.meeting.agenda_items.get(proposal=published)
+        self.client.post(f"/agenda/{item.pk}/process/")
+        self.client.post(f"/agenda/{item.pk}/remove/")
+        published.refresh_from_db()
+        self.assertEqual(
+            (published.status, published.meeting, published.deadline),
+            (Proposal.DRAFT, None, None),
+        )
+        self.client.force_login(self.eve)
+        self.client.post(f"/proposals/{published.pk}/publish/")
+        published.refresh_from_db()
+        self.assertEqual(published.status, Proposal.PUBLISHED)
+        self.assertGreater(published.deadline, timezone.now() + dt.timedelta(days=1))
+
     def test_discard(self):
         """The meeting discards a proposal (5.3.1, 5.3.4): it's withdrawn and
         in the outputs, its proposer drafts it again"""

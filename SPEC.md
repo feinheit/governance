@@ -381,7 +381,10 @@ empty ones). Others' proposals wait for their proposers, whom members ask
 by requesting a meeting; only those running the meeting also bring
 others' waiting and async proposals, in an optgroup of their own (the
 proposer asked them and isn't there). The select starts empty. Removing
-the item puts them back (`AgendaItem.proposal_status`). The secretary processes items (clicking
+the item puts them back (`AgendaItem.proposal_status`); an async proposal
+the meeting processed (`AgendaItem.step`, maybe amended) becomes its
+proposer's draft instead, publishing it again starts a new round with a
+new deadline: the old consents were to another version (5.3). The secretary processes items (clicking
 the row, which also goes to the step processing them: only there an item
 is active, `Meeting.active_item_id`), orders them with drag handles (`agenda_order`, without
 JavaScript arrows)
@@ -715,10 +718,6 @@ Deliberately not modelled:
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-06, open findings):
-  - B1: a published proposal amended in a meeting and then removed from
-    the agenda goes back to async with its old deadline and the old
-    consents, and is adopted as amended without anybody seeing it
-    (`agenda_remove`). To decide.
   - B2: `proposal.roles`/`policies` are only set when publishing:
     proposals brought into or created in a meeting don't show as pending
     on role pages, amended ones keep roles they no longer change (history,

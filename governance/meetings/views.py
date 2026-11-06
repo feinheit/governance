@@ -586,10 +586,16 @@ def agenda_remove(request, pk):
         and item.proposal_status in {Proposal.DRAFT, Proposal.PUBLISHED}
     ):
         # Back where it was: a draft stays private, an async proposal
-        # continues with its deadline
+        # continues with its deadline unless the meeting processed (maybe
+        # amended) it: then its proposer gets it as a draft, publishing it
+        # again starts a new round (brought to a meeting, it left the async
+        # process, 5.3)
         proposal.status = item.proposal_status
+        if proposal.status == Proposal.PUBLISHED and item.step:
+            proposal.status = Proposal.DRAFT
+            proposal.published_at = proposal.deadline = None
         proposal.meeting = None
-        proposal.save(update_fields=["status", "meeting"])
+        proposal.save(update_fields=["status", "meeting", "published_at", "deadline"])
     item.delete()
     return redirect(item.meeting)
 

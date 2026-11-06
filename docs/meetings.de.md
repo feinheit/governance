@@ -49,7 +49,8 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   Secretary sieht auch die "Vorschläge anderer", getrennt aufgeführt
   (andere bitten dich mit "im Meeting besprechen", deinen einzubringen). "Entfernen"
   legt einen Vorschlag zurück: ein Entwurf bleibt deiner, ein asynchroner
-  behält seine Frist.
+  behält seine Frist; wurde er im Meeting behandelt, ist er wieder dein
+  Entwurf, zum Veröffentlichen für eine neue Runde.
 - **Behandeln**: der Facilitator wählt einen Agendapunkt, der Secretary
   klickt ihn an ("Behandeln") und zieht die Punkte an ihren Griffen in
   eine andere Reihenfolge; die Schritte des

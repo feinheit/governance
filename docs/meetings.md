@@ -47,7 +47,8 @@ circle.
   (waiting, published async, drafts); the secretary also sees
   "Others' proposals", listed apart (others ask you to bring yours with
   "discuss in a meeting"). "Remove" puts a proposal back: a draft
-  stays yours, an async proposal keeps its deadline.
+  stays yours, an async proposal keeps its deadline; once processed in the
+  meeting, it's your draft again, to publish for a new round.
 - **Process**: the facilitator chooses an agenda item, the secretary
   clicks it ("Process") and drags the items by their handles to reorder
   them; the steps of the
