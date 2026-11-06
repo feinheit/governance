@@ -518,19 +518,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (round of 2026-11-06), open:
-  - Bugs: a meeting inside a role gets the super-circle's Circle Lead as
-    secretary (`circle_leads()` of a role); a withdrawn proposal and a
-    tension without changes can be adopted in a meeting; a circle emptied
-    by its super-circle while its own meeting runs turns back without a
-    proposal recording it (`revert_after_meeting()`); the API doesn't
-    create proposals inside a role (1.3.1); assigning the Circle Rep as
-    Circle Lead isn't refused (5.1.1); a proposal from a tension may have
-    no role (proposals are grounded in a role, 5.3.1).
-  - Decided: the meeting discards proposals explicitly ("Discard",
-    withdrawn, the proposer may bring them back as a draft); Circle Leads
-    end assignments of elected roles (resigning, 1.4.1); due-election
-    reminders go to the Facilitators (5.3.5); guests in governance
-    meetings stay as they are (proposals come from roles).
   - To decide: whether a meeting's outputs also reach the members at
     its start (holders of roles removed while absent); the day of the
     steps of a meeting ended later by inactivity (after midnight).
