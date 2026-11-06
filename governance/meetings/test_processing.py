@@ -177,6 +177,11 @@ class ProcessingTest(TestCase):
         """A proposal withdrawn by its proposer meanwhile, or a tension
         without changes, isn't adopted in the meeting"""
         self.client.force_login(self.eve)
+        # Asked first, e.g. in a modal
+        self.assertContains(
+            self.client.get(f"/proposals/{self.proposal.pk}/withdraw/"),
+            "You can draft it again afterwards.",
+        )
         self.client.post(f"/proposals/{self.proposal.pk}/withdraw/")
         self.client.force_login(self.ada)
         self.client.post(f"/agenda/{self.item.pk}/adopt/")

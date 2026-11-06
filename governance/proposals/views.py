@@ -225,9 +225,23 @@ def proposal_draft_again(request, pk):
     return redirect(draft)
 
 
-@require_POST
 def proposal_withdraw(request, pk):
+    """Withdrawing a proposal, confirmed first (in a modal on its page)"""
     proposal = own_proposal(request, pk, [Proposal.PUBLISHED, Proposal.IN_MEETING])
+    if request.method != "POST":
+        return render(
+            request,
+            "generic/confirm.html",
+            {
+                "question": gettext("Withdraw %(proposal)s?") % {"proposal": proposal},
+                "help": gettext(
+                    "The circle doesn't decide it anymore. You can draft it again"
+                    " afterwards."
+                ),
+                "submit_label": gettext("Withdraw"),
+                "cancel_url": proposal.get_absolute_url(),
+            },
+        )
     process.withdraw(proposal)
     messages.success(request, gettext("The proposal has been withdrawn."))
     return redirect(proposal)

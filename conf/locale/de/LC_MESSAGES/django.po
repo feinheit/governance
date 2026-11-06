@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:10+0100\n"
+"POT-Creation-Date: 2026-11-06 15:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -130,6 +130,22 @@ msgstr "Du wurdest abgemeldet."
 #: governance/accounts/views.py
 msgid "The API token has been deleted."
 msgstr "Das API-Token wurde gelöscht."
+
+#: governance/accounts/views.py
+#, python-format
+msgid "Delete the API token %(title)s?"
+msgstr "API-Token %(title)s löschen?"
+
+#: governance/accounts/views.py
+msgid "Scripts and gov using it lose their access."
+msgstr "Skripte und gov, die es verwenden, verlieren ihren Zugriff."
+
+#: governance/accounts/views.py governance/roles/editing.py
+#: governance/templates/accounts/api_tokens.html
+#: governance/templates/roles/_role_item.html
+#: governance/templates/roles/role_detail.html
+msgid "Delete"
+msgstr "Löschen"
 
 #: governance/audit/apps.py
 msgid "audit log"
@@ -1180,6 +1196,20 @@ msgid "The proposal is a draft again. Publish it again when it's ready, the circ
 msgstr "Der Vorschlag ist wieder ein Entwurf. Veröffentliche ihn erneut, wenn er bereit ist; der Kreis beginnt dann von vorne."
 
 #: governance/proposals/views.py
+#, python-format
+msgid "Withdraw %(proposal)s?"
+msgstr "%(proposal)s zurückziehen?"
+
+#: governance/proposals/views.py
+msgid "The circle doesn't decide it anymore. You can draft it again afterwards."
+msgstr "Der Kreis entscheidet nicht mehr darüber. Du kannst ihn danach wieder entwerfen."
+
+#: governance/proposals/views.py
+#: governance/templates/proposals/proposal_detail.html
+msgid "Withdraw"
+msgstr "Zurückziehen"
+
+#: governance/proposals/views.py
 msgid "Everybody consented, the proposal is adopted."
 msgstr "Alle sind einverstanden, der Vorschlag ist angenommen."
 
@@ -1395,12 +1425,6 @@ msgstr "Diesen Checklistenpunkt löschen?"
 #: governance/roles/editing.py
 msgid "Delete this link?"
 msgstr "Diesen Link löschen?"
-
-#: governance/roles/editing.py governance/templates/accounts/api_tokens.html
-#: governance/templates/roles/_role_item.html
-#: governance/templates/roles/role_detail.html
-msgid "Delete"
-msgstr "Löschen"
 
 #: governance/roles/models.py
 msgid "name"
@@ -2449,10 +2473,6 @@ msgstr "Neu entwerfen"
 #: governance/templates/proposals/proposal_detail.html
 msgid "Back to the draft"
 msgstr "Zurück zum Entwurf"
-
-#: governance/templates/proposals/proposal_detail.html
-msgid "Withdraw"
-msgstr "Zurückziehen"
 
 #: governance/templates/proposals/proposal_detail.html
 msgid "Responses"

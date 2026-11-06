@@ -76,10 +76,11 @@
             <button type="submit" class="btn btn-sm btn-quiet">{% translate "Back to the draft" %}</button>
           </form>
         {% endif %}
-        <form method="post" action="{% url 'proposal_withdraw' proposal.pk %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-destructive">{% translate "Withdraw" %}</button>
-        </form>
+        <a
+          class="btn btn-sm btn-destructive"
+          href="{% url 'proposal_withdraw' proposal.pk %}"
+          data-modal
+        >{% translate "Withdraw" %}</a>
       </div>
     {% endif %}
   </div>

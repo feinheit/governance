@@ -46,12 +46,11 @@
                 <span>{% translate "expires at" %} {{ token.expires_at|date:"SHORT_DATETIME_FORMAT" }}</span>
               </div>
             </div>
-            <form method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-destructive" name="delete" value="{{ token.pk }}">
-                {% translate "Delete" %}
-              </button>
-            </form>
+            <a
+              class="btn btn-sm btn-destructive"
+              href="{% url 'api_token_delete' token.pk %}"
+              data-modal
+            >{% translate "Delete" %}</a>
           </li>
         {% empty %}
           <li class="list-group-item text-body-secondary">{% translate "No API tokens." %}</li>

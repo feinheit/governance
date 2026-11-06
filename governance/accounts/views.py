@@ -5,7 +5,8 @@ from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext, gettext as _
 from django.views.decorators.cache import never_cache
@@ -84,10 +85,6 @@ def logout(request):
 def api_tokens(request):
     secret = None
     if request.method == "POST":
-        if pk := request.POST.get("delete"):
-            request.user.api_tokens.filter(pk=pk).delete()
-            messages.success(request, gettext("The API token has been deleted."))
-            return redirect("api_tokens")
         title = request.POST.get("title", "").strip()
         access = request.POST.get("access")
         if title and access in APIToken.Access.values:
@@ -105,6 +102,28 @@ def api_tokens(request):
             "api_url": request.build_absolute_uri("/api/"),
             "cli_install": cli_version.INSTALL,
             "base_url": request.build_absolute_uri("/"),
+        },
+    )
+
+
+@never_cache
+@login_required
+def api_token_delete(request, pk):
+    """Deleting one's token, confirmed first (in a modal on the tokens page)"""
+    token = get_object_or_404(request.user.api_tokens, pk=pk)
+    if request.method == "POST":
+        token.delete()
+        messages.success(request, gettext("The API token has been deleted."))
+        return redirect("api_tokens")
+    return render(
+        request,
+        "generic/confirm.html",
+        {
+            "question": gettext("Delete the API token %(title)s?")
+            % {"title": token.title},
+            "help": gettext("Scripts and gov using it lose their access."),
+            "submit_label": gettext("Delete"),
+            "cancel_url": reverse("api_tokens"),
         },
     )
 

@@ -71,7 +71,13 @@ class APITest(TestCase):
         )
         self.assertContains(response, "gov_")
         token = self.bob.api_tokens.get()
-        self.client.post("/accounts/api-tokens/", {"delete": token.pk})
+        # Asked first, e.g. in a modal; only one's own
+        url = f"/accounts/api-tokens/{token.pk}/delete/"
+        self.assertContains(self.client.get(url), "Delete the API token Mine?")
+        self.client.force_login(self.ada)
+        self.assertEqual(self.client.post(url).status_code, 404)
+        self.client.force_login(self.bob)
+        self.client.post(url)
         self.assertFalse(self.bob.api_tokens.exists())
 
         APIToken.objects.update(expires_at=timezone.now() - dt.timedelta(days=100))
