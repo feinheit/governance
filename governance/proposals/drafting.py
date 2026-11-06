@@ -229,9 +229,14 @@ class TensionForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["role"].queryset = roles
         self.fields["role"].required = True
-        if self.instance.role_id:
-            self.fields["role"].empty_label = None
         # New ones: the proposer chooses, none is preselected
+        empty = [] if self.instance.role_id else [("", "---------")]
+        roles = list(roles)
+        groups = [
+            (_("Roles"), [(r.pk, str(r)) for r in roles if not r.core_role]),
+            (_("Core roles"), [(r.pk, str(r)) for r in roles if r.core_role]),
+        ]
+        self.fields["role"].choices = empty + [g for g in groups if g[1]]
         self.fields["role"].label = _("From my role")
         self.fields["tension"].required = True
         self.fields["tension"].help_text = _(

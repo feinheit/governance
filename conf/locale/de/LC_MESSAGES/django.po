@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:35+0100\n"
+"POT-Creation-Date: 2026-11-06 13:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -722,6 +722,17 @@ msgstr "Ein Beispiel einer vergangenen oder aktuellen Situation"
 #: governance/proposals/drafting.py
 msgid "How the proposal addresses the tension in the example"
 msgstr "Wie der Vorschlag die Spannung im Beispiel adressiert"
+
+#: governance/proposals/drafting.py
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
+msgid "Roles"
+msgstr "Rollen"
+
+#: governance/proposals/drafting.py governance/templates/roles/role_detail.html
+msgid "Core roles"
+msgstr "Kernrollen"
 
 #: governance/proposals/drafting.py
 msgid "From my role"
@@ -1765,12 +1776,6 @@ msgstr "Domains"
 msgid "Policies"
 msgstr "Policies"
 
-#: governance/templates/history/role_as_of.html
-#: governance/templates/roles/role_detail.html
-#: governance/templates/search/search.html
-msgid "Roles"
-msgstr "Rollen"
-
 #: governance/templates/meetings/_agenda.html
 msgid "Agenda"
 msgstr "Agenda"
@@ -2619,10 +2624,6 @@ msgstr "Alle Meetings"
 #: governance/templates/roles/role_detail.html
 msgid "Join the running meeting"
 msgstr "Zum laufenden Meeting"
-
-#: governance/templates/roles/role_detail.html
-msgid "Core roles"
-msgstr "Kernrollen"
 
 #: governance/templates/roles/role_detail.html
 msgid "Checklists and metrics"

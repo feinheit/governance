@@ -43,6 +43,18 @@ class DraftingTest(TestCase):
         response = self.client.get(f"/roles/{self.kitchen.pk}/proposals/new/")
         self.assertContains(response, "Continue")
         self.assertContains(response, "## An example of a past or current situation")
+        # Core roles apart from the others
+        facilitator = self.kitchen.roles.get(core_role="facilitator")
+        Assignment.objects.create(role=facilitator, user=self.ada)
+        response = self.client.get(f"/roles/{self.kitchen.pk}/proposals/new/")
+        self.assertContains(
+            response,
+            f'<optgroup label="Roles"><option value="{self.cook.pk}">Cook</option>'
+            f'</optgroup><optgroup label="Core roles"><option value="{facilitator.pk}">'
+            "Facilitator</option></optgroup>",
+            html=True,
+        )
+        Assignment.objects.filter(role=facilitator).delete()
         # The proposer chooses the role, none is preselected
         self.assertContains(response, '<option value="" selected>', html=False)
         self.assertNotContains(response, f'<option value="{self.cook.pk}" selected>')
