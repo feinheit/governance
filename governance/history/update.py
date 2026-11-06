@@ -130,9 +130,10 @@ def reelections(holders, since):
     don't change, the term does (the assignment keeps only the last one)"""
     from governance.meetings.models import Election
 
-    elections = Election.objects.select_related("meeting")
-    for election in elections.order_by("pk"):
-        day = timezone.localdate(election.meeting.started_at)
+    for election in Election.objects.order_by("pk"):
+        # The day it was recorded, like the assignments, not the meeting's
+        # start (a meeting running past midnight)
+        day = timezone.localdate(election.created_at)
         if since and day < since:
             continue
         before = holders.on(day - dt.timedelta(days=1)).get(election.role_id, [])

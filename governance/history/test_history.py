@@ -123,6 +123,28 @@ class ReelectedTest(TestCase):
                 (dt.date(2026, 12, 20), "reelected", ada.pk, "2027-12-31"),
             ],
         )
+        # Recorded after midnight (Zurich) in a meeting started before it:
+        # the day it was recorded, like the assignments, also for the update
+        # of today right after recording it
+        with time_machine.travel(
+            dt.datetime(2027, 12, 1, 22, 30, tzinfo=dt.UTC), tick=False
+        ):
+            meeting = Meeting.objects.create(
+                circle=kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+            )
+        with (
+            time_machine.travel(
+                dt.datetime(2027, 12, 1, 23, 30, tzinfo=dt.UTC), tick=False
+            ),
+            self.captureOnCommitCallbacks(execute=True),
+        ):
+            record_election(meeting, secretary, ada, dt.date(2028, 12, 31))
+        self.assertTrue(
+            Change.objects.filter(
+                role=secretary, kind="reelected", date=dt.date(2027, 12, 2)
+            ).exists()
+        )
+
         self.client.force_login(ada)
         response = self.client.get(f"/roles/{secretary.pk}/history/?assignments=1")
         self.assertContains(response, "Re-elected")

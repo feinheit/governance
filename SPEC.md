@@ -730,8 +730,7 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-06, open findings):
-  - Untested risks: re-elections after midnight dated by the meeting's
-    start (`history/update.py`). Checked: `draft_again` of a proposal
+  - Checked: `draft_again` of a proposal
     withdrawn because its circle turned back into a role is fine (a role
     may be broken down inside, 1.3.1; the draft lists its stale changes as
     problems, publishing refuses them). Decided
