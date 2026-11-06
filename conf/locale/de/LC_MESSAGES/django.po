@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:30+0100\n"
+"POT-Creation-Date: 2026-11-06 08:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -282,7 +282,7 @@ msgstr "Meetings"
 msgid "The day the term ends."
 msgstr "Der letzte Tag der Amtszeit."
 
-#: governance/meetings/elections.py
+#: governance/meetings/elections.py governance/roles/assignments.py
 msgid "A Circle Lead can't be the Circle Rep."
 msgstr "Ein Circle Lead kann nicht Circle Rep sein."
 
@@ -1004,13 +1004,19 @@ msgid "responses"
 msgstr "Antworten"
 
 #: governance/proposals/process.py
-msgid "Only drafts with changes can be published."
-msgstr "Nur Entwürfe mit Änderungen können veröffentlicht werden."
+#, fuzzy
+#| msgid "The async response the objection comes from."
+msgid "Choose the role of the proposer the tension comes from."
+msgstr "Die asynchrone Antwort, aus der der Einwand stammt."
 
 #: governance/proposals/process.py
 #, python-format
 msgid "%(user)s doesn't hold %(role)s in %(circle)s anymore: choose another role."
 msgstr "%(user)s hat %(role)s in %(circle)s nicht mehr: wähle eine andere Rolle."
+
+#: governance/proposals/process.py
+msgid "Only drafts with changes can be published."
+msgstr "Nur Entwürfe mit Änderungen können veröffentlicht werden."
 
 #: governance/proposals/process.py
 msgid "The proposal isn't open for responses anymore."

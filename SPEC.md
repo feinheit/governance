@@ -312,7 +312,10 @@ guide without enforcing them. Only the secretary amends, with the drafting
 controls in a panel, and captures a proposal from a tension. Objections
 are recorded with who raised them for which of their roles, the
 facilitator's test and whether they were integrated; adopting needs every
-objection tested and every valid one integrated. Concerns of members who
+objection tested and every valid one integrated, and a proposer still
+filling the proposal's role (5.3.1, like publishing): a guest's tension
+needs a member owning it, the secretary chooses the role of proposals
+without one. Concerns of members who
 requested the meeting are shown as context. Adopting changes the
 governance at once; the mail waits for the end.
 

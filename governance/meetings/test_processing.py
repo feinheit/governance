@@ -31,6 +31,7 @@ class ProcessingTest(TestCase):
         self.proposal = Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.eve,
+            role=self.cook,
             tension="Better name",
             status=Proposal.IN_MEETING,
             meeting=self.meeting,
@@ -160,6 +161,33 @@ class ProcessingTest(TestCase):
         tension.refresh_from_db()
         self.assertEqual(tension.status, Proposal.IN_MEETING)
 
+    def test_proposals_come_from_roles(self):
+        """A guest's tension becomes a proposal without a role, which isn't
+        adopted (5.3.1), like a proposal from a role its proposer left"""
+        guest = User.objects.create_user("max@example.com", full_name="Max")
+        self.meeting.attendees.add(guest)
+        self.client.force_login(guest)
+        self.client.post(f"/meetings/{self.meeting.pk}/agenda/add/", {"label": "Tea"})
+        item = AgendaItem.objects.get(label="Tea")
+        self.client.force_login(self.bob)
+        self.client.post(f"/agenda/{item.pk}/proposal/")
+        item.refresh_from_db()
+        proposal = item.proposal
+        self.assertIsNone(proposal.role)
+        proposal.instructions = [{"op": "add", "path": "/roles/n1"}]
+        proposal.save()
+        self.client.post(f"/agenda/{item.pk}/adopt/")
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.IN_MEETING)
+
+        # Eve's proposal from her role, which she left meanwhile
+        self.proposal.role = self.cook
+        self.proposal.save()
+        Assignment.objects.filter(user=self.eve).delete()
+        self.client.post(f"/agenda/{self.item.pk}/adopt/")
+        self.proposal.refresh_from_db()
+        self.assertEqual(self.proposal.status, Proposal.IN_MEETING)
+
     def test_objection_left_open(self):
         """A meeting ends with an untested objection: the next meeting
         processing the proposal tests it"""
@@ -235,6 +263,7 @@ class ProcessingTest(TestCase):
         second = Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.eve,
+            role=self.cook,
             tension="Clearer role",
             status=Proposal.IN_MEETING,
             meeting=self.meeting,

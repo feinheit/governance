@@ -33,24 +33,33 @@ def affected(proposal):
     )
 
 
+def check_role(proposal):
+    """The tension of one of the proposer's roles (5.3.1), still now"""
+    if proposal.role is None:
+        raise ProposalError([
+            _("Choose the role of the proposer the tension comes from.")
+        ])
+    roles = proposer_roles(proposal.proposer, proposal.circle)
+    if not roles.filter(pk=proposal.role_id).exists():
+        raise ProposalError([
+            _(
+                "%(user)s doesn't hold %(role)s in %(circle)s anymore: choose another role."
+            )
+            % {
+                "user": proposal.proposer,
+                "role": proposal.role,
+                "circle": proposal.circle,
+            }
+        ])
+
+
 @transaction.atomic
 def publish(proposal):
     if proposal.status != Proposal.DRAFT or proposal.is_tension:
         raise ProposalError([_("Only drafts with changes can be published.")])
-    # The tension of one of the proposer's roles (5.3.1), still now
+    # Drafts imported from GlassFrog have no role
     if proposal.role and proposal.proposer:
-        roles = proposer_roles(proposal.proposer, proposal.circle)
-        if not roles.filter(pk=proposal.role_id).exists():
-            raise ProposalError([
-                _(
-                    "%(user)s doesn't hold %(role)s in %(circle)s anymore: choose another role."
-                )
-                % {
-                    "user": proposal.proposer,
-                    "role": proposal.role,
-                    "circle": proposal.circle,
-                }
-            ])
+        check_role(proposal)
     if found := problems(proposal):
         raise ProposalError(found)
     now = timezone.now()

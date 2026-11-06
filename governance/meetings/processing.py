@@ -20,6 +20,7 @@ from governance.meetings.access import can_run
 from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting, Objection
 from governance.proposals.instructions import ProposalError, adopt
 from governance.proposals.models import Proposal
+from governance.proposals.process import check_role
 from governance.roles.permissions import proposer_roles
 
 
@@ -164,6 +165,8 @@ def item_adopt(request, pk):
         return redirect(item.meeting)
     try:
         with transaction.atomic():
+            # Proposals come from roles, also those of guests (5.3.1)
+            check_role(proposal)
             proposal.meeting = item.meeting
             adopt(proposal)
             complete(item)

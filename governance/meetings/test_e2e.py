@@ -176,6 +176,7 @@ class MeetingE2ETest(LiveServerTestCase):
         proposal = Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.ada,
+            role=self.cook,
             tension="No more bakery",
             status=Proposal.IN_MEETING,
             meeting=self.meeting,
