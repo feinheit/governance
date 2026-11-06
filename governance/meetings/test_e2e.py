@@ -269,6 +269,20 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("#current >> text=Done 1")
         self.assertEqual(self.errors, [])
 
+    def test_attendees_stay_open(self):
+        """The attendees are collapsed; opened, they stay open while the
+        meeting updates"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        self.assertFalse(page.locator("#attendees li").first.is_visible())
+        page.locator("#attendees summary").click()
+        self.assertTrue(page.locator("#attendees li").first.is_visible())
+        AgendaItem.objects.create(meeting=self.meeting, label="Meanwhile", position=9)
+        page.wait_for_selector("#agenda >> text=Meanwhile", timeout=8000)
+        page.wait_for_timeout(200)
+        self.assertTrue(page.locator("#attendees li").first.is_visible())
+        self.assertEqual(self.errors, [])
+
     def test_paused_notice(self):
         """Updates paused for longer than a moment (typing, something open):
         a notice says so until it continues"""

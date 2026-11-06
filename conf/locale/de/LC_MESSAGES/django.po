@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 16:53+0100\n"
+"POT-Creation-Date: 2026-11-06 16:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2289,8 +2289,11 @@ msgid "Not recorded."
 msgstr "Nicht erfasst."
 
 #: governance/templates/meetings/meeting_detail.html
-msgid "Attendees"
-msgstr "Teilnehmende"
+#, python-format
+msgid "Attendees (%(count)s)"
+msgid_plural "Attendees (%(count)s)"
+msgstr[0] "Teilnehmende (%(count)s)"
+msgstr[1] "Teilnehmende (%(count)s)"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "Invite"
@@ -2944,7 +2947,6 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
-
 
 #~ msgid "Minutes"
 #~ msgstr "Protokoll"

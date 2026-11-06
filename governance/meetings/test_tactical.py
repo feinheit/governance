@@ -67,6 +67,11 @@ class TacticalTest(TestCase):
         self.assertIn(self.cook, meeting.invited_roles.all())
         response = self.client.get(meeting.get_absolute_url())
         self.assertNotContains(response, "Add proposal")
+        # All of the circle's roles, the circle says it
+        self.assertNotContains(response, "Invited roles")
+        # Collapsed, with their number
+        self.assertContains(response, 'id="attendees" data-stay-open>')
+        self.assertContains(response, "Attendees (2)")
         self.assertNotContains(response, "Fridge cleaned")  # Only in its step
 
         # The reviews show the invited roles' entries (and the circle's own)
@@ -340,6 +345,7 @@ class TacticalTest(TestCase):
         response = self.client.get(meeting.get_absolute_url())
         self.assertContains(response, "Offers sent")
         self.assertNotContains(response, "Meals served")  # Not invited
+        self.assertContains(response, "Invited roles")  # Who was called
         self.assertContains(self.client.get(f"/people/{self.eve.pk}/"), "Your meetings")
 
         # She runs it, the invited Bob adds items, Ada neither

@@ -479,8 +479,14 @@ a.wb-row-title:hover {
   scroll-margin-top: 1rem;
 }
 
-.wb-details > summary {
+.wb-details > summary,
+.wb-details-card > summary {
   cursor: pointer;
+}
+
+/* A card collapsing below its header (<details>, e.g. the attendees) */
+.wb-details-card:not([open]) > summary {
+  border-bottom: 0;
 }
 
 .wb-details > summary::marker {

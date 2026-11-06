@@ -19,7 +19,7 @@ window.meetingIsIdle = () => {
   const form = document.activeElement?.closest("#meeting form")
   const busy = Boolean(
     document.querySelector(
-      "#meeting details[open], #amend > *, .sortable-chosen",
+      "#meeting details[open]:not([data-stay-open]), #amend > *, .sortable-chosen",
     ) || form,
   )
   busyChecks = busy ? busyChecks + 1 : 0
@@ -99,5 +99,20 @@ document.addEventListener("click", (event) => {
     !event.target.closest("a, button, input, [data-agenda-handle]")
   ) {
     scrollToCurrent(true)
+  }
+})
+
+// Collapsible sections with data-stay-open (the attendees) stay open across
+// the meeting's updates, which would close them (the server's are closed)
+let openSections = []
+document.addEventListener("htmx:before:swap", () => {
+  openSections = [
+    ...document.querySelectorAll("details[data-stay-open][open]"),
+  ].map((details) => details.id)
+})
+document.addEventListener("htmx:after:settle", () => {
+  for (const id of openSections) {
+    const details = document.getElementById(id)
+    if (details) details.open = true
   }
 })

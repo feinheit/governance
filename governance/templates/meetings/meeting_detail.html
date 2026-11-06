@@ -176,7 +176,8 @@
           {% endif %}
         </section>
 
-        {% if tactical_steps %}
+        {% if tactical_steps and not meeting.circle %}
+          {# Ad-hoc tactical meetings: who was called (regular ones invite all of the circle's roles) #}
           <section class="card mb-4">
             <div class="card-header"><h2 class="h6 mb-0">{% translate "Invited roles" %}</h2></div>
             <ul class="list-group list-group-flush">
@@ -193,8 +194,13 @@
           </section>
         {% endif %}
         {% if attendees or can_run and not meeting.ended_at %}
-          <section class="card mb-4">
-            <div class="card-header"><h2 class="h6 mb-0">{% translate "Attendees" %}</h2></div>
+          {# Collapsed, open across the updates once opened (data-stay-open, meeting.js) #}
+          <details class="card mb-4 wb-details-card" id="attendees" data-stay-open>
+            <summary class="card-header">
+              <h2 class="h6 mb-0 d-inline">
+                {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}
+              </h2>
+            </summary>
             <ul class="list-group list-group-flush">
               {% for attendee in attendees %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -224,7 +230,7 @@
                 </li>
               {% endif %}
             </ul>
-          </section>
+          </details>
         {% endif %}
         {% if elections or election_form %}
           <section class="card mb-4">
