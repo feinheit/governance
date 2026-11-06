@@ -558,8 +558,7 @@ Deliberately not modelled:
     day they started missing from meeting outputs; a Rep becoming Circle
     Lead through inherited leads; "Draft again" twice, or into a circle
     turned back into a role; a meeting reverting its circle mailing its
-    outputs to the members of the role it became; API values of the wrong
-    type.
+    outputs to the members of the role it became.
 
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so

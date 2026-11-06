@@ -650,6 +650,14 @@ def validate_format(instructions):
                 _("Instruction %(number)s needs an op (%(ops)s) and a path.")
                 % {"number": index, "ops": ", ".join(sorted(OPS))}
             )
+        elif any(
+            not isinstance(instruction.get(key), str | None)
+            for key in ["value", "original_value"]
+        ):
+            found.append(
+                _("The values of instruction %(number)s have to be texts.")
+                % {"number": index}
+            )
     return found
 
 

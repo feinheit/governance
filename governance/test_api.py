@@ -227,6 +227,24 @@ class APITest(TestCase):
             },
         )
         self.assertEqual(response.status_code, 400)
+        # Values are texts: anything else would be saved as its repr
+        path = f"/roles/{self.cook.pk}/name"
+        for instruction in [
+            {"op": "replace", "path": path, "value": ["Baker"]},
+            {"op": "replace", "path": path, "value": "Baker", "original_value": 5},
+        ]:
+            with self.subTest(instruction=instruction):
+                response = self.api(
+                    "post",
+                    "/api/proposals/",
+                    {
+                        "circle_id": self.kitchen.pk,
+                        "role_id": self.cook.pk,
+                        "tension": "No bread",
+                        "instructions": [instruction],
+                    },
+                )
+                self.assertEqual(response.status_code, 400)
 
     def test_only_proposers_change_proposals(self):
         """The secretary amends in a running meeting's page, not through the
