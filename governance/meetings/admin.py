@@ -31,7 +31,6 @@ class MeetingAdmin(admin.ModelAdmin):
     date_hierarchy = "started_at"
     raw_id_fields = [
         "circle",
-        "facilitator",
         "secretary",
         "called_by",
         "current_item",

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 08:02+0100\n"
+"POT-Creation-Date: 2026-11-06 08:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -359,11 +359,6 @@ msgstr "zuletzt aktiv am"
 #: governance/meetings/models.py
 msgid "minutes"
 msgstr "Protokoll"
-
-#: governance/meetings/models.py
-#: governance/templates/meetings/meeting_detail.html
-msgid "facilitator"
-msgstr "Facilitator"
 
 #: governance/meetings/models.py
 #: governance/templates/meetings/meeting_detail.html
@@ -1925,6 +1920,14 @@ msgid "ended"
 msgstr "beendet"
 
 #: governance/templates/meetings/meeting_detail.html
+msgid "You aren't the circle's Secretary. Take over as the meeting's secretary anyway, e.g. standing in?"
+msgstr "Du bist nicht Secretary des Kreises. Trotzdem den Secretary des Meetings übernehmen, z.B. als Vertretung?"
+
+#: governance/templates/meetings/meeting_detail.html
+msgid "Take over"
+msgstr "Übernehmen"
+
+#: governance/templates/meetings/meeting_detail.html
 msgid "End the meeting"
 msgstr "Meeting beenden"
 
@@ -2498,6 +2501,9 @@ msgstr "Nichts gefunden."
 #: governance/templates/start.html
 msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
 msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+
+#~ msgid "facilitator"
+#~ msgstr "Facilitator"
 
 #~ msgid "data"
 #~ msgstr "Daten"

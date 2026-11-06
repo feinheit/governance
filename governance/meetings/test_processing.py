@@ -26,7 +26,6 @@ class ProcessingTest(TestCase):
             circle=self.kitchen,
             kind=Meeting.GOVERNANCE,
             started_at=timezone.now(),
-            facilitator=self.ada,
             secretary=self.bob,
         )
         self.proposal = Proposal.objects.create(

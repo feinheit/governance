@@ -47,5 +47,10 @@ urlpatterns = [
         name="meeting_attendees",
     ),
     path("meetings/<int:pk>/edit/", views.meeting_update, name="meeting_update"),
+    path(
+        "meetings/<int:pk>/secretary/",
+        views.meeting_secretary,
+        name="meeting_secretary",
+    ),
     path("meetings/<int:pk>/end/", views.meeting_end, name="meeting_end"),
 ]

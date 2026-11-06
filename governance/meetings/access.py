@@ -5,16 +5,15 @@ from governance.roles.permissions import can_start_meeting, is_member
 
 
 def can_run(user, meeting):
-    """The circle's members (standing in for the Facilitator and Secretary if
-    needed), the meeting's facilitator and secretary (also when they aren't
-    members), and for tactical meetings whoever called it"""
+    """The circle's members (any of them facilitates), the meeting's secretary
+    (also when they aren't a member), and for tactical meetings whoever
+    called it"""
     if user.is_admin:
         return True
     if meeting.circle and can_start_meeting(user, meeting.circle):
         return True
     return user.pk in {
         meeting.called_by_id,
-        meeting.facilitator_id,
         meeting.secretary_id,
     }
 

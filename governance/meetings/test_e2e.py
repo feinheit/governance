@@ -65,7 +65,6 @@ class MeetingE2ETest(LiveServerTestCase):
             circle=self.kitchen,
             kind=Meeting.GOVERNANCE,
             started_at=timezone.now(),
-            facilitator=self.ada,
             secretary=self.ada,
         )
         self.meeting.attendees.add(self.ada)
@@ -315,4 +314,31 @@ class MeetingE2ETest(LiveServerTestCase):
         page.go_back()
         row.locator("a", has_text="Ada").first.click()
         page.wait_for_url(f"**{self.ada.get_absolute_url()}")
+        self.assertEqual(self.errors, [])
+
+    def test_take_over_as_secretary(self):
+        """Somebody who isn't the circle's Secretary confirms taking over the
+        meeting's secretary, dismissing changes nothing"""
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="secretary"), user=bob
+        )
+        Meeting.objects.filter(pk=self.meeting.pk).update(secretary=bob)
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        page.evaluate("window.marker = 1")
+        take_over = page.locator("form[action$='/secretary/'] button")
+
+        page.once("dialog", lambda dialog: dialog.dismiss())
+        take_over.click()
+        page.wait_for_timeout(300)
+        self.meeting.refresh_from_db()
+        self.assertEqual(self.meeting.secretary, bob)
+
+        page.once("dialog", lambda dialog: dialog.accept())
+        take_over.click()
+        page.wait_for_selector("form[action$='/secretary/']", state="detached")
+        self.meeting.refresh_from_db()
+        self.assertEqual(self.meeting.secretary, self.ada)
+        self.assertSamePage()
         self.assertEqual(self.errors, [])

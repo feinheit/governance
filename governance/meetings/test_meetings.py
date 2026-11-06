@@ -33,8 +33,7 @@ class MeetingsTest(TestCase):
         meeting = Meeting.objects.get()
         self.assertRedirects(response, meeting.get_absolute_url())
         self.assertEqual(
-            (meeting.kind, meeting.facilitator, meeting.secretary),
-            (Meeting.GOVERNANCE, self.ada, self.bob),
+            (meeting.kind, meeting.secretary), (Meeting.GOVERNANCE, self.bob)
         )
         # Calling a meeting starts it
         self.assertTrue(meeting.is_running)
@@ -52,12 +51,9 @@ class MeetingsTest(TestCase):
         self.assertEqual(meeting.step, "closing")
         self.assertContains(self.client.get(f"/roles/{self.kitchen.pk}/"), "running")
 
-        self.client.post(
-            f"/meetings/{meeting.pk}/edit/",
-            {"facilitator": self.eve.pk, "secretary": self.bob.pk, "minutes": "Tea"},
-        )
+        self.client.post(f"/meetings/{meeting.pk}/edit/", {"minutes": "Tea"})
         meeting.refresh_from_db()
-        self.assertEqual((meeting.facilitator, meeting.minutes), (self.eve, "Tea"))
+        self.assertEqual(meeting.minutes, "Tea")
 
         self.client.post(f"/meetings/{meeting.pk}/end/")
         meeting.refresh_from_db()
@@ -147,13 +143,41 @@ class MeetingsTest(TestCase):
         self.client.force_login(self.eve)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
         meeting = Meeting.objects.get()
-        self.assertEqual((meeting.facilitator, meeting.secretary), (self.ada, self.ada))
+        self.assertEqual(meeting.secretary, self.ada)
         meeting.ended_at = timezone.now()
         meeting.save()
         Assignment.objects.filter(role__core_role="facilitator").delete()
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
         meeting = Meeting.objects.latest("pk")
-        self.assertEqual((meeting.facilitator, meeting.secretary), (self.eve, self.eve))
+        self.assertEqual(meeting.secretary, self.eve)
+
+    def test_take_over_as_secretary(self):
+        """Anybody running the meeting takes over as its secretary, a warning
+        asks those who aren't the circle's Secretary first"""
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        self.assertNotContains(self.client.get(meeting.get_absolute_url()), "Take over")
+        self.client.force_login(self.eve)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "Take over")
+        self.assertContains(response, "hx-confirm=")
+        self.client.post(f"/meetings/{meeting.pk}/secretary/")
+        meeting.refresh_from_db()
+        self.assertEqual(meeting.secretary, self.eve)
+        # The circle's Secretary takes over again without a warning
+        self.client.force_login(self.bob)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "Take over")
+        self.assertNotContains(response, "hx-confirm=")
+        self.client.post(f"/meetings/{meeting.pk}/secretary/")
+        meeting.refresh_from_db()
+        self.assertEqual(meeting.secretary, self.bob)
+        outsider = User.objects.create_user("max@example.com")
+        self.client.force_login(outsider)
+        self.assertEqual(
+            self.client.post(f"/meetings/{meeting.pk}/secretary/").status_code, 403
+        )
 
     def test_permissions_and_list(self):
         # Members stand in for the Facilitator and Secretary (5.3.6), others

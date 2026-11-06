@@ -34,10 +34,22 @@
               {{ meeting.ended_at|date:"SHORT_DATETIME_FORMAT" }}</span>{% endif %}
           {% if meeting.called_by %}<span><span class="wb-meta-label">{% translate "called by" %}</span>
               {{ meeting.called_by }}</span>{% endif %}
-          {% if meeting.facilitator %}<span><span class="wb-meta-label">{% translate "facilitator" %}</span>
-              {{ meeting.facilitator }}</span>{% endif %}
           {% if meeting.secretary %}<span><span class="wb-meta-label">{% translate "secretary" %}</span>
               {{ meeting.secretary }}</span>{% endif %}
+          {% if can_run and meeting.is_running and meeting.secretary != request.user %}
+            {# Standing in, e.g. for a late Secretary (5.3.6) #}
+            <form
+              method="post"
+              action="{% url 'meeting_secretary' meeting.pk %}"
+              class="d-inline"
+              {% if has_circle_secretary and not is_circle_secretary %}
+                hx-confirm="{% translate "You aren't the circle's Secretary. Take over as the meeting's secretary anyway, e.g. standing in?" %}"
+              {% endif %}
+            >
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-quiet py-0">{% translate "Take over" %}</button>
+            </form>
+          {% endif %}
         </div>
       </div>
       {% if can_run and not meeting.ended_at %}

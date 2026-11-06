@@ -143,10 +143,7 @@ class TacticalTest(TestCase):
             {"invited_roles": [self.cook.pk, self.sales.pk]},
         )
         meeting = Meeting.objects.get()
-        self.assertEqual(
-            (meeting.circle, meeting.called_by, meeting.facilitator),
-            (None, self.eve, self.eve),
-        )
+        self.assertEqual((meeting.circle, meeting.called_by), (None, self.eve))
         self.assertEqual(set(meeting.attendees.all()), {self.bob, self.eve})
         self.client.post(f"/meetings/{meeting.pk}/step/", {"step": "checklists"})
         self.assertContains(

@@ -58,14 +58,8 @@ class Meeting(models.Model):
     # meetings/activity.py, meetings inactive for hours end
     active_at = models.DateTimeField(_("last active at"), null=True, blank=True)
     minutes = models.TextField(_("minutes"), blank=True)
-    facilitator = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        related_name="+",
-        verbose_name=_("facilitator"),
-    )
+    # The members run the meeting, the secretary amends proposals (the app
+    # doesn't need to know who facilitates)
     secretary = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,

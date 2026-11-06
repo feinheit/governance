@@ -4,11 +4,15 @@ Meetings plant ihr im Kalender. Im Tool beginnt ein Meeting, wenn jemand
 es startet. Alle folgen auf einem geteilten Bildschirm und fügen Agendapunkte
 vom eigenen Gerät aus hinzu; die Seite aktualisiert sich von selbst.
 
-- **Wer leitet**: Facilitator und Secretary. Fehlen sie, springen andere
-  ein (Verfassung 5.3.6); die beiden lassen sich auch während des Meetings
-  wechseln.
-- **Teilnehmende** sind die Mitglieder des Kreises beim Start; Facilitator
-  und Secretary laden weitere ein oder entfernen sie.
+- **Wer leitet**: Was der Facilitator im Tool macht, kann jedes Mitglied,
+  das Tool hält nicht fest, wer moderiert. Der Secretary wird
+  festgehalten, weil nur er Vorschläge ändert: der Secretary des Kreises,
+  fehlt er, eine Vertretung (Verfassung 5.3.6). "Übernehmen" neben dem
+  Secretary macht jemand anderen zum Secretary, z.B. solange der
+  Secretary sich verspätet; wer nicht Secretary des Kreises ist, bestätigt
+  das zuerst.
+- **Teilnehmende** sind die Mitglieder des Kreises beim Start; Mitglieder
+  laden weitere ein oder entfernen sie.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.
 - **Ende**: "Meeting beenden", oder von selbst drei Stunden nach der
   letzten Änderung. Dann erhalten Mitglieder und Teilnehmende die

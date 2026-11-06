@@ -4,11 +4,14 @@ You plan meetings in the calendar. In the tool a meeting begins when
 somebody starts it. Everybody follows on a shared screen and adds agenda
 items from their own device; the page updates by itself.
 
-- **Who leads**: the facilitator and the secretary. If they're missing,
-  others stand in (constitution 5.3.6); both can also be changed during
-  the meeting.
-- **Attendees** are the circle's members at the start; the facilitator
-  and the secretary invite others or remove them.
+- **Who leads**: every member can do what the facilitator does in the
+  tool, it doesn't record who facilitates. The secretary is recorded,
+  since only they change proposals: the circle's Secretary, if missing
+  a stand-in (constitution 5.3.6). "Take over" next to the secretary
+  makes somebody else the secretary, e.g. while the Secretary is late;
+  the tool asks those who aren't the circle's Secretary to confirm.
+- **Attendees** are the circle's members at the start; members invite
+  others or remove them.
 - **One meeting per circle**: starting a second one leads to the running
   one.
 - **End**: "End the meeting", or by itself three hours after the last

@@ -202,7 +202,6 @@ class APITest(TestCase):
             circle=self.kitchen,
             kind=Meeting.GOVERNANCE,
             started_at=timezone.now(),
-            facilitator=self.ada,
             secretary=self.ada,
         )
         proposal = Proposal.objects.create(

@@ -28,7 +28,12 @@ from governance.proposals.process import current_responses
 from governance.proposals.views import annotate_changes, drafting_context
 from governance.roles.constitution import FACILITATOR, LEAD, SECRETARY
 from governance.roles.models import Assignment, ChecklistItem, Metric, Role
-from governance.roles.permissions import can_start_meeting, members, proposer_roles
+from governance.roles.permissions import (
+    can_start_meeting,
+    holds_core_role,
+    members,
+    proposer_roles,
+)
 
 
 def holder(circle, core_role):
@@ -62,7 +67,7 @@ def meeting_list(request, pk):
 
 def meeting_detail(request, pk):
     meeting = get_object_or_404(
-        Meeting.objects.select_related("circle", "facilitator", "secretary"), pk=pk
+        Meeting.objects.select_related("circle", "secretary"), pk=pk
     )
     return render(
         request,
@@ -81,6 +86,10 @@ def meeting_detail(request, pk):
             .active()
             .exclude(pk__in=meeting.attendees.values("pk"))
             .order_by("full_name", "email"),
+            "is_circle_secretary": bool(meeting.circle)
+            and holds_core_role(request.user, meeting.circle, SECRETARY),
+            "has_circle_secretary": bool(meeting.circle)
+            and meeting.circle.roles.active().filter(core_role=SECRETARY).exists(),
             "election_form": ElectionForm(meeting=meeting)
             if meeting.kind == Meeting.GOVERNANCE
             and meeting.is_running
@@ -187,10 +196,6 @@ def meeting_create(request, pk):
         started_at=timezone.now(),
         called_by=request.user if kind == Meeting.TACTICAL else None,
         # Stand-ins for unfilled roles, in the constitution's order (5.3.6)
-        facilitator=holder(circle, FACILITATOR)
-        or holder(circle, SECRETARY)
-        or holder(circle, LEAD)
-        or request.user,
         secretary=holder(circle, SECRETARY)
         or holder(circle, FACILITATOR)
         or holder(circle, LEAD)
@@ -234,7 +239,7 @@ def tactical_call(request):
     if form.is_valid():
         meeting = form.save(commit=False)
         meeting.kind = Meeting.TACTICAL
-        meeting.called_by = meeting.facilitator = request.user
+        meeting.called_by = request.user
         meeting.started_at = timezone.now()
         meeting.save()
         form.save_m2m()
@@ -286,13 +291,7 @@ def meeting_attendees(request, pk):
 class MeetingForm(ModelForm):
     class Meta:
         model = Meeting
-        fields = ["facilitator", "secretary", "minutes"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Usually the Facilitator and the Secretary, or somebody standing in
-        for field in ["facilitator", "secretary"]:
-            self.fields[field].queryset = User.objects.active()
+        fields = ["minutes"]
 
 
 def meeting_update(request, pk):
@@ -310,6 +309,17 @@ def meeting_update(request, pk):
             "cancel_url": meeting.get_absolute_url(),
         },
     )
+
+
+@require_POST
+def meeting_secretary(request, pk):
+    """Somebody running the meeting takes over as its secretary, e.g. standing
+    in for a late Secretary (5.3.6); the page warns those who aren't"""
+    meeting = runnable_meeting(request, pk)
+    if meeting.is_running:
+        meeting.secretary = request.user
+        meeting.save(update_fields=["secretary"])
+    return redirect(meeting)
 
 
 @require_POST
