@@ -77,6 +77,26 @@ class AssignmentMailsTest(TestCase):
             ],
         )
 
+    def test_sub_circles_following_the_circle_leads(self):
+        """A sub-circle nobody leads follows the Circle Leads of the circle
+        above (1.4.2): its Secretary hears about a new one"""
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        Assignment.objects.create(
+            role=bakery.roles.get(core_role="secretary"), user=self.eve
+        )
+        admin = User.objects.create_user("max@example.com", is_admin=True)
+        self.client.force_login(admin)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/roles/{self.kitchen.roles.get(core_role='lead').pk}/assignments/",
+                {"user": self.bob.pk},
+            )
+        self.assertIn(
+            ("eve@example.com", "Members of Bakery: Bob joined"), self.outbox()
+        )
+
     def test_election(self):
         facilitator = self.kitchen.roles.get(core_role="facilitator")
         meeting = Meeting.objects.create(

@@ -76,10 +76,16 @@ def announce(circles):
 
 
 def affected_circles(role):
-    """The circles whose roles and members change with the role's holders"""
+    """The circles whose roles and members change with the role's holders:
+    a Circle Lead also leads the sub-circles nobody leads (1.4.2)"""
     circles = [role.circle]
     if role.core_role in {LEAD, REP} and role.circle:
         circles.append(role.circle.circle)
+    if role.core_role == LEAD and role.circle:
+        parents = [role.circle]
+        while parents:
+            parents = list(Role.objects.active().circles().filter(circle__in=parents))
+            circles.extend(parents)
     return circles
 
 
