@@ -59,6 +59,24 @@ def role_leads(role):
     return circle_leads(role.circle)
 
 
+def stand_ins(circle, core_roles, *, day=None):
+    """The holders of the first of the circle's core roles somebody holds,
+    else its Circle Leads: who stands in for unfilled roles, in the order
+    given (constitution 5.3.6)"""
+    from governance.accounts.models import User
+
+    for core_role in core_roles:
+        users = User.objects.active().filter(
+            pk__in=Assignment.objects
+            .current(on=day)
+            .of_core_role(core_role, circle)
+            .values("user")
+        )
+        if users.exists():
+            return users
+    return circle_leads(circle)
+
+
 def is_circle_lead(user, circle):
     return circle is not None and circle_leads(circle).filter(pk=user.pk).exists()
 

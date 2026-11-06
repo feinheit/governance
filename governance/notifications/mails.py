@@ -9,7 +9,8 @@ from django.utils.translation import gettext as _, override
 
 from governance.accounts.models import User
 from governance.proposals.describe import describe
-from governance.roles.permissions import members
+from governance.roles.constitution import FACILITATOR, SECRETARY
+from governance.roles.permissions import members, stand_ins
 
 
 def recipients(circle):
@@ -206,25 +207,14 @@ def elections_due(day=None):
     from collections import defaultdict
 
     from governance.meetings.elections import due_elections
-    from governance.roles.models import Assignment, Role
-    from governance.roles.permissions import circle_leads
+    from governance.roles.models import Role
 
     by_user = defaultdict(list)
     for circle in Role.objects.active().circles():
         if not (due := due_elections([circle], day=day)):
             continue
-        for core_role in ["facilitator", "secretary"]:
-            users = set(
-                Assignment.objects
-                .current(on=day)
-                .of_core_role(core_role, circle)
-                .values_list("user", flat=True)
-            )
-            if users:
-                break
-        else:
-            users = set(circle_leads(circle).values_list("pk", flat=True))
-        for user_id in users:
+        users = stand_ins(circle, [FACILITATOR, SECRETARY], day=day)
+        for user_id in users.values_list("pk", flat=True):
             by_user[user_id].extend(due)
     sent = 0
     for user in User.objects.active().filter(pk__in=by_user):

@@ -30,22 +30,11 @@ from governance.roles.constitution import FACILITATOR, SECRETARY
 from governance.roles.models import Assignment, ChecklistItem, Metric, Role
 from governance.roles.permissions import (
     can_start_meeting,
-    circle_leads,
     holds_core_role,
     members,
     proposer_roles,
+    stand_ins,
 )
-
-
-def holder(circle, core_role):
-    assignment = (
-        Assignment.objects
-        .current()
-        .of_core_role(core_role, circle)
-        .select_related("user")
-        .first()
-    )
-    return assignment.user if assignment else None
 
 
 def meeting_list(request, pk):
@@ -195,9 +184,7 @@ def meeting_create(request, pk):
         started_at=timezone.now(),
         called_by=request.user if kind == Meeting.TACTICAL else None,
         # Stand-ins for unfilled roles, in the constitution's order (5.3.6)
-        secretary=holder(circle, SECRETARY)
-        or holder(circle, FACILITATOR)
-        or circle_leads(circle).order_by("pk").first()
+        secretary=stand_ins(circle, [SECRETARY, FACILITATOR]).order_by("pk").first()
         or request.user,
     )
     meeting.attendees.set(members(circle))

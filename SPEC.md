@@ -553,9 +553,8 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (second round of 2026-11-06), open:
-  - Judgement calls, to decide: one helper for the stand-in chains
-    (meeting secretary, election reminders); one link for tactical
-    meetings on the role page; one walk of sub-circles
+  - Judgement calls, to decide: one link for tactical meetings on the
+    role page; one walk of sub-circles
     (`mails.domain_policy_changed()`, `mails.inside()`,
     `drafting.sub_circles_of()`, `assignments.affected_circles()`). Kept
     on purpose for readability: the plain-role branch of `members()`, the
