@@ -195,6 +195,37 @@ class ImportedOpenProposalTest(TestCase):
         self.assertContains(response, cook.get_absolute_url())
         self.assertNotContains(response, baker.get_absolute_url())
 
+    def test_policy_diff(self):
+        """A changed text shows the words removed and added"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        noise = Policy.objects.create(
+            role=kitchen, title="Noise", body="Quiet after ten.\n\n- Music\n- Pots"
+        )
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="Noise",
+            status=Proposal.PUBLISHED,
+            created_at=timezone.now(),
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/policies/{noise.pk}/body",
+                    "value": "Quiet after eleven.\n\n- Music\n- Pots",
+                    "original_value": noise.body,
+                }
+            ],
+            names={f"policies/{noise.pk}": "Noise"},
+        )
+        self.client.force_login(ada)
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(response, '<del class="wb-diff-del">ten</del>', html=True)
+        self.assertContains(
+            response, '<ins class="wb-diff-ins">eleven</ins>', html=True
+        )
+        self.assertContains(response, "<li>Pots</li>", html=True)
+
 
 class DatesTest(TestCase):
     def test_dates_in_order(self):

@@ -502,6 +502,21 @@ a.wb-row-title:hover {
   margin-bottom: 0.5rem;
 }
 
+/* Changed texts (governance/diff.py) */
+.wb-diff-del {
+  background: var(--wb-danger-bg);
+  color: var(--wb-danger-ink);
+  text-decoration: line-through;
+  border-radius: 0.2em;
+}
+
+.wb-diff-ins {
+  background: var(--wb-success-bg);
+  color: var(--wb-success-ink);
+  text-decoration: none;
+  border-radius: 0.2em;
+}
+
 @media (max-width: 767.98px) {
   .wb-fields {
     grid-template-columns: minmax(0, 1fr);

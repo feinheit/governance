@@ -137,10 +137,12 @@
             </div>
           {% endif %}
           {% if change.action != "moved" %}
-            {% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary mt-1">
-                {{ change.old|markdown }}
-              </div>{% endif %}
-            {% if change.new %}<div class="wb-markdown mt-1">{{ change.new|markdown }}</div>{% endif %}
+            {% if change.old and change.new %}<div class="wb-markdown mt-1">
+                {{ change.old|diff:change.new }}
+              </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary mt-1">
+                  {{ change.old|markdown }}
+                </div>{% endif %}
+              {% if change.new %}<div class="wb-markdown mt-1">{{ change.new|markdown }}</div>{% endif %}{% endif %}
           {% endif %}
           {% if change.details %}
             <dl class="wb-fields mt-2">

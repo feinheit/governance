@@ -115,10 +115,12 @@
                 >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
                   {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>
               {% else %}
-                {% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
-                    {{ change.old|markdown }}
-                  </div>{% endif %}
-                {% if change.new %}<div class="wb-markdown">{{ change.new|markdown }}</div>{% endif %}
+                {% if change.old and change.new %}<div class="wb-markdown">
+                    {{ change.old|diff:change.new }}
+                  </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
+                      {{ change.old|markdown }}
+                    </div>{% endif %}
+                  {% if change.new %}<div class="wb-markdown">{{ change.new|markdown }}</div>{% endif %}{% endif %}
               {% endif %}
               {% for label, text in change.details %}<div class="small">
                   <span class="text-body-secondary">{{ label }}:</span> {{ text|plain }}

@@ -19,6 +19,14 @@ def markdown(text):
     return mark_safe(_markdown.render(render_mentions(str(text or ""))))
 
 
+@register.filter(name="diff")
+def diff_filter(old, new):
+    """The changed Markdown text with the words removed and added marked"""
+    from governance.diff import diff
+
+    return diff(old, new)
+
+
 @register.filter
 def plain(text):
     """The text without Markdown and mention syntax, e.g. for snippets"""

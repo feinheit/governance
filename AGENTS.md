@@ -268,6 +268,8 @@ the apps' initial migrations).
   states and kinds through the `tone` filter (`badge {{ x.status|tone }}`),
   role kinds in the circle browser's colors (circle blue, core and
   elected purple). Red only for objections; removing is housekeeping, gray.
+  Changed texts are diffs (`governance/diff.py`, the `diff` filter):
+  removed words red, added green, like diffs elsewhere.
   Buttons: `btn-destructive` (red ink) for deleting, removing somebody,
   withdrawing, `btn-danger` confirming it; buttons needing a permission
   check use `{% button_class right %}`, amber (`btn-elevated`) when done

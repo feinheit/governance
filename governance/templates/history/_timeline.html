@@ -37,10 +37,12 @@
             {% elif obj.old_text or obj.new_text %}
               <details class="wb-details small mt-1">
                 <summary class="text-body-secondary">{% translate "Show" %}</summary>
-                {% if obj.old_text %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
-                    {{ obj.old_text|markdown }}
-                  </div>{% endif %}
-                {% if obj.new_text %}<div class="wb-markdown">{{ obj.new_text|markdown }}</div>{% endif %}
+                {% if obj.old_text and obj.new_text %}<div class="wb-markdown">
+                    {{ obj.old_text|diff:obj.new_text }}
+                  </div>{% else %}{% if obj.old_text %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
+                      {{ obj.old_text|markdown }}
+                    </div>{% endif %}
+                  {% if obj.new_text %}<div class="wb-markdown">{{ obj.new_text|markdown }}</div>{% endif %}{% endif %}
               </details>
             {% endif %}
           </li>
