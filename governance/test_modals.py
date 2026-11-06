@@ -19,10 +19,8 @@ class ModalTest(TestCase):
 
     def test_links(self):
         self.client.force_login(self.ada)
-        self.assertContains(
-            self.client.get(f"/roles/{self.kitchen.pk}/"),
-            f'href="{self.url}" data-modal',
-        )
+        response = self.client.get(f"/roles/{self.kitchen.pk}/")
+        self.assertRegex(response.content.decode(), rf'href="{self.url}"\s+data-modal')
 
     def test_form(self):
         """Only the form, posting to the modal, cancelling closes it"""
