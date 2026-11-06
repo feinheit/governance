@@ -499,11 +499,23 @@ def proposal_update(request, pk):
     )
 
 
-@require_POST
 def proposal_delete(request, pk):
+    """Deleting a draft, confirmed first (in a modal on its page)"""
     proposal = editable_proposal(request, pk)
     if proposal.status != Proposal.DRAFT:
         raise PermissionDenied
+    if request.method != "POST":
+        return render(
+            request,
+            "generic/confirm.html",
+            {
+                "question": gettext("Delete the draft %(proposal)s?")
+                % {"proposal": proposal},
+                "help": gettext("Its tension and its changes are lost."),
+                "submit_label": gettext("Delete the draft"),
+                "cancel_url": proposal.get_absolute_url(),
+            },
+        )
     circle = proposal.circle
     proposal.delete()
     messages.success(request, gettext("The draft has been deleted."))

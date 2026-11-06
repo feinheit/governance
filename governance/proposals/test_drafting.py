@@ -87,6 +87,11 @@ class DraftingTest(TestCase):
 
         self.client.force_login(self.ada)
         Proposal.objects.update(status=Proposal.DRAFT)
+        # Asked first, e.g. in a modal
+        self.assertContains(
+            self.client.get(f"/proposals/{proposal.pk}/delete/"), "Delete the draft"
+        )
+        self.assertTrue(Proposal.objects.exists())
         response = self.client.post(f"/proposals/{proposal.pk}/delete/")
         self.assertRedirects(response, f"/roles/{self.kitchen.pk}/")
         self.assertFalse(Proposal.objects.exists())

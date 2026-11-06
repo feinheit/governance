@@ -55,10 +55,11 @@
           href="{% url 'proposal_update' proposal.pk %}"
           data-modal
         >{% translate "Edit the tension" %}</a>
-        <form method="post" action="{% url 'proposal_delete' proposal.pk %}" class="d-inline">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-destructive">{% translate "Delete the draft" %}</button>
-        </form>
+        <a
+          class="btn btn-sm btn-destructive"
+          href="{% url 'proposal_delete' proposal.pk %}"
+          data-modal
+        >{% translate "Delete the draft" %}</a>
       </div>
     {% elif can_draft_again %}
       <div class="wb-page-actions">

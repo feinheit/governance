@@ -4,7 +4,8 @@
   Confirming something destructive (deleting, removing), e.g. in a modal
   opened from the role's page (governance/modals.py): ``question``, the
   object's ``text``, a ``help`` line, ``submit_label`` and the ``right`` of
-  roles.permissions; cancelling goes back to ``role``.
+  roles.permissions; cancelling closes the modal, else goes back to
+  ``cancel_url``.
 {% endcomment %}
 {% block title %}{{ question }} – {{ block.super }}{% endblock %}
 
@@ -30,7 +31,16 @@
       {% csrf_token %}
       <div class="wb-form-actions">
         <button type="submit" class="btn btn-danger">{{ submit_label }}</button>
-        {% include "meetings/_confirm_cancel.html" with class="btn-quiet" %}
+        {% if modal %}<button
+            type="button"
+            class="btn btn-quiet"
+            data-modal-close
+          >
+            {% translate "Cancel" %}
+          </button>{% else %}<a
+            class="btn btn-quiet"
+            href="{{ cancel_url }}"
+          >{% translate "Cancel" %}</a>{% endif %}
       </div>
     </form>
   </div>

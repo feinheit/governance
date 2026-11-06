@@ -133,6 +133,6 @@ def item_delete(request, kind, pk):
             "text": item,
             "submit_label": gettext("Delete"),
             "right": right,
-            "role": item.role,
+            "cancel_url": item.role.get_absolute_url(),
         },
     )

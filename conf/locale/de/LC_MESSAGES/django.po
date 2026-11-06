@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 15:07+0100\n"
+"POT-Creation-Date: 2026-11-06 15:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -805,6 +805,20 @@ msgstr "Weiter"
 #: governance/templates/proposals/proposal_detail.html
 msgid "Edit the tension"
 msgstr "Spannung bearbeiten"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "Delete the draft %(proposal)s?"
+msgstr "Entwurf %(proposal)s löschen?"
+
+#: governance/proposals/drafting.py
+msgid "Its tension and its changes are lost."
+msgstr "Seine Spannung und seine Änderungen gehen verloren."
+
+#: governance/proposals/drafting.py
+#: governance/templates/proposals/proposal_detail.html
+msgid "Delete the draft"
+msgstr "Entwurf löschen"
 
 #: governance/proposals/drafting.py
 msgid "The draft has been deleted."
@@ -1729,17 +1743,18 @@ msgstr "Du kannst das als Admin tun, nicht über eine deiner Rollen: Die Verfass
 msgid "You can do this as Secretary, standing in for the Circle Leads: the constitution leaves it to them. Only do it when you know it's needed."
 msgstr "Du kannst das als Secretary tun, stellvertretend für die Circle Leads: Die Verfassung überlässt es ihnen. Tu es nur, wenn du weisst, dass es nötig ist."
 
-#: governance/templates/generic/object_form.html
-#: governance/templates/roles/person_detail.html
-msgid "Save"
-msgstr "Speichern"
-
+#: governance/templates/generic/confirm.html
 #: governance/templates/generic/object_form.html
 #: governance/templates/meetings/_confirm_cancel.html
 #: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#: governance/templates/generic/object_form.html
+#: governance/templates/roles/person_detail.html
+msgid "Save"
+msgstr "Speichern"
 
 #: governance/templates/history/_timeline.html
 #: governance/templates/meetings/meeting_detail.html
@@ -2426,10 +2441,6 @@ msgstr "wird angenommen am"
 #: governance/templates/proposals/proposal_detail.html
 msgid "Publish (async)"
 msgstr "Veröffentlichen (asynchron)"
-
-#: governance/templates/proposals/proposal_detail.html
-msgid "Delete the draft"
-msgstr "Entwurf löschen"
 
 #: governance/templates/proposals/proposal_detail.html
 msgid "Draft again"

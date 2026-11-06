@@ -186,7 +186,7 @@ def domain_policy_remove(request, pk, policy_pk):
                 % {"circle": role.circle},
                 "submit_label": gettext("Remove"),
                 "right": right,
-                "role": role,
+                "cancel_url": role.get_absolute_url(),
             },
         )
     policy.archived_on = timezone.localdate()
