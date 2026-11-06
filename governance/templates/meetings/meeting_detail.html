@@ -79,7 +79,7 @@
           {% endif %}
           {% if meeting.is_running %}
             {# One scrolling column (wide screens): the results, the item being processed, the notes; meeting.js scrolls to the item when it changes #}
-            <div class="wb-flow wb-fit">
+            <div class="wb-flow wb-fit" data-fit="flow">
               {% if meeting.step == "closing" %}
                 {# The closing round: the notes, and ending the meeting #}
                 {% include "meetings/_notes.html" %}
@@ -99,7 +99,7 @@
         {% endblock main %}
       </div>
       {# While it runs, both columns fit the window and scroll on their own (wide screens) #}
-      <div class="col-lg-4 order-lg-1{% if meeting.is_running %} wb-fit{% endif %}">
+      <div class="col-lg-4 order-lg-1{% if meeting.is_running %} wb-fit{% endif %}" data-fit="sidebar">
         {% if meeting.is_running %}
           {# The heading beside the steps and results, which start right below the navigation #}
           {% include "roles/_breadcrumbs.html" %}

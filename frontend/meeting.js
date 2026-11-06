@@ -93,22 +93,41 @@ function scrollToCurrent(force = false) {
 
 // On wide screens the running meeting's columns (.wb-fit) fill the window
 // below their top down to its lower edge and scroll on their own (they
-// have padding of their own): the page doesn't scroll
+// have padding of their own): the page doesn't scroll. Their tops are CSS
+// variables on <html>, which the meeting's updates don't replace.
 function fitFlow() {
-  const wide = matchMedia("(min-width: 992px)").matches
   for (const column of document.querySelectorAll(".wb-fit")) {
     const top = column.getBoundingClientRect().top + window.scrollY
-    column.style.maxHeight = wide
-      ? `${Math.max(window.innerHeight - top, 240)}px`
-      : ""
+    document.documentElement.style.setProperty(
+      `--wb-fit-${column.dataset.fit}`,
+      `${Math.min(top, window.innerHeight - 240)}px`,
+    )
   }
 }
+
+// The updates keep the columns' scroll positions (scrolling to the item
+// when another one is processed)
+let scrollTops = {}
+document.addEventListener("htmx:before:swap", () => {
+  scrollTops = Object.fromEntries(
+    [...document.querySelectorAll(".wb-fit")].map((column) => [
+      column.dataset.fit,
+      column.scrollTop,
+    ]),
+  )
+})
 
 fitFlow()
 scrollToCurrent()
 window.addEventListener("resize", fitFlow)
 document.addEventListener("htmx:after:settle", () => {
   fitFlow()
+  for (const column of document.querySelectorAll(".wb-fit")) {
+    const top = scrollTops[column.dataset.fit]
+    if (top !== undefined && column.scrollTop !== top) {
+      column.scrollTo({ top, behavior: "instant" })
+    }
+  }
   scrollToCurrent()
 })
 document.addEventListener("click", (event) => {

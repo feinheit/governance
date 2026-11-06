@@ -575,6 +575,16 @@ a.wb-row-title:hover {
     padding-bottom: 1rem;
   }
 
+  /* Their tops, set on <html> (meeting.js): the meeting's updates don't
+     replace them */
+  .wb-fit[data-fit="sidebar"] {
+    max-height: calc(100vh - var(--wb-fit-sidebar, 0px));
+  }
+
+  .wb-fit[data-fit="flow"] {
+    max-height: calc(100vh - var(--wb-fit-flow, 0px));
+  }
+
   .wb-flow {
     padding-inline-end: 0.25rem;
   }
