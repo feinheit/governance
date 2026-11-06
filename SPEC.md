@@ -180,7 +180,8 @@ two months (published, else created) and not on an agenda here are
 imported as drafts: their proposers bring them again or delete them, admins
 can't withdraw other people's proposals. GlassFrog stays the source of
 truth for imported proposals until the switchover: the import overwrites
-their status. Drafts are private to the proposer until published
+their status. Meetings here may adopt them to try the process (the next
+import sets proposal and structure back), the async process doesn't. Drafts are private to the proposer until published
 or brought into a meeting; a draft without instructions is a tension (the
 tension inbox; GlassFrog's open tensions are imported as such). New
 proposals ask for the tension, an example and how the proposal helps
@@ -690,8 +691,9 @@ Deliberately not modelled:
   only token) instead of `fetch_glassfrog.py`, into a new repository: to
   consider then or afterwards, converting the GlassFrog export's commits
   into the backup's format. Let the
-  open imported proposals be adopted (`adopt()` refuses every proposal
-  with a `glassfrog_id` until then). Remove
+  open imported proposals be adopted async too (`adopt()` refuses
+  proposals with a `glassfrog_id` outside of running meetings until then,
+  e.g. at GlassFrog's deadlines). Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
   being the source of truth in `AGENTS.md` and this file.
 - **Published interpretations** (4.2.1): the Secretary's rulings, binding

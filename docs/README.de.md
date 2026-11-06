@@ -38,4 +38,6 @@ vorsieht. Diese Hilfe erklärt das Tool, nicht Holacracy.
 
 GlassFrog bleibt massgebend, bis wir umstellen: jede Nacht übernimmt das
 Tool Struktur, Besetzung und Vorschläge aus GlassFrog und überschreibt
-dabei, was hier an diesen Daten geändert wurde.
+dabei, was hier an diesen Daten geändert wurde. Aus GlassFrog importierte
+Vorschläge lassen sich zum Ausprobieren in einem Governance Meeting hier
+annehmen, die nächste Nacht setzt sie zurück.

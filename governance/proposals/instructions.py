@@ -597,8 +597,14 @@ def replace_keys(proposal, created):
 @transaction.atomic
 def adopt(proposal):
     """Applies the proposal and marks it as adopted"""
-    if proposal.glassfrog_id or proposal.status == Proposal.ADOPTED:
+    if proposal.status == Proposal.ADOPTED:
         raise ProposalError([_("The proposal has already been adopted.")])
+    if proposal.glassfrog_id and not (proposal.meeting and proposal.meeting.is_running):
+        # Until the switchover GlassFrog decides them async, meetings here
+        # may adopt them (the nightly import sets them back)
+        raise ProposalError([
+            _("Proposals imported from GlassFrog are adopted in a meeting.")
+        ])
     if proposal.status == Proposal.WITHDRAWN:
         raise ProposalError([_("The proposal has been withdrawn.")])
     if not proposal.instructions:

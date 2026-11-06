@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 17:35+0100\n"
+"POT-Creation-Date: 2026-11-06 18:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1032,6 +1032,10 @@ msgstr "%(circle)s hat noch Rollen, diese müssen zuerst weg."
 #: governance/proposals/instructions.py
 msgid "The proposal has already been adopted."
 msgstr "Der Vorschlag wurde bereits angenommen."
+
+#: governance/proposals/instructions.py
+msgid "Proposals imported from GlassFrog are adopted in a meeting."
+msgstr "Aus GlassFrog importierte Vorschläge werden in einem Meeting angenommen."
 
 #: governance/proposals/instructions.py
 msgid "A tension without changes isn't adopted."
@@ -2073,14 +2077,6 @@ msgid "No changes yet."
 msgstr "Noch keine Änderungen."
 
 #: governance/templates/meetings/_current.html
-msgid "Adopt"
-msgstr "Annehmen"
-
-#: governance/templates/meetings/_current.html
-msgid "Discard"
-msgstr "Verwerfen"
-
-#: governance/templates/meetings/_current.html
 msgid "Concerns from the async process"
 msgstr "Bedenken aus dem asynchronen Prozess"
 
@@ -2135,6 +2131,14 @@ msgstr "Begründung"
 #: governance/templates/meetings/_current.html
 msgid "Record objection"
 msgstr "Einwand festhalten"
+
+#: governance/templates/meetings/_current.html
+msgid "Adopt"
+msgstr "Annehmen"
+
+#: governance/templates/meetings/_current.html
+msgid "Discard"
+msgstr "Verwerfen"
 
 #: governance/templates/meetings/_current.html
 msgid "A tension without a proposal yet: the secretary captures the proposal, or the item is done."

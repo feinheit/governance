@@ -38,4 +38,6 @@ provides. This help explains the tool, not Holacracy.
 
 GlassFrog stays authoritative until we switch over: every night the tool
 takes the structure, the assignments and the proposals from GlassFrog,
-overwriting what was changed in these data here.
+overwriting what was changed in these data here. Proposals imported from
+GlassFrog can be adopted in a governance meeting here to try it out, the
+next night sets them back.

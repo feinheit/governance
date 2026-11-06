@@ -7,6 +7,7 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting, Objection
 from governance.proposals.models import Proposal
+from governance.proposals.process import adopt_due_proposals
 from governance.roles.models import Accountability, Assignment, Role
 
 
@@ -222,6 +223,39 @@ class ProcessingTest(TestCase):
         self.client.post(f"/agenda/{item.pk}/adopt/")
         tension.refresh_from_db()
         self.assertEqual(tension.status, Proposal.IN_MEETING)
+
+    def test_imported_proposal(self):
+        """Open proposals imported from GlassFrog are adopted in meetings
+        (the nightly import sets them back until the switchover), not at
+        GlassFrog's deadlines by the daily task"""
+        self.cook.glassfrog_id = 999  # Not the app's ID
+        self.cook.save()
+        published = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            tension="Async",
+            status=Proposal.PUBLISHED,
+            published_at=timezone.now() - dt.timedelta(days=9),
+            deadline=timezone.now() - dt.timedelta(days=2),
+            created_at=timezone.now() - dt.timedelta(days=9),
+            instructions=self.proposal.instructions,
+            glassfrog_id=124,
+        )
+        self.assertEqual(adopt_due_proposals(), [])
+        published.refresh_from_db()
+        self.assertNotEqual(published.status, Proposal.ADOPTED)
+
+        self.proposal.glassfrog_id = 123
+        self.proposal.save()
+        self.client.force_login(self.bob)
+        self.client.post(f"/agenda/{self.item.pk}/process/")
+        response = self.client.post(f"/agenda/{self.item.pk}/adopt/", follow=True)
+        self.assertContains(response, "The proposal is adopted.")
+        self.cook.refresh_from_db()
+        self.assertEqual(self.cook.name, "Chef")
+        # Its instructions have the app's IDs, unlike those adopted in GlassFrog
+        response = self.client.get(self.proposal.get_absolute_url())
+        self.assertContains(response, self.cook.get_absolute_url())
 
     def test_proposals_come_from_roles(self):
         """A guest's tension becomes a proposal without a role, which isn't
