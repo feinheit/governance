@@ -7,6 +7,7 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting
 from governance.roles.models import Assignment, Role
+from governance.roles.permissions import asks_before_starting
 
 
 class MeetingsTest(TestCase):
@@ -94,11 +95,18 @@ class MeetingsTest(TestCase):
         )
         self.assertFalse(Meeting.objects.exists())
 
-        # Without a Secretary the Circle Leads stand in
+        # Without a Secretary the Facilitator stands in, then the Circle
+        # Leads (constitution 5.3.6)
         Assignment.objects.filter(role__core_role="secretary").delete()
         Assignment.objects.create(
             role=self.kitchen.roles.get(core_role="lead"), user=self.eve
         )
+        self.assertFalse(asks_before_starting(self.ada, self.kitchen))
+        self.assertTrue(asks_before_starting(self.eve, self.kitchen))
+        self.assertContains(
+            self.client.get(url), "The Secretary schedules the circle's meetings: Ada."
+        )
+        Assignment.objects.filter(role__core_role="facilitator").delete()
         response = self.client.get(f"/roles/{self.kitchen.pk}/")
         self.assertContains(response, f'<form method="post" action="{url}"')
 
@@ -215,6 +223,12 @@ class MeetingsTest(TestCase):
         self.client.post(f"/meetings/{meeting.pk}/secretary/")
         meeting.refresh_from_db()
         self.assertEqual(meeting.secretary, self.bob)
+        # Without a Secretary, the Facilitator stands in without a warning
+        Assignment.objects.filter(role__core_role="secretary").delete()
+        self.client.force_login(self.ada)
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "Take over")
+        self.assertNotContains(response, "hx-confirm=")
         outsider = User.objects.create_user("max@example.com")
         self.client.force_login(outsider)
         self.assertEqual(

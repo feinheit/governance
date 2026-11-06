@@ -42,7 +42,7 @@
               method="post"
               action="{% url 'meeting_secretary' meeting.pk %}"
               class="d-inline"
-              {% if has_circle_secretary and not is_circle_secretary %}
+              {% if not is_acting_secretary %}
                 hx-confirm="{% translate "You aren't the circle's Secretary. Take over as the meeting's secretary anyway, e.g. standing in?" %}"
               {% endif %}
             >

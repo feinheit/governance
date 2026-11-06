@@ -12,7 +12,12 @@ from django.utils.translation import gettext as _, gettext_noop, override
 from governance.accounts.models import User
 from governance.proposals.describe import describe
 from governance.roles.constitution import FACILITATOR, SECRETARY
-from governance.roles.permissions import circle_leads, members, stand_ins
+from governance.roles.permissions import (
+    acting_secretaries,
+    circle_leads,
+    members,
+    stand_ins,
+)
 
 
 # Into a sub-circle (any depth, 5.2) and out of one, ``Applier.move()``
@@ -97,8 +102,7 @@ def response_given(response):
         subject = gettext_noop("Answer in %(circle)s: %(proposal)s")
     elif response.kind == Response.MEETING:
         users = User.objects.filter(
-            Q(pk=proposal.proposer_id)
-            | Q(pk__in=stand_ins(proposal.circle, [SECRETARY]))
+            Q(pk=proposal.proposer_id) | Q(pk__in=acting_secretaries(proposal.circle))
         )
         subject = gettext_noop("To discuss in a meeting in %(circle)s: %(proposal)s")
     else:

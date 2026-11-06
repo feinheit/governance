@@ -14,7 +14,7 @@ constitution doesn't do) or ``AS_ADMIN``. The pages mark the latter two
 
 from django.db.models import Q
 
-from governance.roles.constitution import LEAD, REP, SECRETARY
+from governance.roles.constitution import FACILITATOR, LEAD, REP, SECRETARY
 from governance.roles.models import Assignment, Role
 
 
@@ -91,6 +91,12 @@ def stand_ins(circle, core_roles, *, day=None):
         if users.exists():
             return users
     return circle_leads(circle)
+
+
+def acting_secretaries(circle):
+    """Who acts as the circle's Secretary: its Secretary, else its
+    Facilitator, else its Circle Leads (constitution 5.3.6)"""
+    return stand_ins(circle, [SECRETARY, FACILITATOR])
 
 
 def is_circle_lead(user, circle):
@@ -197,7 +203,7 @@ def asks_before_starting(user, circle):
     Secretary or standing in for them: the Secretary schedules them"""
     if not circle.is_circle:
         return True
-    return not stand_ins(circle, [SECRETARY]).filter(pk=user.pk).exists()
+    return not acting_secretaries(circle).filter(pk=user.pk).exists()
 
 
 def can_change_settings(user, role):

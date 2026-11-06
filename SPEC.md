@@ -301,9 +301,11 @@ who aren't its Secretary or standing in for them, starting being the
 default. Members run it (`can_run()`): the app
 doesn't record who facilitates, nobody needs rights the other members
 don't have for it. It records the secretary, who amends proposals:
-the Secretary, else the stand-ins of 5.3.6; whoever runs the meeting
+the Secretary, else the stand-ins of 5.3.6 (`acting_secretaries()`: the
+Facilitator, then the Circle Leads, also for asking before starting,
+"Take over" and the requests for a meeting); whoever runs the meeting
 takes over ("Take over", e.g. for a late Secretary), the page asks
-those who aren't the circle's Secretary to confirm. Attendees are the
+those who aren't acting as the circle's Secretary to confirm. Attendees are the
 members when it starts; those running it invite others (also guests of
 Circle Reps) and remove them.
 One meeting at a time per circle (a constraint): starting another one
@@ -624,11 +626,6 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (fourth round, 2026-11-06), open:
-  - Bug: the Facilitator is skipped as the Secretary's stand-in (5.3.6 b)
-    in `asks_before_starting()`, the meeting request mail
-    (`notifications/mails.py`) and the start confirmation's names;
-    `meeting_create` gets it right. The "Take over" warning only checks
-    whether a Secretary is assigned.
   - Bug: removing a proposal from the agenda leaves it `in_meeting` (a
     draft becomes public, an async proposal loses its deadline).
   - Bug: an archived circle's meeting list offers starting a meeting,

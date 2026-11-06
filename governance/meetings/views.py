@@ -26,15 +26,13 @@ from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
 from governance.proposals.process import current_responses
 from governance.proposals.views import annotate_changes, drafting_context
-from governance.roles.constitution import FACILITATOR, SECRETARY
 from governance.roles.models import Assignment, ChecklistItem, Metric, Role
 from governance.roles.permissions import (
+    acting_secretaries,
     asks_before_starting,
     can_start_meeting,
-    holds_core_role,
     members,
     proposer_roles,
-    stand_ins,
 )
 
 
@@ -77,10 +75,9 @@ def meeting_detail(request, pk):
             .active()
             .exclude(pk__in=meeting.attendees.values("pk"))
             .order_by("full_name", "email"),
-            "is_circle_secretary": bool(meeting.circle)
-            and holds_core_role(request.user, meeting.circle, SECRETARY),
-            "has_circle_secretary": bool(meeting.circle)
-            and meeting.circle.roles.active().filter(core_role=SECRETARY).exists(),
+            # Others taking over as the meeting's secretary are asked first
+            "is_acting_secretary": not meeting.circle
+            or acting_secretaries(meeting.circle).filter(pk=request.user.pk).exists(),
             "election_form": ElectionForm(meeting=meeting)
             if meeting.kind == Meeting.GOVERNANCE
             and meeting.is_running
@@ -177,9 +174,7 @@ def meeting_create(request, pk):
                 "right": right,
                 "tactical": request.GET.get("kind") == Meeting.TACTICAL
                 and circle.is_circle,
-                "secretaries": stand_ins(circle, [SECRETARY]).order_by(
-                    "full_name", "email"
-                )
+                "secretaries": acting_secretaries(circle).order_by("full_name", "email")
                 if circle.is_circle
                 else None,
             },
@@ -204,8 +199,7 @@ def meeting_create(request, pk):
         started_at=timezone.now(),
         called_by=request.user if kind == Meeting.TACTICAL else None,
         # Stand-ins for unfilled roles, in the constitution's order (5.3.6)
-        secretary=stand_ins(circle, [SECRETARY, FACILITATOR]).order_by("pk").first()
-        or request.user,
+        secretary=acting_secretaries(circle).order_by("pk").first() or request.user,
     )
     meeting.attendees.set(members(circle))
     if kind == Meeting.TACTICAL:

@@ -130,6 +130,19 @@ class NotificationsTest(TestCase):
         self.assertEqual(sorted(to), ["eve@example.com", "zoe@example.com"])
         self.assertIn("Too short", to["zoe@example.com"].body)
 
+        # Without a Secretary the Facilitator stands in (constitution 5.3.6)
+        Assignment.objects.filter(role=secretary).delete()
+        facilitator = self.kitchen.roles.create(
+            name="Facilitator", core_role="facilitator"
+        )
+        Assignment.objects.create(role=facilitator, user=self.zoe)
+        proposal.pk = None
+        proposal.status = Proposal.DRAFT
+        proposal.save()
+        publish(proposal)
+        to = sent(self.bob, Response.MEETING, "Still too short")
+        self.assertEqual(sorted(to), ["eve@example.com", "zoe@example.com"])
+
     def test_setting(self):
         self.client.force_login(self.zoe)
         response = self.client.get(f"/people/{self.zoe.pk}/")
