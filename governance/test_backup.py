@@ -30,6 +30,9 @@ class BackupTest(TestCase):
             created_at=now,
         )
         Response.objects.create(proposal=published, user=bob, kind=Response.CONSENT)
+        Response.objects.create(
+            proposal=published, user=bob, kind=Response.COMMENT, text="Why?"
+        )
         Proposal.objects.create(
             circle=kitchen, proposer=bob, tension="Secret", created_at=now
         )
@@ -67,7 +70,12 @@ class BackupTest(TestCase):
         self.assertEqual(files["assignments.json"][0]["starts_on"], "2026-01-01")
         # Not Bob's private draft
         self.assertEqual([p["tension"] for p in files["proposals.json"]], ["Bread"])
-        self.assertEqual(files["proposals.json"][0]["responses"][0]["user"], bob.pk)
+        # Responses are anonymous like on the page, except questions and
+        # concerns, which have their author
+        self.assertEqual(
+            [(r["kind"], r["user"]) for r in files["proposals.json"][0]["responses"]],
+            [(Response.CONSENT, None), (Response.COMMENT, bob.pk)],
+        )
         self.assertEqual(
             files["meetings.json"][0]["agenda"][0]["proposal"], published.pk
         )

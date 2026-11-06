@@ -540,7 +540,8 @@ running meeting's page, not through scripts.
 `GET backup/` is the JSON backup (`backup.py`), what the token's user
 sees, one file per kind: `people`, `roles` (with accountabilities and
 domains), `assignments`, `policies`, `history` (the `Change`s since
-2018), `proposals` (with responses, without others' drafts), `meetings`
+2018), `proposals` (with responses, anonymous like on the page except
+questions and concerns, without others' drafts), `meetings`
 (with agenda, objections, elections), `metrics`, `checklist_items`,
 `links`. Lists ordered by ID with the models' field names and GlassFrog
 IDs. `scripts/fetch_backup.py REPO` commits them daily to a git
@@ -632,8 +633,9 @@ Deliberately not modelled:
 ## Backlog
 
 - **Verification** (fourth round, 2026-11-06), open:
-  - Decisions: the JSON backup names who responded (responses are anonymous
-    elsewhere). A role's domain policies when it becomes a circle.
+  - Decisions: a role's domain policies when it becomes a circle (they
+    become the circle's, document it); a circle's policies when it turns
+    back into a role (archived? domain policies kept?).
   - Meetings: the secretary handles the meeting's buttons, attendees
     see where the meeting is and read the proposal themselves.
 - **Non-core members of a role** (later, not yet): people taking part in

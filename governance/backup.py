@@ -100,18 +100,25 @@ def proposals(user):
         ),
         affected_roles=related(Proposal.roles, "proposal_id", "role_id"),
         affected_policies=related(Proposal.policies, "proposal_id", "policy_id"),
-        responses=by(
-            "proposal",
-            rows(
-                Response.objects.filter(proposal__in=visible),
-                "proposal",
-                "user",
-                "kind",
-                "text",
-                "created_at",
-            ),
-        ),
+        responses=by("proposal", responses(visible)),
     )
+
+
+def responses(proposals):
+    """Anonymous like on the proposal page (``process.response_summary()``):
+    only questions and concerns have their author"""
+    result = rows(
+        Response.objects.filter(proposal__in=proposals),
+        "proposal",
+        "user",
+        "kind",
+        "text",
+        "created_at",
+    )
+    for row in result:
+        if row["kind"] != Response.COMMENT and not row["text"]:
+            row["user"] = None
+    return result
 
 
 def meetings():
