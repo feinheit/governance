@@ -1,3 +1,5 @@
+import datetime as dt
+
 from django.core import mail
 from django.test import TestCase
 from django.utils import timezone
@@ -401,6 +403,25 @@ class ProcessingTest(TestCase):
         self.assertIn("Adopted: Better name", body)
         self.assertIn("+ Chef", body)
         self.assertIn("Facilitator: Eve", body)
+
+    def test_outputs_reach_holders_of_removed_roles(self):
+        """Somebody absent whose role the meeting removes still gets the
+        outputs, like when adopting async"""
+        max_ = User.objects.create_user("max@example.com", full_name="Max")
+        waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
+        Assignment.objects.create(
+            role=waiter,
+            user=max_,
+            starts_on=timezone.localdate() - dt.timedelta(days=9),
+        )
+        self.meeting.attendees.set([self.ada, self.bob, self.eve])
+        self.proposal.instructions = [{"op": "remove", "path": f"/roles/{waiter.pk}"}]
+        self.proposal.save()
+        self.client.force_login(self.bob)
+        self.client.post(f"/agenda/{self.item.pk}/adopt/")
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/meetings/{self.meeting.pk}/end/")
+        self.assertIn("max@example.com", [m.to[0] for m in mail.outbox])
 
     def test_async_concerns(self):
         """Concerns from requesting a meeting are context, objections are

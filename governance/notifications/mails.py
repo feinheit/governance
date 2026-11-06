@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.utils.translation import gettext as _, override
 
 from governance.accounts.models import User
@@ -231,6 +232,20 @@ def meeting_ended(meeting):
     users = Q(pk__in=meeting.attendees.all())
     if meeting.circle:
         users |= Q(pk__in=recipients(meeting.circle))
+    if outputs["proposals"]:
+        # The holders of roles the adopted proposals removed or moved away,
+        # also when absent, like adopting async (members before adopting)
+        from governance.roles.models import Assignment
+
+        proposals = [entry["proposal"] for entry in outputs["proposals"]]
+        users |= Q(
+            pk__in=Assignment.objects
+            .filter(role__changed_by_proposals__in=proposals)
+            .filter(
+                Q(ends_on=None) | Q(ends_on__gte=timezone.localdate(meeting.started_at))
+            )
+            .values("user")
+        )
     return send(
         User.objects.filter(users),
         lambda: _("Outputs of the %(meeting)s") % {"meeting": meeting},

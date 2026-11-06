@@ -360,7 +360,8 @@ async proposals, those taken back, adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away), domain policy changes (section 3), and when a meeting ends
 its outputs (adopted proposals, elections, minutes, tactical outcomes;
-also to the attendees). Like GlassFrog, assignments, removals, elections
+also to the attendees and, like adopting async, the holders of roles
+the adopted proposals changed, removed or moved away). Like GlassFrog, assignments, removals, elections
 and deactivations (`roles.assignments.announce()`) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
@@ -542,9 +543,7 @@ Deliberately not modelled:
 
 ## Backlog
 
-- **Verification** (round of 2026-11-06), open: meeting outputs also to
-  the people who lost a role through the meeting's adopted proposals;
-  moves into any sub-circle thereof and out of it (5.2), not only direct
+- **Verification** (round of 2026-11-06), open: moves into any sub-circle thereof and out of it (5.2), not only direct
   ones.
 
 - **Simplify roles and circles**: every role's inside is a circle now
