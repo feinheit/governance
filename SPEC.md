@@ -32,7 +32,8 @@ not depending on it: Django, PostgreSQL, a reduced `User` (email, name,
 short name, active, `notify_all`), Google sign-in (django-authlib) for
 existing, active users, the audit log trigger, Workbench's page layout
 (light and dark mode), django-ninja, the daily `fairy_tasks`, German
-first. htmx 4 on the meeting page, a Preact island for the circle browser,
+first. htmx 4 on the meeting page and for the modals, a Preact island for
+the circle browser,
 all styles and scripts in one bundle (rspack, only the parts of Bootstrap
 in use).
 Hosted at `governance.feinheit.ch` (see `AGENTS.md`).
@@ -318,6 +319,7 @@ agenda items from their own devices. **The meeting page** (htmx 4): actions
 replace only `#meeting`, links navigate normally unless marked
 `data-in-meeting`; every five seconds the region is morphed with the
 server's, except while somebody types or has the panel or a section open.
+A modal (the minutes) doesn't stop it: it's outside of `#meeting`.
 Left: agenda (adding items as its last line), attendees, elections,
 proposals. Right: the rounds and the item being processed. An ended
 meeting shows its outputs like its mail (`meetings/outputs.py`).
@@ -461,6 +463,16 @@ only setting is `User.notify_all` ("everything in all circles").
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
   the handbook's links are updated at the switchover using the imported
   GlassFrog IDs.
+- **Modals** like Workbench's for short forms opened from a page and
+  going back to it: the strategy, metrics, checklist items, links,
+  policies of a domain and settings on the role's page, a holder's focus,
+  a draft's tension, a meeting's minutes. A `<dialog>` loaded by htmx
+  with the `HX-Modal` header (`frontend/modal.js`,
+  `governance/modals.py`), the views stay as they are:
+  `generic/object_form.html` renders only the form, redirects become
+  `HX-Redirect` and load the page. Escape closes changed forms only when
+  pressed twice. Not for drafting roles and policies (long forms, the
+  meeting has its panel).
 - **Technical URLs** on purpose (`/roles/42/`), no slugs: names repeat
   (every circle has a Facilitator), change through governance (renames,
   moves) and differ in the history; the ID is what stays. Not even as
@@ -605,5 +617,5 @@ Deliberately not modelled:
   ending a meeting when its inactivity runs out (instead of the hourly
   `end_inactive_meetings`), sending mails outside the request.
 - **PDF export**, if needed.
-- **Modals** like Workbench's (without its `X-Requested-With`), e.g. for
-  editing a circle's strategy or a meeting's minutes in place.
+- **Modals** for more forms where they help, e.g. assigning roles from
+  the circle's page.

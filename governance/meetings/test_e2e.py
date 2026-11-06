@@ -17,7 +17,7 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
-from governance.roles.models import Assignment, Policy, Role
+from governance.roles.models import Assignment, ChecklistItem, Policy, Role
 
 
 try:
@@ -244,6 +244,40 @@ class MeetingE2ETest(LiveServerTestCase):
 
         textarea.press("Enter")
         self.assertIn(f"with @[Cook](role:{self.cook.pk}) ", textarea.input_value())
+        self.assertEqual(self.errors, [])
+
+    def test_modals(self):
+        """Forms open in a modal (modal.js), Escape keeps changed ones open
+        until pressed again, saving loads the page"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        add = page.locator("a[data-modal][href$='/checklist/new/']")
+        add.click()
+        page.wait_for_selector("#modal[open] textarea[name=description]:focus")
+        page.keyboard.type("Sharpen the knives")
+        page.keyboard.press("Escape")
+        self.assertEqual(page.locator("#modal[open]").count(), 1)
+        page.keyboard.press("Escape")
+        page.wait_for_selector("#modal[open]", state="detached")
+
+        add.click()
+        page.fill("#modal textarea[name=description]", "Sharpen the knives")
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("main >> text=Sharpen the knives")
+        self.assertEqual(page.locator("#modal[open]").count(), 0)
+        self.assertEqual(ChecklistItem.objects.get().description, "Sharpen the knives")
+
+        # In a meeting its updates continue behind the modal
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        page.locator("a[data-modal][href$='/edit/']").click()
+        page.fill("#modal[open] textarea[name=minutes]", "Short and sweet")
+        AgendaItem.objects.create(meeting=self.meeting, label="Meanwhile", position=9)
+        page.wait_for_selector("#agenda >> text=Meanwhile", timeout=8000)
+        self.assertEqual(
+            page.input_value("#modal textarea[name=minutes]"), "Short and sweet"
+        )
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("#meeting >> text=Short and sweet")
         self.assertEqual(self.errors, [])
 
     def test_circle_browser(self):

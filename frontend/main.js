@@ -11,6 +11,8 @@ import "./shortcuts.js"
 // meeting.js first: it decides which links htmx boosts
 import "./meeting.js"
 import "htmx.org"
+// Forms in a <dialog>, outside of the meeting's region its updates replace
+import "./modal.js"
 
 // The script is deferred, the page is parsed already
 const circleBrowser = document.querySelector("#circle-browser")

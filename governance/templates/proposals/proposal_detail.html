@@ -53,6 +53,7 @@
         <a
           class="btn btn-sm btn-quiet"
           href="{% url 'proposal_update' proposal.pk %}"
+          data-modal
         >{% translate "Edit the tension" %}</a>
         <form method="post" action="{% url 'proposal_delete' proposal.pk %}" class="d-inline">
           {% csrf_token %}

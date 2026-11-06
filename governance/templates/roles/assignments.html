@@ -31,6 +31,7 @@
               {% if can_assign %}<a
                   class="btn btn-sm btn-quiet"
                   href="{% url 'assignment_update' assignment.pk %}"
+                  data-modal
                 >{% translate "Edit focus" %}</a>{% endif %}
               <form method="post" action="{% url 'assignment_end' assignment.pk %}" class="d-inline">
                 {% csrf_token %}

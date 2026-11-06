@@ -953,6 +953,55 @@ a.wb-row-title:hover {
   font-size: 1.1rem;
 }
 
+/* Forms in a modal (modal.js): the page's form layout in a <dialog> */
+.wb-modal {
+  width: min(48rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 1.25rem;
+  color: var(--bs-body-color);
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-lg);
+  box-shadow: var(--bs-box-shadow-lg);
+}
+
+.wb-modal::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+body:has(.wb-modal[open]) {
+  overflow: hidden;
+}
+
+.wb-modal .wb-page-header {
+  margin-bottom: 1rem;
+}
+
+.wb-modal h1 {
+  font-size: 1.25rem;
+}
+
+.wb-modal .wb-form-actions {
+  margin-bottom: 0;
+}
+
+/* Escape on a changed form: it stays open, pressing again closes it */
+.wb-modal-shake {
+  animation: wb-modal-shake 0.3s;
+}
+
+@keyframes wb-modal-shake {
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-modal-shake {
+    animation: none;
+  }
+}
+
 /* Group headings inside list groups, e.g. checklists by their frequency */
 .list-group-item.wb-group-heading {
   background: var(--bs-tertiary-bg);

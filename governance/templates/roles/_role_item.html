@@ -10,7 +10,7 @@
   </div>
   {% if can_edit %}
     <div class="d-flex gap-1 flex-shrink-0">
-      <a class="btn btn-sm btn-quiet" href="{% url 'role_item' kind item.pk %}">{% translate "Edit" %}</a>
+      <a class="btn btn-sm btn-quiet" href="{% url 'role_item' kind item.pk %}" data-modal>{% translate "Edit" %}</a>
       <form method="post" action="{% url 'role_item_delete' kind item.pk %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-sm btn-quiet">{% translate "Delete" %}</button>

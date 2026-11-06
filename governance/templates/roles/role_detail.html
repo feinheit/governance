@@ -48,6 +48,7 @@
       {% if can_change_settings %}<a
           class="btn btn-sm btn-quiet"
           href="{% url 'role_settings' role.pk %}"
+          data-modal
         >{% translate "Settings" %}</a>{% endif %}
       <a class="btn btn-sm btn-quiet" href="{% url 'role_history' role.pk %}">{% translate "History" %}</a>
       {% if role.is_circle and not role.archived_on %}<a
@@ -73,6 +74,7 @@
               {% if can_edit_strategy %}<a
                   class="btn btn-sm btn-quiet"
                   href="{% url 'role_strategy' role.pk %}"
+                  data-modal
                 >{% translate "Edit" %}</a>{% endif %}
             </h2>
             <div class="wb-markdown wb-description">{{ role.strategy|markdown|default:"–" }}</div>
@@ -158,6 +160,7 @@
                     <a
                       class="btn btn-sm btn-quiet"
                       href="{% url 'domain_policy' role.pk policy.pk %}"
+                      data-modal
                     >{% translate "Change" %}</a>
                     <form method="post" action="{% url 'domain_policy_remove' role.pk policy.pk %}">
                       {% csrf_token %}
@@ -173,6 +176,7 @@
               <a
                 class="btn btn-sm btn-quiet"
                 href="{% url 'domain_policy_add' role.pk %}"
+                data-modal
               >{% translate "Add a policy for its domains" %}</a>
               <div class="form-text">
                 {% translate "The role regulates its domains itself, without a governance process. Everybody affected is informed." %}
@@ -249,10 +253,12 @@
                 {% if can_edit_checklist %}<a
                     class="btn btn-sm btn-quiet"
                     href="{% url 'role_checklist_add' role.pk %}"
+                    data-modal
                   >{% translate "Add a checklist item" %}</a>{% endif %}
                 {% if can_edit_metrics %}<a
                     class="btn btn-sm btn-quiet"
                     href="{% url 'role_metrics_add' role.pk %}"
+                    data-modal
                   >{% translate "Add a metric" %}</a>{% endif %}
               </li>
             {% endif %}
@@ -275,6 +281,7 @@
                     <a
                       class="btn btn-sm btn-quiet"
                       href="{% url 'role_item' 'links' link.pk %}"
+                      data-modal
                     >{% translate "Edit" %}</a>
                     <form method="post" action="{% url 'role_item_delete' 'links' link.pk %}">
                       {% csrf_token %}
@@ -293,6 +300,7 @@
                 <a
                   class="btn btn-sm btn-quiet"
                   href="{% url 'role_links_add' role.pk %}"
+                  data-modal
                 >{% translate "Add a link" %}</a>
               </li>
             {% endif %}

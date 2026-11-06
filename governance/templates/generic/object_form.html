@@ -1,8 +1,10 @@
-{% extends "base.html" %}
+{% extends modal|yesno:"modal.html,base.html" %}
 {% load i18n %}
 {% comment %}
   Page layout of forms like in Workbench: the heading in the page header,
-  the fields in a card, the save button below.
+  the fields in a card, the save button below. In a modal (links with
+  data-modal, governance/modals.py) without the page around it, posting to
+  the modal and closing it instead of going back.
 {% endcomment %}
 {% block title %}{{ title }} – {% if object %}{{ object }} – {% endif %}{{ block.super }}{% endblock %}
 
@@ -10,14 +12,22 @@
   <div class="wb-form-page">
     <div class="wb-page-header">
       <div class="min-w-0">
-        <h1 class="mb-0">{{ title }}</h1>
+        <h1 class="mb-0" {% if modal %}id="modal-title"{% endif %}>{{ title }}</h1>
         {% block meta %}
           {% if help %}<div class="wb-meta"><span>{{ help }}</span></div>{% endif %}
         {% endblock meta %}
       </div>
     </div>
     {% block before_form %}{% endblock %}
-    <form method="post" action="{{ request.get_full_path }}">
+    <form
+      method="post"
+      action="{{ request.get_full_path }}"
+      {% if modal %}
+        hx-post="{{ request.get_full_path }}"
+        hx-target="#modal"
+        hx-headers='{"HX-Modal": "true"}'
+      {% endif %}
+    >
       {% csrf_token %}
       {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
       {% block fields %}
@@ -33,7 +43,13 @@
           {% block submit_label %}{{ submit_label|default:_("Save") }}{% endblock %}
         </button>
         {# In a meeting's panel cancelling closes the panel (meeting.js) #}
-        {% if cancel_url %}<a
+        {% if modal %}<button
+            type="button"
+            class="btn btn-quiet"
+            data-modal-close
+          >
+            {% translate "Cancel" %}
+          </button>{% elif cancel_url %}<a
             class="btn btn-quiet"
             href="{{ cancel_url }}"
             data-in-meeting

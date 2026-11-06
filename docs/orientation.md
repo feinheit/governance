@@ -59,6 +59,11 @@ Texts are simple Markdown (`**bold**`, lists with `-`, links). With `@`
 you mention a role: the field suggests names, the link always shows the
 role's current name.
 
+Short forms (strategy, metrics, checklist items, links, policies of a
+domain, settings, a holder's focus, the tension of a draft, a meeting's
+minutes) open above the page. Escape closes them; once something has
+been entered, only when pressed twice.
+
 ## Mails
 
 You get mails about the circles you're a member of, that is, where you

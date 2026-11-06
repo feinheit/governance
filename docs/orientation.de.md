@@ -60,6 +60,11 @@ Texte sind einfaches Markdown (`**fett**`, Listen mit `-`, Links). Mit
 `@` erwähnst du eine Rolle: das Feld schlägt Namen vor, der Link zeigt
 immer den aktuellen Namen der Rolle.
 
+Kurze Formulare (Strategie, Metriken, Checklisten-Punkte, Links, Policies
+einer Domain, Einstellungen, der Fokus einer Zuweisung, die Spannung eines
+Entwurfs, das Protokoll eines Meetings) öffnen sich über der Seite.
+Escape schliesst sie; sobald etwas eingegeben ist, erst beim zweiten Mal.
+
 ## Mails
 
 Du erhältst Mails zu den Kreisen, in denen du Mitglied bist, also eine

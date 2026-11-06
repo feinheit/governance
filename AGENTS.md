@@ -42,6 +42,13 @@ everything else, it does nothing on pages without `hx-` attributes;
 links only when marked `data-in-meeting` (`meeting.js`), and the drafting
 views go back to `?next=` (`drafting.done()`, `HX-Location` for htmx).
 
+Short forms open in a modal: `data-modal` on the link (`modal.js`, a
+`<dialog>` outside of `#meeting`, loaded by htmx with `HX-Modal`). Views
+rendering `generic/object_form.html` and redirecting need nothing else
+(`governance/modals.py`: the template renders only the form, redirects
+become `HX-Redirect`); `governance/test_modals.py`, the browser in
+`test_e2e.py`'s `test_modals`.
+
 # Fixing bugs
 
 1. Write a test which reproduces the bug.

@@ -58,7 +58,11 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-sm btn-quiet">{% translate "End the meeting" %}</button>
           </form>
-          <a class="btn btn-sm btn-quiet" href="{% url 'meeting_update' meeting.pk %}">{% translate "Edit" %}</a>
+          <a
+            class="btn btn-sm btn-quiet"
+            href="{% url 'meeting_update' meeting.pk %}"
+            data-modal
+          >{% translate "Edit" %}</a>
         </div>
       {% endif %}
     </div>

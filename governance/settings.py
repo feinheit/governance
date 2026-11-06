@@ -86,6 +86,8 @@ MIDDLEWARE = [
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        # Outside of user_middleware: its redirect to the login too
+        "governance.modals.modal_middleware",
         "governance.accounts.middleware.user_middleware",
         "governance.cli_version.cli_version_middleware",
     ]
@@ -107,6 +109,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "governance.modals.context",
             ],
         },
     }
