@@ -849,7 +849,9 @@ def proposal_move(request, pk):
             for i in proposal.instructions
             if not (subject_of(i["path"]) == key and i["op"] == "move")
         ]
-        replace_subject(proposal, key, new + instructions_of(proposal, key))
+        # The proposal's changes of it apply before it moves away (they're
+        # checked against the circle)
+        replace_subject(proposal, key, instructions_of(proposal, key) + new)
         proposal.names[key] = str(obj)
         proposal.save(update_fields=["instructions", "names"])
         return done(request, proposal)

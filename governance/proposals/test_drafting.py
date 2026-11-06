@@ -751,6 +751,59 @@ class DraftingTest(TestCase):
         )
         self.assertEqual(problems(proposal), ["Bakery can't be moved."])
 
+    def test_edit_then_move(self):
+        """A role and a policy changed and then moved into a sub-circle: the
+        changes apply before the move, in either order"""
+        bakery = Role.objects.create(name="Bakery", circle=self.kitchen, is_circle=True)
+        bakery.create_core_roles()
+        proposal = self.draft()
+        self.client.post(
+            f"/proposals/{proposal.pk}/roles/{self.cook.pk}/",
+            {
+                "name": "Chef",
+                f"accountabilities-{self.cooking.pk}": "Cooking",
+                f"accountabilities-{self.frying.pk}": "Frying",
+            },
+        )
+        self.client.post(
+            f"/proposals/{proposal.pk}/policies/{self.tea.pk}/",
+            {"title": "Coffee", "body": "Always"},
+        )
+        for kind, key in [("roles", self.cook.pk), ("policies", self.tea.pk)]:
+            self.client.post(
+                f"/proposals/{proposal.pk}/move/",
+                {"kind": kind, "key": key, "target": bakery.pk},
+            )
+        proposal.refresh_from_db()
+        self.assertEqual(problems(proposal), [])
+        adopt(proposal)
+        self.cook.refresh_from_db()
+        self.tea.refresh_from_db()
+        self.assertEqual(
+            (self.cook.name, self.cook.circle, self.tea.title, self.tea.role),
+            ("Chef", bakery, "Coffee", bakery),
+        )
+
+        # Moved first, changed afterwards
+        waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
+        Assignment.objects.create(role=waiter, user=self.ada)
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            role=waiter,
+            tension="Tables",
+            created_at=dt.datetime(2026, 12, 1, tzinfo=dt.UTC),
+        )
+        self.client.post(
+            f"/proposals/{proposal.pk}/move/",
+            {"kind": "roles", "key": waiter.pk, "target": bakery.pk},
+        )
+        self.client.post(
+            f"/proposals/{proposal.pk}/roles/{waiter.pk}/", {"name": "Server"}
+        )
+        proposal.refresh_from_db()
+        self.assertEqual(problems(proposal), [])
+
     def test_convert(self):
         proposal = self.draft()
         url = f"/proposals/{proposal.pk}/roles/{self.cook.pk}/convert/"
