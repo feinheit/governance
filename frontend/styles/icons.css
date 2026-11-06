@@ -55,6 +55,9 @@
 .bi-grip-vertical::before {
   content: "\f3fe";
 }
+.bi-three-dots::before {
+  content: "\f5d4";
+}
 .bi-pencil::before {
   content: "\f4cb";
 }

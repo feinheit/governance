@@ -655,6 +655,26 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertEqual(page.evaluate("document.documentElement.scrollWidth"), 390)
         self.assertEqual(self.errors, [])
 
+    def test_menu(self):
+        """What isn't needed often is in a menu, closed by clicking
+        elsewhere and with Escape"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.kitchen.get_absolute_url()}")
+        link = page.locator("a", has_text="Call a tactical meeting")
+        self.assertFalse(link.is_visible())
+        summary = page.locator("details.wb-menu summary")
+        summary.click()
+        self.assertTrue(link.is_visible())
+        page.locator("h1").click()
+        self.assertFalse(link.is_visible())
+        summary.click()
+        page.keyboard.press("Escape")
+        self.assertFalse(link.is_visible())
+        summary.click()
+        link.click()
+        page.wait_for_url(f"**/meetings/tactical/new/?role={self.kitchen.pk}")
+        self.assertEqual(self.errors, [])
+
     def test_take_over_as_secretary(self):
         """Somebody who isn't the circle's Secretary confirms taking over the
         meeting's secretary, dismissing changes nothing"""

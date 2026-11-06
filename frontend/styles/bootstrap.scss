@@ -101,6 +101,8 @@ $enable-grid-classes: false;
 $theme-colors: map-get-multiple($all-theme-colors, ("primary"));
 @import "~bootstrap/scss/buttons";
 @import "~bootstrap/scss/nav";
+// The menus of what isn't needed often (details.wb-menu)
+@import "~bootstrap/scss/dropdown";
 // Only .navbar-expand, without a breakpoint
 $grid-breakpoints: (
   xs: 0,

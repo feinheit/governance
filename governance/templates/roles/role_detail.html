@@ -40,10 +40,20 @@
           class="btn btn-sm btn-quiet d-none d-sm-inline-block"
           href="{% url 'circle_browser' %}?circle={{ role.pk }}"
         >{% translate "Circle browser" %}</a>{% endif %}
-      {% if not role.archived_on %}<a
-          class="btn btn-sm btn-quiet"
-          href="{% url 'tactical_call' %}?role={{ role.pk }}"
-        >{% translate "Call a tactical meeting" %}</a>{% endif %}
+      {% if not role.archived_on %}
+        {# What isn't needed often (frontend/menus.js) #}
+        <details class="dropdown wb-menu">
+          <summary class="btn btn-sm btn-quiet" title="{% translate 'More actions' %}">
+            {% icon "three-dots" %}<span class="visually-hidden">{% translate "More actions" %}</span>
+          </summary>
+          <div class="dropdown-menu dropdown-menu-end">
+            <a
+              class="dropdown-item"
+              href="{% url 'tactical_call' %}?role={{ role.pk }}"
+            >{% translate "Call a tactical meeting" %}</a>
+          </div>
+        </details>
+      {% endif %}
     </div>
   </div>
 

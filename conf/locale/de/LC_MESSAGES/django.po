@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 18:07+0100\n"
+"POT-Creation-Date: 2026-11-06 21:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2870,6 +2870,10 @@ msgstr "Neuer Vorschlag"
 #: governance/templates/roles/role_detail.html
 msgid "Circle browser"
 msgstr "Kreis-Browser"
+
+#: governance/templates/roles/role_detail.html
+msgid "More actions"
+msgstr "Weitere Aktionen"
 
 #: governance/templates/roles/role_detail.html
 msgid "Holds the circle's Purpose and its Accountabilities as far as no role or process in the circle covers them; assigns the roles and defines priorities and strategies."

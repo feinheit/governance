@@ -145,7 +145,9 @@ listed in `docs/orientation.md`), the icons (npm's `bootstrap-icons`, only
 those in use in `styles/icons.css`, `{% icon "pencil" %}`, icon-only
 buttons with a title and a visually hidden label; `test_icons.py`), the
 agenda's drag handles (`agenda.js`, SortableJS, a chunk of its own),
-textareas growing with their text (`autogrow.js`) and the circle browser (a Preact island, `circles/`, which `main.js` imports
+textareas growing with their text (`autogrow.js`), menus of what
+isn't needed often (`details.wb-menu` with Bootstrap's `.dropdown-menu`,
+`menus.js` closes them) and the circle browser (a Preact island, `circles/`, which `main.js` imports
 only on its page: Preact and d3 are a chunk of their own). No core-js:
 SWC's usage detection adds polyfills by guessing (`Array#map` as an
 iterator helper), the browsers of browserslist's defaults have what the

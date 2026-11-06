@@ -224,6 +224,24 @@ h3,
   gap: 0.375rem;
 }
 
+/* Menus of what isn't needed often: a <details> working without
+   JavaScript, Bootstrap's dropdown menu below its button (menus.js closes
+   it when clicking elsewhere and with Escape) */
+.wb-menu > summary {
+  list-style: none;
+}
+
+.wb-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.wb-menu[open] > .dropdown-menu {
+  display: block;
+  top: 100%;
+  inset-inline-end: 0;
+  margin-top: 0.125rem;
+}
+
 .wb-meta {
   display: flex;
   flex-wrap: wrap;
