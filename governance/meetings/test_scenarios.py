@@ -514,3 +514,46 @@ class RoleMeetingScenarioTest(TestCase):
         self.assertEqual(
             self.client.get(f"/roles/{cook.pk}/meetings/").status_code, 200
         )
+
+
+class CircleEmptiedFromAboveScenarioTest(TestCase):
+    def test_super_circle_moves_the_last_role_out(self):
+        """The kitchen moves the bakery's last role out while the bakery's
+        meeting runs: the bakery turns back into a role when its meeting
+        ends, the kitchen's proposal records it"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        meeting = Meeting.objects.create(
+            circle=bakery, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        moving = adopt(
+            Proposal.objects.create(
+                circle=kitchen,
+                proposer=ada,
+                tension="Bread",
+                status=Proposal.PUBLISHED,
+                instructions=[
+                    {
+                        "op": "move",
+                        "from": f"/circles/{bakery.pk}/roles/{baker.pk}",
+                        "path": f"/roles/{baker.pk}",
+                    }
+                ],
+                created_at=timezone.now(),
+            )
+        )
+        bakery.refresh_from_db()
+        self.assertTrue(bakery.is_circle)
+
+        end_meeting(meeting)
+        bakery.refresh_from_db()
+        moving.refresh_from_db()
+        self.assertFalse(bakery.is_circle)
+        self.assertIn(
+            {"op": "remove", "path": f"/roles/{bakery.pk}/supporting_circle"},
+            moving.instructions,
+        )

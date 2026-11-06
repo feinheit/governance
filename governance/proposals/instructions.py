@@ -434,7 +434,7 @@ def is_empty_circle(circle):
 def revert_after_meeting(meeting):
     """A circle which lost its last roles while its meeting ran turns back
     into a role when the meeting ends, recorded in the last adopted proposal
-    changing its roles since the meeting started"""
+    which left it without roles (``adopt()`` adds the circle to its roles)"""
     circle = meeting.circle
     if circle is None:
         return
@@ -447,7 +447,7 @@ def revert_after_meeting(meeting):
             status=Proposal.ADOPTED,
             glassfrog_id=None,
             decided_at__gte=meeting.started_at,
-            roles__circle=circle,
+            roles=circle,
         )
         .order_by("-decided_at", "-pk")
         .first()
@@ -522,7 +522,9 @@ def adopt(proposal):
     proposal.status = Proposal.ADOPTED
     proposal.decided_at = timezone.now()
     proposal.save()
-    proposal.roles.add(*applier.roles)
+    # The circles turning back when their meeting ends, for
+    # revert_after_meeting()
+    proposal.roles.add(*applier.roles, *applier.deferred)
     proposal.policies.add(*applier.policies)
     close_circles([*applier.removed, *applier.reverted], proposal)
     update_changes(since=timezone.localdate())
