@@ -562,19 +562,25 @@ a.wb-row-title:hover {
   position: relative;
 }
 
-/* Sticky: the page scrolls the agenda column, this one stays in view */
+/* The running meeting's columns (.wb-fit, the agenda's and .wb-flow) fit
+   the window down to its lower edge and scroll on their own (meeting.js
+   sets their height): the page doesn't scroll */
 @media (min-width: 992px) {
-  .wb-flow {
+  .wb-fit {
     position: sticky;
     top: 0;
+    align-self: flex-start;
     max-height: 100vh;
     overflow-y: auto;
-    padding-inline-end: 0.25rem;
     padding-bottom: 1rem;
   }
 
+  .wb-flow {
+    padding-inline-end: 0.25rem;
+  }
+
   /* Down to the window's edge: the page has no padding below it */
-  .wb-main:has(.wb-flow) {
+  .wb-main:has(.wb-fit) {
     padding-bottom: 0;
   }
 }

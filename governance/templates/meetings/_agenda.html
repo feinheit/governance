@@ -1,5 +1,13 @@
 {% load governance i18n %}
-<div class="card-header"><h2 class="h6 mb-0">{% translate "Agenda" %}</h2></div>
+<div class="card-header d-flex justify-content-between align-items-center gap-2">
+  <h2 class="h6 mb-0">{% translate "Agenda" %}</h2>
+  {% if attendees or meeting.is_running %}<a
+      class="btn btn-sm btn-quiet py-0"
+      href="{% url 'meeting_attendees' meeting.pk %}"
+      data-modal
+    >{% icon "people" %}
+      {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}</a>{% endif %}
+</div>
 {# The secretary drags the items by their handles (frontend/agenda.js), without JavaScript the arrows; clicking a row processes it #}
 <ul class="list-group list-group-flush" {% if can_run and meeting.is_running %}data-agenda-sortable{% endif %}>
   {% for item in agenda %}

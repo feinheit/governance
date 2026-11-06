@@ -91,18 +91,17 @@ function scrollToCurrent(force = false) {
   }
 }
 
-// On wide screens the column fills the window below its top: the page only
-// scrolls when the agenda's column needs it
+// On wide screens the running meeting's columns (.wb-fit) fill the window
+// below their top down to its lower edge and scroll on their own (they
+// have padding of their own): the page doesn't scroll
 function fitFlow() {
-  const flow = document.querySelector(".wb-flow")
-  if (!flow) return
-  if (!matchMedia("(min-width: 992px)").matches) {
-    flow.style.maxHeight = ""
-    return
+  const wide = matchMedia("(min-width: 992px)").matches
+  for (const column of document.querySelectorAll(".wb-fit")) {
+    const top = column.getBoundingClientRect().top + window.scrollY
+    column.style.maxHeight = wide
+      ? `${Math.max(window.innerHeight - top, 240)}px`
+      : ""
   }
-  // Down to the window's lower edge, the column has padding of its own
-  const top = flow.getBoundingClientRect().top + window.scrollY
-  flow.style.maxHeight = `${Math.max(window.innerHeight - top, 240)}px`
 }
 
 fitFlow()

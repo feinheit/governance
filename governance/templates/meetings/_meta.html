@@ -3,7 +3,9 @@
 <div class="wb-meta">
   {% if meeting.ended_at %}<span><span class="wb-meta-label">{% translate "ended" %}</span>
       {{ meeting.ended_at|date:"SHORT_DATETIME_FORMAT" }}</span>{% endif %}
-  {% if meeting.called_by %}<span><span class="wb-meta-label">{% translate "called by" %}</span>
+  {% if meeting.called_by and not meeting.is_running %}<span><span
+        class="wb-meta-label"
+      >{% translate "called by" %}</span>
       {{ meeting.called_by }}</span>{% endif %}
   {% if meeting.secretary %}<span><span class="wb-meta-label">{% translate "secretary" %}</span>
       {{ meeting.secretary }}</span>{% endif %}

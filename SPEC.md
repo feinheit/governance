@@ -344,12 +344,12 @@ Modals don't stop it: they're outside of `#meeting`.
 While it runs the heading is in the left column, so that the right one
 starts right below the navigation (an ended meeting has the usual
 header with the date, who called it and the secretary, no scrolling
-column). Left: who called it, the secretary ("Take over"), the attendees (a
-modal), the agenda (adding items as its last line, completed items
+column). Left: the secretary ("Take over"), the agenda (the attendees in a
+modal from its heading) (adding items as its last line, completed items
 struck through, "End the meeting" at its bottom), for ad-hoc tactical
-meetings the invited roles, elections, proposals. Right: the rounds, then one column scrolling on its own
-on wide screens, down to the window's lower edge so that the page only
-scrolls for the left column (`.wb-flow`, `fitFlow()`): in tactical meetings the results of the
+meetings the invited roles, elections, proposals. On wide screens both columns fit the window down to its lower edge and
+scroll on their own, the page doesn't (`.wb-fit`, `fitFlow()`).
+Right: the rounds, then one column (`.wb-flow`): in tactical meetings the results of the
 completed items (a card each, `_results.html`), the item being
 processed, and the notes at the bottom (what doesn't belong to an agenda
 item, e.g. a special meeting's intent; the secretary's textarea saves

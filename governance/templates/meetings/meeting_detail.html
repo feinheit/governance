@@ -78,7 +78,7 @@
           {% endif %}
           {% if meeting.is_running %}
             {# One scrolling column (wide screens): the results, the item being processed, the notes; meeting.js scrolls to the item when it changes #}
-            <div class="wb-flow">
+            <div class="wb-flow wb-fit">
               {% if results %}{% include "meetings/_results.html" %}{% endif %}
               {% if current %}{% include "meetings/_current.html" %}{% endif %}
               {% include "meetings/_notes.html" %}
@@ -89,7 +89,8 @@
           {% endif %}
         {% endblock main %}
       </div>
-      <div class="col-lg-4 order-lg-1">
+      {# While it runs, both columns fit the window and scroll on their own (wide screens) #}
+      <div class="col-lg-4 order-lg-1{% if meeting.is_running %} wb-fit{% endif %}">
         {% if meeting.is_running %}
           {# The heading beside the steps and results, which start right below the navigation #}
           {% include "roles/_breadcrumbs.html" %}
@@ -103,22 +104,7 @@
               {% translate "You take part in this meeting as an admin, not as a member of the circle. Only take over when you know it's needed." %}
             </div>
           {% endif %}
-          <div class="mb-3">
-            {% include "meetings/_meta.html" %}
-            <a
-              class="btn btn-sm btn-quiet mt-2"
-              href="{% url 'meeting_attendees' meeting.pk %}"
-              data-modal
-            >{% icon "people" %}
-              {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}</a>
-          </div>
-        {% elif attendees %}
-          <a
-            class="btn btn-sm btn-quiet mb-3"
-            href="{% url 'meeting_attendees' meeting.pk %}"
-            data-modal
-          >{% icon "people" %}
-            {% blocktranslate count count=attendees|length %}Attendees ({{ count }}){% plural %}Attendees ({{ count }}){% endblocktranslate %}</a>
+          <div class="mb-3">{% include "meetings/_meta.html" %}</div>
         {% endif %}
         {# The agenda beside the item being processed #}
         <section class="card mb-4" id="agenda">

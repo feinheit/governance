@@ -258,6 +258,12 @@ class MeetingE2ETest(LiveServerTestCase):
             "document.querySelector('nav[aria-label=Steps]').getBoundingClientRect().top"
         )
         self.assertLess(steps_top - nav_bottom, 40)
+        # A long agenda scrolls in its column too
+        for position in range(10, 40):
+            AgendaItem.objects.create(
+                meeting=meeting, label=f"Later {position}", position=position
+            )
+        page.reload()
         # Only the column scrolls, not the page; it reaches the window's edge
         self.assertLessEqual(
             page.evaluate("document.documentElement.scrollHeight"), 800
