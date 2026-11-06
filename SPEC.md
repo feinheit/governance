@@ -226,6 +226,7 @@ for uncontroversial changes. The proposer only answers questions. Adopted
 when everybody else consented, or by the daily task at the deadline;
 pages and mails show the day, not a time (`adopted_on`). Due proposals are
 adopted in order of publication, conflicting ones go to the meeting.
+Only circle members respond (also no admins outside the circle).
 Responses are anonymous: consents and requests are only counted ("3 of 7
 without objection"); questions and concerns show their author because they
 are answered and discussed with them. A published proposal can't be
@@ -498,6 +499,14 @@ It runs nightly until the switchover.
 
 ## 10. Constitution choices
 
+Decided differently:
+
+- **The deadline of async proposals** (`async_acceptance_days`, 5.3)
+  changes a default process, so by 5.2.1 a policy setting it applies
+  only in its own circle unless it says so. The app treats the anchor's
+  setting as applying to all sub-circles (each may set its own), like
+  our anchor's policy; its wording has to say so.
+
 Deliberately not modelled:
 
 - **The Circle Lead** stays as defined (1.4.5): no accountabilities or
@@ -511,25 +520,33 @@ Deliberately not modelled:
   domain or announcing spending (4.1.2, 4.1.3), **explaining individual
   initiative** (4.3): communication between people, in the chat or
   the task management tool.
+- **Election policies** (5.1.1, 5.1.2): policies widening the
+  candidates beyond the members or allowing several Circle Reps; the app
+  always elects among the members and one Rep.
+- **Special governance meetings** (5.4): a meeting requested for a
+  stated intent, limited to certain changes; the request goes into the
+  calendar and the minutes, the app doesn't limit what it adopts.
+- **The anchor circle's own governance** (1.3.3): the constitution only
+  lets the anchor change its purpose and clarify its accountabilities,
+  by policy; here the board of directors decides, the app lets the
+  anchor's governance change its definition directly, the audit log
+  records it.
+- **Guests of Circle Reps** (5.3, 5.4.1) don't propose or object
+  themselves, the inviting Rep does for them.
+- **Meetings ending by inactivity after midnight** record their steps
+  (e.g. a circle turning back into a role) on the day they end; people
+  end meetings explicitly.
 - **Process breakdowns** (5.5): rare; the super-circle's Facilitator
   stands in, an admin assigns an additional Circle Lead, the declaration
   goes into the minutes.
 
 ## Backlog
 
-- **Verification** (round of 2026-11-06), open:
-  - To decide: whether a meeting's outputs also reach the members at
-    its start (holders of roles removed while absent); the day of the
-    steps of a meeting ended later by inactivity (after midnight).
-  - Constitution, low: moves only reach direct sub-circles (5.2 allows
-    any sub-circle thereof); policies can't widen election candidates or
-    allow several Reps (5.1.1); the anchor's governance changes its name
-    and domains directly (1.3.3 says purpose and accountabilities, by
-    policy); temporary representatives and Rep guests can't propose or
-    object (5.3); special governance meetings (5.4); admins who aren't
-    members request meetings on async proposals; `async_acceptance_days`
-    is inherited by sub-circles (5.2.1: a policy applies to sub-circles
-    only if it says so, check the anchor's policy).
+- **Verification** (round of 2026-11-06), open: meeting outputs also to
+  the people who lost a role through the meeting's adopted proposals;
+  moves into any sub-circle thereof and out of it (5.2), not only direct
+  ones; the async deadline's reach (section 10) explained in the
+  settings.
 
 - **Simplify roles and circles**: every role's inside is a circle now
   (proposals, governance meetings, members are its holders, 1.3.1), so

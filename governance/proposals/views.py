@@ -155,7 +155,8 @@ def proposal_detail(request, pk):
     if proposal.status in {Proposal.PUBLISHED, Proposal.IN_MEETING}:
         members = circle_members(proposal.circle)
         context |= {"show_responses": True} | process.response_summary(proposal)
-        if request.user.is_admin or members.filter(pk=request.user.pk).exists():
+        # Circle members only, also no admins outside it (5.3)
+        if members.filter(pk=request.user.pk).exists():
             context["response_form"] = ResponseForm(
                 is_open=proposal.status == Proposal.PUBLISHED,
                 is_proposer=proposal.proposer_id == request.user.pk,
@@ -238,7 +239,7 @@ def proposal_respond(request, pk):
         Proposal.objects.filter(status__in=[Proposal.PUBLISHED, Proposal.IN_MEETING]),
         pk=pk,
     )
-    if not (request.user.is_admin or is_member(request.user, proposal.circle)):
+    if not is_member(request.user, proposal.circle):
         raise PermissionDenied
     form = ResponseForm(
         request.POST,

@@ -147,6 +147,22 @@ class ProcessTest(TestCase):
         other.refresh_from_db()
         self.assertEqual(other.status, Proposal.WITHDRAWN)
 
+    def test_only_members_respond(self):
+        """Only circle members request a meeting or consent (5.3), admins
+        who aren't members neither"""
+        proposal = publish(self.proposal())
+        admin = User.objects.create_user("max@example.com", is_admin=True)
+        self.client.force_login(admin)
+        self.assertNotContains(
+            self.client.get(proposal.get_absolute_url()), 'value="meeting"'
+        )
+        response = self.client.post(
+            f"/proposals/{proposal.pk}/respond/", {"kind": "meeting"}
+        )
+        self.assertEqual(response.status_code, 403)
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.PUBLISHED)
+
     def test_deadline(self):
         proposal = publish(self.proposal())
         conflicting = publish(self.proposal())
