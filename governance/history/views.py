@@ -1,7 +1,9 @@
 import datetime as dt
 from itertools import groupby
 
+from django.conf import settings
 from django.core.paginator import Paginator
+from django.db.models.functions import TruncDate
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
@@ -146,20 +148,22 @@ def organization_history(request):
     changes = Change.objects.select_related("role", "policy")
     if not request.GET.get("assignments"):
         changes = changes.exclude(kind__in=ASSIGNMENT_KINDS)
-    days = Paginator(
-        changes.values_list("date", flat=True).distinct().order_by("-date"), 30
-    ).get_page(request.GET.get("page"))
+    # The days of changes and of adopted proposals (local days), e.g. one
+    # with elections only, whose changes are hidden
+    adopted = Proposal.objects.filter(status=Proposal.ADOPTED).annotate(
+        day=TruncDate("decided_at", tzinfo=timezone.get_current_timezone())
+    )
+    all_days = sorted(
+        set(changes.order_by().values_list("date", flat=True).distinct())
+        | set(adopted.order_by().values_list("day", flat=True).distinct()),
+        reverse=True,
+    )
+    days = Paginator(all_days, getattr(settings, "HISTORY_DAYS_PER_PAGE", 30)).get_page(
+        request.GET.get("page")
+    )
     dates = list(days.object_list)
     changes = changes.filter(date__in=dates)
-    proposals = (
-        Proposal.objects.filter(
-            status=Proposal.ADOPTED,
-            decided_at__date__gte=min(dates) - dt.timedelta(days=1) if dates else None,
-            decided_at__date__lte=max(dates) if dates else None,
-        ).select_related("circle", "proposer")
-        if dates
-        else []
-    )
+    proposals = adopted.filter(day__in=dates).select_related("circle", "proposer")
     return render(
         request,
         "history/organization_history.html",

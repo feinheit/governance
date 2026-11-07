@@ -765,9 +765,7 @@ Deliberately not modelled:
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
   - The backup names members who consented with a text.
-  - Untested risks: "as of" uses the server's date
-    (`history/views.py`); the organization history's pages bound
-    proposals by the days of changes; a domain policy moved to another
+  - Untested risks: a domain policy moved to another
     domain isn't a change; `proposal_respond` doesn't catch a
     `ProposalError` of a race.
 - **Next deploy**: not while a governance meeting which recorded

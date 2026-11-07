@@ -389,6 +389,40 @@ class TimelineTest(TestCase):
         self.assertEqual(timeline([], [proposal])[0][0], dt.date(2026, 11, 7))
 
 
+class OrganizationHistoryPagesTest(TestCase):
+    def test_days_of_proposals(self):
+        """Pages go by the days of changes and adopted proposals: one adopted
+        on a day without (shown) changes is on its page, once"""
+        from django.test import override_settings
+
+        from governance.accounts.models import User
+        from governance.proposals.models import Proposal
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        for day in [dt.date(2026, 11, 1), dt.date(2026, 11, 3)]:
+            Change.objects.create(date=day, role=kitchen, kind="purpose")
+
+        def adopted(tension, day):
+            return Proposal.objects.create(
+                circle=kitchen,
+                tension=tension,
+                status=Proposal.ADOPTED,
+                created_at=dt.datetime(2026, 10, 1, tzinfo=dt.UTC),
+                decided_at=dt.datetime.combine(day, dt.time(10), tzinfo=dt.UTC),
+            )
+
+        adopted("Elections only", dt.date(2026, 11, 5))  # Newer than any change
+        adopted("Before the day", dt.date(2026, 11, 2))
+        with override_settings(HISTORY_DAYS_PER_PAGE=2):
+            first = self.client.get("/history/").content.decode()
+            second = self.client.get("/history/?page=2").content.decode()
+        self.assertIn("Elections only", first)
+        self.assertEqual(
+            ("Before the day" in first, "Before the day" in second), (False, True)
+        )
+
+
 class FairyTasksTest(TestCase):
     def test_changes_of_the_app(self):
         """Changes made in the app are audit rows: the daily task turns them
