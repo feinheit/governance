@@ -622,7 +622,7 @@ django-ninja at `/api/` (docs at `/api/docs`), the same rules as the web
 interface, session or personal tokens (`APIToken`, read only or read and
 write, valid until 30 days after their last use, created on the API
 tokens page): `GET circles/`, `GET
-roles/{id}/`, `GET search/`, `GET proposals/` (`?open=true`: the published ones of the user's
+roles/{id}/` (core roles with the constitution's texts, without IDs), `GET search/`, `GET proposals/` (`?open=true`: the published ones of the user's
 circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
@@ -756,9 +756,7 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
-  - `GET /api/roles/{id}/` fails for Facilitator, Secretary and Circle
-    Rep (lazy purpose), the API leaves out the core roles'
-    constitutional texts (search too).
+  - Search leaves out the core roles' constitutional texts.
   - Mails describe the changes in the language of whoever triggered
     them, not the recipient's (also the meeting outputs).
   - Imported tensions worked out here are adopted async, the nightly

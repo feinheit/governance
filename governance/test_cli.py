@@ -103,6 +103,12 @@ class CLITest(TestCase):
         result = self.gov("circles", "show", self.kitchen.pk)
         self.assertIn("Cook", result.output)
         self.assertIn("Facilitator", result.output)
+        # Core roles with their constitutional texts
+        secretary = self.kitchen.roles.get(core_role="secretary")
+        result = self.gov("roles", "show", secretary.pk)
+        self.assertIn("Stabilize the Circle", result.output)
+        self.assertIn("Scheduling Governance Meetings", result.output)
+        self.assertIn("All governance records", result.output)
 
         self.assertIn("Cooking soup", self.gov("search", "SOUP").output)
         self.assertIn("Nothing found.", self.gov("search", "nothing").output)

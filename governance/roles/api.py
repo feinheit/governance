@@ -29,7 +29,7 @@ class CircleOut(Schema):
 
 
 class TextOut(Schema):
-    id: int
+    id: int | None  # None: the constitution's, of core roles
     text: str
 
 
@@ -110,7 +110,7 @@ def circles(request):
             "name": circle.name,
             "circle_id": circle.circle_id,
             "depth": circle.depth,
-            "purpose": circle.display_purpose,
+            "purpose": str(circle.display_purpose),
             "url": absolute(circle),
         }
         for circle in Role.objects.depth_first()
@@ -139,20 +139,25 @@ def roles(request):
 def role(request, pk: int):
     """A role or circle with its texts, policies, holders and roles"""
     role = get_object_or_404(Role, pk=pk)
+
+    def constitutional(kind):
+        texts = getattr(role.core, kind) if role.core else []
+        return [{"id": None, "text": str(text)} for text in texts]
+
     return {
         "id": role.pk,
         "name": role.name,
         "circle_id": role.circle_id,
         "is_circle": role.is_circle,
         "core_role": role.core_role,
-        "purpose": role.display_purpose,
+        "purpose": str(role.display_purpose),
         "strategy": role.strategy,
         "short_name": role.short_name,
         "other_names": role.other_names,
-        "accountabilities": [
-            {"id": a.pk, "text": a.text} for a in role.accountabilities.all()
-        ],
-        "domains": [{"id": d.pk, "text": d.text} for d in role.domains.all()],
+        "accountabilities": constitutional("accountabilities")
+        + [{"id": a.pk, "text": a.text} for a in role.accountabilities.all()],
+        "domains": constitutional("domains")
+        + [{"id": d.pk, "text": d.text} for d in role.domains.all()],
         "policies": list(role.policies.active()),
         "holders": [
             {
