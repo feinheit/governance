@@ -169,6 +169,11 @@ class Proposal(models.Model):
     glassfrog_tension_id = models.BigIntegerField(
         _("GlassFrog tension ID"), null=True, blank=True, unique=True
     )
+    adopted_in_glassfrog = models.BooleanField(
+        _("adopted in GlassFrog"),
+        default=False,
+        help_text=_("Its instructions refer to GlassFrog's IDs."),
+    )
 
     objects = ProposalQuerySet.as_manager()
 

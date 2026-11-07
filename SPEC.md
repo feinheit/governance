@@ -1,6 +1,6 @@
-# Spec: Governance (replacing GlassFrog)
+# Spec: Governance (which replaced GlassFrog)
 
-A Django app replacing GlassFrog: circles, roles, accountabilities,
+A Django app which replaced GlassFrog: circles, roles, accountabilities,
 domains, policies, elections, async proposals, governance and tactical
 meetings, following the Holacracy Constitution 5.0
 (`docs/constitution/`, the English original and the official German
@@ -43,9 +43,10 @@ use made-up circles, roles and people.
 
 ## 1. GlassFrog data
 
-`feinheit/glassfrog` (`~/projects/glassfrog`) is fetched daily by
-`scripts/fetch_glassfrog.py` (token in `GLASSFROG_TOKEN`; writes only when
-all requests succeeded, commits only changes).
+`feinheit/glassfrog` (`~/projects/glassfrog`) was fetched daily until the
+switchover (by `scripts/fetch_glassfrog.py`, removed with the importer:
+both are in the git history). The app imported it (section 9); this
+section describes what it contains, for reading the imported history.
 
 **`glassfrog.json`** (`GET /api/v3/circles?include=members`) has a git
 history since 2018-11-16: circles with their roles, policies, domains and
@@ -107,8 +108,8 @@ accountability texts are known where proposals or `roles.json` have them.
   domains to them (see the constitution choices). `archived_on` instead of deleting, `other_names` (earlier
   names, texts may mention them), `is_elected_by_policy`,
   `async_acceptance_days` (inherited by sub-circles; the anchor's policy
-  says 4 days, one circle uses 1; GlassFrog has no setting for it, the
-  import sets the default, 4, on the anchor circle unless set here), `glassfrog_id`/`glassfrog_circle_id`.
+  says 4 days, one circle uses 1; GlassFrog had no setting for it, the
+  import set the default, 4, on the anchor circle), `glassfrog_id`/`glassfrog_circle_id`.
   The policies stay the explanation of these settings, the Secretary sets
   them on the "Settings" pages.
 - **`Accountability`**, **`Domain`**: `role`, `text`, `position`.
@@ -116,8 +117,8 @@ accountability texts are known where proposals or `roles.json` have them.
   `body`, optional `domain`, `archived_on`.
 - **`Assignment`**: `role`, `user`, `focus`, `elected_until`, `starts_on`,
   `ends_on`; ending keeps the row. A person holds a role once (a
-  constraint), the focus lists everything; the import merges GlassFrog's
-  assignments per focus (`importer.merged()`). Circle membership isn't stored: the
+  constraint), the focus lists everything; the import merged GlassFrog's
+  assignments per focus. Circle membership isn't stored: the
   holders of a circle's roles plus the Circle Leads and Circle Reps of its
   sub-circles (`permissions.members()`).
 - **`Metric`**, **`ChecklistItem`**: `role` (a circle for its own items),
@@ -128,8 +129,8 @@ accountability texts are known where proposals or `roles.json` have them.
   GlassFrog's "global" items, shown everywhere, aren't supported; items
   without circle and role belong to the anchor.
 - **`Link`**: `role`, `title`, `url`, `description`; anybody edits them.
-- **Users**: everybody named in GlassFrog's data, matched by email,
-  people who left as inactive users. Afterwards admins add people, and
+- **Users**: everybody named in GlassFrog's data was imported, matched by
+  email, people who left as inactive users. Admins add people, and
   deactivate those who leave in the Django admin, which ends their
   assignments (`roles.assignments.end_assignments_of()`, a Circle Lead's
   role in the super-circle too); their proposals stay.
@@ -147,7 +148,7 @@ the tension; GlassFrog's have none), `tension`, `instructions`
 of a domain, legacy spelling correction), `status`, `published_at`,
 `deadline`, `decided_at`, `meeting`, `glassfrog_id`.
 
-GlassFrog's format makes the import 1:1, every proposal a readable diff,
+GlassFrog's format made the import 1:1, every proposal a readable diff,
 and `test`/`original_value` detect conflicts instead of silently
 overwriting. The interface never shows instructions: forms per operation
 build them (`proposals/drafting.py`), pages render a diff. New objects use
@@ -177,16 +178,12 @@ States: `draft` → `published` (async) → `adopted`, or → `in_meeting` →
 the next governance meeting: someone asked for one in their response, the
 proposal is on an agenda or came up in a meeting (GlassFrog's `escalated`),
 also when no meeting is running. Escalated GlassFrog proposals older than
-two months (published, else created) and not on an agenda here are
+two months (published, else created) and not on an agenda here were
 imported as drafts: their proposers bring them again or delete them, admins
-can't withdraw other people's proposals. GlassFrog stays the source of
-truth for imported proposals until the switchover: the import overwrites
-their status. Meetings here may adopt them to try the process (the next
-import sets proposal and structure back), the async process doesn't. Drafts are private to the proposer until published
+can't withdraw other people's proposals. Open imported proposals are
+adopted like the app's own since the switchover. Drafts are private to the proposer until published
 or brought into a meeting; a draft without instructions is a tension (the
-tension inbox; GlassFrog's open tensions are imported as such, the
-nightly import leaves them once they have changes or aren't drafts
-anymore, decided 2026-11-07). New
+tension inbox; GlassFrog's open tensions were imported as such). New
 proposals ask for the tension, an example and how the proposal helps
 (5.3.1).
 
@@ -481,7 +478,7 @@ async proposals, those taken back, those their proposer withdraws
 (published or waiting for a meeting, `process.retract()`), those which
 can't be adopted async and wait for a meeting (a conflict at the
 deadline or the last consent, `mails.proposal_to_meeting()` with the
-problems; not imported ones, which the nightly import sets back), adopted ones with the diff (also to
+problems), adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the holders of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves
@@ -501,8 +498,7 @@ roles archived by the circle turning back then (the outputs list them,
 `elections.announce_elections()`, decided 2026-11-07) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
-left the circle; changes by adopted proposals are in their mails, the
-nightly GlassFrog import announces nothing. Responses to proposals
+left the circle; changes by adopted proposals are in their mails. Responses to proposals
 (`mails.response_given()`): questions and comments go to the proposer,
 the proposer's answers to everybody who asked or commented (also in an
 earlier round, unless they left the circle), requests for
@@ -517,7 +513,7 @@ only setting is `User.notify_all` ("everything in all circles").
   with date, proposer, tension, meeting and diff.
 - **The audit log** is the history of roles, accountabilities, domains and
   policies (`history/audit.py`): every change of a row, with who and when.
-  The GlassFrog import writes the time before the app as audit rows of
+  The GlassFrog import wrote the time before the app as audit rows of
   "GlassFrog" from the git history of `glassfrog.json` (`history/backfill.py`,
   about 8500 rows instead of a structure per day). Accountabilities and
   domains which no longer exist get negative IDs; texts GlassFrog didn't
@@ -543,7 +539,7 @@ only setting is `User.notify_all` ("everything in all circles").
   (`update.reelections()`), GlassFrog's aren't known. Likewise only its
   last focus: changes of the focus come from the audit log's updates of
   assignments (`update.focus_changes()`, per day the first and the last,
-  not on the day of assigning; also the nightly import's).
+  not on the day of assigning).
 - The audit log covers everything else the same way, row by row.
 
 ## 7. Views
@@ -586,7 +582,7 @@ only setting is `User.notify_all` ("everything in all circles").
   its tension; others see "not found", like for others' drafts
   (`governance/not_found.py`).
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
-  the handbook's links are updated at the switchover using the imported
+  the handbook's links were updated at the switchover using the imported
   GlassFrog IDs.
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
@@ -668,35 +664,25 @@ the user's decision.
 
 ## 9. Import from GlassFrog
 
-`./manage.py import_glassfrog ~/projects/glassfrog`, idempotent (by
-`glassfrog_id` and date):
+Until the switchover `./manage.py import_glassfrog` imported the export
+(section 1) and, nightly, today's state from GlassFrog's API; the importer
+(`governance/glassfrog/`) is in the git history, removed after the
+switchover, when the app became the source of truth. It imported:
 
-1. Users (see section 2), created with German as their language (they
-   change it on their page); `settings.ADMINS` become superusers.
-2. The current structure of live circles from the newest files.
-   Circles with only core roles become roles (`normalize()`).
-3. Proposals, tensions and meetings. Adopted proposals keep their
-   instructions with GlassFrog IDs (`Proposal.glassfrog_id` tells them
-   apart), they are history; names are resolved against the last snapshot
-   before `accepted_at` or the proposal's own `add` instructions. Open
-   proposals (drafts, published, waiting for a meeting) get the app's IDs
-   (`to_app_ids()`), objects they add keys like `n1`: the app adopts them.
-   Those without a tension (most elections) are titled after all they
-   change, by kind or by role, many counted (`summarize()`: "Election:
-   Facilitator, Secretary", "Baker: Name, Purpose").
-4. Assignment history, the history as audit rows (replacing the import's
-   own audit rows of the structure) and `Change`s from the git history of
-   `glassfrog.json`. Its last day is the database's state
-   (`structure_from_database()`), so the audit log continues without
-   spurious changes. Nightly imports' changes are audit rows themselves.
-5. Mentions become `@[Name](role:ID)` (longest name in the circle and its
-   super-circles, also earlier names); the import lists unresolved ones.
-
-`import_glassfrog --api` fetches today's state with `GLASSFROG_TOKEN` and
-adds it to the history in the database, so the server needs no checkout:
-vanished roles and policies are archived today, assignments start and end
-today, users are linked by `glassfrog_id` (redacted people who left).
-It runs nightly until the switchover.
+1. Users (see section 2), with German as their language.
+2. The structure of live circles; circles with only core roles became
+   roles.
+3. Proposals, tensions and meetings. Proposals adopted in GlassFrog keep
+   their instructions with GlassFrog IDs (`Proposal.adopted_in_glassfrog`,
+   set by migration `proposals.0004` after the last import: adopted
+   imported proposals without a role), they are history; open ones got the
+   app's IDs. Those without a tension (most elections) are titled after
+   all they change (`summarize()`: "Election: Facilitator, Secretary",
+   "Baker: Name, Purpose").
+4. The assignment history and the history since 2018 as audit rows of
+   "GlassFrog" (`history/backfill.py`, whose format `audit.structure()`
+   reads), continued without differences by the app's audit log.
+5. Mentions as `@[Name](role:ID)`.
 
 ## 10. Constitution choices
 
@@ -752,40 +738,17 @@ Deliberately not modelled:
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
-- **Before the switchover** (assessment of 2026-11-07; GlassFrog stays
-  the source of truth until then, so bugs cost little now):
-  - Another verification round or two: each round so far still found
-    bugs combining features.
-  - One or two real meetings in the app, also to see the mails in real
-    clients (several role mails at a meeting's end since elections are
-    announced then).
-  - Only adopting takes `lock_structure()`; assignments, domain policies
-    and elections at the same moment are untested.
-  - Recomputing the whole history (reinitializing, the import) at the
-    real size isn't measured.
-  - The lists of current assignments (focus and term next to the name)
-    haven't been looked at in the browser (light and dark, long focus
-    texts, narrow screens).
+- **Untested**: only adopting takes `lock_structure()`; assignments,
+  domain policies and elections at the same moment are untested. The
+  lists of current assignments (focus and term next to the name) haven't
+  been looked at in the browser (light and dark, long focus texts, narrow
+  screens).
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
   wrong assignment or announce wrongly. Remove this item afterwards.
-- **Switchover**: a final import, update the handbook's links, cancel
-  GlassFrog, then stop the nightly `import_glassfrog --api`. Run
-  `scripts/fetch_backup.py` daily on the fetcher's server (with a read
-  only token) instead of `fetch_glassfrog.py`, into a new repository: to
-  consider then or afterwards, converting the GlassFrog export's commits
-  into the backup's format. Let the
-  open imported proposals be adopted async too (`adopt()` refuses
-  proposals with a `glassfrog_id` outside of running meetings until then,
-  e.g. at GlassFrog's deadlines; until then the app's async process moves
-them to "waiting for a meeting" at the last consent or the deadline, and
-the nightly import sets them back: accepted, decided 2026-11-06; it also
-overwrites the status and amendments of one on the agenda of a meeting
-running at 03:00, i.e. active after midnight: accepted too, decided
-2026-11-07). Remove
-  "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
-  being the source of truth in `AGENTS.md` and this file.
+- **The GlassFrog export's history** in the backup's format
+  (`scripts/fetch_backup.py`), converting its commits: to consider.
 - **Published interpretations** (4.2.1): the Secretary's rulings, binding
   for the circle and its sub-circles, shown on the circle page. Postponed,
   we never had the case.

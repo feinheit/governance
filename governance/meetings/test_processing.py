@@ -210,9 +210,8 @@ class ProcessingTest(TestCase):
         self.assertEqual(tension.status, Proposal.IN_MEETING)
 
     def test_imported_proposal(self):
-        """Open proposals imported from GlassFrog are adopted in meetings
-        (the nightly import sets them back until the switchover), not at
-        GlassFrog's deadlines by the daily task"""
+        """Open proposals imported from GlassFrog are adopted like the
+        app's own since the switchover, also async at their deadline"""
         self.cook.glassfrog_id = 999  # Not the app's ID
         self.cook.save()
         published = Proposal.objects.create(
@@ -226,20 +225,12 @@ class ProcessingTest(TestCase):
             instructions=self.proposal.instructions,
             glassfrog_id=124,
         )
-        self.assertEqual(adopt_due_proposals(), [])
-        published.refresh_from_db()
-        self.assertNotEqual(published.status, Proposal.ADOPTED)
-
-        self.proposal.glassfrog_id = 123
-        self.proposal.save()
-        self.client.force_login(self.bob)
-        self.client.post(f"/agenda/{self.item.pk}/process/")
-        response = self.client.post(f"/agenda/{self.item.pk}/adopt/", follow=True)
-        self.assertContains(response, "The proposal is adopted.")
+        self.assertEqual(adopt_due_proposals(), [published])
         self.cook.refresh_from_db()
         self.assertEqual(self.cook.name, "Chef")
         # Its instructions have the app's IDs, unlike those adopted in GlassFrog
-        response = self.client.get(self.proposal.get_absolute_url())
+        self.client.force_login(self.bob)
+        response = self.client.get(published.get_absolute_url())
         self.assertContains(response, self.cook.get_absolute_url())
 
     def test_amended_in_the_meeting(self):

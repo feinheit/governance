@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 15:02+0100\n"
+"POT-Creation-Date: 2026-11-07 16:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1000,10 +1000,6 @@ msgid "The proposal has already been adopted."
 msgstr "Der Vorschlag wurde bereits angenommen."
 
 #: governance/proposals/instructions.py
-msgid "Proposals imported from GlassFrog are adopted in a meeting."
-msgstr "Aus GlassFrog importierte Vorschläge werden in einem Meeting angenommen."
-
-#: governance/proposals/instructions.py
 msgid "A tension without changes isn't adopted."
 msgstr "Eine Spannung ohne Änderungen wird nicht angenommen."
 
@@ -1129,6 +1125,14 @@ msgstr "betroffene Policies"
 #: governance/proposals/models.py
 msgid "GlassFrog tension ID"
 msgstr "GlassFrog-ID der Spannung"
+
+#: governance/proposals/models.py
+msgid "adopted in GlassFrog"
+msgstr "in GlassFrog angenommen"
+
+#: governance/proposals/models.py
+msgid "Its instructions refer to GlassFrog's IDs."
+msgstr "Seine Anweisungen verweisen auf die IDs von GlassFrog."
 
 #: governance/proposals/models.py governance/templates/history/_timeline.html
 msgid "(no tension)"
@@ -2909,8 +2913,8 @@ msgid "Nothing found."
 msgstr "Nichts gefunden."
 
 #: governance/templates/start.html
-msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
-msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+msgid "There is no anchor circle yet."
+msgstr "Es gibt noch keinen Anker-Kreis."
 
 #: governance/templatetags/governance.py
 msgid "As admin"
@@ -2919,6 +2923,12 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "Proposals imported from GlassFrog are adopted in a meeting."
+#~ msgstr "Aus GlassFrog importierte Vorschläge werden in einem Meeting angenommen."
+
+#~ msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
+#~ msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
 
 #~ msgid "the Circle Leads"
 #~ msgstr "die Circle Leads"

@@ -33,11 +33,3 @@ vorsieht. Diese Hilfe erklärt das Tool, nicht Holacracy.
   Accountabilities oder Domains hinzu.
 - **Mails** lassen sich nicht einzeln abbestellen, nur auf alle Kreise
   ausweiten. Filtere sie im Mailprogramm.
-
-## Bis zur Umstellung
-
-GlassFrog bleibt massgebend, bis wir umstellen: jede Nacht übernimmt das
-Tool Struktur, Besetzung und Vorschläge aus GlassFrog und überschreibt
-dabei, was hier an diesen Daten geändert wurde. Aus GlassFrog importierte
-Vorschläge lassen sich zum Ausprobieren in einem Governance Meeting hier
-annehmen, die nächste Nacht setzt sie zurück.

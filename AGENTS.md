@@ -1,6 +1,6 @@
 # Governance
 
-A Django app replacing GlassFrog: circles, roles, accountabilities, domains,
+A Django app which replaced GlassFrog: circles, roles, accountabilities, domains,
 policies, elections, async proposals and governance meetings, following the
 Holacracy Constitution 5.0. `SPEC.md` describes what the app does and why,
 the GlassFrog data, the constitution choices and the backlog; read it
@@ -169,76 +169,29 @@ variables named like the settings: `DATABASE_URL`, `SECRET_KEY`,
 `ALLOWED_HOSTS`, `SECURE_SSL_HOST` and `SECURE_SSL_REDIRECT=True`
 (django-canonical-domain redirects everything else there), `LIVE=True`,
 `EMAIL_URL`, `BASE_URL`, `GOOGLE_CLIENT_ID`,
-`GOOGLE_CLIENT_SECRET`, `SENTRY_DSN` and `SENTRY_ENVIRONMENT`, and until
-the switchover `GLASSFROG_TOKEN`. Only
-existing, active users sign in; new people come from the import until the
-switchover, afterwards admins add them in the Django admin. The
-cron jobs are in argocd's `governance/values.yaml`: `import_glassfrog
---api` at 03:00 UTC (until the switchover), `fairy_tasks` at 03:30, and
-hourly `end_inactive_meetings` (meetings end and send their outputs a few
-hours after their last activity, not only at night).
+`GOOGLE_CLIENT_SECRET`, `SENTRY_DSN` and `SENTRY_ENVIRONMENT`. Only
+existing, active users sign in; admins add new people in the Django admin.
+The cron jobs are in argocd's `governance/values.yaml`: `fairy_tasks` at
+03:30 UTC, and hourly `end_inactive_meetings` (meetings end and send their
+outputs a few hours after their last activity, not only at night).
 Without SMTP set `EMAIL_URL=console:`, error mails failing hide the real
 error. Pods read the secret when they start: restart them after changing
 it.
 
-## Reinitializing the database
-
-The import of the whole history needs the GlassFrog export with its git
-history, which the server doesn't have, so it runs in the web pod from a
-copy. Everything that only exists in the app is lost: proposals, drafts,
-meetings, checklists etc. made here, API tokens, `notify_all`. People
-sign in again: the session cookies check the password field, which the
-import fills with a new unusable password. Takes a few minutes, the
-import itself one; not around 03:00, when the nightly import runs.
-
-1. `git pull` in `~/projects/glassfrog`.
-2. Deploy as usual (`fl deploy governance ~/projects/sites/governance` in
-   `~/projects/argocd`). When the migrations were recreated, their names
-   are all recorded in the old database, so the PreSync migration changes
-   nothing.
-3. Empty the database as its owner (the app's role, PostgreSQL 15 and
-   later; else with the dbadmin DSN): `fl psql governance`, then
-   `DROP SCHEMA public CASCADE; CREATE SCHEMA public;`. The pages fail
-   until step 5.
-4. Find the web pod (`kubectl -n prod get pods`, `governance-…` without
-   `-import-`, `-fairy-`, `-end-` or `-migrate-`) and run
-   `POD=governance-…`.
-5. Migrate: `kubectl -n prod exec $POD -c governance -- .venv/bin/python
-   manage.py migrate`.
-6. Copy the export and import it:
-
-   ```
-   tar -C ~/projects -cz glassfrog | kubectl -n prod exec -i $POD -c governance -- tar -C /tmp -xz
-   kubectl -n prod exec $POD -c governance -- .venv/bin/python manage.py import_glassfrog /tmp/glassfrog
-   kubectl -n prod exec $POD -c governance -- rm -rf /tmp/glassfrog
-   ```
-
-7. Sign in and check the organization, the history and a proposal. The
-   nightly jobs continue as before.
-
-The first import ran on 2026-11-04, the migrations were recreated on
-2026-11-05 (`audit.operations.audit_tables()` adds the audit trigger in
-the apps' initial migrations).
-
 # GlassFrog data
 
-- The GlassFrog export lives in `~/projects/glassfrog` (`feinheit/glassfrog`,
-  private). A fetcher on a server commits it daily (`scripts/fetch_glassfrog.py`
-  here); `git pull` to update, never commit or push to that repository
-  yourself, the fetcher doesn't pull and its push would fail.
-- `glassfrog.json` has a git history since 2018-11-16, the other files
-  (proposals, meetings, roles with accountability texts, …) since
-  2026-11-04. Section 1 of `SPEC.md` lists what they contain and their
-  quirks.
-  Add new findings there.
-- Our governance data never goes into this repository: no exports,
-  fixtures or test data from GlassFrog, no real names. Tests and examples
-  use made-up circles, roles and people.
-- Scripts reading the export run with `python3 -I` from a directory outside
-  the export, and keep scratch files in a temporary directory which is
-  deleted afterwards.
-- The API token is in the server's environment (`GLASSFROG_TOKEN`), never
-  in files of this repository.
+The app replaced GlassFrog (the switchover). Its data was imported, with
+the history since 2018 (the importer, `governance/glassfrog/`, is in the
+git history, removed after the switchover): the models keep their
+`glassfrog_id`s, proposals adopted in GlassFrog refer to GlassFrog's IDs
+(`Proposal.adopted_in_glassfrog`), the audit log's rows before the app
+belong to "GlassFrog" (`history/backfill.py` writes rows like them, the
+tests use it). Section 1 of `SPEC.md` describes the export
+(`~/projects/glassfrog`, `feinheit/glassfrog`, private, no longer
+updated). Our governance data never goes into this repository: no
+exports, fixtures or test data from it, no real names. Tests and
+examples use made-up circles, roles and people. `scripts/fetch_backup.py`
+commits the app's JSON backup daily to a git repository instead.
 
 # Conventions
 
@@ -262,8 +215,8 @@ the apps' initial migrations).
   form mixin), which `mentions.js` autocompletes; add it to textareas
   written by hand.
 - History: the audit log has every change of roles, accountabilities,
-  domains and policies, the GlassFrog import backfills the time before the
-  app (`history/backfill.py`); `structure_on(day)` is the structure of a
+  domains and policies, the GlassFrog import backfilled the time before
+  the app (`history/backfill.py`); `structure_on(day)` is the structure of a
   past day, `history.Change` the differences from day to day computed from
   it (`update_changes()`), proposals say why. Tests reading the audit log
   delete its rows first: other tests (end-to-end) commit theirs and the
