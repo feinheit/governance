@@ -202,6 +202,33 @@ class GovernanceMeetingScenarioTest(TestCase):
             self.assertIn(f"Adopted: {label}", body)
         self.assertNotIn("Cook again", body)
 
+    def test_role_made_a_circle_holds_its_first_meeting(self):
+        """A role turned into a circle on purpose has no roles yet: its first
+        meeting ending without adding any doesn't turn it back, only losing
+        its last roles does"""
+        self.client.force_login(self.bob)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        item, proposal = self.proposal(meeting, "Cooking grows")
+        self.client.post(f"/proposals/{proposal.pk}/roles/{self.cook.pk}/convert/")
+        self.adopt(item)
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(meeting)
+        self.cook.refresh_from_db()
+        self.assertTrue(self.cook.is_circle)
+
+        # Eve leads it, its first meeting elects its Secretary
+        first = Meeting.objects.create(
+            circle=self.cook, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        secretary = self.cook.roles.get(core_role="secretary")
+        Assignment.objects.create(role=secretary, user=self.eve)
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(first)
+        self.cook.refresh_from_db()
+        self.assertTrue(self.cook.is_circle)
+        self.assertTrue(Assignment.objects.current().filter(role=secretary).exists())
+
 
 class AsyncAndMeetingScenarioTest(TestCase):
     """An async proposal and a meeting change the same accountability: at

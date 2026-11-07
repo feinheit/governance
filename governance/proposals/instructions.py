@@ -561,26 +561,29 @@ def revert_after_meeting(meeting):
         .order_by("-decided_at", "-pk")
         .first()
     )
-    applier = Applier(proposal or Proposal(circle=circle))
+    if proposal is None:
+        # Not emptied meanwhile, e.g. a role made a circle on purpose
+        # holding its first meeting before it has roles
+        return
+    applier = Applier(proposal)
     # The meeting's outputs tell those losing the core roles about its own
     # proposals; a super-circle's proposal was mailed before, so they hear
     # about it like from an assignment
-    own = proposal is not None and proposal.meeting_id == meeting.pk
+    own = proposal.meeting_id == meeting.pk
     with nullcontext() if own else announce([circle, circle.circle]):
         applier.convert(circle, to_circle=False)
-    if proposal:
-        proposal.instructions.append({
-            "op": "remove",
-            "path": f"/roles/{circle.pk}/supporting_circle",
-        })
-        proposal.names[f"roles/{circle.pk}"] = circle.name
-        proposal.save(update_fields=["instructions", "names"])
-        proposal.roles.add(circle, *applier.roles)
-        proposal.policies.add(*applier.policies)
-        if own:
-            # For the meeting's outputs; announced otherwise, not again in
-            # the mail of a super-circle's meeting still running
-            proposal.ended_holders.add(*applier.ended_users)
+    proposal.instructions.append({
+        "op": "remove",
+        "path": f"/roles/{circle.pk}/supporting_circle",
+    })
+    proposal.names[f"roles/{circle.pk}"] = circle.name
+    proposal.save(update_fields=["instructions", "names"])
+    proposal.roles.add(circle, *applier.roles)
+    proposal.policies.add(*applier.policies)
+    if own:
+        # For the meeting's outputs; announced otherwise, not again in
+        # the mail of a super-circle's meeting still running
+        proposal.ended_holders.add(*applier.ended_users)
     close_circles([circle], proposal)
     update_changes(since=timezone.localdate())
 

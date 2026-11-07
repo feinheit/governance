@@ -223,7 +223,9 @@ accountabilities and domains through its own governance (1.3.3).
   policies without a domain are archived (a role only has policies for
   its domains, 1.3.2; the same proposal may move them up), those for its
   domains stay the role's, its holders change them again. Drafts say so beforehand, the
-  adopted proposal records the steps.
+  adopted proposal records the steps. A role made a circle on purpose
+  (without roles yet) stays one, also when its first meetings end
+  without adding any: only a proposal emptying it turns it back.
 
 **Async proposals**: circle members get a mail with the tension and the
 diff. Publishing checks again that the proposer may propose from the
@@ -733,9 +735,6 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-07, open findings):
-  - A role turned into a circle on purpose turns back when its first
-    meeting ends without roles (`revert_after_meeting()` reverts any
-    empty circle, not only those a proposal emptied).
   - An election corrected back to the previous holder in the same
     meeting ends their assignment and starts a new one; decided: role
     mails of elections go out with the meeting's outputs, the net change
