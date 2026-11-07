@@ -755,6 +755,28 @@ Deliberately not modelled:
   - The lists of current assignments (focus and term next to the name)
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
+- **Verification** (second round of 2026-11-07, open findings):
+  - A `test` instruction on a field (`/roles/1/aim`) sets it, unseen.
+  - `GET /api/roles/{id}/` fails for Facilitator, Secretary and Circle
+    Rep (lazy purpose), the API leaves out the core roles'
+    constitutional texts (search too).
+  - Mails describe the changes in the language of whoever triggered
+    them, not the recipient's (also the meeting outputs).
+  - Imported tensions worked out here are adopted async, the nightly
+    import sets them back to drafts.
+  - The backup names members who consented with a text.
+  - A meeting inside a role adopts only the first proposal adding roles:
+    the role is a circle then, its holders no longer propose from it.
+  - The Markdown export and the circle browser say unfilled roles are
+    held by the Circle Leads, also the Circle Rep and the Circle Lead.
+  - Search matches the mentions' markup, not the current names.
+  - `gov` shows the days of deadlines etc. in UTC.
+  - Untested risks: "as of" uses the server's date
+    (`history/views.py`); the organization history's pages bound
+    proposals by the days of changes; a domain policy moved to another
+    domain isn't a change; the outputs list elections of core roles
+    archived at the meeting's end; `proposal_respond` doesn't catch a
+    `ProposalError` of a race.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
