@@ -78,6 +78,39 @@ class AssignmentMailsTest(TestCase):
             ],
         )
 
+    def test_focus(self):
+        """The holder hears about their focus changing, nobody else"""
+        assignment = Assignment.objects.create(
+            role=self.cook, user=self.eve, focus="Soup"
+        )
+        self.client.force_login(self.ada)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/assignments/{assignment.pk}/",
+                {"user": self.eve.pk, "focus": "Salad"},
+            )
+        [message] = mail.outbox
+        self.assertEqual(
+            (message.to, message.subject),
+            (["eve@example.com"], "Your focus in Cook (Kitchen): Salad"),
+        )
+        self.assertIn("Before: Soup", message.body)
+        self.assertIn(f"/roles/{self.cook.pk}/", message.body)
+        mail.outbox = []
+        # Saved unchanged: nothing
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/assignments/{assignment.pk}/",
+                {"user": self.eve.pk, "focus": "Salad"},
+            )
+        self.assertEqual(self.outbox(), [])
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/assignments/{assignment.pk}/", {"user": self.eve.pk})
+        self.assertEqual(
+            self.outbox(),
+            [("eve@example.com", "Your focus in Cook (Kitchen): none anymore")],
+        )
+
     def test_sub_circles_following_the_circle_leads(self):
         """A sub-circle nobody leads follows the Circle Leads of the circle
         above (1.4.2): its Secretary hears about a new one"""

@@ -258,6 +258,28 @@ def roles_changed(started, ended):
     return sent
 
 
+def focus_changed(assignment, before):
+    """To the holder, whose focus changed from ``before``"""
+    role = assignment.role
+    return send(
+        User.objects.filter(pk=assignment.user_id),
+        lambda: (
+            _("Your focus in %(role)s: %(focus)s")
+            % {
+                "role": f"{role} ({role.circle})",
+                "focus": assignment.focus or _("none anymore"),
+            }
+        ),
+        "notifications/focus_changed.txt",
+        {
+            "assignment": assignment,
+            "role": role,
+            "before": before,
+            "url": settings.BASE_URL + role.get_absolute_url(),
+        },
+    )
+
+
 def members_changed(circle, joined, left):
     """To the circle's Secretaries, like GlassFrog"""
     from governance.roles.models import Assignment

@@ -283,10 +283,15 @@ def assignment_update(request, pk):
         Assignment.objects.current().select_related("role__circle", "user"), pk=pk
     )
     role = assignable_role(request, assignment.role_id)
+    before = assignment.focus
     form = AssignmentForm(request.POST or None, instance=assignment, role=role)
     if form.is_valid():
-        form.save()
+        from governance.notifications import mails
+
+        assignment = form.save()
         update_today()  # The history shows changes of the focus
+        if assignment.focus != before:
+            transaction.on_commit(lambda: mails.focus_changed(assignment, before))
         return redirect(back(request, role))
     return render(
         request,
