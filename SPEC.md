@@ -725,6 +725,24 @@ Deliberately not modelled:
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
+- **Before the switchover** (assessment of 2026-11-07; GlassFrog stays
+  the source of truth until then, so bugs cost little now):
+  - Another verification round or two: each round so far still found
+    bugs combining features.
+  - One or two real meetings in the app, also to see the mails in real
+    clients (several role mails at a meeting's end since elections are
+    announced then).
+  - Only adopting takes `lock_structure()`; assignments, domain policies
+    and elections at the same moment are untested.
+  - Recomputing the whole history (reinitializing, the import) at the
+    real size isn't measured.
+  - The lists of current assignments (focus and term next to the name)
+    haven't been looked at in the browser (light and dark, long focus
+    texts, narrow screens).
+- **Next deploy**: not while a governance meeting which recorded
+  elections runs: elections before migration `meetings.0006` lack the
+  data to undo them, a correction or the meeting's end would end the
+  wrong assignment or announce wrongly. Remove this item afterwards.
 - **Switchover**: a final import, update the handbook's links, cancel
   GlassFrog, then stop the nightly `import_glassfrog --api`. Run
   `scripts/fetch_backup.py` daily on the fetcher's server (with a read
