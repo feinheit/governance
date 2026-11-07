@@ -514,7 +514,7 @@ only setting is `User.notify_all` ("everything in all circles").
 `MAIL_COPIES` (a list of addresses, in the environment) get one copy
 of each mail (one per event, not per recipient; in the language of
 their account, else the default), not when they received it themselves
-(compared by address).
+(compared by address), as Cc without a To to make filtering easy.
 
 ## 6. History
 

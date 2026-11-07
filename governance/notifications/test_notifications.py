@@ -197,7 +197,7 @@ class NotificationsTest(TestCase):
 
     def test_copies(self):
         """MAIL_COPIES get one copy of each mail, in the language of their
-        account (if any), unless they received it themselves"""
+        account (if any), unless they received it themselves; as Cc without a To"""
         proposal = Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.eve,
@@ -223,13 +223,13 @@ class NotificationsTest(TestCase):
         ):
             publish(proposal)
         self.assertEqual(
-            sorted((m.to[0], m.subject) for m in mail.outbox),
+            sorted((m.to, m.cc, m.subject) for m in mail.outbox),
             [
-                ("ada@example.com", "Proposal in Kitchen: Better name"),
-                ("bob@example.com", "Vorschlag in Kitchen: Better name"),
-                ("copy@example.com", "Proposal in Kitchen: Better name"),
-                ("eve@example.com", "Proposal in Kitchen: Better name"),
-                ("zed@example.com", "Vorschlag in Kitchen: Better name"),
+                ([], ["copy@example.com"], "Proposal in Kitchen: Better name"),
+                ([], ["zed@example.com"], "Vorschlag in Kitchen: Better name"),
+                (["ada@example.com"], [], "Proposal in Kitchen: Better name"),
+                (["bob@example.com"], [], "Vorschlag in Kitchen: Better name"),
+                (["eve@example.com"], [], "Proposal in Kitchen: Better name"),
             ],
         )
 

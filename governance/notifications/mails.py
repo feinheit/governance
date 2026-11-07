@@ -42,19 +42,21 @@ def send(users, subject, template, context):
     if sent:
         for address in dict.fromkeys(a.lower() for a in settings.MAIL_COPIES):
             if address not in received:
-                # In the language of their account, if they have one
+                # In the language of their account, if they have one; as
+                # Cc without a To, easy to filter
                 user = User.objects.filter(email__iexact=address).first()
-                _send(user, address, subject, template, context)
+                _send(user, address, subject, template, context, copy=True)
     return sent
 
 
-def _send(user, address, subject, template, context):
+def _send(user, address, subject, template, context, *, copy=False):
     language = user.language if user else None
     with override(language or settings.LANGUAGE_CODE):
         EmailMessage(
             subject=str(subject()),
             body=render_to_string(template, context | {"user": user}),
-            to=[address],
+            to=[] if copy else [address],
+            cc=[address] if copy else [],
         ).send()
 
 
