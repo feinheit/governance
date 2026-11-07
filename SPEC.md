@@ -731,3 +731,18 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
   `end_inactive_meetings`), sending mails outside the request.
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
+- **Verification** (round of 2026-11-07, open findings):
+  - A role turned into a circle on purpose turns back when its first
+    meeting ends without roles (`revert_after_meeting()` reverts any
+    empty circle, not only those a proposal emptied).
+  - An election corrected back to the previous holder in the same
+    meeting ends their assignment and starts a new one; decided: role
+    mails of elections go out with the meeting's outputs, the net change
+    only.
+  - Roles and policies archived inside a removed circle, and the core
+    roles of a circle turned back, don't list the proposal.
+  - The API answers 500 when instructions replace or remove a text the
+    proposal adds itself (`n1` keys).
+  - Decided: withdrawing is blocked while the proposal's meeting runs;
+    only current members' responses count; a policy regulating a domain
+    can't be moved into a sub-circle.
