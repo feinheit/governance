@@ -19,6 +19,34 @@ class ProposalQuerySet(models.QuerySet):
         return self.filter(~models.Q(status=Proposal.DRAFT) | models.Q(proposer=user))
 
 
+def summarize(changes):
+    """The changes in few words, each name once and many counted, by kind
+    ('Election: Facilitator, Secretary; Role: Baker, Cook and 3 more'), or
+    by subject when that's shorter ('Baker: Name, Purpose')"""
+
+    def grouped(key, value):
+        groups = {}
+        for change in changes:
+            groups.setdefault(str(key(change)), {})[str(value(change))] = None
+        return groups
+
+    by_kind = grouped(lambda c: c.label, lambda c: c.subject)
+    by_subject = grouped(lambda c: c.subject, lambda c: c.label)
+    groups = by_subject if len(by_subject) < len(by_kind) else by_kind
+    parts = []
+    for heading, group in groups.items():
+        names = list(group)
+        if len(names) > 3:
+            text = _("%(subjects)s and %(count)s more") % {
+                "subjects": ", ".join(names[:2]),
+                "count": len(names) - 2,
+            }
+        else:
+            text = ", ".join(names)
+        parts.append(f"{heading}: {text}")
+    return "; ".join(parts)
+
+
 class Proposal(models.Model):
     """A proposed change of a circle's governance
 
@@ -164,8 +192,7 @@ class Proposal(models.Model):
             from governance.proposals.describe import describe
 
             if changes := describe(self.instructions, self.names):
-                more = " …" if len(changes) > 1 else ""
-                return f"{changes[0].label}: {changes[0].subject}{more}"
+                return Truncator(summarize(changes)).chars(100)
             return str(_("(no tension)"))
         return Truncator(first_line).chars(100)
 

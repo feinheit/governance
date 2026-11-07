@@ -670,6 +670,9 @@ the user's decision.
    before `accepted_at` or the proposal's own `add` instructions. Open
    proposals (drafts, published, waiting for a meeting) get the app's IDs
    (`to_app_ids()`), objects they add keys like `n1`: the app adopts them.
+   Those without a tension (most elections) are titled after all they
+   change, by kind or by role, many counted (`summarize()`: "Election:
+   Facilitator, Secretary", "Baker: Name, Purpose").
 4. Assignment history, the history as audit rows (replacing the import's
    own audit rows of the structure) and `Change`s from the git history of
    `glassfrog.json`. Its last day is the database's state

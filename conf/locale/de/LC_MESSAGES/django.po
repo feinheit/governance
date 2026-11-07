@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 13:36+0100\n"
+"POT-Creation-Date: 2026-11-07 13:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -945,9 +945,7 @@ msgstr "%(label)s darf nicht leer sein."
 
 #: governance/proposals/instructions.py
 msgid "Core roles get no accountabilities or domains besides the constitution's."
-msgstr ""
-"Kernrollen erhalten keine Accountabilities oder Domains ausser denen der "
-"Verfassung."
+msgstr "Kernrollen erhalten keine Accountabilities oder Domains ausser denen der Verfassung."
 
 #: governance/proposals/instructions.py
 #, python-format
@@ -1018,6 +1016,11 @@ msgstr "Instruktion %(number)s braucht eine Operation (%(ops)s) und einen Pfad."
 #, python-format
 msgid "The values of instruction %(number)s have to be texts."
 msgstr "Die Werte von Instruktion %(number)s müssen Texte sein."
+
+#: governance/proposals/models.py
+#, python-format
+msgid "%(subjects)s and %(count)s more"
+msgstr "%(subjects)s und %(count)s weitere"
 
 #: governance/proposals/models.py
 msgid "governance"

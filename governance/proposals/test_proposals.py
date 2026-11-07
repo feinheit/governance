@@ -290,7 +290,24 @@ class ProposalTitleTest(TestCase):
             "value": "Bread",
         })
         proposal.names["roles/6"] = "Baker"
-        self.assertEqual(str(proposal), "Election: Circle Rep …")
+        self.assertEqual(str(proposal), "Election: Circle Rep; Purpose: Baker")
+        # One role changed in several ways
+        proposal.instructions[:2] = [
+            {"op": "replace", "path": "/roles/6/name", "value": "Bakery"}
+        ]
+        self.assertEqual(str(proposal), "Baker: Name, Purpose")
+        # All of them, the roles of each kind once, many counted
+        proposal.instructions = [
+            {"op": "replace", "path": f"/roles/{pk}/assignment/links/person"}
+            for pk in [5, 8, 5]
+        ]
+        proposal.names["roles/8"] = "Secretary"
+        self.assertEqual(str(proposal), "Election: Circle Rep, Secretary")
+        proposal.instructions = [{"op": "remove", "path": "/roles/6"}] * 5
+        for pk in range(10, 15):
+            proposal.instructions.append({"op": "remove", "path": f"/roles/{pk}"})
+            proposal.names[f"roles/{pk}"] = f"Role {pk}"
+        self.assertEqual(str(proposal), "Role: Baker, Role 10 and 4 more")
         proposal.instructions, proposal.kind = [], Proposal.SPELLING
         self.assertEqual(str(proposal), "Spelling correction")
 
