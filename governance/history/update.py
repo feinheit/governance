@@ -121,6 +121,7 @@ def update_changes(*, since=None):
                     )
         previous = current
     new.extend(reelections(holders, since))
+    new.extend(focus_changes(since, roles))
     Change.objects.bulk_create(new, batch_size=1000)
     return len(new)
 
@@ -145,6 +146,46 @@ def reelections(holders, since):
                 old=election.user_id,
                 new=election.term_ends_on.isoformat(),
             )
+
+
+def focus_changes(since, roles):
+    """A holder's focus changing: per assignment and day the first focus and
+    the last (from the audit log, the assignment keeps only the last), not on
+    the day of assigning"""
+    after = "AND created_at >= %s" if since else ""
+    params = [day_end(since - dt.timedelta(days=1))] if since else []
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"""
+            SELECT row_data, changed_fields -> 'focus', created_at
+            FROM audit_logged_actions
+            WHERE table_name = 'roles_assignment' AND action = 'U'
+                AND changed_fields ? 'focus' {after}
+            ORDER BY created_at, event_id
+            """,
+            params,
+        )
+        days = {}
+        for row, focus, created_at in cursor:
+            key = (timezone.localdate(created_at), int(row["id"]))
+            if key not in days:
+                days[key] = [row, row["focus"] or ""]
+            days[key].append(focus or "")
+    for (day, _pk), (row, first, *_steps, last) in days.items():
+        if (
+            first == last
+            or row["starts_on"] == day.isoformat()
+            or int(row["role_id"]) not in roles
+        ):
+            continue
+        user = int(row["user_id"])
+        yield Change(
+            date=day,
+            role_id=int(row["role_id"]),
+            kind="focus",
+            old={"user": user, "focus": first},
+            new={"user": user, "focus": last},
+        )
 
 
 def update_today():

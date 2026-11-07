@@ -33,19 +33,23 @@ LABELS = {
     "assigned": _("Assigned"),
     "unassigned": _("No longer assigned"),
     "reelected": _("Re-elected"),
+    "focus": _("Focus changed"),
     "policy-added": _("Policy added"),
     "policy-removed": _("Policy removed"),
     "policy-title": _("Policy renamed"),
     "policy-body": _("Policy text changed"),
     "policy-moved": _("Policy moved"),
 }
-ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected"}
+ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected", "focus"}
 
 
 def user_of(change):
-    """``old`` or ``new`` of assignments; re-elections have the term in ``new``"""
+    """``old`` or ``new`` of assignments; re-elections have the term in
+    ``new``, changes of the focus the user and the focus in both"""
     if change.kind == "reelected":
         return change.old
+    if change.kind == "focus":
+        return change.new["user"]
     return change.new or change.old
 
 
@@ -88,6 +92,11 @@ def present(changes):
         change.user = (
             users.get(user_of(change)) if change.kind in ASSIGNMENT_KINDS else None
         )
+        if change.kind == "focus":
+            change.old_text, change.new_text = (
+                change.old["focus"],
+                change.new["focus"],
+            )
         if change.kind == "reelected":
             # ``new`` is the end of the term, not a text
             change.term, change.new_text = dt.date.fromisoformat(change.new), ""

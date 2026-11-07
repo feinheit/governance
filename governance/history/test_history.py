@@ -173,6 +173,65 @@ class FollowingTest(TestCase):
         self.assertEqual([c.role for c in present(changes[1:])], [bakery])
 
 
+class FocusTest(TestCase):
+    def test_focus_changed(self):
+        """A holder's focus changing is in the role's history: the day's
+        first focus and its last, not on the day of assigning"""
+        import time_machine
+        from django.db import connection
+
+        from governance.accounts.models import User
+        from governance.history.audit import structure_from_database
+        from governance.roles.models import Assignment
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        cook = Role.objects.create(name="Cook")
+        history((dt.date(2026, 1, 1), structure_from_database(dt.date(2026, 1, 1))))
+
+        def on(day):
+            # The audit log has the database's time, not time_machine's
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE audit_logged_actions SET created_at = %s"
+                    " WHERE created_at > %s",
+                    [
+                        dt.datetime(*day, 12, tzinfo=dt.UTC),
+                        dt.datetime(2026, 6, 1, tzinfo=dt.UTC),
+                    ],
+                )
+
+        assignment = Assignment.objects.create(
+            role=cook, user=ada, focus="Soup", starts_on=dt.date(2026, 1, 1)
+        )
+        assignment.focus = "Soups"  # The same day: part of assigning
+        assignment.save()
+        on((2026, 1, 1))
+        for focus in ["Salad", "Salads and soups"]:
+            assignment.focus = focus
+            assignment.save()
+        on((2026, 3, 1))
+        with time_machine.travel(dt.datetime(2026, 3, 1, 14), tick=False):
+            update_changes()
+        self.assertEqual(
+            list(
+                Change.objects.filter(role=cook, kind="focus").values_list(
+                    "date", "old", "new"
+                )
+            ),
+            [
+                (
+                    dt.date(2026, 3, 1),
+                    {"user": ada.pk, "focus": "Soups"},
+                    {"user": ada.pk, "focus": "Salads and soups"},
+                )
+            ],
+        )
+        self.client.force_login(ada)
+        response = self.client.get(f"/roles/{cook.pk}/history/?assignments=1")
+        self.assertContains(response, "Focus changed")
+        self.assertContains(response, "Salads and soups")
+
+
 def history(*days):
     """GlassFrog's history: audit rows instead of the tests' own rows"""
     from django.db import connection

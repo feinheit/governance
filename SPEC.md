@@ -520,7 +520,10 @@ only setting is `User.notify_all` ("everything in all circles").
   following it the same day (`views.without_following()`).
   An assignment keeps only its last term: re-elections (electing the
   holder for a new term) come from the app's elections
-  (`update.reelections()`), GlassFrog's aren't known.
+  (`update.reelections()`), GlassFrog's aren't known. Likewise only its
+  last focus: changes of the focus come from the audit log's updates of
+  assignments (`update.focus_changes()`, per day the first and the last,
+  not on the day of assigning; also the nightly import's).
 - The audit log covers everything else the same way, row by row.
 
 ## 7. Views

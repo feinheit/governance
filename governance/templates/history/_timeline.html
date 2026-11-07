@@ -26,7 +26,7 @@
               <span
                 class="small text-body-secondary"
               >{% blocktranslate with date=obj.term|date:"DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
-            {% elif obj.kind == "name" or obj.kind == "policy-title" %}
+            {% elif obj.kind == "name" or obj.kind == "policy-title" or obj.kind == "focus" %}
               <span class="small">{% if obj.old_text %}<span
                     class="text-decoration-line-through text-body-secondary"
                   >{{ obj.old_text }}</span>{% endif %} {{ obj.new_text }}</span>

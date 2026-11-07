@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 09:08+0100\n"
+"POT-Creation-Date: 2026-11-07 09:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -273,6 +273,10 @@ msgstr "Nicht mehr zugewiesen"
 #: governance/history/views.py
 msgid "Re-elected"
 msgstr "Wiedergewählt"
+
+#: governance/history/views.py
+msgid "Focus changed"
+msgstr "Fokus geändert"
 
 #: governance/history/views.py
 msgid "Policy added"
