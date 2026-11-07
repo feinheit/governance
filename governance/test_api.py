@@ -59,6 +59,16 @@ class APITest(TestCase):
                 self.api("get", "/api/me/", secret=self.read_secret).status_code, 401
             )
 
+    def test_refused_changes_dont_extend_tokens(self):
+        """Changes a read only token may not make aren't a use of it"""
+        response = self.api("post", "/api/proposals/", {}, secret=self.read_secret)
+        self.assertEqual(response.status_code, 403)
+        token = APIToken.objects.get(title="Reader")
+        self.assertIsNone(token.last_used_at)
+        self.api("get", "/api/me/", secret=self.read_secret)
+        token.refresh_from_db()
+        self.assertIsNotNone(token.last_used_at)
+
     def test_tokens_page(self):
         self.assertRedirects(
             self.client.get("/accounts/api-tokens/"),

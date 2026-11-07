@@ -10,7 +10,7 @@ class UserToken(HttpBearer):
     """Personal API tokens: the gov CLI (`gov login`) and scripts"""
 
     def authenticate(self, request, token):
-        if token := APIToken.objects.for_secret(token):
+        if token := APIToken.objects.for_secret(token, extend=False):
             user = token.user
             request.user = user
             request.api_token = token
@@ -26,6 +26,8 @@ class UserToken(HttpBearer):
                 raise HttpError(
                     403, _("This API token only allows reading, not changes.")
                 )
+            # Only uses which are allowed extend the token
+            APIToken.objects.extend(token)
             return user
         return None
 
