@@ -280,6 +280,36 @@ class ElectionsTest(TestCase):
             [],
         )
 
+    def test_corrected_after_midnight(self):
+        """A meeting running past midnight corrects an election: the result
+        corrected away never held the role"""
+        cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        for user in [self.ada, self.bob]:  # Stay members
+            Assignment.objects.create(role=cook, user=user)
+        self.client.force_login(self.ada)
+        url = f"/meetings/{self.meeting.pk}/elections/"
+        for user, at in [
+            (self.ada, dt.datetime(2026, 12, 7, 22, 50, tzinfo=dt.UTC)),
+            (self.bob, dt.datetime(2026, 12, 7, 23, 10, tzinfo=dt.UTC)),
+        ]:
+            with time_machine.travel(at, tick=False):
+                self.client.post(
+                    url,
+                    {
+                        "role": self.facilitator.pk,
+                        "user": user.pk,
+                        "term_ends_on": "2027-12-31",
+                    },
+                )
+        self.assertEqual(
+            list(
+                Assignment.objects.filter(role=self.facilitator).values_list(
+                    "user", "starts_on", "ends_on", "elected_until"
+                )
+            ),
+            [(self.bob.pk, dt.date(2026, 1, 1), None, dt.date(2027, 12, 31))],
+        )
+
     def test_rep_corrected(self):
         """A Circle Rep corrected in the meeting: only the one recorded last
         holds the circle's role in the super-circle"""

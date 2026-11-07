@@ -92,7 +92,8 @@ def undo_election(election, day):
     role = election.role
     holder = Assignment.objects.current().filter(role=role, user=election.user).first()
     if holder and election.started:
-        end_assignment(holder, day)
+        # Never held, also when the meeting ran past midnight meanwhile
+        holder.delete()
     elif holder:
         holder.elected_until = election.previous_term
         holder.save(update_fields=["elected_until"])

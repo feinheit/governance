@@ -749,10 +749,8 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - Untested risks: an election corrected after midnight ends the
-    corrected-away winner's assignment instead of deleting it; deferred
-    reverts don't list the policies they archive among the
-    consequences.
+  - Untested risk: deferred reverts don't list the policies they
+    archive among the consequences.
   - To decide: the Secretary stands in for the Circle Leads (`can_lead`)
     but doesn't propose from the unfilled roles (`proposer_roles()`
     checks `is_circle_lead` only); a role's single holder adding roles
