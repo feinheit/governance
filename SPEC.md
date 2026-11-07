@@ -781,5 +781,4 @@ running at 03:00, i.e. active after midnight: accepted too, decided
 - **Django Tasks** for jobs which belong to a moment, not a schedule:
   ending a meeting when its inactivity runs out (instead of the hourly
   `end_inactive_meetings`), sending mails outside the request.
-- **PDF export**, if needed.
 - **Modals** for more forms where they help.
