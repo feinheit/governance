@@ -198,7 +198,8 @@ it if needed.
 the circle, convert roles and circles. Moves go into a sub-circle or any
 sub-circle thereof and out of them into the circle, in one step (5.2;
 moving roles into a role makes it a circle only for the circle's own
-roles), not into a role's own inside. Removing a circle moves the
+roles), not into a role's own inside; policies regulating a domain stay
+with it (decided 2026-11-07). Removing a circle moves the
 selected roles and policies to the super-circle and archives the rest
 (like GlassFrog). Circles and roles removed (also inside a removed
 circle) and circles turned back into roles close: their open proposals
@@ -739,6 +740,3 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
   `end_inactive_meetings`), sending mails outside the request.
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
-- **Verification** (round of 2026-11-07, open findings):
-  - Decided: a policy regulating a domain can't be moved into a
-    sub-circle.

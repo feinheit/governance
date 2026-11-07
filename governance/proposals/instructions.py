@@ -401,9 +401,15 @@ class Applier:
             self.shrunk.add(obj.circle)
             obj.circle = target
             obj.save(update_fields=["circle"])
+        elif obj.domain_id:
+            # Like the policies of roles for their domains, which get()
+            # refuses: the policy stays with the role holding the domain
+            self.problem(
+                _("%(policy)s regulates a domain of %(role)s and stays with it."),
+                policy=obj,
+                role=obj.role,
+            )
         else:
-            # Policies of roles for their domains go with the role, get()
-            # refuses them
             obj.role = target
             obj.save(update_fields=["role"])
 

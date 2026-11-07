@@ -15,8 +15,8 @@ oder in einem Meeting einbringen.
 Unter "Änderungen vorschlagen" fügst du Rollen und Policies hinzu, änderst
 oder entfernst sie, verschiebst sie in einen Sub-Kreis (auch tiefer
 unten) oder aus einem heraus in den Kreis (Secretary und Circle Leads
-des Sub-Kreises bekommen die Mail dazu), oder machst eine Rolle zum
-Kreis und zurück. Der Entwurf zeigt alles als Vergleich (in geänderten Texten die
+des Sub-Kreises bekommen die Mail dazu; Policies, die eine Domain
+regeln, bleiben bei ihr), oder machst eine Rolle zum Kreis und zurück. Der Entwurf zeigt alles als Vergleich (in geänderten Texten die
 entfernten Wörter rot, die hinzugefügten grün), dazu,
 was das Annehmen bewirken würde oder weshalb es so nicht geht.
 

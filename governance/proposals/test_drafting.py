@@ -529,6 +529,46 @@ class DraftingTest(TestCase):
         self.assertFalse(pastry.is_circle)
         self.assertIn(pastry.roles.get(core_role="secretary"), proposal.roles.all())
 
+    def test_domain_policies_stay(self):
+        """A circle's policy regulating one of its domains stays with the
+        domain: it isn't moved into a sub-circle or out of one"""
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        Role.objects.create(name="Baker", circle=bakery)
+        pantry = Domain.objects.create(role=self.kitchen, text="Pantry")
+        keys = Policy.objects.create(role=self.kitchen, title="Keys", domain=pantry)
+        oven = Domain.objects.create(role=bakery, text="Oven")
+        heat = Policy.objects.create(role=bakery, title="Heat", domain=oven)
+        for instruction in [
+            {
+                "op": "move",
+                "path": f"/roles/{bakery.pk}/supporting_circle/policies/{keys.pk}",
+                "from": f"/policies/{keys.pk}",
+            },
+            {
+                "op": "move",
+                "path": f"/policies/{heat.pk}",
+                "from": f"/circles/{bakery.pk}/policies/{heat.pk}",
+            },
+        ]:
+            proposal = Proposal.objects.create(
+                circle=self.kitchen,
+                proposer=self.ada,
+                tension="Keys",
+                created_at=dt.datetime(2026, 12, 1, tzinfo=dt.UTC),
+                instructions=[instruction],
+            )
+            self.assertEqual(len(problems(proposal)), 1)
+        # Not offered either
+        proposal = self.draft()
+        response = self.client.get(f"/proposals/{proposal.pk}/move/")
+        self.assertNotContains(response, "Keys")
+        self.assertNotContains(response, "Heat")
+        response = self.client.get(
+            f"/proposals/{proposal.pk}/roles/{bakery.pk}/remove-circle/"
+        )
+        self.assertNotContains(response, "Heat")
+
     def test_remove_circle_without_policies(self):
         """The form says when the circle has nothing of a kind to move"""
         bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)

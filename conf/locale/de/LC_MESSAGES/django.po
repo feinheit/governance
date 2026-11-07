@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 08:48+0100\n"
+"POT-Creation-Date: 2026-11-07 09:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -962,6 +962,11 @@ msgstr "%(role)s ist kein Kreis."
 #, python-format
 msgid "%(role)s can't be moved."
 msgstr "%(role)s kann nicht verschoben werden."
+
+#: governance/proposals/instructions.py
+#, python-format
+msgid "%(policy)s regulates a domain of %(role)s and stays with it."
+msgstr "%(policy)s regelt eine Domain von %(role)s und bleibt dort."
 
 #: governance/proposals/instructions.py
 #, python-format

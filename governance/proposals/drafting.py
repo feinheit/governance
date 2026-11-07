@@ -657,7 +657,8 @@ class CircleRemoveForm(Form):
         )
         self.fields["policies"] = forms.ModelMultipleChoiceField(
             label=_("Policies to move to %(circle)s") % {"circle": circle.circle},
-            queryset=circle.policies.active(),
+            # Those regulating its domains go with them
+            queryset=circle.policies.active().filter(domain=None),
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
@@ -799,7 +800,8 @@ def movable(circle):
     sub_circles = sub_circles_of(circle)
     for sub in sub_circles:
         sub.movable_roles = sub.roles.active().filter(core_role="").order_by("name")
-        sub.movable_policies = Policy.objects.active().filter(role=sub)
+        # Not those regulating its domains, they stay with them
+        sub.movable_policies = Policy.objects.active().filter(role=sub, domain=None)
     deeper = [sub for sub in sub_circles if sub.circle_id != circle.pk]
     roles = list(circle.roles.active().filter(core_role="").order_by("name"))
     for role in roles:
@@ -809,7 +811,7 @@ def movable(circle):
         # Moving roles into a role makes it a circle; deeper only circles
         "targets": [*roles, *deeper],
         "roles": circle.roles.active().filter(core_role="").order_by("name"),
-        "policies": Policy.objects.active().filter(role=circle),
+        "policies": Policy.objects.active().filter(role=circle, domain=None),
     }
 
 

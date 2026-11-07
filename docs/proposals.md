@@ -14,7 +14,8 @@ page). You can work it out later or bring it to a meeting.
 Under "Propose changes" you add, change or remove roles and policies,
 move them into a sub-circle (also deeper down) or out of one into the
 circle (the sub-circle's Secretary and Circle Leads get the mail about
-it), or turn a role into a circle and back. The
+it; policies regulating a domain stay with it), or turn a role into a
+circle and back. The
 draft shows everything as a comparison (in changed texts the removed
 words in red, the added ones in green), together with what adopting it
 would cause or why it can't be adopted like this.
