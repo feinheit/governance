@@ -1,5 +1,7 @@
 """The outputs of a meeting, for its mail and its page once it ended"""
 
+from functools import partial
+
 from governance.proposals.describe import describe
 
 
@@ -15,7 +17,8 @@ def meeting_outputs(meeting):
         [
             {
                 "proposal": proposal,
-                "changes": describe(proposal.instructions, proposal.names),
+                # Called by the template, in the recipient's language
+                "changes": partial(describe, proposal.instructions, proposal.names),
             }
             for proposal in meeting.proposals.filter(
                 status="adopted", **decided

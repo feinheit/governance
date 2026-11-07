@@ -107,6 +107,27 @@ class NotificationsTest(TestCase):
             ["ada@example.com", "bob@example.com", "eve@example.com"],
         )
 
+    def test_changes_in_the_recipients_language(self):
+        """The changes are described in each recipient's language, not in
+        the language of whoever caused the mail"""
+        from django.utils.translation import override
+
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            role=self.cook,
+            tension="Bread",
+            created_at=timezone.now(),
+            instructions=[
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Baker"},
+            ],
+        )
+        with override("en"), self.captureOnCommitCallbacks(execute=True):
+            publish(proposal)
+        to_bob = next(m for m in mail.outbox if m.to == ["bob@example.com"])
+        self.assertIn("Rolle hinzugefügt", to_bob.body)
+
     def test_responses(self):
         """Questions go to the proposer, their answers to those who asked;
         requests for a meeting to the proposer and the Secretary, who

@@ -47,7 +47,8 @@ def send(users, subject, template, context):
 def proposal_context(proposal):
     return {
         "proposal": proposal,
-        "changes": describe(proposal.instructions, proposal.names),
+        # Called by the template, in the recipient's language
+        "changes": lambda: describe(proposal.instructions, proposal.names),
         "url": settings.BASE_URL + proposal.get_absolute_url(),
     }
 

@@ -757,8 +757,6 @@ Deliberately not modelled:
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
   - Search leaves out the core roles' constitutional texts.
-  - Mails describe the changes in the language of whoever triggered
-    them, not the recipient's (also the meeting outputs).
   - Imported tensions worked out here are adopted async, the nightly
     import sets them back to drafts.
   - The backup names members who consented with a text.
