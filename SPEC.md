@@ -735,7 +735,10 @@ Deliberately not modelled:
   proposals with a `glassfrog_id` outside of running meetings until then,
   e.g. at GlassFrog's deadlines; until then the app's async process moves
 them to "waiting for a meeting" at the last consent or the deadline, and
-the nightly import sets them back: accepted, decided 2026-11-06). Remove
+the nightly import sets them back: accepted, decided 2026-11-06; it also
+overwrites the status and amendments of one on the agenda of a meeting
+running at 03:00, i.e. active after midnight: accepted too, decided
+2026-11-07). Remove
   "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
   being the source of truth in `AGENTS.md` and this file.
 - **Published interpretations** (4.2.1): the Secretary's rulings, binding
