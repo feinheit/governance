@@ -279,6 +279,14 @@ class ElectionsTest(TestCase):
             [m.subject for m in mail.outbox if m.subject.startswith("Your roles")],
             [],
         )
+        # The outputs list the election, marked
+        outputs = next(m for m in mail.outbox if m.subject.startswith("Outputs"))
+        self.assertIn(
+            "Facilitator: Ada (until 31.12.2027, the role doesn't exist anymore)",
+            outputs.body,
+        )
+        response = self.client.get(self.meeting.get_absolute_url())
+        self.assertContains(response, "the role doesn't exist anymore")
 
     def test_corrected_after_midnight(self):
         """A meeting running past midnight corrects an election: the result

@@ -40,7 +40,8 @@
         <a href="{{ election.role.get_absolute_url }}">{{ election.role }}</a>: {{ election.user }}
         <span
           class="text-body-secondary small"
-        >{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
+        >{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}{% if election.role.archived_on %},
+            {% translate "the role doesn't exist anymore" %}{% endif %}</span>
       </li>
     {% endfor %}
     {% for item in outputs.outcomes %}

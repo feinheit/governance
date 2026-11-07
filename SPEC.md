@@ -494,7 +494,8 @@ when that meeting ends: those losing its core roles get the mail about
 their roles then. Like GlassFrog, assignments, removals, elections
 and deactivations (`roles.assignments.announce()`; elections when the
 meeting ends, the results after corrections only, not those of core
-roles archived by the circle turning back then:
+roles archived by the circle turning back then (the outputs list them,
+"the role doesn't exist anymore", decided 2026-11-07):
 `elections.announce_elections()`, decided 2026-11-07) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
@@ -767,8 +768,7 @@ Deliberately not modelled:
   - Untested risks: "as of" uses the server's date
     (`history/views.py`); the organization history's pages bound
     proposals by the days of changes; a domain policy moved to another
-    domain isn't a change; the outputs list elections of core roles
-    archived at the meeting's end; `proposal_respond` doesn't catch a
+    domain isn't a change; `proposal_respond` doesn't catch a
     `ProposalError` of a race.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
