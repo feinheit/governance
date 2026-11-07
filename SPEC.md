@@ -743,10 +743,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - The person page's "Waiting for your response" counts responses of
-    earlier rounds and misses circles one is a member of without
-    holding one of their roles (inside a role one holds, sub-circles
-    led from above).
   - Editing a holder's focus (and a role's strategy?) doesn't update
     today's history.
   - Drafts inside a role offer to change its domain policies, which

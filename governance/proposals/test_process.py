@@ -307,6 +307,35 @@ class ProcessTest(TestCase):
             self.client.get(f"/people/{self.ada.pk}/"), draft.get_absolute_url()
         )
 
+    def test_waiting_for_the_response(self):
+        """The person page lists the proposals waiting for one's response:
+        responses since publishing again count, and those of all circles
+        one is a member of, also inside a role one holds"""
+        from governance.proposals.process import back_to_draft
+
+        Assignment.objects.create(role=self.cook, user=self.eve)
+        proposal = publish(self.proposal())
+        respond(proposal, self.bob, Response.CONSENT)
+        back_to_draft(proposal)
+        with time_machine.travel(NOW + dt.timedelta(hours=1), tick=False):
+            publish(proposal)
+        inside = publish(
+            Proposal.objects.create(
+                circle=self.cook,
+                role=self.cook,
+                proposer=self.ada,
+                tension="Too much to do",
+                created_at=timezone.now(),
+                instructions=[
+                    {"op": "add", "path": "/roles/n1"},
+                    {"op": "add", "path": "/roles/n1/name", "value": "Dishes"},
+                ],
+            )
+        )
+        self.client.force_login(self.bob)
+        response = self.client.get(f"/people/{self.bob.pk}/")
+        self.assertEqual(list(response.context["waiting"]), [inside, proposal])
+
     def test_back_to_draft(self):
         """A published proposal is changed by taking it back to its draft"""
         proposal = publish(self.proposal())

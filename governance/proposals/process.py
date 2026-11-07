@@ -10,7 +10,7 @@ import datetime as dt
 import re
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Exists, OuterRef, Q
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -18,7 +18,7 @@ from governance.notifications import mails
 from governance.proposals.instructions import ProposalError, adopt, problems
 from governance.proposals.models import Proposal, Response
 from governance.roles.models import Policy, Role
-from governance.roles.permissions import members, proposer_roles
+from governance.roles.permissions import is_member, members, proposer_roles
 
 
 def affected(proposal):
@@ -83,6 +83,27 @@ def current_responses(proposal):
     if proposal.published_at:
         responses = responses.filter(created_at__gte=proposal.published_at)
     return responses
+
+
+def waiting_for(user):
+    """Published proposals of the user's circles without their consent or
+    request since the latest publication, the nearest deadline first"""
+    responded = Response.objects.filter(
+        proposal=OuterRef("pk"),
+        user=user,
+        created_at__gte=OuterRef("published_at"),
+    ).exclude(kind=Response.COMMENT)
+    return [
+        proposal
+        for proposal in Proposal.objects
+        .filter(status=Proposal.PUBLISHED)
+        .exclude(proposer=user)
+        .exclude(Exists(responded))
+        .select_related("circle", "proposer")
+        .order_by("deadline", "pk")
+        # Also inside a role one holds and sub-circles led from above
+        if is_member(user, proposal.circle)
+    ]
 
 
 def response_summary(proposal):

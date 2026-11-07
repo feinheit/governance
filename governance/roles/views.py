@@ -7,7 +7,8 @@ from django.utils.translation import gettext
 from governance.accounts.models import User
 from governance.meetings.elections import due_elections
 from governance.meetings.models import Meeting
-from governance.proposals.models import Proposal, Response
+from governance.proposals.models import Proposal
+from governance.proposals.process import waiting_for
 from governance.roles.constitution import FACILITATOR, REP, SECRETARY
 from governance.roles.domain_policies import can_change_domain_policies
 from governance.roles.editing import can_edit_items, can_edit_strategy
@@ -265,12 +266,6 @@ def person_detail(request, pk):
             for assignment in assignments
             if assignment.role.core_role in {FACILITATOR, SECRETARY}
         ])
-        responded = Response.objects.filter(user=user).exclude(kind=Response.COMMENT)
-        circles = {
-            assignment.role.circle_id
-            for assignment in assignments
-            if assignment.role.circle_id
-        }
         context |= {
             # Ad-hoc tactical meetings have no circle page
             "meetings": Meeting.objects
@@ -281,12 +276,7 @@ def person_detail(request, pk):
             .filter(proposer=user, status=Proposal.DRAFT)
             .select_related("circle")
             .order_by("-created_at"),
-            "waiting": Proposal.objects
-            .filter(status=Proposal.PUBLISHED, circle__in=circles)
-            .exclude(proposer=user)
-            .exclude(pk__in=responded.values("proposal"))
-            .select_related("circle", "proposer")
-            .order_by("deadline"),
+            "waiting": waiting_for(user),
         }
         context["drafts"], context["drafts_more"] = split_more(context["drafts"], 5)
         context["waiting"], context["waiting_more"] = split_more(context["waiting"], 5)
