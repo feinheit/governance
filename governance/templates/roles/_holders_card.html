@@ -6,12 +6,9 @@
     {% for assignment in role.current_assignments %}
       <li class="list-group-item wb-row">
         <div class="wb-row-main">
-          <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
-          <div class="wb-row-meta">
-            {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
-            {% if assignment.elected_until %}<span
-              >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% elif assignment.starts_on %}<span
-              >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+          <div class="wb-row-heading">
+            <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
+            {% include "roles/_assignment_note.html" %}
           </div>
         </div>
         {% if can_end_assignment %}

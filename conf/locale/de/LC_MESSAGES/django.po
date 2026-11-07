@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 22:24+0100\n"
+"POT-Creation-Date: 2026-11-07 08:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2591,16 +2591,15 @@ msgstr "%(circle)s hat keine Sub-Kreise."
 msgid "Back to the proposal"
 msgstr "Zurück zum Vorschlag"
 
-#: governance/templates/roles/_ending_reps.html
-msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
-msgstr "Ein Circle Lead kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen neue Circle Reps:"
-
+#: governance/templates/roles/_assignment_note.html
 #: governance/templates/roles/_holders.html
-#: governance/templates/roles/_holders_card.html
-#: governance/templates/roles/person_detail.html
 #, python-format
 msgid "elected until %(date)s"
 msgstr "gewählt bis %(date)s"
+
+#: governance/templates/roles/_ending_reps.html
+msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
+msgstr "Ein Circle Lead kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen neue Circle Reps:"
 
 #: governance/templates/roles/_holders.html
 #: governance/templates/roles/_holders_card.html
@@ -2617,13 +2616,6 @@ msgstr "Von den Circle Leads des übergeordneten Kreises besetzt"
 #: governance/templates/roles/assignments.html
 msgid "Holders"
 msgstr "Besetzung"
-
-#: governance/templates/roles/_holders_card.html
-#: governance/templates/roles/assignments.html
-#: governance/templates/roles/person_detail.html
-#, python-format
-msgid "since %(date)s"
-msgstr "seit %(date)s"
 
 #: governance/templates/roles/_holders_card.html
 #: governance/templates/roles/assignments.html
@@ -2907,6 +2899,10 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#, python-format
+#~ msgid "since %(date)s"
+#~ msgstr "seit %(date)s"
 
 #~ msgid "raised by"
 #~ msgstr "erhoben von"

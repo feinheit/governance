@@ -30,11 +30,9 @@
           {% for assignment in assignments %}
             <li class="list-group-item wb-row">
               <div class="wb-row-main">
-                <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
-                <div class="wb-row-meta">
-                  {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
-                  {% if assignment.starts_on %}<span
-                    >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+                <div class="wb-row-heading">
+                  <a class="wb-row-title" href="{{ assignment.user.get_absolute_url }}">{{ assignment.user }}</a>
+                  {% include "roles/_assignment_note.html" %}
                 </div>
               </div>
               <div class="d-flex gap-1 flex-shrink-0 align-items-start">

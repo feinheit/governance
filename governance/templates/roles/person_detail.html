@@ -32,13 +32,7 @@
                     {% if assignment.role.is_circle %}<span
                         class="badge wb-tone-circle"
                       >{% translate "Circle" %}</span>{% endif %}
-                  </div>
-                  <div class="wb-row-meta">
-                    {% if assignment.focus %}<span>{{ assignment.focus }}</span>{% endif %}
-                    {% if assignment.elected_until %}<span
-                      >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% endif %}
-                    {% if assignment.starts_on %}<span
-                      >{% blocktranslate with date=assignment.starts_on|date:"SHORT_DATE_FORMAT" %}since {{ date }}{% endblocktranslate %}</span>{% endif %}
+                    {% include "roles/_assignment_note.html" %}
                   </div>
                 </div>
               </li>

@@ -63,6 +63,14 @@ class AssignmentsTest(TestCase):
             (self.eve, "Soup", dt.date(2026, 12, 1)),
         )
         self.assertContains(self.client.get(url), "Soup")
+        # Lists of current roles show the focus, not since when: the focus
+        # may be younger than the assignment
+        for page in [url, f"/roles/{self.cook.pk}/", f"/people/{self.eve.pk}/"]:
+            response = self.client.get(page)
+            self.assertContains(
+                response, '<span class="text-body-secondary">Soup</span>', html=True
+            )
+            self.assertNotContains(response, "since 01.12.2026")
 
         # The same person again, also with another focus: one assignment
         # per person, the focus lists everything

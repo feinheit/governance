@@ -523,7 +523,8 @@ only setting is `User.notify_all` ("everything in all circles").
   meetings, due elections, history.
 - **Role page**: purpose, accountabilities, domains (linking to their
   policies, which the link opens, `frontend/open_details.js`), holders with focus and
-  terms, its policies and those of its circles (5.2.1), pending proposals
+  terms (next to the name; lists of current assignments don't say since
+  when, the focus is often younger: `roles/_assignment_note.html`), its policies and those of its circles (5.2.1), pending proposals
   (also for its inside), metrics, checklists, links, history.
 - **Start page** (`/`, <kbd>Alt-H</kbd>): the own person page, with what
   waits for the person; the anchor circle is `/organization/` (the

@@ -1,0 +1,5 @@
+{% load i18n %}{# Next to the title in lists of current assignments: the focus, the term of elected roles; not since when (the focus may be younger) #}{% if assignment.focus %}<span
+    class="text-body-secondary"
+  >{{ assignment.focus }}</span>{% endif %}{% if assignment.elected_until %}<span
+    class="text-body-secondary"
+  >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% endif %}
