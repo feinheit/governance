@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext
 
 from governance.forms import ModelForm
+from governance.history.update import update_today
 from governance.roles.models import ChecklistItem, Link, Metric, Role
 from governance.roles.permissions import ALLOWED, NOT_ALLOWED, can_lead
 
@@ -41,6 +42,7 @@ def strategy(request, pk):
     form = StrategyForm(request.POST or None, instance=role)
     if form.is_valid():
         form.save()
+        update_today()
         return redirect(role)
     return render(
         request,

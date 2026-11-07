@@ -286,6 +286,7 @@ def assignment_update(request, pk):
     form = AssignmentForm(request.POST or None, instance=assignment, role=role)
     if form.is_valid():
         form.save()
+        update_today()  # The history shows changes of the focus
         return redirect(back(request, role))
     return render(
         request,

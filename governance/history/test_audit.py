@@ -181,7 +181,7 @@ class BusyDayTest(AuditTestCase):
 
 class ChangesRightAwayTest(AuditTestCase):
     def test_outside_proposals(self):
-        """Assignments, domain policies, elections and deactivations show in
+        """Assignments, focus, strategies, domain policies, elections and deactivations show in
         the history right away, not only after the nightly job"""
         from django.urls import reverse
 
@@ -198,6 +198,9 @@ class ChangesRightAwayTest(AuditTestCase):
         fridge = Domain.objects.create(role=cook, text="The fridge")
         today = timezone.localdate()
         yesterday = today - dt.timedelta(days=1)
+        assignment = Assignment.objects.create(
+            role=cook, user=root, starts_on=yesterday
+        )
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM audit_logged_actions")
         backfill([(yesterday, structure_from_database(yesterday))])
@@ -212,6 +215,14 @@ class ChangesRightAwayTest(AuditTestCase):
         with self.captureOnCommitCallbacks(execute=True):
             self.client.post(f"/roles/{cook.pk}/assignments/", {"user": eve.pk})
         self.assertIn((cook, "assigned"), kinds())
+
+        # Focus and strategy too
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/assignments/{assignment.pk}/", {"focus": "Breakfast"})
+        self.assertIn((cook, "focus"), kinds())
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/roles/{kitchen.pk}/strategy/", {"strategy": "Fresh"})
+        self.assertIn((kitchen, "strategy"), kinds())
 
         with self.captureOnCommitCallbacks(execute=True):
             self.client.post(

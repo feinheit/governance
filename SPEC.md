@@ -518,7 +518,8 @@ only setting is `User.notify_all` ("everything in all circles").
   replaying the audit log (`update_changes()`, also "changed outside
   governance" in the GlassFrog period); a cache for the history pages,
   updated by `fairy_tasks` for yesterday and today, after adopting and
-  after assignments, elections and domain policies (`update_today()`).
+  after assignments (also their focus), elections, domain policies and
+  strategies (`update_today()`).
 - **Assignments** have `starts_on`/`ends_on`, reconstructed from GlassFrog's
   history; they are the holders of the history too. A circle's role has its
   Circle Leads and Reps as holders, GlassFrog's data missed some of them;
@@ -743,8 +744,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - Editing a holder's focus (and a role's strategy?) doesn't update
-    today's history.
   - Drafts inside a role offer to change its domain policies, which
     adopting refuses.
   - Published proposals' consequences are shown to their editors only:
