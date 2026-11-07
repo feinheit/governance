@@ -169,6 +169,99 @@ class ElectionsTest(TestCase):
             Assignment.objects.filter(role=self.secretary, user=self.bob).exists()
         )
 
+    def test_corrected_back(self):
+        """A result corrected back to the holder in the meeting undoes it: Ada
+        keeps her assignment with the new term, the role mails go out when
+        the meeting ends, only the net change (none here)"""
+        from governance.meetings.activity import end_meeting
+
+        Assignment.objects.create(role=self.facilitator, user=self.ada)
+        self.client.force_login(self.ada)
+        url = f"/meetings/{self.meeting.pk}/elections/"
+        for user in [self.bob, self.ada]:
+            with self.captureOnCommitCallbacks(execute=True):
+                self.client.post(
+                    url,
+                    {
+                        "role": self.secretary.pk,
+                        "user": user.pk,
+                        "term_ends_on": "2027-12-31",
+                    },
+                )
+        self.assertEqual(
+            list(
+                Assignment.objects.filter(role=self.secretary).values_list(
+                    "user", "starts_on", "ends_on", "elected_until"
+                )
+            ),
+            [(self.ada.pk, dt.date(2026, 1, 1), None, dt.date(2027, 12, 31))],
+        )
+        self.assertEqual(mail.outbox, [])
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(self.meeting)
+        self.assertEqual(
+            [m.subject for m in mail.outbox if m.subject.startswith("Your roles")], []
+        )
+
+    def test_elected_announced_when_the_meeting_ends(self):
+        """The meeting's elections are announced when it ends, with the
+        result recorded last"""
+        from governance.meetings.activity import end_meeting
+
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        for user in [self.ada, eve]:
+            Assignment.objects.create(role=self.facilitator, user=user)
+        self.client.force_login(self.ada)
+        url = f"/meetings/{self.meeting.pk}/elections/"
+        for user in [self.bob, eve]:
+            with self.captureOnCommitCallbacks(execute=True):
+                self.client.post(
+                    url,
+                    {
+                        "role": self.secretary.pk,
+                        "user": user.pk,
+                        "term_ends_on": "2027-12-31",
+                    },
+                )
+        self.assertEqual(mail.outbox, [])
+        self.assertFalse(
+            Assignment.objects.filter(role=self.secretary, user=self.bob).exists()
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(self.meeting)
+        self.assertEqual(
+            sorted(
+                (m.to[0], m.subject)
+                for m in mail.outbox
+                if m.subject.startswith("Your roles")
+            ),
+            [
+                ("ada@example.com", "Your roles: no longer Secretary (Kitchen)"),
+                ("eve@example.com", "Your roles: Secretary (Kitchen)"),
+            ],
+        )
+
+    def test_rep_corrected(self):
+        """A Circle Rep corrected in the meeting: only the one recorded last
+        holds the circle's role in the super-circle"""
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        for user in [self.ada, eve]:
+            Assignment.objects.create(role=self.facilitator, user=user)
+        self.client.force_login(self.ada)
+        url = f"/meetings/{self.meeting.pk}/elections/"
+        for user in [self.ada, eve]:
+            self.client.post(
+                url,
+                {"role": self.rep.pk, "user": user.pk, "term_ends_on": "2027-12-31"},
+            )
+        self.assertEqual(
+            [a.user for a in Assignment.objects.current().filter(role=self.rep)], [eve]
+        )
+        self.assertEqual(
+            [a.user for a in Assignment.objects.current().filter(role=self.kitchen)],
+            [eve],
+        )
+
     def test_held_without_a_term(self):
         """A role becoming elected while somebody holds it: its holder has no
         term, the role is due for an election"""

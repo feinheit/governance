@@ -25,35 +25,41 @@ def announce(circles):
     GlassFrog): the people about the roles they get and lose, the circles'
     Secretaries about people joining and leaving. A circle's role in the
     super-circle follows its Circle Leads and Rep, it isn't announced."""
-    from governance.notifications import mails
-
     circles = {circle for circle in circles if circle is not None}
-
-    def holdings():
-        return set(
-            Assignment.objects
-            .current()
-            .filter(role__circle__in=circles, role__is_circle=False)
-            .values_list("user", "role")
-        )
-
-    def memberships():
-        # Also people deactivated meanwhile, members() only has active ones
-        return {
-            circle: set(members(circle).values_list("pk", flat=True))
-            | set(
-                Assignment.objects
-                .current()
-                .filter(role__circle=circle)
-                .values_list("user", flat=True)
-            )
-            for circle in circles
-        }
-
-    held, joined = holdings(), memberships()
+    before = holdings(circles)
     # Nothing to announce when the block fails
     yield  # noqa: RUF075
-    now_held, now_joined = holdings(), memberships()
+    announce_changes(circles, before, holdings(circles))
+
+
+def holdings(circles):
+    """``(roles, members)``: who holds which of the circles' roles, and the
+    circles' members"""
+    roles = set(
+        Assignment.objects
+        .current()
+        .filter(role__circle__in=circles, role__is_circle=False)
+        .values_list("user", "role")
+    )
+    # Also people deactivated meanwhile, members() only has active ones
+    joined = {
+        circle: set(members(circle).values_list("pk", flat=True))
+        | set(
+            Assignment.objects
+            .current()
+            .filter(role__circle=circle)
+            .values_list("user", flat=True)
+        )
+        for circle in circles
+    }
+    return roles, joined
+
+
+def announce_changes(circles, before, after):
+    """Mails the differences of two ``holdings()``, after committing"""
+    from governance.notifications import mails
+
+    (held, joined), (now_held, now_joined) = before, after
     started, ended = now_held - held, held - now_held
     changes = [
         (

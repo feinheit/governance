@@ -425,7 +425,8 @@ Circle Leads like other unfilled roles, not a role to propose from). Re-electing
 ends the previous assignment (removed if it only started today), a Rep
 also holds the circle's role in the super-circle. Elected roles have one
 holder: recording the same role again in the meeting (a correction, a
-second vote) replaces the earlier result. Due elections (within 30 days, nobody elected, or held without a
+second vote) replaces the earlier result, undone first (`Election`
+keeps what it changed: the previous holder keeps their assignment). Due elections (within 30 days, nobody elected, or held without a
 term, e.g. a role made elected by policy while held; terms end in the
 future) show on
 the circle page and the Facilitator's and Secretary's person pages;
@@ -473,7 +474,9 @@ sub-circles' Secretaries and Circle Leads like adopting async). A
 circle emptied by its super-circle while its own meeting ran turns back
 when that meeting ends: those losing its core roles get the mail about
 their roles then. Like GlassFrog, assignments, removals, elections
-and deactivations (`roles.assignments.announce()`) tell people the roles
+and deactivations (`roles.assignments.announce()`; elections when the
+meeting ends, the results after corrections only:
+`elections.announce_elections()`, decided 2026-11-07) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
 left the circle; changes by adopted proposals are in their mails, the
@@ -735,10 +738,6 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-07, open findings):
-  - An election corrected back to the previous holder in the same
-    meeting ends their assignment and starts a new one; decided: role
-    mails of elections go out with the meeting's outputs, the net change
-    only.
   - Decided: withdrawing is blocked while the proposal's meeting runs;
     only current members' responses count; a policy regulating a domain
     can't be moved into a sub-circle.

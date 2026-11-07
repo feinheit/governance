@@ -18,8 +18,9 @@ from governance.meetings.access import can_run
 from governance.meetings.models import Election, Meeting
 from governance.roles.assignments import (
     affected_circles,
-    announce,
+    announce_changes,
     end_assignment,
+    holdings,
     sync_circle_holders,
 )
 from governance.roles.constitution import FACILITATOR, REP, SECRETARY
@@ -48,34 +49,101 @@ def elected_roles(circles):
 
 @transaction.atomic
 def record_election(meeting, role, user, term_ends_on):
-    """The elected person holds the role until the term ends"""
-    with announce(affected_circles(role)):
-        return _record_election(meeting, role, user, term_ends_on)
-
-
-def _record_election(meeting, role, user, term_ends_on):
+    """The elected person holds the role until the term ends; announced when
+    the meeting ends (``announce_elections()``)"""
     day = timezone.localdate()
-    reelected = False
+    # Recorded again in the meeting (a correction, a second vote): the
+    # latest result replaces the earlier one, the role has one holder
+    for earlier in meeting.elections.filter(role=role):
+        undo_election(earlier, day)
+        earlier.delete()
+    election = Election(
+        meeting=meeting, role=role, user=user, term_ends_on=term_ends_on
+    )
     for assignment in Assignment.objects.current().filter(role=role):
         if assignment.user_id == user.pk:
+            election.started = False
+            election.previous_term = assignment.elected_until
             assignment.elected_until = term_ends_on
             assignment.save(update_fields=["elected_until"])
-            reelected = True
         else:
+            election.replaced.append({
+                "pk": assignment.pk,
+                "user": assignment.user_id,
+                "focus": assignment.focus,
+                "starts_on": assignment.starts_on and assignment.starts_on.isoformat(),
+                "elected_until": assignment.elected_until
+                and assignment.elected_until.isoformat(),
+            })
             end_assignment(assignment, day)
-    if not reelected:
+    if election.started:
         Assignment.objects.create(
             role=role, user=user, starts_on=day, elected_until=term_ends_on
         )
     if role.core_role == REP:
         sync_circle_holders(role.circle, day)
     update_today()
-    # Recorded again in the meeting (a correction, a second vote): the
-    # latest result replaces the earlier one, the role has one holder
-    meeting.elections.filter(role=role).delete()
-    return Election.objects.create(
-        meeting=meeting, role=role, user=user, term_ends_on=term_ends_on
+    election.save()
+    return election
+
+
+def undo_election(election, day):
+    """Reverses what recording the election changed"""
+    role = election.role
+    holder = Assignment.objects.current().filter(role=role, user=election.user).first()
+    if holder and election.started:
+        end_assignment(holder, day)
+    elif holder:
+        holder.elected_until = election.previous_term
+        holder.save(update_fields=["elected_until"])
+    for data in election.replaced:
+        if not Assignment.objects.filter(pk=data["pk"]).update(ends_on=None):
+            # Removed because it started the same day
+            Assignment.objects.create(
+                role=role,
+                user_id=data["user"],
+                focus=data["focus"],
+                starts_on=data["starts_on"],
+                elected_until=data["elected_until"],
+            )
+    if role.core_role == REP:
+        sync_circle_holders(role.circle, day)
+
+
+class _Undone(Exception):
+    pass
+
+
+def announce_elections(meeting):
+    """When the meeting ends: the people about the roles they got and lost
+    in its elections, the Secretaries about people joining and leaving (a
+    Circle Rep in the super-circle), the results after corrections only"""
+    # Not those of roles removed meanwhile, their proposal told the holders
+    elections = list(
+        meeting.elections
+        .filter(role__archived_on=None)
+        .select_related("role__circle")
+        .order_by("-pk")
     )
+    if not elections:
+        return
+    circles = {
+        circle
+        for election in elections
+        for circle in affected_circles(election.role)
+        if circle is not None
+    }
+    day = timezone.localdate()
+    # The state before the elections, other changes stay
+    try:
+        with transaction.atomic():
+            for election in elections:
+                undo_election(election, day)
+            before = holdings(circles)
+            raise _Undone
+    except _Undone:
+        pass
+    announce_changes(circles, before, holdings(circles))
 
 
 def due_elections(circles, *, day=None):

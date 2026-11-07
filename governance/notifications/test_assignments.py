@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from governance.accounts.models import User
+from governance.meetings.activity import end_meeting
 from governance.meetings.elections import record_election
 from governance.meetings.models import Meeting
 from governance.roles.assignments import end_assignments_of
@@ -104,8 +105,11 @@ class AssignmentMailsTest(TestCase):
         )
         with self.captureOnCommitCallbacks(execute=True):
             record_election(meeting, facilitator, self.eve, dt.date(2027, 12, 1))
+        self.assertEqual(self.outbox(), [])  # When the meeting ends
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(meeting)
         self.assertEqual(
-            self.outbox(),
+            [m for m in self.outbox() if not m[1].startswith("Outputs")],
             [
                 ("bob@example.com", "Members of Kitchen: Eve joined"),
                 ("eve@example.com", "Your roles: Facilitator (Kitchen)"),

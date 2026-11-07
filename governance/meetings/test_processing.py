@@ -589,12 +589,17 @@ class ProcessingTest(TestCase):
         )
         with self.captureOnCommitCallbacks(execute=True):
             self.client.post(f"/meetings/{self.meeting.pk}/end/")
-        # Ada isn't a member anymore, Eve replaced her as Facilitator
+        # Ada isn't a member anymore, Eve replaced her as Facilitator; the
+        # election's own mails go out now too
+        outputs = [m for m in mail.outbox if m.subject.startswith("Outputs")]
         self.assertEqual(
-            sorted(m.to[0] for m in mail.outbox),
-            ["bob@example.com", "eve@example.com"],
+            sorted(m.to[0] for m in outputs), ["bob@example.com", "eve@example.com"]
         )
-        body = mail.outbox[0].body
+        self.assertIn(
+            ("ada@example.com", "Your roles: no longer Facilitator (Kitchen)"),
+            [(m.to[0], m.subject) for m in mail.outbox],
+        )
+        body = outputs[0].body
         self.assertIn("Adopted: Better name", body)
         self.assertIn("+ Chef", body)
         self.assertIn("Facilitator: Eve", body)

@@ -80,7 +80,9 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 - **Wahlen**: der Facilitator führt die Wahl durch, "Wahl festhalten"
   des Secretarys speichert Person und Ende der Amtszeit (Facilitator, Secretary, Circle
   Rep und durch Policy gewählte Rollen). Wird dieselbe Rolle im Meeting
-  nochmals festgehalten, ersetzt das das frühere Ergebnis. Anstehende Wahlen stehen auf der
+  nochmals festgehalten, ersetzt das das frühere Ergebnis, als wäre es
+  nie festgehalten worden. Gewählte und Abgelöste erfahren davon, wenn
+  das Meeting endet. Anstehende Wahlen stehen auf der
   Seite des Kreises, Facilitators erhalten montags eine Erinnerung.
 
 ## Tactical Meeting
