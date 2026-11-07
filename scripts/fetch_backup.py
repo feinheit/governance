@@ -5,9 +5,8 @@
 
 ``REPO`` is a checkout of the backup repository, ``gov`` must be installed.
 The token (read access suffices) decides what the backup contains:
-everything its user sees, the people included. Like
-``fetch_glassfrog.py``, files are only replaced when the request succeeded,
-and nothing is committed when nothing changed.
+everything its user sees, the people included. Files are only replaced
+when the request succeeded, and nothing is committed when nothing changed.
 """
 
 import datetime as dt

@@ -93,8 +93,8 @@ CORE_ROLE_CHOICES = [(role.key, role.name) for role in CORE_ROLES.values()]
 def constitutional_texts():
     """All constitutional accountabilities and domains, also in English
 
-    The import uses them to skip the core roles' constitutional
-    accountabilities stored in GlassFrog's data.
+    The history's backfill uses them to skip the core roles'
+    constitutional accountabilities stored in GlassFrog's data.
     """
     from django.utils.translation import override
 

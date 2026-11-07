@@ -31,12 +31,6 @@ MAIL_COPIES = env("MAIL_COPIES", default=[])
 GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", default="")
 GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", default=None)
 
-# The GlassFrog export (a checkout of the repository the fetcher commits to),
-# for the first import with the whole history. Afterwards the import may
-# fetch today's state from GlassFrog's API instead (with the token).
-GLASSFROG_EXPORT = env("GLASSFROG_EXPORT", default="")
-GLASSFROG_TOKEN = env("GLASSFROG_TOKEN", default="")
-
 # Links in mails
 # The dev server of fl dev (AGENTS.md)
 BASE_URL = env("BASE_URL", default="http://127.0.0.1:8000")
@@ -63,7 +57,6 @@ INSTALLED_APPS = [
         "governance.meetings",
         "governance.history",
         "governance.notifications",
-        "governance.glassfrog",
         "debug_toolbar" if DEBUG_TOOLBAR else "",
     ]
     if a

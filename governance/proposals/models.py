@@ -201,13 +201,6 @@ class Proposal(models.Model):
         return reverse("proposal", kwargs={"pk": self.pk})
 
     @property
-    def decided_in_glassfrog(self):
-        """Imported proposals are GlassFrog's to decide async while the
-        nightly import runs, i.e. until the switchover removes its token;
-        afterwards the app's async process adopts them at their deadline"""
-        return bool(self.glassfrog_id and settings.GLASSFROG_TOKEN)
-
-    @property
     def adopted_on(self):
         """The day the nightly task adopts the published proposal, if nobody
         objects or requests a meeting before"""

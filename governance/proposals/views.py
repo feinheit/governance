@@ -70,7 +70,7 @@ def subjects(proposal, changes):
         for kind in ["roles", "policies"]
     }
     # Proposals adopted in GlassFrog refer to GlassFrog IDs, open ones were
-    # converted to the app's IDs like the app's own (import, to_app_ids())
+    # converted to the app's IDs like the app's own when they were imported
     field = "glassfrog_id" if proposal.adopted_in_glassfrog else "pk"
     return {
         f"{kind}/{getattr(obj, field)}": obj

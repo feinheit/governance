@@ -221,10 +221,9 @@ def try_adopting(proposal):
                 return False
             adopt(proposal)
     except ProposalError as exc:
-        # Those who got it learn why it didn't pass async; not for those
-        # imported from GlassFrog, which the nightly import sets back
+        # Those who got it learn why it didn't pass async
         problems = exc.problems
-        if to_meeting(proposal) and not proposal.decided_in_glassfrog:
+        if to_meeting(proposal):
             transaction.on_commit(
                 partial(mails.proposal_to_meeting, proposal, problems)
             )

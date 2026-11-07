@@ -4,8 +4,8 @@ A Django app for running an organization with the
 [Holacracy Constitution 5.0](docs/constitution/README.md): circles, roles
 with their purpose, accountabilities and domains, policies, elections,
 async proposals, governance and tactical meetings, and the complete
-history of how the structure changed and why. It replaces GlassFrog at
-[Feinheit](https://www.feinheit.ch/) and imports its data, including the
+history of how the structure changed and why. It replaced GlassFrog at
+[Feinheit](https://www.feinheit.ch/), whose data it imported, including the
 history.
 
 The interface is German first (and English); the Holacracy terms stay
@@ -28,8 +28,7 @@ Python 3.15 with [uv](https://docs.astral.sh/uv/), PostgreSQL, Node with
     mise exec -- yarn install
     ./runtests.sh
 
-See `AGENTS.md` for the development server, the translations and the
-import from GlassFrog.
+See `AGENTS.md` for the development server and the translations.
 
 ## License
 

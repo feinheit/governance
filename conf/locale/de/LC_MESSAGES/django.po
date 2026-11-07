@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 08:39+0100\n"
+"POT-Creation-Date: 2026-11-09 14:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -882,6 +882,7 @@ msgid "Purpose"
 msgstr "Purpose"
 
 #: governance/proposals/describe.py governance/proposals/drafting.py
+#: governance/proposals/views.py
 msgid "Title"
 msgstr "Titel"
 
@@ -1231,10 +1232,6 @@ msgstr "%(circle)s hat noch Rollen, diese müssen zuerst weg."
 #: governance/proposals/instructions.py
 msgid "The proposal has already been adopted."
 msgstr "Der Vorschlag wurde bereits angenommen."
-
-#: governance/proposals/instructions.py
-msgid "Proposals imported from GlassFrog are adopted in a meeting."
-msgstr "Aus GlassFrog importierte Vorschläge werden in einem Meeting angenommen."
 
 #: governance/proposals/instructions.py
 msgid "A tension without changes isn't adopted."
@@ -3281,8 +3278,8 @@ msgid "Nothing found."
 msgstr "Nichts gefunden."
 
 #: governance/templates/start.html
-msgid "There is no anchor circle yet. Import the GlassFrog export with ./manage.py import_glassfrog."
-msgstr "Es gibt noch keinen Anker-Kreis. Importiere den GlassFrog-Export mit ./manage.py import_glassfrog."
+msgid "There is no anchor circle yet."
+msgstr "Es gibt noch keinen Anker-Kreis."
 
 #: governance/templatetags/governance.py
 msgid "As admin"

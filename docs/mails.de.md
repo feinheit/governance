@@ -48,7 +48,6 @@ der letzten Aktivität), nicht einzeln.
 ## Keine Mails
 
 - Entwürfe und Spannungen, bis sie veröffentlicht sind.
-- Der nächtliche Import aus GlassFrog, bis zur Umstellung.
 - Wer nicht mehr in der Firma ist (inaktiv), erhält nichts, auch nicht
   als vorschlagende Person.
 

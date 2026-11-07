@@ -21,7 +21,7 @@ class Command(BaseCommand):
         set_user_name("Fairy tasks")
         adopt_due_proposals()
         end_inactive_meetings()
-        # Yesterday's late changes too, and the nightly import's
+        # Yesterday's late changes too
         update_changes(since=timezone.localdate() - dt.timedelta(days=1))
         prune_api_tokens()
         if timezone.localdate().weekday() == 0:  # Mondays

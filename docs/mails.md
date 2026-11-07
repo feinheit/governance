@@ -48,7 +48,6 @@ activity), not one by one.
 ## No mails
 
 - Drafts and tensions, until published.
-- The nightly import from GlassFrog, until the switchover.
 - People who left the company (inactive) get nothing, also as proposers.
 
 ## How

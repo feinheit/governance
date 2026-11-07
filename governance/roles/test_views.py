@@ -26,7 +26,7 @@ class ViewsTest(TestCase):
         """The start page is the own page, the organization a link away"""
         self.assertRedirects(self.client.get("/"), self.user.get_absolute_url())
         response = self.client.get("/organization/")
-        self.assertContains(response, "import_glassfrog")  # No anchor yet
+        self.assertContains(response, "There is no anchor circle yet.")
         anchor = Role.objects.create(name="Example Ltd", is_circle=True)
         self.assertRedirects(
             self.client.get("/organization/"), anchor.get_absolute_url()
