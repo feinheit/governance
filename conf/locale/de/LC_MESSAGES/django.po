@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 16:24+0100\n"
+"POT-Creation-Date: 2026-11-07 16:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1210,8 +1210,8 @@ msgid "Response"
 msgstr "Antwort"
 
 #: governance/proposals/views.py
-msgid "Required for questions. If you want to discuss the proposal in a meeting, you can give your reasons here."
-msgstr "Nötig für Fragen. Möchtest du den Vorschlag in einem Meeting besprechen, kannst du hier deine Gründe angeben."
+msgid "Required for questions. If you want to discuss the proposal in a meeting, you can give your reasons here, but you don't have to."
+msgstr "Nötig für Fragen. Möchtest du den Vorschlag in einem Meeting besprechen, kannst du hier deine Gründe angeben, musst aber nicht."
 
 #: governance/proposals/views.py
 msgid "Please explain."

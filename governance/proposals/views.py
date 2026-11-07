@@ -29,7 +29,7 @@ class ResponseForm(Form):
         widget=forms.Textarea(attrs={"rows": 3}),
         help_text=_(
             "Required for questions. If you want to discuss the proposal in a"
-            " meeting, you can give your reasons here."
+            " meeting, you can give your reasons here, but you don't have to."
         ),
     )
 
