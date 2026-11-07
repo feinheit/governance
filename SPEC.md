@@ -185,7 +185,9 @@ truth for imported proposals until the switchover: the import overwrites
 their status. Meetings here may adopt them to try the process (the next
 import sets proposal and structure back), the async process doesn't. Drafts are private to the proposer until published
 or brought into a meeting; a draft without instructions is a tension (the
-tension inbox; GlassFrog's open tensions are imported as such). New
+tension inbox; GlassFrog's open tensions are imported as such, the
+nightly import leaves them once they have changes or aren't drafts
+anymore, decided 2026-11-07). New
 proposals ask for the tension, an example and how the proposal helps
 (5.3.1).
 
@@ -757,8 +759,6 @@ Deliberately not modelled:
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
   - Search leaves out the core roles' constitutional texts.
-  - Imported tensions worked out here are adopted async, the nightly
-    import sets them back to drafts.
   - The backup names members who consented with a text.
   - A meeting inside a role adopts only the first proposal adding roles:
     the role is a circle then, its holders no longer propose from it.

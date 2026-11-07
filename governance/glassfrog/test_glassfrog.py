@@ -676,6 +676,27 @@ class ImportTest(TestCase):
         old.refresh_from_db()
         self.assertEqual(old.status, Proposal.IN_MEETING)
 
+    def test_tensions_worked_out_here(self):
+        """The import updates GlassFrog's tensions only while they're
+        unchanged drafts here: once worked out they're the app's"""
+        import_glassfrog(self.path, log=lambda message: None)
+        tension = Proposal.objects.get(glassfrog_tension_id=601)
+        tension.tension = "Changed here"
+        tension.save()
+        import_glassfrog(self.path, log=lambda message: None)
+        tension.refresh_from_db()
+        self.assertNotEqual(tension.tension, "Changed here")  # Still a draft
+
+        tension.instructions = [{"op": "add", "path": "/roles/n1"}]
+        tension.status = Proposal.PUBLISHED
+        tension.tension = "Changed here"
+        tension.save()
+        import_glassfrog(self.path, log=lambda message: None)
+        tension.refresh_from_db()
+        self.assertEqual(
+            (tension.status, tension.tension), (Proposal.PUBLISHED, "Changed here")
+        )
+
     def test_history_in_the_audit_log(self):
         """The import writes GlassFrog's history as audit rows; importing
         again replaces them instead of doubling them"""

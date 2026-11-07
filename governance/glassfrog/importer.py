@@ -831,6 +831,15 @@ class Importer:
             if circle is None:
                 self.stats["tensions without a known circle"] += 1
                 continue
+            if (
+                Proposal.objects
+                .filter(glassfrog_tension_id=tension["id"])
+                .exclude(status=Proposal.DRAFT, instructions=[])
+                .exists()
+            ):
+                # Worked out here (changes, published): the app's now
+                self.stats["tensions worked out here"] += 1
+                continue
             Proposal.objects.update_or_create(
                 glassfrog_tension_id=tension["id"],
                 defaults={
