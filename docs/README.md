@@ -28,9 +28,9 @@ provides. This help explains the tool, not Holacracy.
   individual action happen in the chat or in the task management tool.
 - **Linked roles** (1.3.4) and passing on references from outside the
   circle (1.4.4) don't exist.
-- **The Circle Lead** stays as the constitution defines it: governance
-  doesn't add accountabilities or domains to it (they would apply to the
-  Circle Lead of every circle).
+- **The core roles** (Circle Lead, Facilitator, Secretary, Circle Rep)
+  stay as the constitution defines them: governance doesn't add
+  accountabilities or domains to them.
 - **Mails** can't be unsubscribed one by one, only extended to all
   circles. Filter them in your mail program.
 

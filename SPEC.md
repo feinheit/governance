@@ -103,9 +103,8 @@ accountability texts are known where proposals or `roles.json` have them.
   for the anchor), `name`, `purpose`, `position`, `is_circle`; circles
   have `short_name` and `strategy` (set by the Circle Leads, not
   governance). `core_role` (lead, facilitator, secretary, rep): created
-  and removed with their circle, governance only adds accountabilities
-  and domains to them (not to the Circle Lead, see the constitution
-  choices). `archived_on` instead of deleting, `other_names` (earlier
+  and removed with their circle, governance adds no accountabilities or
+  domains to them (see the constitution choices). `archived_on` instead of deleting, `other_names` (earlier
   names, texts may mention them), `is_elected_by_policy`,
   `async_acceptance_days` (inherited by sub-circles; the anchor's policy
   says 4 days, one circle uses 1; GlassFrog has no setting for it, the

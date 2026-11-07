@@ -28,9 +28,9 @@ vorsieht. Diese Hilfe erklärt das Tool, nicht Holacracy.
   erklären geschieht im Chat oder im Aufgaben-Tool.
 - **Linked Roles** (1.3.4) und das Weiterleiten von Verweisen von
   ausserhalb des Kreises (1.4.4) gibt es nicht.
-- **Der Circle Lead** bleibt, wie ihn die Verfassung definiert:
-  Governance fügt ihm keine Accountabilities oder Domains hinzu (sie
-  gälten für den Circle Lead jedes Kreises).
+- **Die Kernrollen** (Circle Lead, Facilitator, Secretary, Circle Rep)
+  bleiben, wie die Verfassung sie definiert: Governance fügt ihnen keine
+  Accountabilities oder Domains hinzu.
 - **Mails** lassen sich nicht einzeln abbestellen, nur auf alle Kreise
   ausweiten. Filtere sie im Mailprogramm.
 
