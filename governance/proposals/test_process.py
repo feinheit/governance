@@ -245,6 +245,22 @@ class ProcessTest(TestCase):
         proposal.refresh_from_db()
         self.assertEqual(proposal.status, Proposal.DRAFT)
 
+    def test_not_adopted_async_after_leaving_the_process(self):
+        """A due proposal brought into a meeting or taken back to its draft
+        while the daily task runs isn't adopted async"""
+        from governance.proposals.process import try_adopting
+
+        for status in [Proposal.IN_MEETING, Proposal.DRAFT]:
+            with self.subTest(status=status):
+                proposal = self.proposal(status=Proposal.PUBLISHED)
+                stale = Proposal.objects.get(pk=proposal.pk)  # Loaded before
+                Proposal.objects.filter(pk=proposal.pk).update(status=status)
+                self.assertFalse(try_adopting(stale))
+                proposal.refresh_from_db()
+                self.assertEqual(proposal.status, status)
+                self.cook.refresh_from_db()
+                self.assertEqual(self.cook.name, "Cook")
+
     def test_proposer_without_the_role(self):
         """Publishing needs the proposer's role still (5.3.1), e.g. after
         their assignment ended since drafting"""

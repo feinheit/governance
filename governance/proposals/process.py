@@ -194,9 +194,19 @@ def respond(proposal, user, kind, text=""):
 
 
 def try_adopting(proposal):
-    """Adopts the proposal, or moves it to a meeting if it conflicts now"""
+    """Adopts the proposal, or moves it to a meeting if it conflicts now;
+    not one which left the async process meanwhile (brought into a meeting,
+    taken back to its draft)"""
     try:
         with transaction.atomic():
+            status = (
+                Proposal.objects
+                .select_for_update()
+                .values_list("status", flat=True)
+                .get(pk=proposal.pk)
+            )
+            if status != Proposal.PUBLISHED:
+                return False
             adopt(proposal)
     except ProposalError as exc:
         # Those who got it learn why it didn't pass async; not for those
