@@ -749,10 +749,15 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - Untested risks: an election
-    corrected after midnight ends the corrected-away winner's
-    assignment instead of deleting it; deferred reverts don't list the
-    policies they archive among the consequences.
+  - Untested risks: an election corrected after midnight ends the
+    corrected-away winner's assignment instead of deleting it; deferred
+    reverts don't list the policies they archive among the
+    consequences.
+  - To decide: the Secretary stands in for the Circle Leads (`can_lead`)
+    but doesn't propose from the unfilled roles (`proposer_roles()`
+    checks `is_circle_lead` only); a role's single holder adding roles
+    inside it makes it a circle right away, the circle containing the
+    role gets no mail.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
