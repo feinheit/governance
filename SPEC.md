@@ -566,7 +566,9 @@ only setting is `User.notify_all` ("everything in all circles").
   dark mode. The page also lists the tree, which works without
   JavaScript; phones don't show it in the navigation.
 - **Search**: roles, accountabilities, domains and policies, all terms
-  matching, ignoring case and accents; snippets as plain text.
+  matching, ignoring case and accents, in the texts as the pages show
+  them (mentions with the current names, the core roles' constitutional
+  texts); snippets as plain text.
 - **Export**: the whole governance as Markdown, `/export/governance.md`
   (`?holders=0` without the people); no button, `gov export` (`GET
   export/`) offers it.
@@ -760,9 +762,7 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
-  - Search leaves out the core roles' constitutional texts.
   - The backup names members who consented with a text.
-  - Search matches the mentions' markup, not the current names.
   - `gov` shows the days of deadlines etc. in UTC.
   - Untested risks: "as of" uses the server's date
     (`history/views.py`); the organization history's pages bound

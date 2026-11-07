@@ -87,7 +87,7 @@ class RoleOut(Schema):
 class FoundTextOut(Schema):
     """An accountability or domain, with its role"""
 
-    id: int
+    id: int | None  # None: the constitution's, of core roles
     text: str
     role_id: int
     role: str

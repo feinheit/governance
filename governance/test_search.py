@@ -42,3 +42,23 @@ class SearchTest(TestCase):
             self.client.get("/search/", {"q": "nothing"}), "Nothing found"
         )
         self.assertNotContains(self.client.get("/search/"), "Nothing found")
+
+    def test_what_the_pages_show(self):
+        """Mentions with the current names, not their markup; the core
+        roles' constitutional texts"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        pastry = Role.objects.create(name="Pastry", circle=kitchen)
+        Accountability.objects.create(
+            role=cook, text=f"Asking @[Baker](role:{pastry.pk})"
+        )
+        response = self.client.get("/search/", {"q": "asking pastry"})
+        self.assertContains(response, cook.get_absolute_url())
+        self.assertContains(
+            self.client.get("/search/", {"q": "(role:"}), "Nothing found"
+        )
+        secretary = kitchen.roles.get(core_role="secretary")
+        response = self.client.get("/search/", {"q": "governance records"})
+        self.assertContains(response, secretary.get_absolute_url())
