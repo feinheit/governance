@@ -112,7 +112,7 @@ class ProcessTest(TestCase):
             self.client.post(
                 f"/proposals/{proposal.pk}/respond/", {"kind": "consent"}
             ).status_code,
-            404,
+            403,
         )
 
     def test_own_proposal_and_anonymous_responses(self):
@@ -260,6 +260,23 @@ class ProcessTest(TestCase):
                 self.assertEqual(proposal.status, status)
                 self.cook.refresh_from_db()
                 self.assertEqual(self.cook.name, "Cook")
+
+    def test_responding_too_late(self):
+        """Responding to a proposal adopted or withdrawn meanwhile (an open
+        page) tells so instead of failing"""
+        proposal = self.proposal(status=Proposal.ADOPTED)
+        self.client.force_login(self.bob)
+        for kind in [Response.CONSENT, Response.COMMENT]:
+            with self.subTest(kind=kind):
+                response = self.client.post(
+                    f"/proposals/{proposal.pk}/respond/",
+                    {"kind": kind, "text": "Hm?"},
+                    follow=True,
+                )
+                self.assertContains(
+                    response, "The proposal isn&#x27;t open for responses anymore."
+                )
+        self.assertFalse(proposal.responses.exists())
 
     def test_proposer_without_the_role(self):
         """Publishing needs the proposer's role still (5.3.1), e.g. after

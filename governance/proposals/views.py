@@ -266,12 +266,15 @@ def proposal_withdraw(request, pk):
 
 @require_POST
 def proposal_respond(request, pk):
-    proposal = get_object_or_404(
-        Proposal.objects.filter(status__in=[Proposal.PUBLISHED, Proposal.IN_MEETING]),
-        pk=pk,
-    )
+    proposal = get_object_or_404(Proposal.objects.exclude(status=Proposal.DRAFT), pk=pk)
     if not is_member(request.user, proposal.circle):
         raise PermissionDenied
+    if proposal.status not in {Proposal.PUBLISHED, Proposal.IN_MEETING}:
+        # Adopted or withdrawn while the page was open
+        messages.error(
+            request, gettext("The proposal isn't open for responses anymore.")
+        )
+        return redirect(proposal)
     form = ResponseForm(
         request.POST,
         is_open=proposal.status == Proposal.PUBLISHED,
@@ -282,9 +285,14 @@ def proposal_respond(request, pk):
             for error in errors:
                 messages.error(request, error)
         return redirect(proposal)
-    process.respond(
-        proposal, request.user, form.cleaned_data["kind"], form.cleaned_data["text"]
-    )
+    try:
+        process.respond(
+            proposal, request.user, form.cleaned_data["kind"], form.cleaned_data["text"]
+        )
+    except ProposalError as exc:  # E.g. decided by another request meanwhile
+        for problem in exc.problems:
+            messages.error(request, problem)
+        return redirect(proposal)
     proposal.refresh_from_db()
     if proposal.status == Proposal.ADOPTED:
         messages.success(

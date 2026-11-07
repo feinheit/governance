@@ -765,9 +765,8 @@ Deliberately not modelled:
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
   - The backup names members who consented with a text.
-  - Untested risks: a domain policy moved to another
-    domain isn't a change; `proposal_respond` doesn't catch a
-    `ProposalError` of a race.
+  - Untested risk: a domain policy moved to another domain isn't a
+    `Change` (the role's history lists the recorded proposal).
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
