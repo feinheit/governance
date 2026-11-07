@@ -140,6 +140,19 @@ class Role(models.Model):
         return self.core.purpose if self.core else self.purpose
 
     @property
+    def unfilled(self):
+        """Who holds the role while nobody is assigned: the Circle Leads
+        (1.4.2), not the Circle Rep (5.1.1); a circle's Circle Lead the
+        super-circle's"""
+        if self.core_role == REP or (
+            self.core_role == LEAD and not (self.circle and self.circle.circle_id)
+        ):
+            return _("Nobody")
+        if self.core_role == LEAD:
+            return _("Held by the super-circle's Circle Leads")
+        return _("Held by the Circle Leads")
+
+    @property
     def is_elected(self):
         if self.core:
             return self.core.is_elected

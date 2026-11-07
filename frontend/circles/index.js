@@ -378,9 +378,7 @@ function Tooltip({ node, x, y, width, height }) {
         </div>
       ) : (
         <div className="text-body-secondary small">
-          {data.holders.length
-            ? data.holders.join(", ")
-            : label("Held by the Circle Leads")}
+          {data.holders.length ? data.holders.join(", ") : data.unfilled}
           {data.elected ? ` · ${label("elected")}` : ""}
         </div>
       )}

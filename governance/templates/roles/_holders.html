@@ -8,15 +8,5 @@
     >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% endif %}{% if not forloop.last %},
   {% endif %}
 {% empty %}
-  {# The Circle Leads hold the unfilled roles (1.4.2), but aren't eligible for the #}
-  {# Circle Rep; the super-circle's Circle Leads lead a circle nobody leads #}
-  <span class="text-body-secondary">
-    {% if role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
-      {% translate "Nobody" %}
-    {% elif role.core_role == "lead" %}
-      {% translate "Held by the super-circle's Circle Leads" %}
-    {% else %}
-      {% translate "Held by the Circle Leads" %}
-    {% endif %}
-  </span>
+  <span class="text-body-secondary">{{ role.unfilled }}</span>
 {% endfor %}

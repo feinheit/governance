@@ -50,7 +50,7 @@
             </li>
           {% empty %}
             <li class="list-group-item text-body-secondary">
-              {% if role.archived_on or role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}{% translate "Nobody" %}{% elif role.core_role == "lead" %}{% translate "Held by the super-circle's Circle Leads" %}{% else %}{% translate "Held by the Circle Leads" %}{% endif %}
+              {% if role.archived_on %}{% translate "Nobody" %}{% else %}{{ role.unfilled }}{% endif %}
             </li>
           {% endfor %}
         </ul>

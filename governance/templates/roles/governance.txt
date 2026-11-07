@@ -22,7 +22,7 @@
 
 {% endfor %}{% for role in circle.export_roles %}{{ circle.subheading }} {{ role.name }}
 
-{% if with_holders %}*{% translate "Held by" %}: {% for assignment in role.export_holders %}{{ assignment.user }}{% if assignment.focus %} ({{ assignment.focus }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}{% translate "the Circle Leads" %}{% endfor %}*
+{% if with_holders %}*{% for assignment in role.export_holders %}{% if forloop.first %}{% translate "Held by" %}: {% endif %}{{ assignment.user }}{% if assignment.focus %} ({{ assignment.focus }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}{{ role.unfilled }}{% endfor %}*
 
 {% endif %}{% if role.display_purpose %}{{ role.display_purpose }}
 

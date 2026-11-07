@@ -762,8 +762,6 @@ Deliberately not modelled:
 - **Verification** (second round of 2026-11-07, open findings):
   - Search leaves out the core roles' constitutional texts.
   - The backup names members who consented with a text.
-  - The Markdown export and the circle browser say unfilled roles are
-    held by the Circle Leads, also the Circle Rep and the Circle Lead.
   - Search matches the mentions' markup, not the current names.
   - `gov` shows the days of deadlines etc. in UTC.
   - Untested risks: "as of" uses the server's date

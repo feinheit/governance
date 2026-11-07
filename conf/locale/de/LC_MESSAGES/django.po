@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 13:56+0100\n"
+"POT-Creation-Date: 2026-11-07 14:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1272,11 +1272,6 @@ msgstr "Pfad"
 msgid "Open the circle's page"
 msgstr "Seite des Kreises öffnen"
 
-#: governance/roles/browser.py governance/templates/roles/_holders.html
-#: governance/templates/roles/assignments.html
-msgid "Held by the Circle Leads"
-msgstr "Von den Circle Leads besetzt"
-
 #: governance/roles/browser.py
 msgid "Core roles and elected roles"
 msgstr "Kernrollen und gewählte Rollen"
@@ -1495,6 +1490,19 @@ msgstr "Frühere Namen und Kurznamen, Texte erwähnen sie vielleicht noch."
 #: governance/roles/models.py
 msgid "GlassFrog circle ID"
 msgstr "GlassFrog-ID des Kreises"
+
+#: governance/roles/models.py governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignments.html
+msgid "Nobody"
+msgstr "Niemand"
+
+#: governance/roles/models.py
+msgid "Held by the super-circle's Circle Leads"
+msgstr "Von den Circle Leads des übergeordneten Kreises besetzt"
+
+#: governance/roles/models.py
+msgid "Held by the Circle Leads"
+msgstr "Von den Circle Leads besetzt"
 
 #: governance/roles/models.py
 msgid "accountability"
@@ -2615,17 +2623,6 @@ msgstr "gewählt bis %(date)s"
 msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
 msgstr "Ein Circle Lead kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen neue Circle Reps:"
 
-#: governance/templates/roles/_holders.html
-#: governance/templates/roles/_holders_card.html
-#: governance/templates/roles/assignments.html
-msgid "Nobody"
-msgstr "Niemand"
-
-#: governance/templates/roles/_holders.html
-#: governance/templates/roles/assignments.html
-msgid "Held by the super-circle's Circle Leads"
-msgstr "Von den Circle Leads des übergeordneten Kreises besetzt"
-
 #: governance/templates/roles/_holders_card.html
 #: governance/templates/roles/assignments.html
 msgid "Holders"
@@ -2713,10 +2710,6 @@ msgstr "Stand %(date)s."
 #: governance/templates/roles/governance.txt
 msgid "Held by"
 msgstr "Besetzt durch"
-
-#: governance/templates/roles/governance.txt
-msgid "the Circle Leads"
-msgstr "die Circle Leads"
 
 #: governance/templates/roles/people.html
 msgid "Nobody holds a role yet."
@@ -2913,6 +2906,9 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "the Circle Leads"
+#~ msgstr "die Circle Leads"
 
 #, python-format
 #~ msgid "since %(date)s"

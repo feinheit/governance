@@ -18,7 +18,9 @@ def circle_tree(user=None):
 
     Roles say whether they are elected and whether ``user`` holds them.
     """
-    roles = list(Role.objects.active().order_by("position", "name"))
+    roles = list(
+        Role.objects.active().select_related("circle").order_by("position", "name")
+    )
     holders = defaultdict(list)
     mine = set()
     for role_id, user_id, name, email in (
@@ -51,6 +53,8 @@ def circle_tree(user=None):
             data["elected"] = role.is_elected
             data["lead"] = role.core_role == LEAD
             data["mine"] = role.pk in mine
+            if not holders[role.pk]:
+                data["unfilled"] = str(role.unfilled)
         if role.is_circle:
             data["children"] = [node(child) for child in children[role.pk]]
         return data
@@ -64,7 +68,6 @@ def circle_browser(request):
     labels = {
         "Path": gettext("Path"),
         "Open the circle's page": gettext("Open the circle's page"),
-        "Held by the Circle Leads": gettext("Held by the Circle Leads"),
         "roles": gettext("roles"),
         "Assigned": gettext("Assigned"),
         "Core roles and elected roles": gettext("Core roles and elected roles"),

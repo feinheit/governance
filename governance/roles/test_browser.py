@@ -54,3 +54,7 @@ class CircleBrowserTest(TestCase):
         self.assertContains(response, "your role")
         secretary = next(c for c in tree["children"] if c["name"] == "Secretary")
         self.assertEqual((secretary["elected"], secretary["mine"]), (True, False))
+        # Who holds unfilled roles, like the role's page
+        self.assertEqual(secretary["unfilled"], "Held by the Circle Leads")
+        lead = next(c for c in tree["children"] if c["name"] == "Circle Lead")
+        self.assertEqual(lead["unfilled"], "Nobody")  # The anchor's
