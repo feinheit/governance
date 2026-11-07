@@ -179,6 +179,34 @@ class CLITest(TestCase):
         self.assertIn(proposal.status, {Proposal.PUBLISHED, Proposal.ADOPTED})
         self.assertIn(proposal.get_absolute_url(), result.output)
 
+    def test_days_like_the_pages(self):
+        """The day of adoption like the pages, not the deadline's day in UTC"""
+        import datetime as dt
+
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        Assignment.objects.create(role=self.cook, user=bob)
+        deadline = dt.datetime(2026, 11, 11, 23, 30, tzinfo=dt.UTC)  # Zurich: 12th
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            role=self.cook,
+            proposer=bob,
+            tension="Soup",
+            status=Proposal.PUBLISHED,
+            created_at=deadline - dt.timedelta(days=5),
+            published_at=deadline - dt.timedelta(days=5),
+            deadline=deadline,
+            instructions=[
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Baker"},
+            ],
+        )
+        self.assertEqual(proposal.adopted_on, dt.date(2026, 11, 12))
+        for args in [("proposals", "show", proposal.pk), ("proposals", "open")]:
+            with self.subTest(args=args):
+                output = self.gov(*args).output
+                self.assertIn("2026-11-12", output)
+                self.assertNotIn("2026-11-11", output)
+
     def test_responding(self):
         """Open proposals of one's circles, responding to them"""
         import datetime as dt

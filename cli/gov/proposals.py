@@ -32,6 +32,12 @@ def _day(value):
     return value[:10] if value else ""
 
 
+def _adopted_on(proposal):
+    """The day the nightly task adopts it, like the pages (older servers
+    only send the deadline)"""
+    return proposal.get("adopted_on") or _day(proposal["deadline"])
+
+
 def echo_proposal(proposal):
     echo_fields(
         proposal["title"],
@@ -43,8 +49,8 @@ def echo_proposal(proposal):
             ("Kind", proposal["kind"] if proposal["kind"] != "governance" else ""),
             ("Published", _day(proposal["published_at"])),
             (
-                "Deadline",
-                _day(proposal["deadline"]) if proposal["status"] == "published" else "",
+                "To be adopted on",
+                _adopted_on(proposal) if proposal["status"] == "published" else "",
             ),
             ("Decided", _day(proposal["decided_at"])),
             ("URL", proposal["url"]),
@@ -229,14 +235,16 @@ def open_proposals(as_json):
     if not data:
         console.print("No open proposals.")
         return
-    table = make_table("ID>", "Proposal…", "Circle", "Proposer", "Deadline", "You")
+    table = make_table(
+        "ID>", "Proposal…", "Circle", "Proposer", "To be adopted on", "You"
+    )
     for proposal in data:
         table.add_row(
             link(proposal["id"], proposal["url"]),
             link(proposal["title"], proposal["url"]),
             proposal["circle"],
             proposal["proposer"] or "",
-            _day(proposal["deadline"]),
+            _adopted_on(proposal),
             POSITIONS.get(proposal["my_response"], ""),
         )
     console.print(table)

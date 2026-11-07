@@ -93,6 +93,8 @@ class ProposalOut(Schema):
     created_at: str
     published_at: str | None
     deadline: str | None
+    # The day the nightly task adopts it, like the pages show it
+    adopted_on: str | None
     decided_at: str | None
     url: str
     problems: list[str]
@@ -113,7 +115,8 @@ def own_draft(user, proposal):
 
 
 def _iso(value):
-    return value.isoformat() if value else None
+    """In local time: the first ten characters are the day the pages show"""
+    return timezone.localtime(value).isoformat() if value else None
 
 
 def out(request, proposal):
@@ -140,9 +143,10 @@ def out(request, proposal):
             }
             for change in describe(proposal.instructions, proposal.names)
         ],
-        "created_at": proposal.created_at.isoformat(),
+        "created_at": _iso(proposal.created_at),
         "published_at": _iso(proposal.published_at),
         "deadline": _iso(proposal.deadline),
+        "adopted_on": proposal.adopted_on and proposal.adopted_on.isoformat(),
         "decided_at": _iso(proposal.decided_at),
         "url": settings.BASE_URL + proposal.get_absolute_url(),
         "problems": problems(proposal)
@@ -174,7 +178,7 @@ def responses_out(proposal):
                 "kind": response.kind,
                 "label": str(response.get_kind_display()),
                 "text": response.text,
-                "created_at": response.created_at.isoformat(),
+                "created_at": _iso(response.created_at),
             }
             for response in summary["responses"]
         ],

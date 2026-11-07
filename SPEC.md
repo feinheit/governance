@@ -634,7 +634,8 @@ circles, nearest deadline first; each with `my_response`) and
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
 the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET me/`
 (the user, the token's access and their roles); objects come with the URL
-of their page. Clients send instructions only (e.g. written by an LLM from
+of their page, times in local time (their first ten characters are the
+day the pages show), proposals with `adopted_on`. Clients send instructions only (e.g. written by an LLM from
 a tension); the server fills in names and returns `problems` with every
 draft, the readable `changes` of the proposal's page, and for published
 proposals and those waiting for a meeting the `responses` like the page
@@ -763,7 +764,6 @@ Deliberately not modelled:
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
   - The backup names members who consented with a text.
-  - `gov` shows the days of deadlines etc. in UTC.
   - Untested risks: "as of" uses the server's date
     (`history/views.py`); the organization history's pages bound
     proposals by the days of changes; a domain policy moved to another
