@@ -543,9 +543,10 @@ def get_policy(proposal, key):
             raise PermissionDenied
         return None
     # Not the policies of its roles for their domains, they change them
-    # themselves (1.3.2)
+    # themselves (1.3.2), also not those of a role it adds roles inside
     return get_object_or_404(
-        Policy.objects.active().filter(role=proposal.circle), pk=key
+        Policy.objects.active().filter(role=proposal.circle, role__is_circle=True),
+        pk=key,
     )
 
 

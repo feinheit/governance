@@ -744,8 +744,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - Drafts inside a role offer to change its domain policies, which
-    adopting refuses.
   - Published proposals' consequences are shown to their editors only:
     everybody seeing the proposal sees them (decided 2026-11-07).
   - Core roles get no accountabilities or domains besides the

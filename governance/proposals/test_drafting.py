@@ -835,6 +835,22 @@ class DraftingTest(TestCase):
         self.assertEqual(
             problems(proposal), ["Cook only has policies for its domains."]
         )
+        # Nor changing those, the role does
+        knives = Domain.objects.create(role=self.cook, text="Knives")
+        sharp = Policy.objects.create(role=self.cook, domain=knives, title="Sharp")
+        proposal.instructions = []
+        proposal.save()
+        self.assertNotContains(self.client.get(proposal.get_absolute_url()), "Sharp")
+        self.assertEqual(
+            self.client.get(
+                f"/proposals/{proposal.pk}/policies/{sharp.pk}/"
+            ).status_code,
+            404,
+        )
+        proposal.instructions = [
+            {"op": "add", "path": "/policies/n1"},
+            {"op": "add", "path": "/policies/n1/title", "value": "Knife rule"},
+        ]
         # Once it's a circle, by adding roles first, it has policies
         proposal.instructions[:0] = [
             {"op": "add", "path": "/roles/n1"},

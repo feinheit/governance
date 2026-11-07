@@ -142,8 +142,11 @@ def drafting_context(proposal):
         + list(
             circle.roles.active().exclude(core_role=LEAD).order_by("position", "name")
         ),
-        # Its roles change their policies for their domains themselves (1.3.2)
-        "circle_policies": Policy.objects.active().filter(role=circle),
+        # Its roles change their policies for their domains themselves (1.3.2),
+        # also a role adding roles inside it
+        "circle_policies": Policy.objects.active().filter(
+            role=circle, role__is_circle=True
+        ),
     }
 
 
