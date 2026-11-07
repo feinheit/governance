@@ -278,6 +278,38 @@ class ProcessTest(TestCase):
                 )
         self.assertFalse(proposal.responses.exists())
 
+    def test_response_form(self):
+        """Nothing chosen beforehand; no objection takes no text, which is
+        refused instead of dropped (the page shows the field only for the
+        responses taking one)"""
+        proposal = publish(self.proposal())
+        self.client.force_login(self.bob)
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertNotContains(response, "checked")
+        self.assertContains(response, 'data-shown-for="kind=comment meeting"')
+        url = f"/proposals/{proposal.pk}/respond/"
+        response = self.client.post(url, {"text": "Hm"}, follow=True)
+        self.assertContains(response, "This field is required.")
+        response = self.client.post(
+            url, {"kind": Response.CONSENT, "text": "Fine by me"}, follow=True
+        )
+        self.assertContains(
+            response, "No objection takes no text: ask a question or request a meeting."
+        )
+        self.assertFalse(proposal.responses.exists())
+        # The API too
+        from governance.accounts.models import APIToken
+
+        _token, secret = APIToken.create_for(user=self.bob, title="CLI", access="write")
+        response = self.client.post(
+            f"/api/proposals/{proposal.pk}/responses/",
+            {"kind": Response.CONSENT, "text": "Fine by me"},
+            content_type="application/json",
+            headers={"authorization": f"Bearer {secret}"},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(proposal.responses.exists())
+
     def test_proposer_without_the_role(self):
         """Publishing needs the proposer's role still (5.3.1), e.g. after
         their assignment ended since drafting"""

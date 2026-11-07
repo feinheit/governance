@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 14:39+0100\n"
+"POT-Creation-Date: 2026-11-07 14:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1203,6 +1203,12 @@ msgstr "Nötig für Fragen. Wenn du ein Meeting verlangst: das Bedenken, das bes
 #: governance/proposals/views.py
 msgid "Please explain."
 msgstr "Bitte begründen."
+
+#: governance/proposals/views.py
+msgid "No objection takes no text: ask a question or request a meeting."
+msgstr ""
+"Zu „kein Einwand“ gehört kein Text: stelle eine Frage oder verlange ein "
+"Meeting."
 
 #: governance/proposals/views.py
 #, python-format

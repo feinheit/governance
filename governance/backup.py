@@ -116,7 +116,10 @@ def responses(proposals):
         "created_at",
     )
     for row in result:
-        if row["kind"] != Response.COMMENT and not row["text"]:
+        # Consents (earlier ones had texts) and requests without a concern
+        if row["kind"] == Response.CONSENT or (
+            row["kind"] != Response.COMMENT and not row["text"]
+        ):
             row["user"] = None
     return result
 

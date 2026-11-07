@@ -45,7 +45,7 @@ Mitglieder des Kreises (solange du die Rolle noch hast, aus der die
 Spannung kommt). Bis zur Frist, die der Kreis festlegt, antworten
 sie:
 
-- **kein Einwand**
+- **kein Einwand**, ohne Text (wird nur gezählt)
 - **Frage oder Kommentar**: du erhältst eine Mail und beantwortest sie;
   deine Antwort geht per Mail an alle, die gefragt oder kommentiert haben.
 - **im Meeting besprechen**, wenn nötig mit dem Bedenken. Der Vorschlag

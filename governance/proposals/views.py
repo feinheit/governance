@@ -22,7 +22,6 @@ class ResponseForm(Form):
         label=_("Response"),
         choices=[c for c in Response.KIND_CHOICES if c[0] != Response.OBJECTION],
         widget=forms.RadioSelect,
-        initial=Response.CONSENT,
     )
     text = forms.CharField(
         label=_("Text"),
@@ -46,6 +45,12 @@ class ResponseForm(Form):
         data["text"] = data.get("text", "").strip()
         if data.get("kind") == Response.COMMENT and not data["text"]:
             self.add_error("text", _("Please explain."))
+        if data.get("kind") == Response.CONSENT and data["text"]:
+            # Consents are only counted: refused instead of dropped
+            self.add_error(
+                "text",
+                _("No objection takes no text: ask a question or request a meeting."),
+            )
         return data
 
 

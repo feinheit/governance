@@ -507,6 +507,44 @@ class MeetingE2ETest(LiveServerTestCase):
         )
         self.assertEqual(self.errors, [])
 
+    def test_response_text(self):
+        """The response's text only for the responses taking one, and never
+        hidden while it has text"""
+        import datetime as dt
+
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        Assignment.objects.create(role=self.cook, user=bob)
+        now = timezone.now()
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            role=self.cook,
+            proposer=bob,
+            tension="Bread",
+            status=Proposal.PUBLISHED,
+            created_at=now,
+            published_at=now,
+            deadline=now + dt.timedelta(days=2),
+            instructions=[
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Baker"},
+            ],
+        )
+        page = self.page
+        page.goto(f"{self.live_server_url}{proposal.get_absolute_url()}")
+        text = page.locator("textarea[name=text]")
+        self.assertFalse(text.is_visible())
+        page.get_by_label("question or comment").check()
+        self.assertTrue(text.is_visible())
+        text.fill("Why?")
+        page.get_by_label("no objection").check()
+        self.assertTrue(text.is_visible())  # Not dropped unseen
+        text.fill("")
+        page.get_by_label("discuss in a meeting").check()
+        self.assertTrue(text.is_visible())
+        page.get_by_label("no objection").check()
+        self.assertFalse(text.is_visible())
+        self.assertEqual(self.errors, [])
+
     def test_holders(self):
         """Assigning and removing on the role's page, in modals"""
         Assignment.objects.create(

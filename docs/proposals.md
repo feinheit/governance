@@ -42,7 +42,7 @@ Drafts are private until you publish them or bring them to a meeting.
 long as you still hold the role the tension comes from).
 Until the deadline the circle sets, they respond:
 
-- **no objection**
+- **no objection**, without a text (it's only counted)
 - **question or comment**: you get a mail and answer it; your answer
   goes by mail to those who asked or commented.
 - **discuss in a meeting**, if needed with the concern. The proposal then

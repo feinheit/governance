@@ -11,6 +11,7 @@ import "./show_more.js"
 import "./open_details.js"
 import "./menus.js"
 import "./autogrow.js"
+import "./shown_for.js"
 import "./shortcuts.js"
 // meeting.js first: it decides which links htmx boosts
 import "./meeting.js"

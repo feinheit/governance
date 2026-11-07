@@ -243,7 +243,10 @@ diff. Publishing checks again that the proposer may propose from the
 proposal's role (5.3.1), e.g. their assignment ended since drafting;
 drafts without a role (a guest's item drafted again, drafts imported
 from GlassFrog) get one first (decided 2026-11-07). Until the deadline (`async_acceptance_days`) members ask questions
-(comments), consent ("no objection") or request a meeting, optionally with
+(comments), consent ("no objection", without a text: it's only counted,
+a text is refused rather than dropped; the form chooses nothing
+beforehand and shows the text field only for questions and requests,
+`shown_for.js`, decided 2026-11-07) or request a meeting, optionally with
 the concern, which moves it to the next governance meeting. No async
 objections, like GlassFrog: objections are tested in meetings, so async is
 for uncontroversial changes. The proposer only answers questions. Adopted
@@ -649,7 +652,8 @@ running meeting's page, not through scripts.
 sees, one file per kind: `people`, `roles` (with accountabilities and
 domains), `assignments`, `policies`, `history` (the `Change`s since
 2018), `proposals` (with responses, anonymous like on the page except
-questions and concerns, without others' drafts), `meetings`
+questions and concerns, also earlier consents with a text, without
+others' drafts), `meetings`
 (with agenda, elections), `metrics`, `checklist_items`,
 `links`. Lists ordered by ID with the models' field names and GlassFrog
 IDs. `scripts/fetch_backup.py REPO` commits them daily to a git
@@ -764,7 +768,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
-  - The backup names members who consented with a text.
   - Untested risk: a domain policy moved to another domain isn't a
     `Change` (the role's history lists the recorded proposal).
 - **Next deploy**: not while a governance meeting which recorded

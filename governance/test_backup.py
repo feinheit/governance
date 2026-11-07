@@ -30,6 +30,10 @@ class BackupTest(TestCase):
             created_at=now,
         )
         Response.objects.create(proposal=published, user=bob, kind=Response.CONSENT)
+        # Consents had texts before, they stay anonymous
+        Response.objects.create(
+            proposal=published, user=bob, kind=Response.CONSENT, text="Fine"
+        )
         Response.objects.create(
             proposal=published, user=bob, kind=Response.COMMENT, text="Why?"
         )
@@ -74,7 +78,11 @@ class BackupTest(TestCase):
         # concerns, which have their author
         self.assertEqual(
             [(r["kind"], r["user"]) for r in files["proposals.json"][0]["responses"]],
-            [(Response.CONSENT, None), (Response.COMMENT, bob.pk)],
+            [
+                (Response.CONSENT, None),
+                (Response.CONSENT, None),
+                (Response.COMMENT, bob.pk),
+            ],
         )
         self.assertEqual(
             files["meetings.json"][0]["agenda"][0]["proposal"], published.pk
