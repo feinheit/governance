@@ -336,6 +336,30 @@ class ProcessTest(TestCase):
         response = self.client.get(f"/people/{self.bob.pk}/")
         self.assertEqual(list(response.context["waiting"]), [inside, proposal])
 
+    def test_consequences_for_everybody(self):
+        """Those responding see what adopting does automatically, not only
+        the proposer"""
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        for user in [self.ada, self.bob]:
+            Assignment.objects.create(role=baker, user=user)
+        proposal = publish(
+            Proposal.objects.create(
+                circle=bakery,
+                role=baker,
+                proposer=self.ada,
+                tension="No more bread",
+                created_at=timezone.now(),
+                instructions=[{"op": "remove", "path": f"/roles/{baker.pk}"}],
+            )
+        )
+        self.client.force_login(self.bob)
+        self.assertContains(
+            self.client.get(proposal.get_absolute_url()),
+            "Bakery loses its last roles",
+        )
+
     def test_back_to_draft(self):
         """A published proposal is changed by taking it back to its draft"""
         proposal = publish(self.proposal())

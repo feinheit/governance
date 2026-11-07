@@ -154,7 +154,9 @@ overwriting. The interface never shows instructions: forms per operation
 build them (`proposals/drafting.py`), pages render a diff. New objects use
 keys like `n1` until adoption. `adopt()` (`proposals/instructions.py`)
 applies all or nothing, validated against the constitution; the draft
-page lists the `problems()` and `consequences()` adopting now would have.
+page lists the `problems()` and `consequences()` adopting now would have;
+published proposals show everybody their `consequences()` (decided
+2026-11-07).
 The meeting shows the `problems()` of the item being processed to
 everybody, e.g. a role the proposal changes which a proposal adopted
 earlier in the meeting changed too. Adopting stays blocked; the secretary
@@ -744,8 +746,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - Published proposals' consequences are shown to their editors only:
-    everybody seeing the proposal sees them (decided 2026-11-07).
   - Core roles get no accountabilities or domains besides the
     constitution's, like the Circle Lead (decided 2026-11-07).
   - Untested risks: `adopt()` doesn't check the status (a proposal

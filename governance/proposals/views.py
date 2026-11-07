@@ -164,6 +164,9 @@ def proposal_detail(request, pk):
         context["amended_in"] = meeting
     elif can_edit(request.user, proposal):
         context |= drafting_context(proposal)
+    elif proposal.status in {Proposal.PUBLISHED, Proposal.IN_MEETING}:
+        # Those responding see what adopting it does automatically
+        context["consequences"] = consequences(proposal)
     if proposal.status in {Proposal.PUBLISHED, Proposal.IN_MEETING}:
         members = circle_members(proposal.circle)
         context |= {"show_responses": True} | process.response_summary(proposal)
