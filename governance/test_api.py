@@ -119,6 +119,36 @@ class APITest(TestCase):
         self.client.force_login(self.bob)
         self.assertEqual(self.client.get("/api/circles/").status_code, 200)
 
+    def test_texts_the_proposal_adds(self):
+        """Instructions changing or removing a text the proposal adds apply
+        to it, not a server error"""
+        cook = self.cook.pk
+        response = self.api(
+            "post",
+            "/api/proposals/",
+            {
+                "circle_id": self.kitchen.pk,
+                "role_id": self.cook.pk,
+                "tension": "Soups",
+                "instructions": [
+                    {
+                        "op": "add",
+                        "path": f"/roles/{cook}/accountabilities/n1",
+                        "value": "Soup",
+                    },
+                    {
+                        "op": "replace",
+                        "path": f"/roles/{cook}/accountabilities/n1",
+                        "value": "Soups",
+                    },
+                    {"op": "add", "path": f"/roles/{cook}/domains/n2", "value": "Pot"},
+                    {"op": "remove", "path": f"/roles/{cook}/domains/n2"},
+                ],
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["problems"], [])
+
     def test_proposals(self):
         # Read only tokens don't change anything
         response = self.api(

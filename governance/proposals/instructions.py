@@ -309,7 +309,13 @@ class Applier:
             )
             self.created[f"{kind}/{key}"] = obj
             return
-        obj = model.objects.filter(pk=key, role=role).first()
+        if NEW_KEY.fullmatch(key):
+            # Added by the proposal before
+            obj = self.created.get(f"{kind}/{key}")
+            if obj is not None and obj.role_id != role.pk:
+                obj = None
+        else:
+            obj = model.objects.filter(pk=key, role=role).first()
         if obj is None:
             self.problem(
                 _("%(text)s doesn't exist anymore."),
@@ -325,6 +331,8 @@ class Applier:
                 self.policies.update(policies)
                 policies.update(archived_on=self.day)
             obj.delete()
+            if NEW_KEY.fullmatch(key):
+                self.created[f"{kind}/{key}"] = None
         elif op == "replace":
             obj.text = value or ""
             obj.save(update_fields=["text"])
