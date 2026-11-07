@@ -529,6 +529,12 @@ class Applier:
             if not is_empty_circle(circle):
                 continue
             if Meeting.objects.filter(circle=circle).running().exists():
+                # Turns back when the meeting ends (revert_after_meeting()),
+                # archiving the policies left there (for consequences())
+                circle.at_meeting_end = True
+                circle.archived_policies = list(
+                    circle.policies.active().filter(domain=None)
+                )
                 self.deferred.append(circle)
                 continue
             self.convert(circle, to_circle=False)
@@ -738,8 +744,6 @@ def consequences(proposal):
     except ProposalError:
         return {}
     except Rollback:
-        for circle in applier.deferred:
-            circle.at_meeting_end = True
         return {
             "reverting": [*applier.reverted, *applier.deferred],
             "reps": applier.ended_reps,

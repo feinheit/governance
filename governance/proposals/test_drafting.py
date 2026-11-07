@@ -2,6 +2,7 @@ import datetime as dt
 
 import time_machine
 from django.test import TestCase
+from django.utils import timezone
 
 from governance.accounts.models import User
 from governance.proposals.instructions import ProposalError, adopt, problems
@@ -724,6 +725,36 @@ class DraftingTest(TestCase):
         with self.assertRaises(ProposalError):
             adopt(leftover)
         self.assertFalse(Role.objects.filter(name="Sous").exists())
+
+    def test_turns_back_when_the_meeting_ends(self):
+        """A circle losing its last roles in its own meeting turns back when
+        the meeting ends: the draft says which policies are archived then"""
+        from governance.meetings.models import Meeting
+        from governance.proposals.instructions import consequences
+
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        Policy.objects.create(role=bakery, title="Noise")
+        Meeting.objects.create(
+            circle=bakery, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+        proposal = Proposal.objects.create(
+            circle=bakery,
+            proposer=self.ada,
+            tension="No more bread",
+            created_at=timezone.now(),
+            instructions=[{"op": "remove", "path": f"/roles/{baker.pk}"}],
+        )
+        [circle] = consequences(proposal)["reverting"]
+        self.assertEqual(
+            (
+                circle,
+                circle.at_meeting_end,
+                [p.title for p in circle.archived_policies],
+            ),
+            (bakery, True, ["Noise"]),
+        )
 
     def test_circle_without_roles_turns_back(self):
         """Moving or removing a circle's last role turns it back into a role"""

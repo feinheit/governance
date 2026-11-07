@@ -192,7 +192,9 @@ proposals ask for the tension, an example and how the proposal helps
 **Who proposes**: a proposal addresses a tension of one of the proposer's
 roles in the circle (5.3.1), chosen from `proposer_roles()`: the roles
 held in the circle (also a sub-circle's role, held by its Circle Leads and
-Rep), for the Circle Leads also the unfilled ones (1.4.2). Agenda items
+Rep), for the Circle Leads also the unfilled ones (1.4.2), not for the
+Secretary standing in for them: they propose from the Secretary role and
+say in the tension which role they speak for (decided 2026-11-07). Agenda items
 turned into proposals get the owner's first role, the secretary changes
 it if needed.
 
@@ -215,7 +217,9 @@ accountabilities and domains through its own governance (1.3.3).
 
 - Adding roles inside a role is the role's own governance (1.3.1): its
   holders propose in the role, adopting makes it a circle with them as
-  Circle Leads. With a single holder publishing adopts right away. Moving
+  Circle Leads. With a single holder publishing adopts right away. Only
+  the holders get the mails, not the circle containing the role: its
+  structure inside is the role's own business (decided 2026-11-07). Moving
   roles into a role is the circle's governance and converts it too.
 - A circle losing its last own roles turns back into a role (held by
   its Circle Leads, no longer by its Circle Rep) when
@@ -748,14 +752,6 @@ Deliberately not modelled:
   - The lists of current assignments (focus and term next to the name)
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
-- **Verification** (round of 2026-11-07, open findings):
-  - Untested risk: deferred reverts don't list the policies they
-    archive among the consequences.
-  - To decide: the Secretary stands in for the Circle Leads (`can_lead`)
-    but doesn't propose from the unfilled roles (`proposer_roles()`
-    checks `is_circle_lead` only); a role's single holder adding roles
-    inside it makes it a circle right away, the circle containing the
-    role gets no mail.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
