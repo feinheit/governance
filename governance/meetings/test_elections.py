@@ -241,6 +241,45 @@ class ElectionsTest(TestCase):
             ],
         )
 
+    def test_not_announced_when_the_circle_turns_back(self):
+        """A circle which lost its last roles in its meeting turns back into
+        a role when the meeting ends: its elections aren't announced, the
+        outputs tell those losing the core roles"""
+        from governance.meetings.activity import end_meeting
+        from governance.proposals.instructions import adopt
+        from governance.proposals.models import Proposal
+
+        cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        Assignment.objects.create(role=cook, user=self.ada)
+        self.client.force_login(self.ada)
+        self.client.post(
+            f"/meetings/{self.meeting.pk}/elections/",
+            {
+                "role": self.facilitator.pk,
+                "user": self.ada.pk,
+                "term_ends_on": "2027-12-31",
+            },
+        )
+        adopt(
+            Proposal.objects.create(
+                circle=self.kitchen,
+                proposer=self.ada,
+                meeting=self.meeting,
+                status=Proposal.IN_MEETING,
+                tension="No more cooking",
+                created_at=timezone.now(),
+                instructions=[{"op": "remove", "path": f"/roles/{cook.pk}"}],
+            )
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            end_meeting(self.meeting)
+        self.kitchen.refresh_from_db()
+        self.assertFalse(self.kitchen.is_circle)
+        self.assertEqual(
+            [m.subject for m in mail.outbox if m.subject.startswith("Your roles")],
+            [],
+        )
+
     def test_rep_corrected(self):
         """A Circle Rep corrected in the meeting: only the one recorded last
         holds the circle's role in the super-circle"""

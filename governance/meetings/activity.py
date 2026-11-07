@@ -59,8 +59,9 @@ def end_meeting(meeting, at=None):
     meeting.ended_at = at or timezone.now()
     meeting.current_item = None
     meeting.save(update_fields=["ended_at", "current_item"])
-    announce_elections(meeting)
+    # Not the elections of core roles archived by turning back
     revert_after_meeting(meeting)
+    announce_elections(meeting)
     transaction.on_commit(lambda: meeting_ended(meeting))
 
 

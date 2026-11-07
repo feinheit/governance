@@ -481,7 +481,8 @@ circle emptied by its super-circle while its own meeting ran turns back
 when that meeting ends: those losing its core roles get the mail about
 their roles then. Like GlassFrog, assignments, removals, elections
 and deactivations (`roles.assignments.announce()`; elections when the
-meeting ends, the results after corrections only:
+meeting ends, the results after corrections only, not those of core
+roles archived by the circle turning back then:
 `elections.announce_elections()`, decided 2026-11-07) tell people the roles
 they get and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
@@ -739,6 +740,27 @@ Deliberately not modelled:
   - The lists of current assignments (focus and term next to the name)
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
+- **Verification** (round of 2026-11-07, open findings):
+  - Publishing skips the role check for drafts without a role (a
+    guest's meeting item drafted again, imported drafts): publishing
+    requires one of the proposer's roles (decided 2026-11-07).
+  - The person page's "Waiting for your response" counts responses of
+    earlier rounds and misses circles one is a member of without
+    holding one of their roles (inside a role one holds, sub-circles
+    led from above).
+  - Editing a holder's focus (and a role's strategy?) doesn't update
+    today's history.
+  - Drafts inside a role offer to change its domain policies, which
+    adopting refuses.
+  - Published proposals' consequences are shown to their editors only:
+    everybody seeing the proposal sees them (decided 2026-11-07).
+  - Core roles get no accountabilities or domains besides the
+    constitution's, like the Circle Lead (decided 2026-11-07).
+  - Untested risks: `adopt()` doesn't check the status (a proposal
+    brought into a meeting while the daily task adopts it); an election
+    corrected after midnight ends the corrected-away winner's
+    assignment instead of deleting it; deferred reverts don't list the
+    policies they archive among the consequences.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
