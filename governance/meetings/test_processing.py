@@ -185,15 +185,9 @@ class ProcessingTest(TestCase):
         self.assertEqual(meeting_outputs(self.meeting)["withdrawn"], [])
 
     def test_only_open_proposals_with_changes_are_adopted(self):
-        """A proposal withdrawn by its proposer meanwhile, or a tension
-        without changes, isn't adopted in the meeting"""
-        self.client.force_login(self.eve)
-        # Asked first, e.g. in a modal
-        self.assertContains(
-            self.client.get(f"/proposals/{self.proposal.pk}/withdraw/"),
-            "You can draft it again afterwards.",
-        )
-        self.client.post(f"/proposals/{self.proposal.pk}/withdraw/")
+        """A proposal withdrawn meanwhile (e.g. a role it changes removed),
+        or a tension without changes, isn't adopted in the meeting"""
+        Proposal.objects.filter(pk=self.proposal.pk).update(status=Proposal.WITHDRAWN)
         self.client.force_login(self.ada)
         self.client.post(f"/agenda/{self.item.pk}/adopt/")
         self.proposal.refresh_from_db()
@@ -264,6 +258,24 @@ class ProcessingTest(TestCase):
         self.client.force_login(self.eve)
         response = self.client.get(self.meeting.get_absolute_url())
         self.assertContains(response, f'href="{self.proposal.get_absolute_url()}"')
+
+    def test_not_withdrawn_while_the_meeting_runs(self):
+        """The proposer doesn't withdraw the proposal while its meeting runs,
+        the secretary discards it there (5.3.1)"""
+        url = f"/proposals/{self.proposal.pk}/withdraw/"
+        self.client.force_login(self.eve)
+        self.assertNotContains(self.client.get(self.proposal.get_absolute_url()), url)
+        self.assertEqual(self.client.post(url).status_code, 403)
+        self.proposal.refresh_from_db()
+        self.assertEqual(self.proposal.status, Proposal.IN_MEETING)
+        # Afterwards, waiting for the next meeting, it may, asked first
+        self.meeting.ended_at = timezone.now()
+        self.meeting.save()
+        self.assertContains(self.client.get(self.proposal.get_absolute_url()), url)
+        self.assertContains(self.client.get(url), "You can draft it again afterwards.")
+        self.client.post(url)
+        self.proposal.refresh_from_db()
+        self.assertEqual(self.proposal.status, Proposal.WITHDRAWN)
 
     def test_proposals_come_from_roles(self):
         """A guest's tension becomes a proposal without a role, which isn't

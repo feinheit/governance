@@ -58,7 +58,7 @@ questions and concerns show their author.
 
 Published proposals can't be changed: "Back to the draft" (the circle
 starts over afterwards) or "Withdraw". Both tell the circle's members by
-mail.
+mail. While its meeting runs, the secretary discards it there instead.
 
 ## Without a proposal
 

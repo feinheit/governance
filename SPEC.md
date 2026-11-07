@@ -242,7 +242,8 @@ Responses are anonymous: consents and requests are only counted ("3 of 7
 without objection"); questions and concerns show their author because they
 are answered and discussed with them. A published proposal can't be
 edited: the proposer takes it back to its draft (responses since
-republishing count) or withdraws it. Somebody leaving the circle doesn't adopt a proposal early, even when
+republishing count) or withdraws it, not while its meeting runs (the
+secretary discards it there, decided 2026-11-07). Somebody leaving the circle doesn't adopt a proposal early, even when
 everybody remaining has consented: it waits for its deadline like
 announced (decided 2026-11-06). Role and policy pages show pending
 proposals (published or in a meeting): `Proposal.save()` keeps their
@@ -738,6 +739,5 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-07, open findings):
-  - Decided: withdrawing is blocked while the proposal's meeting runs;
-    only current members' responses count; a policy regulating a domain
-    can't be moved into a sub-circle.
+  - Decided: only current members' responses count; a policy regulating
+    a domain can't be moved into a sub-circle.

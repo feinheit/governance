@@ -170,7 +170,9 @@ def proposal_detail(request, pk):
                 is_open=proposal.status == Proposal.PUBLISHED,
                 is_proposer=proposal.proposer_id == request.user.pk,
             )
-        context["can_withdraw"] = proposal.proposer_id == request.user.pk
+        context["can_withdraw"] = (
+            proposal.proposer_id == request.user.pk and "amended_in" not in context
+        )
     context["can_draft_again"] = (
         proposal.status == Proposal.WITHDRAWN
         and proposal.proposer_id == request.user.pk
@@ -237,6 +239,9 @@ def proposal_draft_again(request, pk):
 def proposal_withdraw(request, pk):
     """Withdrawing a proposal, confirmed first (in a modal on its page)"""
     proposal = own_proposal(request, pk, [Proposal.PUBLISHED, Proposal.IN_MEETING])
+    if proposal.meeting and proposal.meeting.is_running:
+        # The secretary discards it there (5.3.1)
+        raise PermissionDenied
     if request.method != "POST":
         return render(
             request,
