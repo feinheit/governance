@@ -239,7 +239,8 @@ pages and mails show the day, not a time (`adopted_on`). Due proposals are
 adopted in order of publication, conflicting ones go to the meeting.
 Only circle members respond (also no admins outside the circle).
 Responses are anonymous: consents and requests are only counted ("3 of 7
-without objection"); questions and concerns show their author because they
+without objection"; current members only, not people who left since,
+decided 2026-11-07); questions and concerns show their author because they
 are answered and discussed with them. A published proposal can't be
 edited: the proposer takes it back to its draft (responses since
 republishing count) or withdraws it, not while its meeting runs (the
@@ -739,5 +740,5 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
 - **PDF export**, if needed.
 - **Modals** for more forms where they help.
 - **Verification** (round of 2026-11-07, open findings):
-  - Decided: only current members' responses count; a policy regulating
-    a domain can't be moved into a sub-circle.
+  - Decided: a policy regulating a domain can't be moved into a
+    sub-circle.

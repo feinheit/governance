@@ -141,6 +141,21 @@ class ProcessTest(TestCase):
         self.assertEqual(response.content.decode().count("Bob"), 1)  # The question
         self.assertNotContains(response, "Eve</span>")  # No list of members
 
+    def test_counts_current_members(self):
+        """Only the responses of current members count, not those of people
+        who left the circle since ("2 of 1")"""
+        from governance.proposals.process import response_summary
+
+        carl = User.objects.create_user("carl@example.com", full_name="Carl")
+        for user in [self.eve, carl]:
+            Assignment.objects.create(role=self.cook, user=user)
+        proposal = publish(self.proposal())
+        respond(proposal, self.bob, Response.CONSENT)
+        respond(proposal, self.eve, Response.CONSENT)
+        Assignment.objects.filter(user__in=[self.bob, self.eve]).delete()
+        summary = response_summary(proposal)
+        self.assertEqual((summary["consents"], summary["others"]), (0, 1))
+
     def test_objection_and_meeting(self):
         proposal = publish(self.proposal())
         self.client.force_login(self.bob)

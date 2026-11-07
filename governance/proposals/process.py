@@ -91,7 +91,13 @@ def response_summary(proposal):
     consented, requested a meeting or didn't respond yet isn't shown, only
     counted; questions and concerns have their author, because they are
     answered and integrated with them"""
-    found = positions(proposal).values()
+    others = set(
+        members(proposal.circle)
+        .exclude(pk=proposal.proposer_id)
+        .values_list("pk", flat=True)
+    )
+    # Not those of people who left the circle since
+    found = [r for r in positions(proposal).values() if r.user_id in others]
     return {
         "responses": current_responses(proposal)
         .filter(
@@ -102,7 +108,7 @@ def response_summary(proposal):
         .select_related("user"),
         "consents": sum(1 for r in found if r.kind == Response.CONSENT),
         "meeting_requests": sum(1 for r in found if r.kind == Response.MEETING),
-        "others": members(proposal.circle).exclude(pk=proposal.proposer_id).count(),
+        "others": len(others),
     }
 
 

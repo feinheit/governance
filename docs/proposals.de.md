@@ -57,8 +57,8 @@ wird er deswegen nicht früher angenommen: er wartet auf die Frist. Einwände gi
 asynchron nicht, sie werden im Meeting geprüft: asynchron ist für
 unumstrittene Änderungen.
 
-Zustimmungen und Meeting-Wünsche werden nur gezählt ("3 von 7"), Fragen
-und Bedenken stehen mit Namen.
+Zustimmungen und Meeting-Wünsche werden nur gezählt ("3 von 7", der
+aktuellen Mitglieder), Fragen und Bedenken stehen mit Namen.
 
 Veröffentlichte Vorschläge lassen sich nicht ändern: "Zurück zum Entwurf"
 (der Kreis beginnt danach von vorne) oder "Zurückziehen". Beides erfahren
