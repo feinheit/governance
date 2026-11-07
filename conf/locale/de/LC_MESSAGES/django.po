@@ -1210,8 +1210,8 @@ msgid "Response"
 msgstr "Antwort"
 
 #: governance/proposals/views.py
-msgid "Required for questions. When requesting a meeting: the concern to discuss, optional."
-msgstr "Nötig für Fragen. Wenn du ein Meeting verlangst: das Bedenken, das besprochen werden soll, freiwillig."
+msgid "Required for questions. If you want to discuss the proposal in a meeting, you can give your reasons here."
+msgstr "Nötig für Fragen. Möchtest du den Vorschlag in einem Meeting besprechen, kannst du hier deine Gründe angeben."
 
 #: governance/proposals/views.py
 msgid "Please explain."
