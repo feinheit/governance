@@ -85,7 +85,7 @@ no outcomes), `metrics`, `checklist_items`, `projects`.
 ```
 
 Ops `add`, `replace`, `remove`, `move` and `test` (the target must still
-exist). Paths cover roles (`name`, `aim` = purpose, `supporting_circle` =
+exist; only roles and policies, not their fields). Paths cover roles (`name`, `aim` = purpose, `supporting_circle` =
 convert to circle), accountabilities, domains, policies (`title`, `body`,
 `links/domain`), moving roles and policies between circles, and elections
 (`/roles/N/assignment/links/person`, `/roles/N/assignment/until`).
@@ -756,7 +756,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (second round of 2026-11-07, open findings):
-  - A `test` instruction on a field (`/roles/1/aim`) sets it, unseen.
   - `GET /api/roles/{id}/` fails for Facilitator, Secretary and Circle
     Rep (lazy purpose), the API leaves out the core roles'
     constitutional texts (search too).

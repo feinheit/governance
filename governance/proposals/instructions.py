@@ -202,6 +202,9 @@ class Applier:
             self.move(instruction)
         elif match := re.fullmatch(rf"/(roles|policies)/{KEY}", path):
             self.apply_to_object(instruction, match[1], match[2])
+        elif op not in {"add", "replace", "remove"}:
+            # Tests check objects only, not fields (they'd set them unseen)
+            self.unsupported(path)
         elif match := re.fullmatch(rf"/roles/{KEY}/(name|aim)", path):
             self.apply_to_role_field(instruction, match[1], ROLE_FIELDS[match[2]])
         elif match := re.fullmatch(rf"/policies/{KEY}/(title|body)", path):

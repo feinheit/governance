@@ -121,6 +121,26 @@ class ProblemsTest(TestCase):
                     problems(proposal), [f"The app can't apply {path} yet."]
                 )
 
+    def test_tests_only_check_objects(self):
+        """A test of a field or a text (from the API) isn't a hidden change"""
+        from governance.proposals.instructions import problems
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen, purpose="Food")
+        for path in [
+            f"/roles/{cook.pk}/aim",
+            f"/roles/{cook.pk}/name",
+            f"/roles/{cook.pk}/accountabilities/n1",
+        ]:
+            proposal = Proposal(
+                circle=kitchen,
+                instructions=[{"op": "test", "path": path, "value": "Hidden"}],
+            )
+            with self.subTest(path=path):
+                self.assertEqual(
+                    problems(proposal), [f"The app can't apply {path} yet."]
+                )
+
     def test_new_circle_like_glassfrog(self):
         """GlassFrog turns a new role into a circle twice, before and after
         moving roles into it"""
