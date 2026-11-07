@@ -739,8 +739,6 @@ the nightly import sets them back: accepted, decided 2026-11-06). Remove
     meeting ends their assignment and starts a new one; decided: role
     mails of elections go out with the meeting's outputs, the net change
     only.
-  - Roles and policies archived inside a removed circle, and the core
-    roles of a circle turned back, don't list the proposal.
   - Decided: withdrawing is blocked while the proposal's meeting runs;
     only current members' responses count; a policy regulating a domain
     can't be moved into a sub-circle.

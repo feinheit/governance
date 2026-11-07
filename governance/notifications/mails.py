@@ -333,7 +333,7 @@ def meeting_ended(meeting):
     if meeting.circle:
         users |= Q(pk__in=recipients(meeting.circle))
     if outputs["proposals"]:
-        # The holders of roles the adopted proposals removed or moved away,
+        # The holders of roles the adopted proposals changed or moved away,
         # also when absent, like adopting async (members before adopting)
         from governance.proposals.models import Proposal
         from governance.roles.models import Assignment
@@ -343,6 +343,8 @@ def meeting_ended(meeting):
         users |= Q(
             pk__in=Assignment.objects
             .filter(role__changed_by_proposals__in=proposals)
+            # Those of archived roles are the proposals' ended_holders
+            .filter(role__archived_on=None)
             .filter(Q(ends_on=None) | Q(ends_on__gte=started))
             .values("user")
         ) | Q(

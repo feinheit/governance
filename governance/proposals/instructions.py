@@ -433,7 +433,11 @@ class Applier:
             self.end_assignment(assignment)
         role.archived_on = self.day
         role.save(update_fields=["archived_on"])
-        role.policies.active().update(archived_on=self.day)
+        # Their history lists the proposal
+        self.roles.add(role)
+        policies = role.policies.active()
+        self.policies.update(policies)
+        policies.update(archived_on=self.day)
         self.removed.append(role)
 
     def end_assignment(self, assignment):
@@ -490,6 +494,7 @@ class Applier:
                 self.end_assignment(assignment)
             core_role.archived_on = self.day
             core_role.save(update_fields=["archived_on"])
+            self.roles.add(core_role)
         # The circle's policies go: a role only has policies for its domains
         # (1.3.2); the proposal may move them up first
         policies = role.policies.active().filter(domain=None)
@@ -570,7 +575,7 @@ def revert_after_meeting(meeting):
         })
         proposal.names[f"roles/{circle.pk}"] = circle.name
         proposal.save(update_fields=["instructions", "names"])
-        proposal.roles.add(circle)
+        proposal.roles.add(circle, *applier.roles)
         proposal.policies.add(*applier.policies)
         if own:
             # For the meeting's outputs; announced otherwise, not again in

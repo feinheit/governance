@@ -495,6 +495,40 @@ class DraftingTest(TestCase):
                 403,
             )
 
+    def test_archived_with_it_list_the_proposal(self):
+        """Roles and policies archived inside a removed circle and the core
+        roles of a circle turned back list the proposal (their history)"""
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        flour = Policy.objects.create(role=bakery, title="Flour")
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            tension="No bread",
+            instructions=[{"op": "remove", "path": f"/roles/{bakery.pk}"}],
+            created_at=dt.datetime(2026, 12, 1, tzinfo=dt.UTC),
+        )
+        adopt(proposal)
+        self.assertIn(baker, proposal.roles.all())
+        self.assertIn(bakery.roles.get(core_role="secretary"), proposal.roles.all())
+        self.assertIn(flour, proposal.policies.all())
+
+        pastry = Role.objects.create(name="Pastry", is_circle=True, circle=self.kitchen)
+        pastry.create_core_roles()
+        icing = Role.objects.create(name="Icing", circle=pastry)
+        proposal = Proposal.objects.create(
+            circle=pastry,
+            proposer=self.ada,
+            tension="No icing",
+            created_at=dt.datetime(2026, 12, 1, tzinfo=dt.UTC),
+            instructions=[{"op": "remove", "path": f"/roles/{icing.pk}"}],
+        )
+        adopt(proposal)
+        pastry.refresh_from_db()
+        self.assertFalse(pastry.is_circle)
+        self.assertIn(pastry.roles.get(core_role="secretary"), proposal.roles.all())
+
     def test_remove_circle_without_policies(self):
         """The form says when the circle has nothing of a kind to move"""
         bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
