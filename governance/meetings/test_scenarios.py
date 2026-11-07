@@ -538,8 +538,25 @@ class RoleMeetingScenarioTest(TestCase):
             f"/proposals/{item.proposal.pk}/roles/new/",
             {"name": "Sous", "purpose": "", "new_accountabilities": "Chopping"},
         )
+        # A second one, drafted before the first makes the role a circle
+        self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Dishes"})
+        second = AgendaItem.objects.get(label="Dishes")
+        self.client.post(f"/agenda/{second.pk}/process/")
+        self.client.post(f"/agenda/{second.pk}/proposal/")
+        second.refresh_from_db()
+        self.client.post(
+            f"/proposals/{second.proposal.pk}/roles/new/",
+            {"name": "Dishwasher", "purpose": ""},
+        )
+        self.client.post(f"/agenda/{item.pk}/process/")
         response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
         self.assertContains(response, "The proposal is adopted.")
+        # From the role, now its Circle Lead
+        self.client.post(f"/agenda/{second.pk}/process/")
+        response = self.client.post(f"/agenda/{second.pk}/adopt/", follow=True)
+        self.assertContains(response, "The proposal is adopted.")
+        second.proposal.refresh_from_db()
+        self.assertEqual(second.proposal.role, cook.roles.get(core_role="lead"))
 
         cook.refresh_from_db()
         self.assertTrue(cook.is_circle)

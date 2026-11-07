@@ -219,7 +219,9 @@ accountabilities and domains through its own governance (1.3.3).
 
 - Adding roles inside a role is the role's own governance (1.3.1): its
   holders propose in the role, adopting makes it a circle with them as
-  Circle Leads. With a single holder publishing adopts right away. Only
+  Circle Leads; proposals from the role itself then come from its Circle
+  Lead role (e.g. the next ones of the same meeting, decided
+  2026-11-07). With a single holder publishing adopts right away. Only
   the holders get the mails, not the circle containing the role: its
   structure inside is the role's own business (decided 2026-11-07). Moving
   roles into a role is the circle's governance and converts it too.
@@ -760,8 +762,6 @@ Deliberately not modelled:
 - **Verification** (second round of 2026-11-07, open findings):
   - Search leaves out the core roles' constitutional texts.
   - The backup names members who consented with a text.
-  - A meeting inside a role adopts only the first proposal adding roles:
-    the role is a circle then, its holders no longer propose from it.
   - The Markdown export and the circle browser say unfilled roles are
     held by the Circle Leads, also the Circle Rep and the Circle Lead.
   - Search matches the mentions' markup, not the current names.

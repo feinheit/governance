@@ -17,6 +17,7 @@ from django.utils.translation import gettext as _
 from governance.notifications import mails
 from governance.proposals.instructions import ProposalError, adopt, problems
 from governance.proposals.models import Proposal, Response
+from governance.roles.constitution import LEAD
 from governance.roles.models import Policy, Role
 from governance.roles.permissions import is_member, members, proposer_roles
 
@@ -39,6 +40,16 @@ def check_role(proposal):
         raise ProposalError([
             _("Choose the role of the proposer the tension comes from.")
         ])
+    if (
+        proposal.role_id == proposal.circle_id
+        and Role.objects.filter(pk=proposal.circle_id, is_circle=True).exists()
+    ):
+        # From inside a role which became a circle meanwhile, e.g. by an
+        # earlier proposal of the meeting: its holders are its Circle Leads
+        proposal.circle.refresh_from_db()
+        if lead := proposal.circle.roles.active().filter(core_role=LEAD).first():
+            proposal.role = lead
+            proposal.save(update_fields=["role"])
     roles = proposer_roles(proposal.proposer, proposal.circle)
     if not roles.filter(pk=proposal.role_id).exists():
         raise ProposalError([
