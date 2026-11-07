@@ -123,9 +123,9 @@ Rules the server enforces (it reports them as problems):
 
 - `original_value` must be the current text exactly; copy it from
   `gov roles show --json`. It lets the server detect changes since drafting.
-- The core roles (Circle Lead, Facilitator, Secretary, Circle Rep) keep
-  their names and purposes. Accountabilities and domains can be added to
-  them, but not to the Circle Lead.
+- The core roles (Circle Lead, Facilitator, Secretary, Circle Rep) stay
+  as the constitution defines them: no changed names or purposes, no
+  added accountabilities or domains.
 - A new role or policy needs a name or title.
 - Roles and policies outside the proposal's circle can't be changed.
 

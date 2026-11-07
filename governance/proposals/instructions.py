@@ -288,11 +288,17 @@ class Applier:
         role = self.get("roles", role_key)
         if role is None:
             return
-        if role.core_role == LEAD:
-            # Additions would apply to all sub-circles' Circle Leads
-            # (constitution 1.4.5); the app leaves the Circle Lead as
-            # the constitution defines it, on purpose
-            self.problem(_("The Circle Lead gets no accountabilities or domains."))
+        if role.core_role:
+            # The app leaves the core roles as the constitution defines them,
+            # on purpose: additions to the Circle Lead would apply to all
+            # sub-circles' Circle Leads (1.4.5), the circle's own core roles
+            # (1.3.3, 5.1.1) don't need them (decided 2026-11-07)
+            self.problem(
+                _(
+                    "Core roles get no accountabilities or domains besides the"
+                    " constitution's."
+                )
+            )
             return
         model = TEXTS[kind]
         if not self.check_value(str(role), value):

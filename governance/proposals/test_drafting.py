@@ -394,6 +394,35 @@ class DraftingTest(TestCase):
         bread = Policy.objects.get(title="Bread")
         self.assertEqual((bread.role, bread.body), (self.kitchen, "Daily"))
 
+    def test_core_roles_stay_as_defined(self):
+        """No accountabilities or domains besides the constitution's, not
+        only for the Circle Lead (decided 2026-11-07)"""
+        proposal = self.draft()
+        for core_role in ["facilitator", "secretary"]:  # No Rep in the anchor
+            with self.subTest(core_role=core_role):
+                role = self.kitchen.roles.get(core_role=core_role)
+                url = f"/proposals/{proposal.pk}/roles/{role.pk}/"
+                self.assertNotContains(
+                    self.client.get(proposal.get_absolute_url()), url
+                )
+                self.assertEqual(self.client.get(url).status_code, 403)
+                proposal.instructions = [
+                    {
+                        "op": "add",
+                        "path": f"/roles/{role.pk}/domains/n1/description",
+                        "value": "The minutes",
+                    },
+                ]
+                self.assertEqual(
+                    problems(proposal),
+                    [
+                        (
+                            "Core roles get no accountabilities or domains besides"
+                            " the constitution's."
+                        )
+                    ],
+                )
+
     def test_circle_lead_stays_as_defined(self):
         lead = self.kitchen.roles.get(core_role="lead")
         proposal = self.draft()
@@ -413,7 +442,13 @@ class DraftingTest(TestCase):
             },
         ]
         self.assertEqual(
-            problems(proposal), ["The Circle Lead gets no accountabilities or domains."]
+            problems(proposal),
+            [
+                (
+                    "Core roles get no accountabilities or domains besides the"
+                    " constitution's."
+                )
+            ],
         )
 
     def test_constitution(self):
@@ -440,16 +475,6 @@ class DraftingTest(TestCase):
                 "A new role or policy needs a name.",
             ],
         )
-
-        # Secretary, Facilitator and Circle Rep may get accountabilities
-        secretary = self.kitchen.roles.get(core_role="secretary")
-        self.client.post(
-            f"/proposals/{self.draft().pk}/roles/{secretary.pk}/",
-            {"new_accountabilities": "Ordering supplies"},
-        )
-        adopt(Proposal.objects.latest("pk"))
-        self.assertEqual(Domain.objects.count(), 0)
-        self.assertEqual(secretary.accountabilities.get().text, "Ordering supplies")
 
     def test_remove_circle(self):
         """Selected roles and policies move to the super-circle, the rest goes"""

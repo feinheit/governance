@@ -30,6 +30,10 @@ says so). A circle removed or turned back into a role takes its open
 proposals with it (they're withdrawn), a removed circle's running
 meeting ends; so does a removed role with the proposals for inside it.
 
+The core roles (Circle Lead, Facilitator, Secretary, Circle Rep) stay as
+the constitution defines them: proposals don't add accountabilities or
+domains to them.
+
 Drafts are private until you publish them or bring them to a meeting.
 
 ## Publishing async

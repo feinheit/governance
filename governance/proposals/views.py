@@ -13,7 +13,6 @@ from governance.proposals.describe import describe
 from governance.proposals.drafting import can_edit
 from governance.proposals.instructions import ProposalError, consequences, problems
 from governance.proposals.models import Proposal, Response
-from governance.roles.constitution import LEAD
 from governance.roles.models import Policy, Role
 from governance.roles.permissions import is_member, members as circle_members
 
@@ -138,10 +137,8 @@ def drafting_context(proposal):
         "consequences": consequences(proposal) if proposal.instructions else {},
         # The anchor circle changes its own purpose and accountabilities
         "circle_roles": ([] if circle.circle_id else [circle])
-        # The Circle Lead stays as the constitution defines it
-        + list(
-            circle.roles.active().exclude(core_role=LEAD).order_by("position", "name")
-        ),
+        # The core roles stay as the constitution defines them
+        + list(circle.roles.active().filter(core_role="").order_by("position", "name")),
         # Its roles change their policies for their domains themselves (1.3.2),
         # also a role adding roles inside it
         "circle_policies": Policy.objects.active().filter(

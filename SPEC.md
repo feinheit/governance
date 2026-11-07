@@ -698,7 +698,10 @@ Deliberately not modelled:
 - **The Circle Lead** stays as defined (1.4.5): no accountabilities or
   domains added through governance (they would apply to every
   sub-circle's Circle Lead), no delegation removing them. The
-  documentation has to say so.
+  documentation has to say so. Neither do Facilitator, Secretary and
+  Circle Rep get any (1.3.3, 5.1.1 would allow it; decided 2026-11-07):
+  their holders would set the policies of such domains, and our data has
+  none.
 - **Linked roles** (1.3.4): no demand in our data, much complexity.
 - **Redirecting references** from outside the circle (1.4.4): an edge
   case, a proposal in the circle containing the reference does the same.
@@ -746,8 +749,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - Core roles get no accountabilities or domains besides the
-    constitution's, like the Circle Lead (decided 2026-11-07).
   - Untested risks: `adopt()` doesn't check the status (a proposal
     brought into a meeting while the daily task adopts it); an election
     corrected after midnight ends the corrected-away winner's

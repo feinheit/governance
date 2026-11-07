@@ -23,7 +23,7 @@ from django.views.decorators.http import require_POST
 from governance.forms import Form, ModelForm, next_url
 from governance.proposals.instructions import MARKERS, NEW_KEY, new_key, subject_of
 from governance.proposals.models import Proposal
-from governance.roles.constitution import CORE_ROLES, LEAD
+from governance.roles.constitution import CORE_ROLES
 from governance.roles.models import Policy, Role
 from governance.roles.permissions import proposer_roles
 
@@ -555,7 +555,7 @@ def role_edit(request, pk, key=None):
     is_existing = key is not None
     key = key or new_key(proposal.instructions)
     role = get_role(proposal, key) if is_existing else None
-    if role is not None and role.core_role == LEAD:
+    if role is not None and role.core_role:
         raise PermissionDenied  # Stays as the constitution defines it
     form = RoleForm(request.POST or None, proposal=proposal, key=key, role=role)
     if form.is_valid():

@@ -31,6 +31,10 @@ Kreis entfernt oder wieder zur Rolle, werden seine offenen Vorschläge
 zurückgezogen, das laufende Meeting eines entfernten Kreises endet;
 ebenso bei einer entfernten Rolle die Vorschläge für ihr Inneres.
 
+Die Kernrollen (Circle Lead, Facilitator, Secretary, Circle Rep) bleiben,
+wie die Verfassung sie definiert: Vorschläge fügen ihnen keine
+Accountabilities oder Domains hinzu.
+
 Entwürfe sind privat, bis du sie veröffentlichst oder in ein Meeting
 bringst.
 
