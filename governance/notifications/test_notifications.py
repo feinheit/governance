@@ -40,10 +40,16 @@ class NotificationsTest(TestCase):
         self.assertEqual(set(recipients(self.kitchen)), {self.ada, self.bob, self.zoe})
         self.assertEqual(set(recipients(self.anchor)), {self.zoe})
 
+    def waiter(self, user):
+        waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
+        Assignment.objects.create(role=waiter, user=user)
+        return waiter
+
     def test_mails(self):
         proposal = Proposal.objects.create(
             circle=self.kitchen,
-            proposer=self.eve,  # E.g. an admin, not a member
+            proposer=self.eve,
+            role=self.waiter(self.eve),
             tension="Better name",
             created_at=timezone.now(),
             instructions=[
@@ -110,6 +116,7 @@ class NotificationsTest(TestCase):
         proposal = Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.eve,
+            role=self.waiter(self.eve),
             tension="Better name",
             created_at=timezone.now(),
             instructions=[

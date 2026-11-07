@@ -57,9 +57,8 @@ def check_role(proposal):
 def publish(proposal):
     if proposal.status != Proposal.DRAFT or proposal.is_tension:
         raise ProposalError([_("Only drafts with changes can be published.")])
-    # Drafts imported from GlassFrog have no role
-    if proposal.role and proposal.proposer:
-        check_role(proposal)
+    # Also drafts imported from GlassFrog, which have no role
+    check_role(proposal)
     if found := problems(proposal):
         raise ProposalError(found)
     now = timezone.now()

@@ -230,7 +230,9 @@ accountabilities and domains through its own governance (1.3.3).
 
 **Async proposals**: circle members get a mail with the tension and the
 diff. Publishing checks again that the proposer may propose from the
-proposal's role (5.3.1), e.g. their assignment ended since drafting. Until the deadline (`async_acceptance_days`) members ask questions
+proposal's role (5.3.1), e.g. their assignment ended since drafting;
+drafts without a role (a guest's item drafted again, drafts imported
+from GlassFrog) get one first (decided 2026-11-07). Until the deadline (`async_acceptance_days`) members ask questions
 (comments), consent ("no objection") or request a meeting, optionally with
 the concern, which moves it to the next governance meeting. No async
 objections, like GlassFrog: objections are tested in meetings, so async is
@@ -741,9 +743,6 @@ Deliberately not modelled:
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
 - **Verification** (round of 2026-11-07, open findings):
-  - Publishing skips the role check for drafts without a role (a
-    guest's meeting item drafted again, imported drafts): publishing
-    requires one of the proposer's roles (decided 2026-11-07).
   - The person page's "Waiting for your response" counts responses of
     earlier rounds and misses circles one is a member of without
     holding one of their roles (inside a role one holds, sub-circles

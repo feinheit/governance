@@ -30,6 +30,7 @@ class ProcessTest(TestCase):
             Assignment.objects.create(role=self.cook, user=user)
 
     def proposal(self, **kwargs):
+        kwargs.setdefault("role", self.cook)
         return Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.ada,
@@ -265,6 +266,19 @@ class ProcessTest(TestCase):
         proposal.save()
         publish(proposal)
         self.assertEqual(proposal.status, Proposal.PUBLISHED)
+
+    def test_proposer_without_a_role(self):
+        """A draft without a role (e.g. a guest's item of a meeting drafted
+        again, a draft imported from GlassFrog) needs one to be published"""
+        proposal = self.proposal(role=None)
+        with self.assertRaises(ProposalError) as raised:
+            publish(proposal)
+        self.assertEqual(
+            raised.exception.problems,
+            ["Choose the role of the proposer the tension comes from."],
+        )
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.DRAFT)
 
     def test_pending_and_person(self):
         draft = self.proposal()
