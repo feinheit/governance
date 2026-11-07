@@ -97,6 +97,8 @@ def proposals(user):
             "decided_at",
             "meeting",
             "glassfrog_id",
+            # Its instructions refer to GlassFrog's IDs
+            "adopted_in_glassfrog",
         ),
         affected_roles=related(Proposal.roles, "proposal_id", "role_id"),
         affected_policies=related(Proposal.policies, "proposal_id", "policy_id"),

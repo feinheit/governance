@@ -68,7 +68,7 @@ def check_role(proposal):
 def publish(proposal):
     if proposal.status != Proposal.DRAFT or proposal.is_tension:
         raise ProposalError([_("Only drafts with changes can be published.")])
-    # Also drafts imported from GlassFrog, which have no role
+    # Also drafts imported from GlassFrog, which had no role
     check_role(proposal)
     if found := problems(proposal):
         raise ProposalError(found)
@@ -220,10 +220,9 @@ def try_adopting(proposal):
                 return False
             adopt(proposal)
     except ProposalError as exc:
-        # Those who got it learn why it didn't pass async; not for those
-        # imported from GlassFrog, which the nightly import sets back
+        # Those who got it learn why it didn't pass async
         problems = exc.problems
-        if to_meeting(proposal) and not proposal.glassfrog_id:
+        if to_meeting(proposal):
             transaction.on_commit(lambda: mails.proposal_to_meeting(proposal, problems))
         return False
     return True

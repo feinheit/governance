@@ -33,11 +33,3 @@ provides. This help explains the tool, not Holacracy.
   accountabilities or domains to them.
 - **Mails** can't be unsubscribed one by one, only extended to all
   circles. Filter them in your mail program.
-
-## Until the switchover
-
-GlassFrog stays authoritative until we switch over: every night the tool
-takes the structure, the assignments and the proposals from GlassFrog,
-overwriting what was changed in these data here. Proposals imported from
-GlassFrog can be adopted in a governance meeting here to try it out, the
-next night sets them back.

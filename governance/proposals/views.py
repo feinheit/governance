@@ -67,14 +67,8 @@ def links(proposal, changes):
         for kind in ["roles", "policies"]
     }
     # Proposals adopted in GlassFrog refer to GlassFrog IDs, open ones were
-    # converted to the app's IDs like the app's own (import, to_app_ids()).
-    # Those adopted here have a role, the import sets none.
-    imported = (
-        proposal.glassfrog_id
-        and proposal.status == Proposal.ADOPTED
-        and proposal.role_id is None
-    )
-    field = "glassfrog_id" if imported else "pk"
+    # converted to the app's IDs like the app's own when they were imported
+    field = "glassfrog_id" if proposal.adopted_in_glassfrog else "pk"
     urls = {}
     for kind, model in [("roles", Role), ("policies", Policy)]:
         for obj in model.objects.filter(**{f"{field}__in": ids[kind]}):

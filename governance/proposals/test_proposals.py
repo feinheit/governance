@@ -131,6 +131,7 @@ class ProposalsTest(TestCase):
             created_at=now - dt.timedelta(days=2),
             decided_at=now,
             glassfrog_id=1,
+            adopted_in_glassfrog=True,
         )
         adopted.roles.set([cook])
         draft = Proposal.objects.create(
@@ -325,3 +326,37 @@ class AdoptedOnTest(TestCase):
         ]:
             proposal.deadline = deadline
             self.assertEqual(proposal.adopted_on, day, deadline)
+
+
+class AdoptedInGlassFrogTest(TestCase):
+    def test_migration(self):
+        """After the last import, adopted imported proposals without a role
+        were adopted in GlassFrog; those adopted here have one"""
+        import importlib
+
+        from django.apps import apps
+
+        mark = importlib.import_module(
+            "governance.proposals.migrations.0004_adopted_in_glassfrog"
+        ).mark
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        ada = User.objects.create_user("ada@example.com")
+        common = {"circle": kitchen, "proposer": ada, "created_at": timezone.now()}
+        there = Proposal.objects.create(
+            **common, glassfrog_id=1, status=Proposal.ADOPTED
+        )
+        # Adopted here, still open, the app's own
+        Proposal.objects.create(
+            **common, glassfrog_id=2, status=Proposal.ADOPTED, role=kitchen
+        )
+        Proposal.objects.create(**common, glassfrog_id=3, status=Proposal.PUBLISHED)
+        Proposal.objects.create(**common, status=Proposal.ADOPTED)
+        mark(apps, None)
+        self.assertEqual(
+            set(
+                Proposal.objects.filter(adopted_in_glassfrog=True).values_list(
+                    "pk", flat=True
+                )
+            ),
+            {there.pk},
+        )

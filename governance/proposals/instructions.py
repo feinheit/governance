@@ -578,7 +578,6 @@ def revert_after_meeting(meeting):
         Proposal.objects
         .filter(
             status=Proposal.ADOPTED,
-            glassfrog_id=None,
             decided_at__gte=meeting.started_at,
             reverting_circles=circle,
         )
@@ -663,12 +662,6 @@ def adopt(proposal):
     lock_structure()
     if proposal.status == Proposal.ADOPTED:
         raise ProposalError([_("The proposal has already been adopted.")])
-    if proposal.glassfrog_id and not (proposal.meeting and proposal.meeting.is_running):
-        # Until the switchover GlassFrog decides them async, meetings here
-        # may adopt them (the nightly import sets them back)
-        raise ProposalError([
-            _("Proposals imported from GlassFrog are adopted in a meeting.")
-        ])
     if proposal.status == Proposal.WITHDRAWN:
         raise ProposalError([_("The proposal has been withdrawn.")])
     if not proposal.instructions:
