@@ -238,6 +238,9 @@ for uncontroversial changes. The proposer only answers questions. Adopted
 when everybody else consented, or by the daily task at the deadline;
 pages and mails show the day, not a time (`adopted_on`). Due proposals are
 adopted in order of publication, conflicting ones go to the meeting.
+Adoptions run one after the other (`instructions.lock_structure()`, an
+advisory lock until the transaction ends), so that two at once check
+against each other's changes.
 Only circle members respond (also no admins outside the circle).
 Responses are anonymous: consents and requests are only counted ("3 of 7
 without objection"; current members only, not people who left since,

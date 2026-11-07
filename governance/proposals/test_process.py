@@ -2,7 +2,7 @@ import datetime as dt
 
 import time_machine
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 
 from governance.accounts.models import User
@@ -326,3 +326,65 @@ class ProcessTest(TestCase):
             respond(proposal, self.bob, Response.CONSENT)
         proposal.refresh_from_db()
         self.assertEqual(proposal.status, Proposal.ADOPTED)
+
+
+class ConcurrentAdoptionTest(TransactionTestCase):
+    def test_one_after_the_other(self):
+        """Two proposals adopted at once see each other's changes: the
+        bakery's last role removed while the kitchen moves a role into it
+        leaves a circle, not a role with roles inside"""
+        import threading
+
+        from django.db import connection, transaction
+
+        from governance.proposals.instructions import adopt
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+
+        def proposal(circle, instruction):
+            return Proposal.objects.create(
+                circle=circle,
+                proposer=ada,
+                tension="Bread",
+                created_at=timezone.now(),
+                instructions=[instruction],
+            )
+
+        remove = proposal(bakery, {"op": "remove", "path": f"/roles/{baker.pk}"})
+        move = proposal(
+            kitchen,
+            {
+                "op": "move",
+                "path": f"/roles/{bakery.pk}/supporting_circle/roles/{cook.pk}",
+                "from": f"/roles/{cook.pk}",
+            },
+        )
+        adopted, done = threading.Event(), threading.Event()
+
+        def first():
+            with transaction.atomic():
+                adopt(remove)
+                adopted.set()
+                done.wait(1)  # The other adopts meanwhile, or waits
+            connection.close()
+
+        def second():
+            adopt(move)
+            done.set()
+            connection.close()
+
+        threads = [threading.Thread(target=first), threading.Thread(target=second)]
+        threads[0].start()
+        adopted.wait(5)
+        threads[1].start()
+        for thread in threads:
+            thread.join()
+        bakery.refresh_from_db()
+        cook.refresh_from_db()
+        self.assertEqual((cook.circle, bakery.is_circle), (bakery, True))

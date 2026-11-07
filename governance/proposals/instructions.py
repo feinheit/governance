@@ -14,7 +14,7 @@ constitution's rules raise ``ProposalError`` with all problems found.
 import re
 from contextlib import nullcontext
 
-from django.db import transaction
+from django.db import connection, transaction
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -37,6 +37,8 @@ KEY = r"(\d+|n\d+)"
 # Left from merging texts changed in the meantime (``drafting.MergeMixin``)
 MARKERS = re.compile(r"^(<{7}|>{7})( .*)?$|^={7}$", re.MULTILINE)
 NEW_KEY = re.compile(r"n(\d+)")
+# pg_advisory_xact_lock()'s key of lock_structure(), any number of our own
+STRUCTURE_LOCK = 20261107
 ROLE_FIELDS = {"name": "name", "aim": "purpose"}
 POLICY_FIELDS = {"title": "title", "body": "body"}
 TEXTS = {"accountabilities": Accountability, "domains": Domain}
@@ -550,6 +552,7 @@ def revert_after_meeting(meeting):
     """A circle which lost its last roles while its meeting ran turns back
     into a role when the meeting ends, recorded in the last adopted proposal
     which left it without roles (``Proposal.reverting_circles``)"""
+    lock_structure()
     circle = meeting.circle
     if circle is None:
         return
@@ -619,17 +622,30 @@ def replace_keys(proposal, created):
             proposal.names[mapping[key]] = str(obj)
 
 
+def lock_structure():
+    """One change of the structure after the other, until the transaction
+    ends: two proposals adopted at once (a meeting and the nightly task,
+    two requests) check against each other's changes, e.g. one moving a role
+    into a circle whose last role the other removes. Adopting is rare,
+    waiting a moment doesn't matter."""
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT pg_advisory_xact_lock(%s)", [STRUCTURE_LOCK])
+
+
 @transaction.atomic
 def adopt(proposal):
     """Applies the proposal and marks it as adopted"""
     # Locked, with its status in the database: two requests (or a click and
-    # the nightly task) may adopt the same proposal loaded before
+    # the nightly task) may adopt the same proposal loaded before. The
+    # proposal first, then the structure, like requests changing the
+    # proposal before adopting it (the last consent)
     proposal.status = (
         Proposal.objects
         .select_for_update()
         .values_list("status", flat=True)
         .get(pk=proposal.pk)
     )
+    lock_structure()
     if proposal.status == Proposal.ADOPTED:
         raise ProposalError([_("The proposal has already been adopted.")])
     if proposal.glassfrog_id and not (proposal.meeting and proposal.meeting.is_running):
