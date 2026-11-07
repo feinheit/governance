@@ -64,6 +64,9 @@ def _policy_row(pk, entry):
         "role_id": entry["role"],
         "title": entry["title"],
         "body": entry["body"],
+        "domain_id": entry.get("domain"),
+        # Without a row of its own (audit.structure())
+        "domain_text": entry.get("domain_text"),
         "archived_on": None,
     }
 

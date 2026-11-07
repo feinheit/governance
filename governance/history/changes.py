@@ -66,3 +66,7 @@ def diff_policies(old, new):
                 yield int(pk), b["role"], field, a[field], b[field]
         if a["role"] != b["role"]:
             yield int(pk), b["role"], "moved", a["role"], b["role"]
+        elif a.get("domain") and b.get("domain") and a["domain"] != b["domain"]:
+            # Another domain, not a domain renamed (days of GlassFrog
+            # without the domain's ID in the app don't count)
+            yield int(pk), b["role"], "domain", a["domain_text"], b["domain_text"]

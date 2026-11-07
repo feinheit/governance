@@ -201,6 +201,8 @@ class ChangesRightAwayTest(AuditTestCase):
         assignment = Assignment.objects.create(
             role=cook, user=root, starts_on=yesterday
         )
+        pantry = Domain.objects.create(role=cook, text="The pantry")
+        cold = Policy.objects.create(role=cook, domain=fridge, title="Cold")
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM audit_logged_actions")
         backfill([(yesterday, structure_from_database(yesterday))])
@@ -230,6 +232,23 @@ class ChangesRightAwayTest(AuditTestCase):
                 {"title": "Labels", "body": "Always", "domain": fridge.pk},
             )
         self.assertIn((Policy.objects.get(title="Labels"), "policy-added"), kinds())
+        # Moved to another domain of the role
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/roles/{cook.pk}/domain-policies/{cold.pk}/",
+                {"title": "Cold", "body": "", "domain": pantry.pk},
+            )
+        self.assertEqual(
+            list(Change.objects.filter(policy=cold).values_list("kind", "old", "new")),
+            [("policy-domain", "The fridge", "The pantry")],
+        )
+        # A domain renamed isn't the policy moving
+        with self.captureOnCommitCallbacks(execute=True):
+            Domain.objects.filter(pk=pantry.pk).update(text="The larder")
+            from governance.history.update import update_today
+
+            update_today()
+        self.assertEqual(Change.objects.filter(policy=cold).count(), 1)
 
         facilitator = kitchen.roles.get(core_role="facilitator")
         meeting = Meeting.objects.create(

@@ -983,6 +983,9 @@ class Importer:
         users = {person_id: user.pk for person_id, user in self.users.items()}
         roles = {role_id: role.pk for role_id, role in self.roles.items()}
         policies = {policy_id: policy.pk for policy_id, policy in self.policies.items()}
+        domains = dict(
+            Domain.objects.exclude(glassfrog_id=None).values_list("glassfrog_id", "pk")
+        )
         known = unknown = 0
         history = Backfill()
         for day, data in self.export.snapshots():
@@ -1026,6 +1029,8 @@ class Importer:
                         "title": entry["title"],
                         "body": convert(entry["body"], entry["role"]),
                         "role": roles[entry["role"]],
+                        "domain": domains.get(entry.get("domain")),
+                        "domain_text": snapshot["domains"].get(entry.get("domain")),
                     }
             if day == self.history.days[-1]:
                 result = structure_from_database(day)

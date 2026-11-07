@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 14:52+0100\n"
+"POT-Creation-Date: 2026-11-07 15:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -297,6 +297,10 @@ msgstr "Policy-Text geändert"
 #: governance/history/views.py
 msgid "Policy moved"
 msgstr "Policy verschoben"
+
+#: governance/history/views.py
+msgid "Policy moved to another domain"
+msgstr "Policy in eine andere Domain verschoben"
 
 #: governance/meetings/apps.py governance/meetings/models.py
 msgid "meetings"
@@ -1206,9 +1210,7 @@ msgstr "Bitte begründen."
 
 #: governance/proposals/views.py
 msgid "No objection takes no text: ask a question or request a meeting."
-msgstr ""
-"Zu „kein Einwand“ gehört kein Text: stelle eine Frage oder verlange ein "
-"Meeting."
+msgstr "Zu „kein Einwand“ gehört kein Text: stelle eine Frage oder verlange ein Meeting."
 
 #: governance/proposals/views.py
 #, python-format

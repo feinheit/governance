@@ -767,9 +767,6 @@ Deliberately not modelled:
   - The lists of current assignments (focus and term next to the name)
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
-- **Verification** (second round of 2026-11-07, open findings):
-  - Untested risk: a domain policy moved to another domain isn't a
-    `Change` (the role's history lists the recorded proposal).
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the

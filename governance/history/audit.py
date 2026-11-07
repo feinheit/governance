@@ -108,6 +108,9 @@ def structure(rows, assignments, day):
             key=lambda item: (_int(item[1].get("position")) or 0, item[0]),
         ):
             by_role[_int(data["role_id"])].append(data.get("text"))
+    domain_texts = {
+        _int(pk): data.get("text") for pk, data in rows.get("domains", {}).items()
+    }
     roles = {}
     for pk, data in rows.get("roles", {}).items():
         if not _active(data, day):
@@ -133,6 +136,11 @@ def structure(rows, assignments, day):
                 "title": data.get("title") or "",
                 "body": data.get("body") or "",
                 "role": _int(data["role_id"]),
+                # A role's policy for its domains, with the domain's text
+                # (the backfill's rows have it, backfill._policy_row())
+                "domain": _int(data.get("domain_id")),
+                "domain_text": domain_texts.get(_int(data.get("domain_id")))
+                or data.get("domain_text"),
             }
             for pk, data in rows.get("policies", {}).items()
             if _active(data, day)
@@ -175,8 +183,10 @@ def structure_from_database(day):
                 "title": policy.title,
                 "body": policy.body,
                 "role": policy.role_id,
+                "domain": policy.domain_id,
+                "domain_text": policy.domain.text if policy.domain else None,
             }
-            for policy in Policy.objects.active()
+            for policy in Policy.objects.active().select_related("domain")
         },
     }
 

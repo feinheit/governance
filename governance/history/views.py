@@ -41,6 +41,7 @@ LABELS = {
     "policy-title": _("Policy renamed"),
     "policy-body": _("Policy text changed"),
     "policy-moved": _("Policy moved"),
+    "policy-domain": _("Policy moved to another domain"),
 }
 ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected", "focus"}
 
