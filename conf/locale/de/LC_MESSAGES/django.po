@@ -2474,6 +2474,11 @@ msgstr "Du hast jetzt %(role)s in %(circle)s."
 msgid "You don't hold %(role)s in %(circle)s anymore."
 msgstr "Du hast %(role)s in %(circle)s nicht mehr."
 
+#: governance/templates/notifications/roles_changed.txt
+#, python-format
+msgid "Focus: %(focus)s"
+msgstr "Fokus: %(focus)s"
+
 #: governance/templates/proposals/_consequences.html
 #, python-format
 msgid "%(circle)s loses its last roles: it turns back into a role when the meeting ends, its Facilitator, Secretary and Circle Rep and their terms end."

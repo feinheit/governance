@@ -111,6 +111,17 @@ class AssignmentMailsTest(TestCase):
             [("eve@example.com", "Your focus in Cook (Kitchen): none anymore")],
         )
 
+    def test_focus_when_assigned(self):
+        """The mail about the new role says the focus it starts with"""
+        self.client.force_login(self.ada)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/roles/{self.cook.pk}/assignments/",
+                {"user": self.eve.pk, "focus": "Soup"},
+            )
+        [message] = [m for m in mail.outbox if m.to == ["eve@example.com"]]
+        self.assertIn("You now hold Cook in Kitchen.\nFocus: Soup\n", message.body)
+
     def test_sub_circles_following_the_circle_leads(self):
         """A sub-circle nobody leads follows the Circle Leads of the circle
         above (1.4.2): its Secretary hears about a new one"""

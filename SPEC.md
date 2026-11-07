@@ -499,7 +499,7 @@ meeting ends, the results after corrections only, not those of core
 roles archived by the circle turning back then (the outputs list them,
 "the role doesn't exist anymore", decided 2026-11-07):
 `elections.announce_elections()`, decided 2026-11-07) tell people the roles
-they get and lose (not the circle's role in the super-circle, which
+they get (with their focus) and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
 left the circle; changing a holder's focus tells the holder
 (`mails.focus_changed()`, nobody else, decided 2026-11-07); changes by adopted proposals are in their mails, the

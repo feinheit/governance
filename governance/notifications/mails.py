@@ -225,17 +225,29 @@ def domain_policy_changed(proposal):
 
 
 def roles_changed(started, ended):
-    """``started`` and ``ended`` are sets of ``(user_id, role_id)``"""
-    from governance.roles.models import Role
+    """``started`` and ``ended`` are sets of ``(user_id, role_id)``; the
+    roles started with their focus"""
+    from governance.roles.models import Assignment, Role
 
     roles = Role.objects.select_related("circle").in_bulk({
         role for _user, role in started | ended
     })
+    focus = {
+        (user, role): focus
+        for user, role, focus in Assignment.objects
+        .current()
+        .filter(role__in={role for _user, role in started})
+        .values_list("user", "role", "focus")
+    }
     sent = 0
     for user_id in sorted({user for user, _role in started | ended}):
         changes = [
-            (roles[role], True) for user, role in sorted(started) if user == user_id
-        ] + [(roles[role], False) for user, role in sorted(ended) if user == user_id]
+            (roles[role], True, focus.get((user, role), ""))
+            for user, role in sorted(started)
+            if user == user_id
+        ] + [
+            (roles[role], False, "") for user, role in sorted(ended) if user == user_id
+        ]
         sent += send(
             User.objects.filter(pk=user_id),
             lambda changes=changes: (
@@ -248,7 +260,7 @@ def roles_changed(started, ended):
                             else _("no longer %(role)s")
                             % {"role": f"{role} ({role.circle})"}
                         )
-                        for role, holds in changes
+                        for role, holds, _focus in changes
                     )
                 }
             ),
