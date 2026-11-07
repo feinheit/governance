@@ -24,6 +24,9 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = env(
     "DEFAULT_FROM_EMAIL", default="governance@feinheit.ch"
 )
 
+# Addresses getting a copy of each distinct mail (notifications/mails.py)
+MAIL_COPIES = env("MAIL_COPIES", default=[])
+
 # Google sign-in, only for existing, active users
 GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", default="")
 GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", default=None)

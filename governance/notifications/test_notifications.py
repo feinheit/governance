@@ -195,6 +195,44 @@ class NotificationsTest(TestCase):
         to = sent(self.bob, Response.MEETING, "Still too short")
         self.assertEqual(sorted(to), ["eve@example.com", "zoe@example.com"])
 
+    def test_copies(self):
+        """MAIL_COPIES get one copy of each mail, in the language of their
+        account (if any), unless they received it themselves"""
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            role=self.waiter(self.eve),
+            tension="Better name",
+            created_at=timezone.now(),
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{self.cook.pk}/name",
+                    "original_value": "Cook",
+                    "value": "Chef",
+                }
+            ],
+            names={f"roles/{self.cook.pk}": "Cook"},
+        )
+        copies = ["Ada@example.com", "copy@example.com", "copy@example.com"]
+        User.objects.create_user("zed@example.com", full_name="Zed", language="de")
+        copies.append("Zed@example.com")
+        with (
+            self.settings(MAIL_COPIES=copies),
+            self.captureOnCommitCallbacks(execute=True),
+        ):
+            publish(proposal)
+        self.assertEqual(
+            sorted((m.to[0], m.subject) for m in mail.outbox),
+            [
+                ("ada@example.com", "Proposal in Kitchen: Better name"),
+                ("bob@example.com", "Vorschlag in Kitchen: Better name"),
+                ("copy@example.com", "Proposal in Kitchen: Better name"),
+                ("eve@example.com", "Proposal in Kitchen: Better name"),
+                ("zed@example.com", "Vorschlag in Kitchen: Better name"),
+            ],
+        )
+
     def test_setting(self):
         self.client.force_login(self.zoe)
         response = self.client.get(f"/people/{self.zoe.pk}/")

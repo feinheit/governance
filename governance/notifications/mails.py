@@ -31,17 +31,31 @@ def recipients(circle):
 
 
 def send(users, subject, template, context):
-    """One mail per user, in their language; nothing for people who left"""
+    """One mail per user, in their language; nothing for people who left.
+    ``settings.MAIL_COPIES`` get a copy, unless they received it already."""
     sent = 0
+    received = set()
     for user in users.filter(is_active=True).distinct():
-        with override(user.language or settings.LANGUAGE_CODE):
-            EmailMessage(
-                subject=str(subject()),
-                body=render_to_string(template, context | {"user": user}),
-                to=[user.email],
-            ).send()
+        _send(user, user.email, subject, template, context)
+        received.add(user.email.lower())
         sent += 1
+    if sent:
+        for address in dict.fromkeys(a.lower() for a in settings.MAIL_COPIES):
+            if address not in received:
+                # In the language of their account, if they have one
+                user = User.objects.filter(email__iexact=address).first()
+                _send(user, address, subject, template, context)
     return sent
+
+
+def _send(user, address, subject, template, context):
+    language = user.language if user else None
+    with override(language or settings.LANGUAGE_CODE):
+        EmailMessage(
+            subject=str(subject()),
+            body=render_to_string(template, context | {"user": user}),
+            to=[address],
+        ).send()
 
 
 def proposal_context(proposal):

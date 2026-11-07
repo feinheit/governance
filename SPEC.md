@@ -511,6 +511,10 @@ a meeting to the proposer and the circle's Secretary (else who stands
 in), who prepares the meeting; consents stay silent until adopting.
 Not configurable, people filter their mails; the
 only setting is `User.notify_all` ("everything in all circles").
+`MAIL_COPIES` (a list of addresses, in the environment) get one copy
+of each mail (one per event, not per recipient; in the language of
+their account, else the default), not when they received it themselves
+(compared by address).
 
 ## 6. History
 

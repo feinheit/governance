@@ -168,7 +168,8 @@ commit to `latest/<app>`. The configuration comes from environment
 variables named like the settings: `DATABASE_URL`, `SECRET_KEY`,
 `ALLOWED_HOSTS`, `SECURE_SSL_HOST` and `SECURE_SSL_REDIRECT=True`
 (django-canonical-domain redirects everything else there), `LIVE=True`,
-`EMAIL_URL`, `BASE_URL`, `GOOGLE_CLIENT_ID`,
+`EMAIL_URL`, `MAIL_COPIES` (e.g. `["a@example.com"]`, who gets a copy of
+each mail), `BASE_URL`, `GOOGLE_CLIENT_ID`,
 `GOOGLE_CLIENT_SECRET`, `SENTRY_DSN` and `SENTRY_ENVIRONMENT`, and until
 the switchover `GLASSFROG_TOKEN`. Only
 existing, active users sign in; new people come from the import until the
