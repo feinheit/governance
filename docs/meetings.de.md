@@ -79,7 +79,10 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 - **Regelmässig**: "Tactical Meeting starten" auf der Seite des Kreises,
   das darf jedes Mitglied; alle Rollen des Kreises sind eingeladen.
 - **Ad hoc**: "Tactical Meeting einberufen" im Menü deines Namens (oben
-  rechts), mit beliebigen Rollen, auch aus anderen Kreisen. "Alle
+  rechts), mit beliebigen Rollen, auch aus anderen Kreisen; die Liste
+  zeigt, wer sie hat: diese Personen sind eingeladen. Um nur einen Teil
+  davon einzuladen (Verfassung 3.1), die anderen im Meeting aus den
+  Teilnehmenden entfernen. "Alle
   Meetings" im Menü "Weitere Aktionen" (…) einer Rollenseite listet die
   Meetings auf, zu denen die Rolle eingeladen war.
 

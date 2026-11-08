@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -311,14 +311,31 @@ class TacticalMeetingForm(ModelForm):
             .active()
             .exclude(circle=None)
             .select_related("circle")
+            .prefetch_related(
+                Prefetch(
+                    "assignments",
+                    queryset=Assignment.objects.current().select_related("user"),
+                    to_attr="current_assignments",
+                )
+            )
             .order_by("circle__name", "position", "name")
         )
-        field.label_from_instance = lambda role: f"{role} ({role.circle})"
+        field.label_from_instance = role_with_holders
         field.widget.attrs["size"] = 15
         field.help_text = _(
             "Any partner may call a tactical meeting and invite the roles"
-            " they need. Hold Ctrl or Cmd to select several."
+            " they need; their holders are invited. Hold Ctrl or Cmd to select"
+            " several. To invite only some holders of a role (constitution"
+            " 3.1), remove the others from the attendees in the meeting."
         )
+
+
+def role_with_holders(role):
+    """The role, its circle and who is invited with it"""
+    holders = ", ".join(
+        str(a.user) for a in role.current_assignments if a.user.is_active
+    )
+    return f"{role} ({role.circle}): {holders or gettext('nobody')}"
 
 
 def tactical_call(request):

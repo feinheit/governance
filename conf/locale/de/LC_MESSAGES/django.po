@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:34+0100\n"
+"POT-Creation-Date: 2026-11-08 14:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -632,8 +632,12 @@ msgid "Tactical Meetings"
 msgstr "Tactical Meetings"
 
 #: governance/meetings/views.py
-msgid "Any partner may call a tactical meeting and invite the roles they need. Hold Ctrl or Cmd to select several."
-msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen. Mit Ctrl oder Cmd mehrere auswählen."
+msgid "Any partner may call a tactical meeting and invite the roles they need; their holders are invited. Hold Ctrl or Cmd to select several. To invite only some holders of a role (constitution 3.1), remove the others from the attendees in the meeting."
+msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen; eingeladen ist, wer sie hat. Mit Ctrl oder Cmd mehrere auswählen. Um nur einen Teil der Personen einer Rolle einzuladen (Verfassung 3.1), die anderen im Meeting aus den Teilnehmenden entfernen."
+
+#: governance/meetings/views.py
+msgid "nobody"
+msgstr "niemand"
 
 #: governance/meetings/views.py governance/templates/base.html
 msgid "Call a tactical meeting"

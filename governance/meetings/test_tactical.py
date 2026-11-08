@@ -381,7 +381,9 @@ class TacticalTest(TestCase):
         """Any partner calls one and invites roles of any circle"""
         self.client.force_login(self.eve)
         response = self.client.get(f"/meetings/tactical/new/?role={self.cook.pk}")
-        self.assertContains(response, "Cook (Kitchen)")
+        # Who is invited with each role
+        self.assertContains(response, "Cook (Kitchen): Bob")
+        self.assertContains(response, "Sales (Example Ltd): Eve")
         self.client.post(
             "/meetings/tactical/new/",
             {"invited_roles": [self.cook.pk, self.sales.pk]},
