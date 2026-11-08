@@ -6,7 +6,7 @@
     <div>
       <a
         class="wb-row-title d-inline"
-        href="{% url 'role_history' change.role_id %}#day-{{ change.date|date:'Y-m-d' }}"
+        href="{{ change.role.get_history_url }}&amp;day={{ change.date|date:'Y-m-d' }}#day-{{ change.date|date:'Y-m-d' }}"
       >{{ change.label }}</a>
       {% if change.policy %}<span class="small">{{ change.policy }}</span>{% endif %}
       {% if change.old_role or change.new_role %}<span

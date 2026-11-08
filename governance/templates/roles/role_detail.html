@@ -34,7 +34,7 @@
           href="{% url 'role_settings' role.pk %}"
           data-modal
         >{% icon "gear" %} {% translate "Settings" %}</a>{% endif %}
-      <a class="btn btn-sm btn-quiet" href="{% url 'role_history' role.pk %}">{% icon "clock-history" %}
+      <a class="btn btn-sm btn-quiet" href="{{ role.get_history_url }}">{% icon "clock-history" %}
         {% translate "History" %}</a>
       {% if running_meeting %}
         {# One meeting at a time per circle #}
@@ -356,7 +356,7 @@
               {% translate "No changes." %}
             </li>{% endif %}
           <li class="list-group-item small">
-            <a href="{% url 'role_history' role.pk %}">{% translate "Complete history" %}</a> ·
+            <a href="{{ role.get_history_url }}">{% translate "Complete history" %}</a> ·
             <a href="{% url 'proposals' %}?role={{ role.pk }}">{% translate "All proposals changing this role" %}</a>
             {% if role.is_circle %}
               · <a href="{% url 'proposals' %}?circle={{ role.pk }}">{% translate "All proposals of this circle" %}</a>

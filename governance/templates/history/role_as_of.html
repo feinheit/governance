@@ -6,7 +6,7 @@
   <div class="alert alert-info">
     {% blocktranslate with day=day|date:"DATE_FORMAT" %}As of {{ day }}.{% endblocktranslate %}
     <a href="{{ role.get_absolute_url }}">{% translate "Today" %}</a> · <a
-      href="{% url 'role_history' role.pk %}"
+      href="{{ role.get_history_url }}"
     >{% translate "History" %}</a>
   </div>
   {% if not entry %}

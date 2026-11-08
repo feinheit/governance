@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:08+0100\n"
+"POT-Creation-Date: 2026-11-08 14:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -367,22 +367,20 @@ msgid "Domains removed"
 msgstr "Domains entfernt"
 
 #: governance/history/views.py
+msgid "Circle or role"
+msgstr "Kreis oder Rolle"
+
+#: governance/history/views.py
+msgid "With sub-circles"
+msgstr "Mit Sub-Kreisen"
+
+#: governance/history/views.py
 msgid "With assignments"
 msgstr "Mit Zuweisungen"
 
 #: governance/history/views.py
 msgid "With links, metrics and checklists"
 msgstr "Mit Links, Metriken und Checklisten"
-
-#: governance/history/views.py governance/proposals/describe.py
-#: governance/templates/history/role_as_of.html
-#: governance/templates/roles/_role_rows.html
-#: governance/templates/roles/person_detail.html
-#: governance/templates/roles/role_context.html
-#: governance/templates/roles/role_detail.html
-#: governance/templates/search/search.html
-msgid "Circle"
-msgstr "Kreis"
 
 #: governance/meetings/apps.py governance/meetings/models.py
 msgid "meetings"
@@ -620,7 +618,7 @@ msgstr "Der Link muss mit https:// beginnen."
 msgid "Any partner may call a tactical meeting and invite the roles they need. Hold Ctrl or Cmd to select several."
 msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen. Mit Ctrl oder Cmd mehrere auswählen."
 
-#: governance/meetings/views.py governance/templates/roles/role_detail.html
+#: governance/meetings/views.py governance/templates/base.html
 msgid "Call a tactical meeting"
 msgstr "Tactical Meeting einberufen"
 
@@ -799,6 +797,16 @@ msgstr "Rolle"
 #: governance/templates/roles/governance.txt
 msgid "Policy"
 msgstr "Policy"
+
+#: governance/proposals/describe.py
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/_role_rows.html
+#: governance/templates/roles/person_detail.html
+#: governance/templates/roles/role_context.html
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
+msgid "Circle"
+msgstr "Kreis"
 
 #: governance/proposals/describe.py
 msgid "yes"
@@ -1884,10 +1892,8 @@ msgstr "Governance"
 msgid "Sign in with Google"
 msgstr "Mit Google anmelden"
 
-#: governance/templates/base.html
-#: governance/templates/history/organization_history.html
+#: governance/templates/base.html governance/templates/history/history.html
 #: governance/templates/history/role_as_of.html
-#: governance/templates/history/role_history.html
 #: governance/templates/roles/role_detail.html
 msgid "History"
 msgstr "Geschichte"
@@ -1913,10 +1919,6 @@ msgstr "API"
 #: governance/templates/base.html
 msgid "Sign out"
 msgstr "Abmelden"
-
-#: governance/templates/generic/_filters.html
-msgid "Remove the filter"
-msgstr "Filter entfernen"
 
 #: governance/templates/generic/_filters.html
 msgid "Filter"
@@ -1971,13 +1973,18 @@ msgstr "Anzeigen"
 msgid "No changes."
 msgstr "Keine Änderungen."
 
-#: governance/templates/history/organization_history.html
+#: governance/templates/history/history.html
+#: governance/templates/history/role_as_of.html
+msgid "Show as of"
+msgstr "Stand anzeigen"
+
+#: governance/templates/history/history.html
 #: governance/templates/meetings/meeting_list.html
 #: governance/templates/proposals/proposal_list.html
 msgid "Newer"
 msgstr "Neuere"
 
-#: governance/templates/history/organization_history.html
+#: governance/templates/history/history.html
 #: governance/templates/meetings/meeting_list.html
 #: governance/templates/proposals/proposal_list.html
 msgid "Older"
@@ -2004,11 +2011,6 @@ msgstr "besetzt durch"
 #, python-format
 msgid "elected until %(elected_until)s"
 msgstr "gewählt bis %(elected_until)s"
-
-#: governance/templates/history/role_as_of.html
-#: governance/templates/history/role_history.html
-msgid "Show as of"
-msgstr "Stand anzeigen"
 
 #: governance/templates/history/role_as_of.html
 #: governance/templates/roles/governance.txt
@@ -3009,12 +3011,12 @@ msgid "More actions"
 msgstr "Weitere Aktionen"
 
 #: governance/templates/roles/role_detail.html
-msgid "Mail addresses of the members"
-msgstr "Mailadressen der Mitglieder"
-
-#: governance/templates/roles/role_detail.html
 msgid "All meetings"
 msgstr "Alle Meetings"
+
+#: governance/templates/roles/role_detail.html
+msgid "Mail addresses of the members"
+msgstr "Mailadressen der Mitglieder"
 
 #: governance/templates/roles/role_detail.html
 #, python-format
@@ -3103,6 +3105,9 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "Remove the filter"
+#~ msgstr "Filter entfernen"
 
 #~ msgid "Without assignments"
 #~ msgstr "Ohne Zuweisungen"

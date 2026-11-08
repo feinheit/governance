@@ -146,7 +146,7 @@ class ReelectedTest(TestCase):
         )
 
         self.client.force_login(ada)
-        response = self.client.get(f"/roles/{secretary.pk}/history/?assignments=1")
+        response = self.client.get(f"/history/?role={secretary.pk}&assignments=1")
         self.assertContains(response, "Re-elected")
         self.assertContains(response, "until 31 December 2027")
 
@@ -227,7 +227,7 @@ class FocusTest(TestCase):
             ],
         )
         self.client.force_login(ada)
-        response = self.client.get(f"/roles/{cook.pk}/history/?assignments=1")
+        response = self.client.get(f"/history/?role={cook.pk}&assignments=1")
         self.assertContains(response, "Focus changed")
         self.assertContains(response, "Salads and soups")
 
@@ -340,13 +340,13 @@ class HistoryViewsTest(TestCase):
         )
         proposal.roles.add(cook)
 
-        response = self.client.get(f"/roles/{cook.pk}/history/")
+        response = self.client.get(f"/history/?role={cook.pk}")
         self.assertContains(response, "Better names")
         self.assertContains(response, "Renamed")
         self.assertContains(response, "Purpose changed")
         self.assertNotContains(response, "No longer assigned")
         self.assertContains(
-            self.client.get(f"/roles/{cook.pk}/history/?assignments=1"),
+            self.client.get(f"/history/?role={cook.pk}&assignments=1"),
             "No longer assigned",
         )
 
@@ -484,9 +484,11 @@ class RolePageHistoryTest(TestCase):
         self.assertContains(response, "Renamed")
         self.assertContains(response, "Kok")
         # Linked to the history, which shows what changed that day
-        self.assertContains(response, f"/roles/{cook.pk}/history/#day-2019-03-12")
         self.assertContains(
-            self.client.get(f"/roles/{cook.pk}/history/"), 'id="day-2019-03-12"'
+            response, f"/history/?role={cook.pk}&amp;day=2019-03-12#day-2019-03-12"
+        )
+        self.assertContains(
+            self.client.get(f"/history/?role={cook.pk}"), 'id="day-2019-03-12"'
         )
 
 
@@ -508,7 +510,7 @@ class MergedListsTest(TestCase):
         ]:
             Change.objects.create(date=day, role=cook, kind=kind, old=old, new=new)
 
-        for url in [f"/roles/{cook.pk}/history/", "/history/"]:
+        for url in [f"/history/?role={cook.pk}", "/history/"]:
             with self.subTest(url=url):
                 response = self.client.get(url)
                 self.assertContains(response, "Accountabilities changed", count=1)
@@ -570,12 +572,81 @@ class OperationalItemsTest(TestCase):
             [("link-added", circle.pk, "[Board](https://example.com/)")],
         )
 
-        url = f"/roles/{circle.pk}/history/"
+        url = f"/history/?role={circle.pk}"
         self.assertNotContains(self.client.get(url), "Link added")
-        response = self.client.get(f"{url}?operational=1")
+        response = self.client.get(f"{url}&operational=1")
         self.assertContains(response, "Link added")
         self.assertContains(response, 'href="https://example.com/"')
         self.assertNotContains(self.client.get("/history/"), "Link added")
         self.assertContains(self.client.get("/history/?operational=1"), "Link added")
         # Not on the role's page
         self.assertNotContains(self.client.get(circle.get_absolute_url()), "Link added")
+
+
+class OneHistoryTest(TestCase):
+    def test_circle_role_and_sub_circles(self):
+        """One history page: a circle with its roles (sub-circles on
+        request), or one role"""
+        from governance.accounts.models import User
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        day = dt.date(2026, 1, 2)
+        for role, old, new in [
+            (kitchen, "Kichen", "Kitchen"),
+            (cook, "Kok", "Cook"),
+            (bakery, "Bakry", "Bakery"),
+            (baker, "Becker", "Baker"),
+        ]:
+            Change.objects.create(date=day, role=role, kind="name", old=old, new=new)
+
+        def names(url):
+            text = self.client.get(url).content.decode()
+            return {
+                name for name in ["Kichen", "Kok", "Bakry", "Becker"] if name in text
+            }
+
+        self.assertEqual(
+            names(f"/history/?role={kitchen.pk}"), {"Kichen", "Kok", "Bakry"}
+        )
+        self.assertEqual(
+            names(f"/history/?role={kitchen.pk}&sub_circles=on"),
+            {"Kichen", "Kok", "Bakry", "Becker"},
+        )
+        self.assertEqual(names(f"/history/?role={cook.pk}"), {"Kok"})
+        # The role chosen, though not a circle; its structure "as of"
+        response = self.client.get(f"/history/?role={cook.pk}")
+        self.assertContains(
+            response, f'<option value="{cook.pk}" selected>Cook</option>', html=True
+        )
+        self.assertContains(response, f"/roles/{cook.pk}/as-of/")
+
+        # The pages link it
+        self.assertContains(
+            self.client.get(cook.get_absolute_url()), f"/history/?role={cook.pk}"
+        )
+        self.assertContains(
+            self.client.get(kitchen.get_absolute_url()), f"/history/?role={kitchen.pk}"
+        )
+
+    def test_page_of_a_day(self):
+        """A link to a day opens the page with that day"""
+        from governance.accounts.models import User
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        cook = Role.objects.create(name="Cook")
+        for days in range(3):
+            Change.objects.create(
+                date=dt.date(2026, 1, 1) + dt.timedelta(days=days),
+                role=cook,
+                kind="purpose",
+                old="",
+                new=f"Purpose {days}",
+            )
+        with self.settings(HISTORY_DAYS_PER_PAGE=1):
+            response = self.client.get("/history/?day=2026-01-02")
+            self.assertContains(response, 'id="day-2026-01-02"')
+            self.assertEqual(response.context["page"].number, 2)

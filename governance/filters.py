@@ -17,7 +17,9 @@ class FilterForm(forms.Form):
             *args,
             **kwargs,
         )
-        for field in self.fields.values():
+        for name, field in self.fields.items():
+            if isinstance(field, RoleField):
+                field.add_role(self.data.get(name, ""))
             widget = field.widget
             if isinstance(widget, forms.CheckboxInput):
                 widget.attrs["class"] = "form-check-input"
@@ -54,3 +56,20 @@ class CircleField(forms.TypedChoiceField):
         field = super().__deepcopy__(memo)
         field.choices = circle_choices(field.empty_label)
         return field
+
+
+class RoleField(CircleField):
+    """A circle, or a role (from its page): the circles, and the role
+    chosen if it isn't one of them (``FilterForm`` adds it)"""
+
+    def add_role(self, value):
+        if not str(value).isdigit() or any(
+            key == str(value) for key, _label in self.choices
+        ):
+            return
+        if role := Role.objects.filter(pk=value).first():
+            self.choices = [
+                *self.choices[:1],
+                (str(role.pk), role.name),
+                *self.choices[1:],
+            ]

@@ -16,8 +16,10 @@ active person. Everybody signed in sees everything except others' drafts.
   (everybody with their roles), **Mail addresses**, Help, API and
   signing out.
 - **Proposals**: all proposals, filtered by status.
-- **History**: what changed when, filtered by circle, on request with the
-  assignments and with links, metrics and checklists.
+- **History**: what changed when; for a circle with its roles ("With
+  sub-circles" also what's inside them) or for a role, on request with
+  the assignments and with links, metrics and checklists. The pages of
+  circles and roles link theirs.
 - **Search** finds roles, accountabilities, domains and policies
   containing all the words entered.
 

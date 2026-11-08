@@ -561,8 +561,10 @@ their account, else the default), not when they received it themselves
   the role's page not.
 - **Filters** like Workbench's (`governance/filters.py`,
   `generic/_filters.html`, `frontend/filters.js`: GET forms submitting when
-  changed): the history by circle (with its sub-circles), with
-  assignments, with links, metrics and checklists.
+  changed). The history is one page (`/history/`, `?role=`): a circle
+  with its roles (a sub-circle as a role; "With sub-circles" with what's
+  inside them) or a role alone, with assignments, with links, metrics and
+  checklists; links to a day (`?day=`) open its page.
 - The audit log covers everything else the same way, row by row.
 
 ## 7. Views

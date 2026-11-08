@@ -8,6 +8,7 @@ e2e`` leaves them out, CI runs them.
 """
 
 import os
+import re
 
 from django.conf import settings
 from django.test import Client, LiveServerTestCase, tag
@@ -524,7 +525,9 @@ class MeetingE2ETest(LiveServerTestCase):
         page = self.page
         page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
         page.locator("a", has_text="Purpose changed").click()
-        page.wait_for_url("**/history/#day-2026-01-02")
+        page.wait_for_url(
+            re.compile(r"/history/\?role=\d+&day=2026-01-02#day-2026-01-02$")
+        )
         self.assertTrue(
             page.locator("#day-2026-01-02 details").get_attribute("open") is not None
         )
@@ -779,8 +782,8 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertFalse(page.locator("[data-filter-submit]").is_visible())
         page.locator("label", has_text="With assignments").click()
         page.wait_for_url("**/history/?assignments=on")
-        page.select_option("select[name=circle]", str(self.kitchen.pk))
-        page.wait_for_url(f"**/history/?assignments=on&circle={self.kitchen.pk}")
+        page.select_option("select[name=role]", str(self.kitchen.pk))
+        page.wait_for_url(f"**/history/?assignments=on&role={self.kitchen.pk}")
         page.locator("a", has_text="Reset").click()
         page.wait_for_url("**/history/?")
         self.assertEqual(self.errors, [])

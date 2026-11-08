@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 from governance.accounts.models import User
 from governance.diff import similar, tokens
-from governance.filters import CircleField, FilterForm
+from governance.filters import FilterForm, RoleField
 from governance.history.audit import structure_on
 from governance.history.models import Change
 from governance.proposals.models import Proposal
@@ -208,16 +208,13 @@ def timeline(changes, proposals):
     ]
 
 
-class RoleHistoryFilters(FilterForm):
+class HistoryFilters(FilterForm):
+    role = RoleField(label=_("Circle or role"), empty_label=_("All circles"))
+    sub_circles = forms.BooleanField(label=_("With sub-circles"), required=False)
     assignments = forms.BooleanField(label=_("With assignments"), required=False)
     operational = forms.BooleanField(
         label=_("With links, metrics and checklists"), required=False
     )
-
-
-class HistoryFilters(RoleHistoryFilters):
-    circle = CircleField(label=_("Circle"), empty_label=_("All circles"))
-    field_order = ["circle", "assignments", "operational"]
 
 
 def filtered(changes, filters):
@@ -230,26 +227,9 @@ def filtered(changes, filters):
     return changes
 
 
-def role_history(request, pk):
-    role = get_object_or_404(Role, pk=pk)
-    filters = RoleHistoryFilters(request.GET)
-    changes = filtered(role.changes.select_related("role", "policy"), filters)
-    proposals = role.changed_by_proposals.filter(
-        status=Proposal.ADOPTED
-    ).select_related("proposer")
-    return render(
-        request,
-        "history/role_history.html",
-        {
-            "role": role,
-            "ancestors": role.ancestors(),
-            "timeline": timeline(changes, proposals),
-            "filters": filters,
-        },
-    )
-
-
-def organization_history(request):
+def history(request):
+    """What changed when: everything, a circle with its roles (with its
+    sub-circles on request) or one role, both ``?role=``"""
     filters = HistoryFilters(request.GET)
     changes = filtered(Change.objects.select_related("role", "policy"), filters)
     # The days of changes and of adopted proposals (local days), e.g. one
@@ -257,10 +237,18 @@ def organization_history(request):
     adopted = Proposal.objects.filter(status=Proposal.ADOPTED).annotate(
         day=TruncDate("decided_at", tzinfo=timezone.get_current_timezone())
     )
-    if circle_id := filters.get("circle"):
-        # The circle, its roles and those of its sub-circles
-        circle = get_object_or_404(Role, pk=circle_id)
-        circles = [circle, *circle.sub_circles()]
+    subject = None
+    if role_id := filters.get("role"):
+        subject = role = get_object_or_404(Role, pk=role_id)
+    if subject and not subject.is_circle:
+        changes = changes.filter(role=role)
+        adopted = adopted.filter(pk__in=role.changed_by_proposals.values("pk"))
+    elif subject:
+        circle = subject
+        circles = [circle]
+        if filters.get("sub_circles"):
+            circles.extend(circle.sub_circles())
+        # The circles and their roles (a sub-circle as a role too)
         changes = changes.filter(Q(role__in=circles) | Q(role__circle__in=circles))
         adopted = adopted.filter(circle__in=circles)
     all_days = sorted(
@@ -268,19 +256,29 @@ def organization_history(request):
         | set(adopted.order_by().values_list("day", flat=True).distinct()),
         reverse=True,
     )
-    days = Paginator(all_days, getattr(settings, "HISTORY_DAYS_PER_PAGE", 30)).get_page(
-        request.GET.get("page")
-    )
+    paginator = Paginator(all_days, getattr(settings, "HISTORY_DAYS_PER_PAGE", 30))
+    number = request.GET.get("page")
+    try:
+        # Links to a day (#day-…) open its page
+        day = dt.date.fromisoformat(request.GET.get("day", ""))
+    except ValueError:
+        day = None
+    if day and not number:
+        newer_or_same = [d for d in all_days if d >= day]
+        number = max(1, -(-len(newer_or_same) // paginator.per_page))
+    days = paginator.get_page(number)
     dates = list(days.object_list)
     changes = changes.filter(date__in=dates)
     proposals = adopted.filter(day__in=dates).select_related("circle", "proposer")
     return render(
         request,
-        "history/organization_history.html",
+        "history/history.html",
         {
             "timeline": timeline(changes, proposals),
             "page": days,
             "filters": filters,
+            "subject": subject,
+            "ancestors": subject.ancestors() if subject else [],
         },
     )
 

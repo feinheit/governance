@@ -129,6 +129,10 @@ class Role(models.Model):
     def get_absolute_url(self):
         return reverse("role", kwargs={"pk": self.pk})
 
+    def get_history_url(self):
+        """The history of a circle with its roles, or of a role"""
+        return f"{reverse('history')}?role={self.pk}"
+
     @property
     def core(self):
         return CORE_ROLES.get(self.core_role)

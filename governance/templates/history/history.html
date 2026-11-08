@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block title %}{% translate "History" %} – {{ block.super }}{% endblock %}
+{% block title %}{% translate "History" %}{% if subject %} {{ subject }}{% endif %} – {{ block.super }}{% endblock %}
 
 {% block content %}
+  {% include "roles/_breadcrumbs.html" %}
   <div class="wb-page-header">
     <div>
-      <h1>{% translate "History" %}</h1>
+      <h1>
+        {% translate "History" %}
+        {% if subject %}: <a href="{{ subject.get_absolute_url }}">{{ subject }}</a>{% endif %}
+      </h1>
     </div>
+    {% if subject %}
+      {# The structure of a day #}
+      <form class="wb-page-actions flex-nowrap" method="get" action="{% url 'role_as_of' subject.pk %}">
+        <input type="date" name="date" class="form-control form-control-sm" required>
+        <button class="btn btn-sm btn-quiet text-nowrap">{% translate "Show as of" %}</button>
+      </form>
+    {% endif %}
   </div>
   {% include "generic/_filters.html" with form=filters %}
   {% include "history/_timeline.html" with show_role=True %}
