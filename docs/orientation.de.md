@@ -52,7 +52,9 @@ Laufende Meetings, an denen du teilnimmst, stehen oben auf jeder Seite.
 ## Zurückblicken
 
 Jede Rolle und jeder Kreis hat eine Geschichte: die Vorschläge, die sie
-geändert haben, mit Spannung und Vergleich. "Stand anzeigen" zeigt die
+geändert haben, mit Spannung und Vergleich, und was sich ohne Vorschlag
+geändert hat (z.B. in GlassFrog). Die Seite der Rolle zeigt das Neueste
+davon und ihre früheren Namen. "Stand anzeigen" zeigt die
 Struktur an einem früheren Tag, zurück bis 2018.
 
 ## Texte

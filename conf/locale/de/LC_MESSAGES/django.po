@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 16:26+0100\n"
+"POT-Creation-Date: 2026-11-08 09:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1833,6 +1833,7 @@ msgstr "Vorschlag"
 #: governance/templates/meetings/_outputs.html
 #: governance/templates/meetings/meeting_detail.html
 #: governance/templates/notifications/meeting_ended.txt
+#: governance/templates/roles/role_detail.html
 #, python-format
 msgid "until %(date)s"
 msgstr "bis %(date)s"
@@ -1842,6 +1843,7 @@ msgid "Show"
 msgstr "Anzeigen"
 
 #: governance/templates/history/_timeline.html
+#: governance/templates/roles/role_detail.html
 msgid "No changes."
 msgstr "Keine Änderungen."
 
@@ -2909,8 +2911,8 @@ msgid "Add a link"
 msgstr "Link hinzufügen"
 
 #: governance/templates/roles/role_detail.html
-msgid "No proposals changed this role."
-msgstr "Noch kein Vorschlag hat diese Rolle geändert."
+msgid "Formerly"
+msgstr "Früher"
 
 #: governance/templates/roles/role_detail.html
 msgid "Complete history"
@@ -2948,6 +2950,9 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "No proposals changed this role."
+#~ msgstr "Noch kein Vorschlag hat diese Rolle geändert."
 
 #~ msgid "the Circle Leads"
 #~ msgstr "die Circle Leads"

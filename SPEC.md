@@ -561,7 +561,10 @@ their account, else the default), not when they received it themselves
   policies, which the link opens, `frontend/open_details.js`), holders with focus and
   terms (next to the name; lists of current assignments don't say since
   when, the focus is often younger: `roles/_assignment_note.html`), its policies and those of its circles (5.2.1), pending proposals
-  (also for its inside), metrics, checklists, links, history.
+  (also for its inside), metrics, checklists, links, history (its former
+  names, the latest proposals and changes without the assignments and
+  the counts of texts not recorded, `recent_history()`: GlassFrog
+  renamed many roles without a proposal).
 - **Start page** (`/`, <kbd>Alt-H</kbd>): the own person page, with what
   waits for the person; the anchor circle is `/organization/` (the
   navigation's "Organization", <kbd>Alt-O</kbd>).

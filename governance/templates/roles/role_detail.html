@@ -309,9 +309,23 @@
       <section class="card mb-4">
         <div class="card-header"><h2 class="h6 mb-0">{% translate "History" %}</h2></div>
         <ul class="list-group list-group-flush">
-          {% include "proposals/_proposal_rows.html" with proposals=history more=history_more %}
+          {% if former_names %}
+            <li class="list-group-item small text-body-secondary">
+              {% translate "Formerly" %}:
+              {% for name, until in former_names %}{{ name }} <span class="text-nowrap"
+                >({% blocktranslate with date=until|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %})</span>{% if not forloop.last %},
+                {% endif %}{% endfor %}
+            </li>
+          {% endif %}
+          {% for kind, obj in history %}
+            {% if kind == "proposal" %}{% include "proposals/_proposal_row.html" with proposal=obj more=False %}{% else %}{% include "history/_change_row.html" with change=obj more=False %}{% endif %}
+          {% endfor %}
+          {% include "_show_more.html" with more=history_more %}
+          {% for kind, obj in history_more %}
+            {% if kind == "proposal" %}{% include "proposals/_proposal_row.html" with proposal=obj more=True %}{% else %}{% include "history/_change_row.html" with change=obj more=True %}{% endif %}
+          {% endfor %}
           {% if not history %}<li class="list-group-item text-body-secondary">
-              {% translate "No proposals changed this role." %}
+              {% translate "No changes." %}
             </li>{% endif %}
           <li class="list-group-item small">
             <a href="{% url 'role_history' role.pk %}">{% translate "Complete history" %}</a> ·

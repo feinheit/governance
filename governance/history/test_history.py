@@ -465,3 +465,26 @@ class FairyTasksTest(TestCase):
             [("name", "Cook", "Chef")],
         )
         self.assertEqual(Change.objects.get(role=cook).date, timezone.localdate())
+
+
+class RolePageHistoryTest(TestCase):
+    def test_renamed_without_a_proposal(self):
+        """The role's page shows its changes and former names, not only the
+        proposals (GlassFrog's history has changes without proposals)"""
+        from governance.accounts.models import User
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=circle)
+        Change.objects.create(
+            date=dt.date(2019, 3, 12), role=cook, kind="name", old="Kok", new="Cook"
+        )
+
+        response = self.client.get(cook.get_absolute_url())
+        self.assertContains(response, "Renamed")
+        self.assertContains(response, "Kok")
+        # Linked to the history, which shows what changed that day
+        self.assertContains(response, f"/roles/{cook.pk}/history/#day-2019-03-12")
+        self.assertContains(
+            self.client.get(f"/roles/{cook.pk}/history/"), 'id="day-2019-03-12"'
+        )

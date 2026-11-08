@@ -1,6 +1,6 @@
 {% load governance i18n %}
 {% for day, entries in timeline %}
-  <section class="card mb-3">
+  <section class="card mb-3" id="day-{{ day|date:'Y-m-d' }}">
     <div class="card-header"><h2 class="h6 mb-0">{{ day|date:"DATE_FORMAT" }}</h2></div>
     <ul class="list-group list-group-flush">
       {% for kind, obj in entries %}

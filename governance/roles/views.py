@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext
 
 from governance.accounts.models import User
+from governance.history.views import ASSIGNMENT_KINDS, timeline
 from governance.meetings.elections import due_elections
 from governance.meetings.models import Meeting
 from governance.proposals.models import Proposal
@@ -106,6 +107,33 @@ def split_more(objects, shown):
     return objects, []
 
 
+def recent_history(role, count=10):
+    """The newest adopted proposals and changes of the role, like the
+    history page's but without the assignments (the holders card has them)"""
+    proposals = role.changed_by_proposals.filter(status="adopted").select_related(
+        "proposer"
+    )[:count]
+    changes = (
+        role.changes
+        .exclude(kind__in=ASSIGNMENT_KINDS)
+        # Only counts, the proposals of those days say more
+        .exclude(kind__endswith="-unrecorded")
+        .select_related("role", "policy")[:count]
+    )
+    return [
+        entry for _day, entries in timeline(changes, proposals) for entry in entries
+    ][:count]
+
+
+def former_names(role):
+    """The names the role had before, oldest first, with the day they ended"""
+    names = []
+    for change in role.changes.filter(kind="name").order_by("date", "pk"):
+        if change.old and change.old != role.name:
+            names.append((change.old, change.date))
+    return names
+
+
 def role_detail(request, pk):
     role = get_object_or_404(
         Role.objects.select_related("circle").prefetch_related(current_assignments()),
@@ -156,9 +184,9 @@ def role_detail(request, pk):
         .filter(Q(roles=role) | Q(circle=role))
         .distinct()
         .select_related("proposer"),
-        "history": role.changed_by_proposals.filter(status="adopted").select_related(
-            "proposer"
-        )[:10],
+        "history": recent_history(role),
+        # GlassFrog's history has many renames without a proposal
+        "former_names": former_names(role),
     }
     context["pending"], context["pending_more"] = split_more(context["pending"], 5)
     context["history"], context["history_more"] = split_more(context["history"], 5)
