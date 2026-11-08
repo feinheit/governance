@@ -446,19 +446,6 @@ class CLITest(TestCase):
         result = self.gov("constitution", "--language", "de")
         self.assertIn("# **Holacracy Verfassung**", result.output)
 
-    def test_export_json(self):
-        """The current governance as data, the people when asked for"""
-        data = json.loads(self.gov("export", "--json").output)
-        [kitchen] = data["roles"]  # The anchor circle, with its roles
-        cook = next(role for role in kitchen["roles"] if role["name"] == "Cook")
-        self.assertEqual(cook["accountabilities"][0]["text"], "Cooking soup")
-        self.assertNotIn("role_leads", cook)
-        data = json.loads(self.gov("export", "--json", "--with-people").output)
-        cook = next(
-            role for role in data["roles"][0]["roles"] if role["id"] == self.cook.pk
-        )
-        self.assertEqual(cook["role_leads"][0]["name"], "Ada")
-
     def complete(self, args, incomplete):
         self.gov("me")  # Stores a token
         with patch.dict("os.environ", {"GOVERNANCE_URL": "http://testserver"}):

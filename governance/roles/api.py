@@ -7,7 +7,7 @@ from django.utils import timezone
 from ninja import Router, Schema
 
 from governance.roles.context import affecting
-from governance.roles.export import governance_data, governance_markdown
+from governance.roles.export import governance_markdown
 from governance.roles.models import Assignment, Domain, Policy, Role
 from governance.search import search_results
 
@@ -407,11 +407,3 @@ def export(request, *, people: bool = False):
         "date": timezone.localdate().isoformat(),
         "markdown": governance_markdown(with_people=people),
     }
-
-
-@router.get("export/json/")
-def export_json(request, *, people: bool = False):
-    """The current governance as data: a tree of the active roles from the
-    anchor circle down with everything belonging to them, the Role Leads
-    only when asked for"""
-    return governance_data(with_people=people)
