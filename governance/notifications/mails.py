@@ -33,33 +33,40 @@ def recipients(circle):
 def send(users, subject, template, context):
     """One mail per user, in their language; nothing for people who left.
     ``settings.MAIL_COPIES`` get a copy, unless they received it already."""
-    sent = 0
+    sent = []
     received = set()
     for user in users.filter(is_active=True).distinct():
         _send(user, user.email, subject, template, context)
         received.add(user.email.lower())
-        sent += 1
+        sent.append(user)
     if sent:
         for address in dict.fromkeys(a.lower() for a in settings.MAIL_COPIES):
             if address not in received:
                 # In the language of their account, if they have one; as
                 # Cc without a To, easy to filter
                 user = User.objects.filter(email__iexact=address).first()
-                _send(user, address, subject, template, context, copy=True)
-    return sent
+                _send(user, address, subject, template, context, copy=sent)
+    return len(sent)
 
 
 def first_name(user):
     return user.full_name.split()[0] if user and user.full_name.strip() else ""
 
 
-def _send(user, address, subject, template, context, *, copy=False):
+def _send(user, address, subject, template, context, *, copy=None):
+    """``copy``: the recipients of the mail this is a copy of"""
     language = user.language if user else None
     with override(language or settings.LANGUAGE_CODE):
-        # Greeted by the first name (copies have nobody's), why they get
-        # it at the end (docs/mails.md)
+        # Greeted by the first name (copies have nobody's but say whose
+        # mail they are), why they get it at the end (docs/mails.md)
         name = "" if copy else first_name(user)
         greeting = _("Hello %(name)s,") % {"name": name} if name else _("Hello,")
+        if copy:
+            greeting = (
+                _("Copy of the mail to %(recipients)s.")
+                % {"recipients": ", ".join(str(recipient) for recipient in copy)}
+                + f"\n\n{greeting}"
+            )
         body = render_to_string(template, context | {"user": user}).strip()
         footer = _("Why you get this mail: %(url)s") % {
             "url": f"{settings.BASE_URL}/help/mails/"

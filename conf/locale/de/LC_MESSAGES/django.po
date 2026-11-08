@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 15:21+0100\n"
+"POT-Creation-Date: 2026-11-08 15:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -692,6 +692,11 @@ msgstr "Hallo %(name)s,"
 #: governance/notifications/mails.py
 msgid "Hello,"
 msgstr "Hallo,"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Copy of the mail to %(recipients)s."
+msgstr "Kopie der Mail an %(recipients)s."
 
 #: governance/notifications/mails.py
 #, python-format
@@ -1935,6 +1940,7 @@ msgstr "Mit Google anmelden"
 
 #: governance/templates/base.html governance/templates/history/history.html
 #: governance/templates/history/role_as_of.html
+#: governance/templates/roles/policy_detail.html
 #: governance/templates/roles/role_detail.html
 msgid "History"
 msgstr "Geschichte"
@@ -2016,6 +2022,7 @@ msgid "Show"
 msgstr "Anzeigen"
 
 #: governance/templates/history/_timeline.html
+#: governance/templates/roles/policy_detail.html
 #: governance/templates/roles/role_detail.html
 msgid "No changes."
 msgstr "Keine Änderungen."

@@ -262,7 +262,12 @@ class NotificationsTest(TestCase):
         bodies = {(m.to or m.cc)[0]: m.body for m in mail.outbox}
         self.assertTrue(bodies["ada@example.com"].startswith("Hello Ada,\n\n"))
         self.assertTrue(bodies["bob@example.com"].startswith("Hallo Bob,\n\n"))
-        self.assertTrue(bodies["copy@example.com"].startswith("Hello,\n\n"))
+        # Copies say whose mail they are
+        self.assertTrue(
+            bodies["copy@example.com"].startswith(
+                "Copy of the mail to Ada, Bob Müller.\n\nHello,\n\n"
+            )
+        )
         self.assertIn("/help/mails/", bodies["ada@example.com"])
 
     def test_setting(self):

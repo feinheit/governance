@@ -527,9 +527,12 @@ in), who prepares the meeting; consents stay silent until adopting.
 Not configurable, people filter their mails; the
 only setting is `User.notify_all` ("everything in all circles").
 `MAIL_COPIES` (a list of addresses, in the environment) get one copy
-of each mail (one per event, not per recipient; in the language of
-their account, else the default), not when they received it themselves
-(compared by address), as Cc without a To to make filtering easy.
+of each mail (one per mail sent to several people with the same text,
+saying to whom: "Copy of the mail to Ada, Bob."; personal mails like
+roles changed one per person; in the language of their account, else
+the default), not when they received it themselves (compared by
+address), as Cc without a To to make filtering easy. Temporary, to
+verify the mails; removed once they've proven themselves.
 
 ## 6. History
 
@@ -842,9 +845,6 @@ Deliberately not modelled:
   its circle's governance meetings, ad hoc meetings' outputs go to their
   attendees only, a circle's history shows today's roles and the moves
   of those which left). Open:
-  - Copies of personal mails (`MAIL_COPIES`, `_send(copy=True)`) don't
-    say whose they are ("You now hold Cook"); `roles_changed` and
-    `elections_due` send one copy per person, not one per event.
   - Unproven: `can_add_items` lets holders of invited roles add items to
     an ad hoc meeting even when the caller unchecked them; ad hoc
     meetings are "tactical meeting" in the outputs mail and "Running

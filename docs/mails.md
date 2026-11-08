@@ -56,4 +56,4 @@ One plain text mail per person, in the language of their page,
 greeting you by your first name and linking this page at the end. Mails
 go out once the change is saved. They can't be unsubscribed one by one,
 filter them in your mail program. The administrators may have set up an
-address getting a copy of every mail.
+address getting a copy of every mail, saying whom the mail went to.
