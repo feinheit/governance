@@ -26,3 +26,14 @@ the problems the server reports, and shows the user the result.
 Publishing (the circle's members get a mail) only happens when the user
 explicitly asks for it; otherwise the draft stays private or goes into the
 next governance meeting.
+
+## governance-review
+
+Reviews the governance of a circle or a role against the Holacracy
+Constitution (`gov constitution`): purposes, accountabilities which are
+activities rather than outcomes to ensure, domains with clear
+boundaries, unambiguous policies which constrain roles, not people.
+Policies which are really employment rules or documentation get a
+suggestion where they would fit better (the handbook, the staff
+regulations, relational agreements). It only reads; the findings the
+user picks become drafts with `governance-proposal`.

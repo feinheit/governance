@@ -310,8 +310,9 @@ the apps' initial migrations).
   `governance/test_cli.py` runs the real commands against the API (requests
   go through Django's test client); add a test there for new commands.
   `cli/skills/` has Claude Code skills using `gov` (e.g.
-  `governance-proposal`, a draft from a tension); `governance/test_skills.py`
-  checks that their examples of instructions are what the server takes.
+  `governance-proposal`, a draft from a tension, `governance-review`);
+  `governance/test_skills.py` checks that their examples of instructions
+  are what the server takes and that the `gov` commands they use exist.
 - Model methods changing data without required arguments get
   `alters_data = True`: templates must not call them (overridden
   `save()` and `delete()` keep Django's, its `AltersData` copies it).

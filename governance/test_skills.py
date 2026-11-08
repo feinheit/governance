@@ -11,10 +11,46 @@ from governance.proposals.models import Proposal
 from governance.roles.models import Assignment, Role
 
 
-SKILL = settings.BASE_DIR / "cli" / "skills" / "governance-proposal" / "SKILL.md"
+SKILLS = settings.BASE_DIR / "cli" / "skills"
+SKILL = SKILLS / "governance-proposal" / "SKILL.md"
+
+
+def gov_commands(text):
+    """The words of the `gov` commands in a skill, up to the first argument
+    in angle brackets or a redirection"""
+    for line in re.findall(r"^\s*(gov [^\n#]*)", text, re.MULTILINE):
+        yield [word for word in line.split() if word != "\\"]
 
 
 class SkillTest(TestCase):
+    def test_gov_commands(self):
+        """The commands and options the skills use exist"""
+        import gov
+
+        paths = sorted(SKILLS.glob("*/SKILL.md"))
+        self.assertGreaterEqual(len(paths), 2)
+        for path in paths:
+            for words in gov_commands(path.read_text()):
+                with self.subTest(skill=path.parent.name, command=" ".join(words)):
+                    command = gov.cli
+                    rest = iter(words[1:])
+                    for word in rest:
+                        if word in {"<", "|"}:
+                            break
+                        if len(word) > 1 and word.startswith("-"):  # Not stdin
+                            options = {
+                                opt: param
+                                for param in command.params
+                                for opt in param.opts
+                            }
+                            self.assertIn(word, options)
+                            if not options[word].is_flag:
+                                next(rest)  # Its value
+                        elif hasattr(command, "commands"):
+                            # Groups take no arguments, only their commands
+                            self.assertIn(word, command.commands)
+                            command = command.commands[word]
+
     def test_proposal_examples(self):
         """The skill's examples of instructions are what the server takes"""
         text = SKILL.read_text()

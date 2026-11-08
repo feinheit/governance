@@ -750,7 +750,8 @@ write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
 `gov domains`, `gov export`, `gov constitution`, `gov search` and `gov proposals` (list, show,
 create, update, publish; open, consent, request-meeting, comment). The Claude Code skill `governance-proposal`
 (`cli/skills/`) prepares a draft from a tension with it; publishing stays
-the user's decision.
+the user's decision. `governance-review` reviews a circle's or a role's
+governance against the constitution (`gov constitution`), read only.
 
 ## 9. Import from GlassFrog
 
