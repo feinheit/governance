@@ -77,6 +77,15 @@ class MeetingsTest(TestCase):
         response = self.client.get(f"{url}?kind=ad_hoc")
         self.assertNotContains(response, meeting.get_absolute_url())
         self.assertContains(response, ad_hoc.get_absolute_url())
+        # A badge of their own, the meeting's page says it too
+        self.assertContains(
+            response,
+            '<span class="badge wb-tone-ad-hoc">Ad hoc Tactical Meeting</span>',
+            html=True,
+        )
+        self.assertContains(
+            self.client.get(ad_hoc.get_absolute_url()), "Ad hoc Tactical Meeting"
+        )
         anchor = Role.objects.create(name="Company", is_circle=True)
         self.kitchen.circle = anchor
         self.kitchen.save()

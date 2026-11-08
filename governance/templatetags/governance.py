@@ -97,6 +97,8 @@ TONES = {
     # Meetings, and the special kinds of proposals
     "governance": "core",
     "tactical": "info",
+    # Not a circle's: very different, an outline (main.css)
+    "ad-hoc": "ad-hoc",
 }
 
 

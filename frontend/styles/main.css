@@ -993,6 +993,12 @@ a.wb-row-title:hover {
   --wb-tone-bg: var(--wb-core-bg);
   --wb-tone-ink: var(--wb-core-ink);
 }
+/* Ad hoc tactical meetings, not a circle's: hollow, dashed */
+.badge.wb-tone-ad-hoc {
+  --wb-tone-bg: transparent;
+  --wb-tone-ink: var(--wb-info-ink);
+  border: 1px dashed currentColor;
+}
 
 /* Circle browser (frontend/circles): one blue ramp by depth, validated
    for both surfaces; labels in text ink with a surface halo */

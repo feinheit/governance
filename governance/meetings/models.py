@@ -139,6 +139,23 @@ class Meeting(models.Model):
         return reverse("meeting", kwargs={"pk": self.pk})
 
     @property
+    def is_ad_hoc(self):
+        """A tactical meeting called with any roles, not a circle's (3.1)"""
+        return self.kind == self.TACTICAL and self.circle_id is None
+
+    @property
+    def kind_label(self):
+        """The kind, ad hoc tactical meetings apart"""
+        if self.is_ad_hoc:
+            return _("Ad hoc Tactical Meeting")
+        return self.get_kind_display()
+
+    @property
+    def kind_key(self):
+        """For the badge's tone: ``ad-hoc``, ``governance``, ``tactical``"""
+        return "ad-hoc" if self.is_ad_hoc else self.kind
+
+    @property
     def steps(self):
         return (
             TACTICAL_STEP_CHOICES

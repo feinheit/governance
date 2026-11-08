@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:58+0100\n"
+"POT-Creation-Date: 2026-11-08 15:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -509,6 +509,10 @@ msgstr "aktueller Agendapunkt"
 #: governance/templates/proposals/proposal_detail.html
 msgid "meeting"
 msgstr "Meeting"
+
+#: governance/meetings/models.py
+msgid "Ad hoc Tactical Meeting"
+msgstr "Ad-hoc Tactical Meeting"
 
 #: governance/meetings/models.py
 msgid "Present proposal"

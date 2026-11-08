@@ -15,7 +15,7 @@
         </div>{% endif %}
     </div>
     <div class="wb-row-aside">
-      <span class="badge {{ meeting.kind|tone }}">{{ meeting.get_kind_display }}</span>
+      <span class="badge {{ meeting.kind_key|tone }}">{{ meeting.kind_label }}</span>
       {% if meeting.is_running %}<span class="badge wb-tone-success">{% translate "running" %}</span>{% endif %}
     </div>
   </li>

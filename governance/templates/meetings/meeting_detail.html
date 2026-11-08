@@ -21,7 +21,7 @@
       {% include "roles/_breadcrumbs.html" %}
       <div class="wb-page-header">
         <div>
-          <h1 class="wb-title">{{ meeting.get_kind_display }}</h1>
+          <h1 class="wb-title">{{ meeting.kind_label }}</h1>
           {% include "meetings/_meta.html" %}
         </div>
       </div>
@@ -106,7 +106,7 @@
           <div class="wb-meeting-head">
             {% include "roles/_breadcrumbs.html" %}
             <h1 class="wb-title h3">
-              {{ meeting.get_kind_display }}
+              {{ meeting.kind_label }}
               <span class="badge wb-tone-success fs-6">{% translate "running" %}</span>
             </h1>
             {% if can_take_over|elevated %}
