@@ -258,9 +258,12 @@ for uncontroversial changes. The proposer only answers questions. Adopted
 when everybody else consented, or by the daily task at the deadline;
 pages and mails show the day, not a time (`adopted_on`). Due proposals are
 adopted in order of publication, conflicting ones go to the meeting.
-Adoptions run one after the other (`instructions.lock_structure()`, an
+Adoptions run one after the other (`locking.lock_structure()`, an
 advisory lock until the transaction ends), so that two at once check
-against each other's changes.
+against each other's changes; so do the views changing assignments,
+domain policies and elections around the process (`locking_structure`,
+POSTs take it before loading anything, the request's transaction holds
+it, `ATOMIC_REQUESTS`).
 Only circle members respond (also no admins outside the circle).
 Responses are anonymous: consents and requests are only counted ("3 of 7
 without objection"; current members only, not people who left since,
@@ -836,8 +839,6 @@ Deliberately not modelled:
   - One or two real meetings in the app, also to see the mails in real
     clients (several role mails at a meeting's end since elections are
     announced then).
-  - Only adopting takes `lock_structure()`; assignments, domain policies
-    and elections at the same moment are untested.
 - **Verification** (round of 2026-11-08; fixed: an unfilled Circle Rep
   invited the Circle Leads to ad hoc tactical meetings, a sub-circle
   listed its super-circle's regular tactical meetings; decided: the

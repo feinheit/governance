@@ -18,6 +18,7 @@ from django.utils.translation import gettext
 
 from governance.forms import ModelForm
 from governance.history.update import update_today
+from governance.locking import locking_structure
 from governance.proposals.models import Proposal
 from governance.roles.models import Assignment, Domain, Policy, Role
 from governance.roles.permissions import (
@@ -106,6 +107,7 @@ def changes(policy, old, new):
     return result
 
 
+@locking_structure
 @transaction.atomic
 def domain_policy_edit(request, pk, policy_pk=None):
     role = get_object_or_404(Role, pk=pk)
@@ -171,6 +173,7 @@ def domain_policy_edit(request, pk, policy_pk=None):
     )
 
 
+@locking_structure
 @transaction.atomic
 def domain_policy_remove(request, pk, policy_pk):
     """Removing a policy, confirmed first (in a modal on the role's page)"""

@@ -14,6 +14,7 @@ from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
 from governance.history.update import update_today
+from governance.locking import locking_structure
 from governance.meetings.access import can_run
 from governance.meetings.models import Election, Meeting
 from governance.roles.assignments import (
@@ -207,6 +208,7 @@ class ElectionForm(ModelForm):
         return data
 
 
+@locking_structure
 @require_POST
 def election_add(request, pk):
     meeting = get_object_or_404(Meeting.objects.select_related("circle"), pk=pk)

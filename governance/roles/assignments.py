@@ -14,6 +14,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from governance.accounts.models import User
 from governance.forms import ModelForm, next_url
 from governance.history.update import update_today
+from governance.locking import locking_structure
 from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Assignment, Role
 from governance.roles.permissions import can_assign, can_end_assignment, members
@@ -231,6 +232,7 @@ def assignable_role(request, pk, check=can_assign):
     return role
 
 
+@locking_structure
 def assignments(request, pk):
     """The role's holders, with the form to add one (elected roles are
     elected, their holders only removed here); in a modal only the form"""
@@ -278,6 +280,7 @@ def render_assignments(request, role, form, *, reps=None):
     )
 
 
+@locking_structure
 def assignment_update(request, pk):
     assignment = get_object_or_404(
         Assignment.objects.current().select_related("role__circle", "user"), pk=pk
@@ -306,6 +309,7 @@ def assignment_update(request, pk):
     )
 
 
+@locking_structure
 def assignment_end(request, pk):
     """Removing somebody from a role, confirmed first (in a modal on the
     role's page), also when it ends Circle Rep assignments (5.1.1)"""

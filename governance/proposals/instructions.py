@@ -14,11 +14,12 @@ constitution's rules raise ``ProposalError`` with all problems found.
 import re
 from contextlib import nullcontext
 
-from django.db import connection, transaction
+from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from governance.history.update import update_changes
+from governance.locking import lock_structure
 from governance.notifications.mails import proposal_adopted, proposal_withdrawn
 from governance.proposals.models import Proposal
 from governance.roles.assignments import (
@@ -37,8 +38,6 @@ KEY = r"(\d+|n\d+)"
 # Left from merging texts changed in the meantime (``drafting.MergeMixin``)
 MARKERS = re.compile(r"^(<{7}|>{7})( .*)?$|^={7}$", re.MULTILINE)
 NEW_KEY = re.compile(r"n(\d+)")
-# pg_advisory_xact_lock()'s key of lock_structure(), any number of our own
-STRUCTURE_LOCK = 20261107
 ROLE_FIELDS = {"name": "name", "aim": "purpose"}
 POLICY_FIELDS = {"title": "title", "body": "body"}
 TEXTS = {"accountabilities": Accountability, "domains": Domain}
@@ -635,16 +634,6 @@ def replace_keys(proposal, created):
     for key, obj in created.items():
         if key.startswith(("roles/", "policies/")):
             proposal.names[mapping[key]] = str(obj)
-
-
-def lock_structure():
-    """One change of the structure after the other, until the transaction
-    ends: two proposals adopted at once (a meeting and the nightly task,
-    two requests) check against each other's changes, e.g. one moving a role
-    into a circle whose last role the other removes. Adopting is rare,
-    waiting a moment doesn't matter."""
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT pg_advisory_xact_lock(%s)", [STRUCTURE_LOCK])
 
 
 @transaction.atomic
