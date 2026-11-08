@@ -488,3 +488,40 @@ class RolePageHistoryTest(TestCase):
         self.assertContains(
             self.client.get(f"/roles/{cook.pk}/history/"), 'id="day-2019-03-12"'
         )
+
+
+class MergedListsTest(TestCase):
+    def test_accountabilities_of_a_day_are_one_change(self):
+        """A day's added and removed accountabilities are one entry, texts
+        replaced by similar ones as a diff"""
+        from governance.accounts.models import User
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=circle)
+        day = dt.date(2026, 1, 2)
+        for kind, old, new in [
+            ("accountabilities-removed", "Cooking the soup", ""),
+            ("accountabilities-added", "", "Cooking the soup daily"),
+            ("accountabilities-added", "", "Baking bread"),
+            ("accountabilities-removed", "Washing dishes", ""),
+        ]:
+            Change.objects.create(date=day, role=cook, kind=kind, old=old, new=new)
+
+        for url in [f"/roles/{cook.pk}/history/", "/history/"]:
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertContains(response, "Accountabilities changed", count=1)
+                self.assertNotContains(response, "Accountability added")
+                self.assertNotContains(response, "Accountability removed")
+                # The replaced text as a diff
+                self.assertContains(
+                    response, '<ins class="wb-diff-ins"> daily</ins>', html=False
+                )
+                self.assertContains(response, "Baking bread")
+                self.assertContains(response, "Washing dishes")
+        self.assertContains(
+            self.client.get(cook.get_absolute_url()),
+            "Accountabilities changed",
+            count=1,
+        )

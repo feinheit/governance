@@ -1,4 +1,5 @@
 import datetime as dt
+from difflib import SequenceMatcher
 from itertools import groupby
 
 from django.conf import settings
@@ -10,6 +11,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from governance.accounts.models import User
+from governance.diff import similar, tokens
 from governance.history.audit import structure_on
 from governance.history.models import Change
 from governance.proposals.models import Proposal
@@ -44,6 +46,15 @@ LABELS = {
     "policy-domain": _("Policy moved to another domain"),
 }
 ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected", "focus"}
+# Added and removed texts of a role on a day, merged into one entry
+LISTS = {
+    "accountabilities": (
+        _("Accountabilities changed"),
+        _("Accountabilities added"),
+        _("Accountabilities removed"),
+    ),
+    "domains": (_("Domains changed"), _("Domains added"), _("Domains removed")),
+}
 
 
 def user_of(change):
@@ -77,6 +88,62 @@ def without_following(changes):
     ]
 
 
+def pairs(removed, added):
+    """``(old, new)`` of the texts: those replaced by a similar one as
+    pairs, the most similar first, the others alone"""
+    candidates = sorted(
+        (
+            (-SequenceMatcher(None, tokens(old), tokens(new)).ratio(), i, j)
+            for i, old in enumerate(removed)
+            for j, new in enumerate(added)
+            if similar(old, new)
+        ),
+    )
+    paired, used_old, used_new = {}, set(), set()
+    for _ratio, i, j in candidates:
+        if i not in used_old and j not in used_new:
+            paired[j] = i
+            used_old.add(i)
+            used_new.add(j)
+    return [
+        *(
+            (removed[paired[j]] if j in paired else "", new)
+            for j, new in enumerate(added)
+        ),
+        *((old, "") for i, old in enumerate(removed) if i not in used_old),
+    ]
+
+
+def merge_lists(changes):
+    """A role's accountabilities (or domains) added and removed on a day as
+    one change with ``items``, like the proposal which made them"""
+    merged, groups = [], {}
+    for change in changes:
+        field, _sep, kind = change.kind.rpartition("-")
+        if field not in LISTS or kind not in {"added", "removed"}:
+            merged.append(change)
+            continue
+        key = (change.date, change.role_id, field)
+        if key not in groups:
+            groups[key] = change
+            change.removed, change.added = [], []
+            merged.append(change)
+        group = groups[key]
+        (group.removed if kind == "removed" else group.added).append(
+            change.old if kind == "removed" else change.new
+        )
+    for (_date, _role, field), change in groups.items():
+        changed, added, removed = LISTS[field]
+        if len(change.removed) + len(change.added) == 1:
+            continue  # One text, as before
+        change.kind = f"{field}-changed"
+        change.label = (
+            added if not change.removed else removed if not change.added else changed
+        )
+        change.items = pairs(change.removed, change.added)
+    return merged
+
+
 def present(changes):
     """Readable labels, users and roles for the template"""
     changes = without_following(list(changes))
@@ -108,7 +175,7 @@ def present(changes):
                 roles.get(change.old),
                 roles.get(change.new),
             )
-    return changes
+    return merge_lists(changes)
 
 
 def timeline(changes, proposals):

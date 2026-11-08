@@ -540,7 +540,11 @@ their account, else the default), not when they received it themselves
   governance" in the GlassFrog period); a cache for the history pages,
   updated by `fairy_tasks` for yesterday and today, after adopting and
   after assignments (also their focus), elections, domain policies and
-  strategies (`update_today()`).
+  strategies (`update_today()`). One row per accountability or domain
+  added or removed; the pages merge a role's of a day into one entry
+  ("Accountabilities changed", `views.merge_lists()`), like the proposal
+  which made them, texts replaced by similar ones as a diff (`pairs()`,
+  the most similar first).
 - **Assignments** have `starts_on`/`ends_on`, reconstructed from GlassFrog's
   history; they are the holders of the history too. A circle's role has its
   Circle Leads and Reps as holders, GlassFrog's data missed some of them;

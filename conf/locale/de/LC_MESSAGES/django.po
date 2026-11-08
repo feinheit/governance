@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 09:46+0100\n"
+"POT-Creation-Date: 2026-11-08 13:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -301,6 +301,30 @@ msgstr "Policy verschoben"
 #: governance/history/views.py
 msgid "Policy moved to another domain"
 msgstr "Policy in eine andere Domain verschoben"
+
+#: governance/history/views.py
+msgid "Accountabilities changed"
+msgstr "Accountabilities geändert"
+
+#: governance/history/views.py
+msgid "Accountabilities added"
+msgstr "Accountabilities hinzugefügt"
+
+#: governance/history/views.py
+msgid "Accountabilities removed"
+msgstr "Accountabilities entfernt"
+
+#: governance/history/views.py
+msgid "Domains changed"
+msgstr "Domains geändert"
+
+#: governance/history/views.py
+msgid "Domains added"
+msgstr "Domains hinzugefügt"
+
+#: governance/history/views.py
+msgid "Domains removed"
+msgstr "Domains entfernt"
 
 #: governance/meetings/apps.py governance/meetings/models.py
 msgid "meetings"
@@ -750,12 +774,12 @@ msgid "until"
 msgstr "bis"
 
 #: governance/proposals/drafting.py
-msgid "New accountabilities"
-msgstr "Neue Accountabilities"
-
-#: governance/proposals/drafting.py
 msgid "New domains"
 msgstr "Neue Domains"
+
+#: governance/proposals/drafting.py
+msgid "New accountabilities"
+msgstr "Neue Accountabilities"
 
 #: governance/proposals/drafting.py
 msgid "The tension from the point of view of the role"
@@ -1916,6 +1940,13 @@ msgstr "Strategie"
 #: governance/templates/roles/_governance_lists.txt
 #: governance/templates/roles/role_detail.html
 #: governance/templates/search/search.html
+msgid "Domains"
+msgstr "Domains"
+
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/_governance_lists.txt
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
 msgid "Accountabilities"
 msgstr "Accountabilities"
 
@@ -1925,13 +1956,6 @@ msgid "%(counter)s accountability (text not recorded)"
 msgid_plural "%(counter)s accountabilities (texts not recorded)"
 msgstr[0] "%(counter)s Accountability (Text nicht erfasst)"
 msgstr[1] "%(counter)s Accountabilities (Texte nicht erfasst)"
-
-#: governance/templates/history/role_as_of.html
-#: governance/templates/roles/_governance_lists.txt
-#: governance/templates/roles/role_detail.html
-#: governance/templates/search/search.html
-msgid "Domains"
-msgstr "Domains"
 
 #: governance/templates/history/role_as_of.html
 #: governance/templates/roles/governance.txt
