@@ -13,6 +13,7 @@ vorsieht. Diese Hilfe erklärt das Tool, nicht Holacracy.
   veröffentlichen, antworten
 - [Meetings](meetings.de.md): Governance und Tactical Meetings, Wahlen
 - [Operative Arbeit](operational.de.md): was ohne Governance geändert wird
+- [Mails](mails.de.md): wann das Tool Mails verschickt und an wen
 
 ## Was das Tool nicht macht
 

@@ -475,6 +475,9 @@ Open meetings are listed on the attendees' person pages.
 
 ## 5. Notifications
 
+`docs/mails.md` lists them for the users (when, to whom); keep it up to
+date with this section.
+
 Plain text mails per active recipient in their language (none for
 people who left, also as proposers), after the transaction commits (`notifications/mails.py`), to the circle's members: published
 async proposals, those taken back, those their proposer withdraws

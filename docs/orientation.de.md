@@ -82,7 +82,7 @@ du erhältst oder abgibst, von Änderungen deines Fokus und als Secretary, wer d
 oder ihn verlässt. Wer einen Vorschlag macht, erfährt von Fragen und
 Wünschen nach einem Meeting, der Secretary von letzteren, und auf deine
 Fragen kommt die Antwort per Mail. Auf deiner Personenseite kannst du dich über alles in
-allen Kreisen informieren lassen.
+allen Kreisen informieren lassen. [Mails](mails.de.md) listet alle auf.
 
 ## API
 

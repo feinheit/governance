@@ -90,7 +90,7 @@ of the interface in its language. `/help/name/` renders them in the
 page's language (`governance/help.py`, add new pages to `_NAMES`). The
 files link each other relatively within their language (`meetings.md`,
 `meetings.de.md`). Update both in the same commit when a change affects
-what users see.
+what users see; `mails.md` lists every mail with its recipients.
 
 # Translations
 

@@ -25,6 +25,7 @@ _NAMES = {
     "proposals": "proposals",
     "meetings": "meetings",
     "operational": "operational",
+    "mails": "mails",
 }
 PAGES = {
     "en": {page: f"{name}.md" for page, name in _NAMES.items()}

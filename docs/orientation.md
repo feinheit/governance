@@ -80,7 +80,8 @@ outputs of meetings. You also hear about roles you get or lose and changes of yo
 Secretary about people joining or leaving your circle. As proposer you
 hear about questions and requests for a meeting, as Secretary about the
 latter, and your questions get their answers by mail. On your page you
-can choose to be informed about everything in all circles.
+can choose to be informed about everything in all circles. [Mails](mails.md)
+lists them all.
 
 ## API
 

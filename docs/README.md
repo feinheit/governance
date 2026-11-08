@@ -13,6 +13,7 @@ provides. This help explains the tool, not Holacracy.
   responding
 - [Meetings](meetings.md): governance and tactical meetings, elections
 - [Operational work](operational.md): what changes without governance
+- [Mails](mails.md): when the tool sends mails and to whom
 
 ## What the tool doesn't do
 
