@@ -39,7 +39,7 @@ aktualisiert sich von selbst.
 
 "Governance Meeting starten" auf der Seite des Kreises, das darf jedes
 Mitglied. Ablauf: Check-in, Agenda, Abschluss. Wer eine Rolle hat,
-startet eines auf der Seite der Rolle, um sie in Rollen aufzuteilen: mit
+startet eines auf der Seite der Rolle (im Menü "…"), um sie in Rollen aufzuteilen: mit
 der ersten angenommenen Rolle wird sie zum Kreis, die Inhaber:innen
 werden seine Circle Leads. Das Tool fragt vorher nach, Abbrechen ist
 vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.

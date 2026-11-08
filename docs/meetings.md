@@ -38,7 +38,7 @@ the page updates by itself.
 
 "Start a governance meeting" on the circle's page, every member may do
 that. Steps: check-in, agenda, closing. The holders of a role start one
-on the role's page to break it down into roles: adopting the first role
+on the role's page (in the menu "…") to break it down into roles: adopting the first role
 makes it a circle, with them as its Circle Leads. The tool asks first,
 cancelling is the default: changing the role itself is proposed in its
 circle.

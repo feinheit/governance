@@ -553,14 +553,24 @@ their account, else the default), not when they received it themselves
 
 ## 7. Views
 
-- **Circle page**: purpose, strategy, domains, accountabilities, policies
-  of the super-circles (with their origin) above its own (5.2.1), roles
-  with holders, sub-circles, metrics, checklists, links, pending proposals,
-  meetings, due elections, history.
-- **Role page**: purpose, accountabilities, domains (linking to their
-  policies, which the link opens, `frontend/open_details.js`), holders with focus and
+- **Circle and role pages** are laid out for the desktop: on the left
+  what the role is (purpose, domains, accountabilities, its own
+  policies), on the right what is used most (holders or core roles, a
+  circle's meetings, pending proposals, due elections), then checklists,
+  links and history; a circle's roles below both. What constrains it
+  from outside is a link away, in a modal ("Domains and policies
+  affecting this role", `role_context`): the domains and policies of its
+  circles from the anchor circle down (5.2.1) and the domains of the
+  other roles in its circle with their policies (1.3.2). A running
+  meeting has a button in the header. A role's governance meetings (for
+  its inside, 1.3.1) are rare, its menu starts them and links them.
+- **Circle page**: purpose, strategy, domains, accountabilities, its
+  policies, core roles, meetings, pending proposals, due elections,
+  metrics, checklists, links, history, roles with holders and sub-circles.
+- **Role page**: purpose, domains (linking to their
+  policies, which the link opens, `frontend/open_details.js`), accountabilities, its policies, holders with focus and
   terms (next to the name; lists of current assignments don't say since
-  when, the focus is often younger: `roles/_assignment_note.html`), its policies and those of its circles (5.2.1), pending proposals
+  when, the focus is often younger: `roles/_assignment_note.html`), pending proposals
   (also for its inside), metrics, checklists, links, history (its former
   names, the latest proposals and changes without the assignments and
   the counts of texts not recorded, `recent_history()`: GlassFrog

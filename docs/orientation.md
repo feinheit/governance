@@ -30,15 +30,19 @@ link with the mouse shows its shortcut.
 
 ## Circles, roles and people
 
-A **circle** shows its purpose, strategy, accountabilities, domains, its
-policies and those of the circles above it, its roles with their holders,
-checklists and metrics, links, open proposals, meetings and due
-elections.
+A **circle** shows its purpose, strategy, domains, accountabilities, its
+policies, its core roles and meetings, open proposals, due elections,
+checklists and metrics, links, the history and its roles with their
+holders.
 
-A **role** shows its purpose, accountabilities, domains, who holds it
-(with focus and term, the Circle Leads assign and remove here), its policies and those of its circles, which
-apply to it too, checklists, metrics and links. A domain with policies
-links to them ("2 policies"), which opens them.
+A **role** shows its purpose, domains, accountabilities, its policies,
+who holds it (with focus and term, the Circle Leads assign and remove
+here), checklists, metrics and links. A domain with policies links to
+them ("2 policies"), which opens them. "Domains and policies affecting
+this role" shows what applies to it from outside: the domains and
+policies of its circles and the domains of the other roles in its
+circle. Its meetings (rare, see [Meetings](meetings.md)) are in the menu
+"…".
 Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.
 

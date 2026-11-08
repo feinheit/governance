@@ -31,15 +31,19 @@ Auf dem Mac <kbd>Ctrl</kbd> statt <kbd>Alt</kbd>. Fährst du mit der Maus
 
 ## Kreise, Rollen und Personen
 
-Ein **Kreis** zeigt Purpose, Strategie, Accountabilities, Domains, seine
-Policies und die der übergeordneten Kreise, seine Rollen mit Besetzung,
-Checklisten und Metriken, Links, offene Vorschläge, Meetings und
-anstehende Wahlen.
+Ein **Kreis** zeigt Purpose, Strategie, Domains, Accountabilities, seine
+Policies, seine Kernrollen und Meetings, offene Vorschläge, anstehende
+Wahlen, Checklisten und Metriken, Links, die Geschichte und seine Rollen
+mit Besetzung.
 
-Eine **Rolle** zeigt Purpose, Accountabilities, Domains, wer sie hat (mit
-Fokus und Amtszeit, die Circle Leads weisen hier zu und entfernen), ihre Policies und die ihrer Kreise, die auch für sie
-gelten, Checklisten, Metriken und Links. Eine Domain mit Policies
-verlinkt sie ("2 Policies") und klappt sie auf.
+Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,
+wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und
+entfernen), Checklisten, Metriken und Links. Eine Domain mit Policies
+verlinkt sie ("2 Policies") und klappt sie auf. "Domains und Policies,
+die diese Rolle betreffen" zeigt, was von aussen für sie gilt: die
+Domains und Policies ihrer Kreise und die Domains der anderen Rollen in
+ihrem Kreis. Ihre Meetings (selten, siehe [Meetings](meetings.de.md))
+stehen im Menü "…".
 Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
 unbesetzten Circle Lead die des übergeordneten Kreises.
 

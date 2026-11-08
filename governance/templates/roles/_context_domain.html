@@ -1,0 +1,11 @@
+{% load governance i18n %}
+{# A domain with its policies (role_context.html) #}
+<li class="list-group-item">
+  <div class="wb-markdown">
+    <span class="badge wb-tone-neutral">{% translate "Domain" %}</span>
+    {{ domain.text|markdown }}
+  </div>
+  {% for policy in domain.role_policies %}
+    <div class="ms-3 mt-1">{% include "roles/_context_policy.html" %}</div>
+  {% endfor %}
+</li>

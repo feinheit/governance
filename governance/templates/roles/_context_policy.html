@@ -1,0 +1,7 @@
+{% load governance i18n %}
+{# A policy, folded (role_context.html) #}
+<details class="wb-details">
+  <summary><span class="wb-row-title d-inline">{{ policy }}</span></summary>
+  <div class="wb-markdown wb-description mt-2">{{ policy.body|markdown }}</div>
+  <a class="small" href="{{ policy.get_absolute_url }}">{% translate "Details and history" %}</a>
+</details>

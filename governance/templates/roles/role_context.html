@@ -1,0 +1,80 @@
+{% extends modal|yesno:"modal.html,base.html" %}
+{% load governance i18n %}
+{% comment %}
+  What constrains the role from outside (views.role_context): the domains
+  and policies of its circles, outermost first, and the domains of the
+  other roles in its circle; in a modal opened from the role's page
+{% endcomment %}
+{% block title %}{{ title }} – {{ role }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  {% if not modal %}{% include "roles/_breadcrumbs.html" with ancestors=role.ancestors %}{% endif %}
+  <div class="wb-page-header">
+    <div class="min-w-0">
+      <h1 class="mb-0 {% if modal %}h5{% endif %}" {% if modal %}id="modal-title"{% endif %}>
+        {{ title }}
+      </h1>
+      <div class="wb-meta">
+        <span><a href="{{ role.get_absolute_url }}">{{ role }}</a></span>
+        <span>{% translate "Policies apply in sub-circles too unless they say otherwise." %}</span>
+      </div>
+    </div>
+    {% if modal %}<button
+        type="button"
+        class="btn btn-sm btn-quiet"
+        data-modal-close
+        title="{% translate 'Close' %}"
+      >
+        {% icon "x-lg" %}<span class="visually-hidden">{% translate "Close" %}</span>
+      </button>{% endif %}
+  </div>
+
+  {% for entry in circles %}
+    <section class="card mb-3">
+      <div class="card-header">
+        <h2 class="h6 mb-0">
+          <a href="{{ entry.circle.get_absolute_url }}">{{ entry.circle }}</a>
+          <span class="badge wb-tone-circle">{% translate "Circle" %}</span>
+        </h2>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for domain in entry.domains %}
+          {% include "roles/_context_domain.html" %}
+        {% endfor %}
+        {% for policy in entry.policies %}
+          <li class="list-group-item">{% include "roles/_context_policy.html" %}</li>
+        {% endfor %}
+        {% if not entry.domains and not entry.policies %}<li class="list-group-item text-body-secondary">
+            {% translate "No domains and policies." %}
+          </li>{% endif %}
+      </ul>
+    </section>
+  {% endfor %}
+
+  {% if others %}
+    <section class="card mb-3">
+      <div class="card-header">
+        <h2 class="h6 mb-0">
+          {% blocktranslate with circle=role.circle.name %}Domains of other roles in {{ circle }}{% endblocktranslate %}
+        </h2>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for entry in others %}
+          <li class="list-group-item py-1 small fw-semibold wb-group-heading">
+            <a href="{{ entry.role.get_absolute_url }}">{{ entry.role }}</a>
+          </li>
+          {% for text in entry.core_domains %}
+            <li class="list-group-item">
+              {{ text }} <span class="badge wb-tone-core">{% translate "constitution" %}</span>
+            </li>
+          {% endfor %}
+          {% for domain in entry.domains %}
+            {% include "roles/_context_domain.html" %}
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+  {% if not circles and not others %}<p class="text-body-secondary">{% translate "None" %}</p>{% endif %}
+{% endblock content %}

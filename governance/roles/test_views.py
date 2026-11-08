@@ -154,8 +154,10 @@ class ViewsTest(TestCase):
             created_at=timezone.now(),
         )
         response = self.client.get(cook.get_absolute_url())
-        self.assertContains(response, "Clean up")
+        self.assertNotContains(response, "Clean up")
+        self.assertContains(response, f"/roles/{cook.pk}/context/")
         self.assertContains(response, "Too much to do")
+        self.assertContains(self.client.get(f"/roles/{cook.pk}/context/"), "Clean up")
 
     def test_new_proposal_only_for_proposers(self):
         """Admins outside the circle don't get "New proposal", which would
@@ -283,14 +285,14 @@ class ViewsTest(TestCase):
         self.assertContains(response, "Stove off")
         self.assertContains(response, policy.get_absolute_url())
 
-        # The super-circle's policies apply in the kitchen too
+        # The super-circle's policies apply in the kitchen too, behind a
+        # link (role_context)
         Policy.objects.create(role=anchor, title="Tea time", body="At four")
-        response = self.client.get(kitchen.get_absolute_url())
-        self.assertContains(response, "Tea time")
-        self.assertContains(response, "From the super-circle")
-        self.assertNotContains(
-            self.client.get(anchor.get_absolute_url()), "From the super-circle"
+        self.assertNotContains(self.client.get(kitchen.get_absolute_url()), "Tea time")
+        self.assertContains(
+            self.client.get(f"/roles/{kitchen.pk}/context/"), "Tea time"
         )
+        self.assertNotContains(self.client.get(anchor.get_absolute_url()), "/context/")
 
         response = self.client.get(policy.get_absolute_url())
         self.assertContains(response, "Off at night")
@@ -303,3 +305,44 @@ class ViewsTest(TestCase):
         Assignment.objects.filter(role=cook).update(ends_on=dt.date(2026, 2, 1))
         response = self.client.get(self.user.get_absolute_url())
         self.assertContains(response, "Earlier roles")
+
+
+class RoleContextTest(TestCase):
+    def test_domains_and_policies_affecting_a_role(self):
+        """The domains and policies of its circles, outermost first, and the
+        domains of the other roles in its circle with their policies"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        anchor = Role.objects.create(name="Company", is_circle=True)
+        Domain.objects.create(role=anchor, text="The brand")
+        Policy.objects.create(role=anchor, title="Tea time")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        stove = Domain.objects.create(role=kitchen, text="The stove")
+        Policy.objects.create(role=kitchen, domain=stove, title="Gas off")
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        Domain.objects.create(role=cook, text="The knives")
+        baker = Role.objects.create(name="Baker", circle=kitchen)
+        oven = Domain.objects.create(role=baker, text="The oven")
+        Policy.objects.create(role=baker, domain=oven, title="Ask first")
+
+        response = self.client.get(f"/roles/{cook.pk}/context/")
+        text = response.content.decode()
+        for expected in [
+            "The brand",
+            "Tea time",
+            "The stove",
+            "Gas off",
+            "The oven",
+            "Ask first",
+            # The Secretary's constitutional domain
+            "Domains of other roles in Kitchen",
+        ]:
+            self.assertIn(expected, text)
+        self.assertLess(text.index("The brand"), text.index("The stove"))
+        # Not its own
+        self.assertNotIn("The knives", text)
+        # Only the form in a modal
+        self.assertNotContains(
+            self.client.get(f"/roles/{cook.pk}/context/", headers={"HX-Modal": "true"}),
+            "<html",
+        )

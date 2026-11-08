@@ -596,6 +596,8 @@ class MeetingE2ETest(LiveServerTestCase):
         """In a role Enter cancels, in a circle (not the Secretary) it starts"""
         page = self.page
         page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        # A role's meetings are in the menu
+        page.locator("details.wb-menu summary").click()
         page.locator("a[data-modal]", has_text="Start a governance meeting").click()
         page.wait_for_selector("#modal[open] [data-modal-close]:focus")
         page.keyboard.press("Enter")

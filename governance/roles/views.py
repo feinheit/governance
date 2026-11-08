@@ -141,10 +141,8 @@ def role_detail(request, pk):
     )
     mark_reps([role])
     policies = list(role.policies.active().select_related("domain"))
-    domains = list(role.domains.all())
-    for domain in domains:
-        # Linked to in the domains, opened there (frontend/open_details.js)
-        domain.role_policies = [p for p in policies if p.domain_id == domain.pk]
+    # Linked to in the domains, opened there (frontend/open_details.js)
+    domains = with_policies(list(role.domains.all()), policies)
     context = {
         "role": role,
         "ancestors": role.ancestors(),
@@ -166,13 +164,6 @@ def role_detail(request, pk):
         "policies": policies,
         # A role's policies for its domains, without governance (1.3.2)
         "can_change_domain_policies": can_change_domain_policies(request.user, role),
-        # Policies apply in sub-circles unless they say otherwise (5.2.1),
-        # and to the roles in them
-        "inherited_policies": [
-            (circle, list(circle.policies.active().select_related("domain")))
-            for circle in role.ancestors()
-            if circle.policies.active().exists()
-        ],
         "metrics": role.metrics.all(),
         "checklist_items": role.checklistitems.all(),
         # Checklist items first, then metrics, grouped by their frequency
@@ -211,9 +202,9 @@ def role_detail(request, pk):
         context["can_start_meeting"] = can_start_meeting(request.user, role)
         context["asks_before_starting"] = asks_before_starting(request.user, role)
         context["running_meeting"] = role.meetings.running().first()
-        context["show_meetings"] = role.is_circle or bool(
-            context["meetings"] or context["can_start_meeting"]
-        )
+        # A circle's page shows its meetings, a role's menu links them
+        context["show_meetings"] = role.is_circle
+        context["has_meetings"] = bool(context["meetings"])
     if not role.is_circle:
         context["has_proposals_inside"] = (
             Proposal.objects.visible_to(request.user).filter(circle=role).exists()
@@ -222,6 +213,60 @@ def role_detail(request, pk):
         # Who covers the role while nobody holds it (1.4.2)
         context["leads"] = circle_leads(role.circle).order_by("full_name", "email")
     return render(request, "roles/role_detail.html", context)
+
+
+def with_policies(domains, policies):
+    """The domains with their policies (``role_policies``)"""
+    for domain in domains:
+        domain.role_policies = [p for p in policies if p.domain_id == domain.pk]
+    return domains
+
+
+def role_context(request, pk):
+    """What constrains the role from outside: the domains and policies of
+    its circles (5.2.1, from the outermost down) and the domains of the
+    other roles in its circle (1.3.2), with their policies; the role's page
+    opens it in a modal"""
+    role = get_object_or_404(Role.objects.select_related("circle"), pk=pk)
+    circles = []
+    for circle in role.ancestors():
+        policies = list(circle.policies.active().select_related("domain"))
+        circles.append({
+            "circle": circle,
+            "domains": with_policies(list(circle.domains.all()), policies),
+            "policies": [p for p in policies if not p.domain_id],
+        })
+    others = []
+    if role.circle:
+        for other in (
+            role.circle.roles
+            .active()
+            .exclude(pk=role.pk)
+            .prefetch_related(
+                "domains", Prefetch("policies", queryset=Policy.objects.active())
+            )
+            .order_by("position", "name")
+        ):
+            domains = list(other.domains.all())
+            core_domains = other.core.domains if other.core else []
+            if domains or core_domains:
+                others.append({
+                    "role": other,
+                    "core_domains": core_domains,
+                    "domains": with_policies(domains, list(other.policies.all())),
+                })
+    return render(
+        request,
+        "roles/role_context.html",
+        {
+            "role": role,
+            "title": gettext("Domains and policies affecting this circle")
+            if role.is_circle
+            else gettext("Domains and policies affecting this role"),
+            "circles": circles,
+            "others": others,
+        },
+    )
 
 
 def policy_detail(request, pk):
