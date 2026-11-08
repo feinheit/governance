@@ -32,8 +32,7 @@ aktualisiert sich von selbst.
 
 ## Governance Meeting
 
-"Governance Meeting starten" auf der Seite des Kreises, das darf jedes
-Mitglied. Ablauf: Check-in, Agenda, Abschluss. Wer eine Rolle hat,
+"Governance Meeting starten" auf der Seite des Kreises (bei seinen Meetings und im Menü "…", mit "Alle Meetings"), das darf jedes Mitglied. Ablauf: Check-in, Agenda, Abschluss. Wer eine Rolle hat,
 startet eines auf der Seite der Rolle (im Menü "…"), um sie in Rollen aufzuteilen: mit
 der ersten angenommenen Rolle wird sie zum Kreis, wer die Rolle hat, wird Circle Lead des neuen Kreises. Das Tool fragt vorher nach, Abbrechen ist
 vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
@@ -81,7 +80,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   das darf jedes Mitglied; alle Rollen des Kreises sind eingeladen.
 - **Ad hoc**: "Tactical Meeting einberufen" im Menü "Weitere Aktionen" (…)
   einer Rollenseite, mit beliebigen Rollen, auch aus anderen Kreisen.
-  "Meetings" im selben Menü listet die Meetings auf, zu denen die Rolle
+  "Alle Meetings" im selben Menü listet die Meetings auf, zu denen die Rolle
   eingeladen war.
 
 Ablauf: Check-in, Checklisten, Metriken, Updates, Agenda, Abschluss. Die

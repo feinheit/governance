@@ -36,8 +36,7 @@ the page updates by itself.
 
 ## Governance meeting
 
-"Start a governance meeting" on the circle's page, every member may do
-that. Steps: check-in, agenda, closing. The holders of a role start one
+"Start a governance meeting" on the circle's page (in its Meetings and in the menu "…", with "All meetings"), every member may do that. Steps: check-in, agenda, closing. The holders of a role start one
 on the role's page (in the menu "…") to break it down into roles: adopting the first role
 makes it a circle, with them as its Circle Leads. The tool asks first,
 cancelling is the default: changing the role itself is proposed in its
@@ -87,8 +86,7 @@ circle.
 - **Regular**: "Start a tactical meeting" on the circle's page, every
   member may do that; all of the circle's roles are invited.
 - **Ad hoc**: "Call a tactical meeting" in the menu "More actions" (…)
-  of a role's page, with any roles, also from other circles. "Meetings"
-  in the same menu lists the meetings the role was invited to.
+  of a role's page, with any roles, also from other circles. "All meetings" in the same menu lists the meetings the role was invited to.
 
 Steps: check-in, checklists, metrics, updates, agenda, closing. The
 updates show the links of the circle and the invited roles (e.g. to the

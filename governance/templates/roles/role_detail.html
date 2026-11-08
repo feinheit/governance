@@ -60,18 +60,39 @@
                 class="dropdown-item"
                 href="{% url 'mail_addresses' %}#circle-{{ role.pk }}"
               >{% translate "Mail addresses of the members" %}</a>{% endif %}
-            {% if not role.is_circle %}
-              {# Governance meetings of roles for their inside (1.3.1) are rare, a circle's page shows its meetings #}
-              {% if can_start_meeting and not running_meeting %}<a
+            {# Also on a circle's page beside its meetings: easier to find in both places #}
+            {% if can_start_meeting and not running_meeting %}
+              {% url 'meeting_create' role.pk as start_url %}
+              {% if asks_before_starting %}
+                <a
                   class="dropdown-item"
-                  href="{% url 'meeting_create' role.pk %}"
+                  href="{{ start_url }}"
                   data-modal
-                >{% translate "Start a governance meeting" %}</a>{% endif %}
-              {% if has_meetings %}<a
-                  class="dropdown-item"
-                  href="{% url 'meetings' role.pk %}"
-                >{% translate "Meetings" %}</a>{% endif %}
+                >{% translate "Start a governance meeting" %}</a>
+                {% if role.is_circle %}<a
+                    class="dropdown-item"
+                    href="{{ start_url }}?kind=tactical"
+                    data-modal
+                  >{% translate "Start a tactical meeting" %}</a>{% endif %}
+              {% else %}
+                <form method="post" action="{{ start_url }}">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">{% translate "Start a governance meeting" %}</button>
+                  <button
+                    type="submit"
+                    name="kind"
+                    value="tactical"
+                    class="dropdown-item"
+                  >
+                    {% translate "Start a tactical meeting" %}
+                  </button>
+                </form>
+              {% endif %}
             {% endif %}
+            {% if role.is_circle or has_meetings %}<a
+                class="dropdown-item"
+                href="{% url 'meetings' role.pk %}"
+              >{% translate "All meetings" %}</a>{% endif %}
           </div>
         </details>
       {% endif %}
