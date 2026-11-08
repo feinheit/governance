@@ -204,7 +204,8 @@ def role_detail(request, pk):
         context["running_meeting"] = role.meetings.running().first()
         # A circle's page shows its meetings, a role's menu links them
         context["show_meetings"] = role.is_circle
-        context["has_meetings"] = bool(context["meetings"])
+        # Also the ad hoc tactical meetings it was invited to
+        context["has_meetings"] = Meeting.objects.of_role(role).exists()
     if not role.is_circle:
         context["has_proposals_inside"] = (
             Proposal.objects.visible_to(request.user).filter(circle=role).exists()

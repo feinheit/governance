@@ -26,6 +26,30 @@ class MeetingsTest(TestCase):
         )
         Assignment.objects.create(role=self.cook, user=self.eve)
 
+    def test_role_invited_to_ad_hoc_meetings(self):
+        """A role's meetings include the ad hoc tactical meetings it was
+        invited to, its menu links them"""
+        self.client.force_login(self.eve)
+        self.assertNotContains(
+            self.client.get(self.cook.get_absolute_url()),
+            f'href="/roles/{self.cook.pk}/meetings/"',
+        )
+        meeting = Meeting.objects.create(
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            ended_at=timezone.now(),
+            called_by=self.eve,
+        )
+        meeting.invited_roles.add(self.cook)
+        self.assertContains(
+            self.client.get(self.cook.get_absolute_url()),
+            f'href="/roles/{self.cook.pk}/meetings/"',
+        )
+        self.assertContains(
+            self.client.get(f"/roles/{self.cook.pk}/meetings/"),
+            meeting.get_absolute_url(),
+        )
+
     def test_lifecycle(self):
         self.client.force_login(self.bob)
         response = self.client.get(f"/roles/{self.kitchen.pk}/")

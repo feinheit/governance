@@ -34,6 +34,11 @@ class MeetingQuerySet(models.QuerySet):
     def running(self):
         return self.filter(ended_at=None, started_at__isnull=False)
 
+    def of_role(self, role):
+        """Its own (a circle's, or a role's for its inside) and the ad hoc
+        tactical meetings it was invited to"""
+        return self.filter(Q(circle=role) | Q(invited_roles=role)).distinct()
+
 
 class Meeting(models.Model):
     GOVERNANCE = "governance"

@@ -87,7 +87,8 @@ circle.
 - **Regular**: "Start a tactical meeting" on the circle's page, every
   member may do that; all of the circle's roles are invited.
 - **Ad hoc**: "Call a tactical meeting" in the menu "More actions" (…)
-  of a role's page, with any roles, also from other circles.
+  of a role's page, with any roles, also from other circles. "Meetings"
+  in the same menu lists the meetings the role was invited to.
 
 Steps: check-in, checklists, metrics, updates, agenda, closing. The
 updates show the links of the circle and the invited roles (e.g. to the

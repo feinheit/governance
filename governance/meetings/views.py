@@ -45,7 +45,7 @@ from governance.roles.permissions import (
 
 def meeting_list(request, pk):
     circle = get_object_or_404(Role.objects.with_inside(), pk=pk)
-    meetings = circle.meetings.all()
+    meetings = Meeting.objects.of_role(circle)
     if kind := request.GET.get("kind"):
         meetings = meetings.filter(kind=kind)
     return render(

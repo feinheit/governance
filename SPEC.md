@@ -569,8 +569,7 @@ their account, else the default), not when they received it themselves
   the circle's domains and policies (5.2.1) and the domains of its roles
   with their policies (1.3.2; e.g. a role of the anchor circle holding
   the laptops). A running
-  meeting has a button in the header. A role's governance meetings (for
-  its inside, 1.3.1) are rare, its menu starts them and links them.
+  meeting has a button in the header. A role's governance meetings (for its inside, 1.3.1) are rare, its menu starts them and links its meetings, also the ad hoc tactical meetings it was invited to (`Meeting.objects.of_role()`, the circle's list too).
 - **Circle page**: purpose, strategy, domains, accountabilities, its
   policies, core roles, meetings, pending proposals, due elections,
   metrics, checklists, links, history, roles with holders and sub-circles.
