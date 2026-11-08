@@ -400,10 +400,10 @@ class ExportOut(Schema):
 
 
 @router.get("export/", response=ExportOut)
-def export(request, *, holders: bool = False):
+def export(request, *, people: bool = False):
     """The whole current governance as one Markdown document, like
-    /export/governance.md; who holds the roles only when asked for"""
+    /export/governance.md; who holds the roles (people) only when asked for"""
     return {
         "date": timezone.localdate().isoformat(),
-        "markdown": governance_markdown(with_holders=holders),
+        "markdown": governance_markdown(with_people=people),
     }

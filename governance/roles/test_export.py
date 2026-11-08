@@ -27,7 +27,7 @@ class ExportTest(TestCase):
         # No button, the URL (and later the CLI) offers it
         response = self.client.get(anchor.get_absolute_url())
         self.assertNotContains(response, "/export/governance.md")
-        response = self.client.get("/export/governance.md?holders=1")
+        response = self.client.get("/export/governance.md?people=1")
         self.assertEqual(response["Content-Type"], "text/markdown; charset=utf-8")
         text = response.content.decode()
         self.assertIn("## Example Ltd", text)

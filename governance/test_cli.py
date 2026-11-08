@@ -422,7 +422,7 @@ class CLITest(TestCase):
         self.assertIn("Kitchen", result.output)
         self.assertIn("Cooking soup", result.output)
         self.assertNotIn("Ada", result.output)  # Personal data when asked for
-        self.assertIn("Ada", self.gov("export", "--with-holders").output)
+        self.assertIn("Ada", self.gov("export", "--with-people").output)
         path = self.directory / "governance.md"
         self.gov("export", "--output", path)
         self.assertIn("Cooking soup", path.read_text())
@@ -447,12 +447,10 @@ class CLITest(TestCase):
         self.assertIn("# **Holacracy Verfassung**", result.output)
 
     def test_export_json(self):
-        """The JSON backup, one key per file"""
-        files = json.loads(self.gov("export", "--json").output)
+        """The JSON backup, one key per file, has the people: opt-in"""
+        files = json.loads(self.gov("export", "--json", "--with-people").output)
         self.assertIn("Cook", [role["name"] for role in files["roles.json"]])
-        # The backup always has the people
-        result = self.gov("export", "--json", "--with-holders")
-        self.assertNotEqual(result.exit_code, 0)
+        self.assertNotEqual(self.gov("export", "--json").exit_code, 0)
 
     def complete(self, args, incomplete):
         self.gov("me")  # Stores a token

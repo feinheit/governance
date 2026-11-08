@@ -51,7 +51,7 @@ day, your roles for an hour, proposals for five minutes.
     gov domains --circle 12     # domains with their policies
     gov search soup kitchen     # all terms, ignoring case and accents
     gov export -o governance.md # everything as one Markdown document
-    gov export --json           # the JSON backup: everything, one key per file
+    gov export --json --with-people  # the JSON backup: everything, one key per file
     gov constitution --language de  # the Holacracy Constitution as Markdown
     gov proposals --circle 12 --status published
     gov proposals show 56       # tension, changes, problems

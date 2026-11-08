@@ -18,11 +18,11 @@ def plain_mentions(text):
     )
 
 
-def governance_markdown(*, with_holders=False):
+def governance_markdown(*, with_people=False):
     """Who holds the roles only when asked for: personal data"""
     circles = Role.objects.depth_first()
     holders = {}
-    if with_holders:
+    if with_people:
         for assignment in Assignment.objects.current().select_related("user"):
             holders.setdefault(assignment.role_id, []).append(assignment)
     for circle in circles:
@@ -43,14 +43,14 @@ def governance_markdown(*, with_holders=False):
             )
     text = render_to_string(
         "roles/governance.txt",
-        {"circles": circles, "now": timezone.localtime(), "with_holders": with_holders},
+        {"circles": circles, "now": timezone.localtime(), "with_people": with_people},
     )
     return plain_mentions(text)
 
 
 def export_markdown(request):
     response = HttpResponse(
-        governance_markdown(with_holders=request.GET.get("holders") == "1"),
+        governance_markdown(with_people=request.GET.get("people") == "1"),
         content_type="text/markdown; charset=utf-8",
     )
     response["Content-Disposition"] = (

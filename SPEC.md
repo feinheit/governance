@@ -657,7 +657,7 @@ verify the mails; removed once they've proven themselves.
   them (mentions with the current names, the core roles' constitutional
   texts); snippets as plain text.
 - **Export**: the whole governance as Markdown, `/export/governance.md`
-  (the people only with `?holders=1`, `--with-holders`: personal data
+  (the people only with `?people=1`, `--with-people`: personal data
   is opt-in, decided 2026-11-08); no button, `gov export` (`GET
   export/`) offers it.
 - **Help** (`/help/`, `governance/help.py`): the user documentation in
@@ -673,7 +673,7 @@ verify the mails; removed once they've proven themselves.
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
   the handbook's links are updated at the switchover using the imported
   GlassFrog IDs (a script in the handbook's pull request reading
-  `gov export --json`).
+  `gov export --json --with-people`).
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
   policies of a domain and settings on the role's page, a holder's focus,
@@ -742,7 +742,7 @@ questions and concerns, also earlier consents with a text, without
 others' drafts), `meetings`
 (with agenda, elections), `metrics`, `checklist_items`,
 `links`. Lists ordered by ID with the models' field names and GlassFrog
-IDs. `gov export --json` prints them, `scripts/fetch_backup.py REPO`
+IDs. `gov export --json --with-people` prints them, `scripts/fetch_backup.py REPO`
 commits them daily to a git
 repository, like the GlassFrog export before (the backlog has the rest).
 
