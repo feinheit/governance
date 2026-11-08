@@ -99,6 +99,55 @@ class MeetingsTest(TestCase):
             above.get_absolute_url(),
         )
 
+    def test_moved_role_meetings(self):
+        """A role moved into a circle has the circle's meetings since then"""
+        import datetime as dt
+
+        from governance.history.models import Change
+
+        bakery = Role.objects.create(name="Bakery", is_circle=True)
+        before, after = (
+            Meeting.objects.create(
+                circle=self.kitchen,
+                kind=Meeting.TACTICAL,
+                started_at=timezone.make_aware(dt.datetime(2025, 1, day)),
+                ended_at=timezone.make_aware(dt.datetime(2025, 1, day, 2)),
+            )
+            for day in [1, 3]
+        )
+        Change.objects.create(
+            date=dt.date(2025, 1, 2),
+            role=self.cook,
+            kind="moved",
+            old=bakery.pk,
+            new=self.kitchen.pk,
+        )
+        self.assertEqual(list(Meeting.objects.of_role(self.cook)), [after])
+        # Back in the bakery, then the kitchen again: since the last move
+        Change.objects.create(
+            date=dt.date(2025, 1, 4),
+            role=self.cook,
+            kind="moved",
+            old=self.kitchen.pk,
+            new=bakery.pk,
+        )
+        Change.objects.create(
+            date=dt.date(2025, 1, 5),
+            role=self.cook,
+            kind="moved",
+            old=bakery.pk,
+            new=self.kitchen.pk,
+        )
+        self.assertEqual(list(Meeting.objects.of_role(self.cook)), [])
+        self.assertEqual(
+            set(
+                Meeting.objects.of_role(
+                    Role.objects.create(name="Dishes", circle=self.kitchen)
+                )
+            ),
+            {before, after},
+        )
+
     def test_lifecycle(self):
         self.client.force_login(self.bob)
         response = self.client.get(f"/roles/{self.kitchen.pk}/")

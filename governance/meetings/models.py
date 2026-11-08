@@ -43,7 +43,20 @@ class MeetingQuerySet(models.QuerySet):
         # too, only ad hoc ones count
         meetings = Q(circle=role) | Q(circle=None, invited_roles=role)
         if not role.is_circle and role.circle_id:
-            meetings |= Q(circle=role.circle_id)
+            from governance.history.models import Change
+
+            # Since it moved into the circle, if it did
+            moved_in = (
+                Change.objects
+                .filter(role=role, kind="moved", new=role.circle_id)
+                .order_by("-date")
+                .values_list("date", flat=True)
+                .first()
+            )
+            circle = Q(circle=role.circle_id)
+            if moved_in:
+                circle &= Q(started_at__date__gte=moved_in)
+            meetings |= circle
         return self.filter(meetings).distinct()
 
 

@@ -606,7 +606,7 @@ verify the mails; removed once they've proven themselves.
   the circle's domains and policies (5.2.1) and the domains of its roles
   with their policies (1.3.2; e.g. a role of the anchor circle holding
   the laptops). A running
-  meeting has a button in the header. A role's governance meetings (for its inside, 1.3.1) are rare, its menu starts them and links its meetings (a circle's menu too, besides its Meetings card: easier to find), also the ad hoc tactical meetings it was invited to and a role's those of its circle, which invite all its roles (`Meeting.objects.of_role()`; GlassFrog's tactical meetings have no invited roles; a circle's list has its own, not its super-circle's).
+  meeting has a button in the header. A role's governance meetings (for its inside, 1.3.1) are rare, its menu starts them and links its meetings (a circle's menu too, besides its Meetings card: easier to find), also the ad hoc tactical meetings it was invited to and a role's those of its circle, which invite all its roles (since it moved into the circle, if it did; `Meeting.objects.of_role()`; GlassFrog's tactical meetings have no invited roles; a circle's list has its own, not its super-circle's).
 - **Circle page**: purpose, strategy, domains, accountabilities, its
   policies, core roles, meetings, pending proposals, due elections,
   metrics, checklists, links, history, roles with holders and sub-circles.
