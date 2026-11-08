@@ -680,7 +680,7 @@ verify the mails; removed once they've proven themselves.
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
   the handbook's links are updated at the switchover using the imported
   GlassFrog IDs (a script in the handbook's pull request reading
-  `gov export --json --with-people`).
+  `gov backup`).
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
   policies of a domain and settings on the role's page, a Role Lead's focus,
