@@ -507,6 +507,29 @@ class MeetingE2ETest(LiveServerTestCase):
         )
         self.assertEqual(self.errors, [])
 
+    def test_history_day(self):
+        """A day of the history linked from the role's page shows what
+        changed, unfolded"""
+        import datetime as dt
+
+        from governance.history.models import Change
+
+        Change.objects.create(
+            date=dt.date(2026, 1, 2),
+            role=self.cook,
+            kind="purpose",
+            old="Frying",
+            new="Food",
+        )
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        page.locator("a", has_text="Purpose changed").click()
+        page.wait_for_url("**/history/#day-2026-01-02")
+        self.assertTrue(
+            page.locator("#day-2026-01-02 details").get_attribute("open") is not None
+        )
+        self.assertEqual(self.errors, [])
+
     def test_response_text(self):
         """The response's text only for the responses taking one, and never
         hidden while it has text"""

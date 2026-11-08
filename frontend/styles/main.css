@@ -492,6 +492,14 @@ a.wb-row-title:hover {
   --bs-table-bg: transparent;
 }
 
+/* The part of the page a link points to, e.g. a day in the history
+   (opened by open_details.js) */
+.card:target {
+  scroll-margin-top: 1rem;
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
 /* Collapsible list items, e.g. policies */
 .wb-details {
   scroll-margin-top: 1rem;

@@ -20,3 +20,16 @@ document.addEventListener("click", (event) => {
   })
   targets[0].querySelector("summary")?.focus({ preventScroll: true })
 })
+
+// Links from elsewhere to a part of the page open what's folded there, e.g.
+// a day in the history linked from the role's page (#day-…, highlighted by
+// :target in main.css)
+function openTarget() {
+  const id = decodeURIComponent(window.location.hash.slice(1))
+  const target = id && document.getElementById(id)
+  if (!target) return
+  if (target.matches("details")) target.open = true
+  for (const details of target.querySelectorAll("details")) details.open = true
+}
+openTarget()
+window.addEventListener("hashchange", openTarget)
