@@ -220,8 +220,8 @@
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Meetings" %}</h2></div>
           <ul class="list-group list-group-flush">
             {% include "meetings/_meeting_rows.html" %}
-            <li class="list-group-item small d-flex flex-wrap gap-2 align-items-center">
-              <a href="{% url 'meetings' role.pk %}">{% translate "All meetings" %}</a>
+            <li class="list-group-item d-flex flex-wrap gap-2 align-items-center">
+              <a class="btn btn-sm btn-quiet" href="{% url 'meetings' role.pk %}">{% translate "All meetings" %}</a>
               {% if can_start_meeting and not running_meeting %}
                 <div class="ms-auto">{% include "meetings/_start_buttons.html" %}</div>
               {% endif %}
