@@ -514,16 +514,23 @@ a.wb-row-title:hover {
 }
 
 /* The part of the page a link points to, e.g. a day in the history
-   (opened by open_details.js) */
-.list-group-item:target {
+   (opened by open_details.js) or a group of mail addresses: highlighted,
+   fading after a moment like in Workbench */
+:is(.card, .list-group-item):target {
   scroll-margin-top: 1rem;
-  background: var(--bs-primary-bg-subtle);
 }
 
-.card:target {
-  scroll-margin-top: 1rem;
-  border-color: var(--bs-primary);
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+.list-group-item:target,
+.card:target > .card-header,
+.card:target .list-group-item {
+  animation: wb-target-fade 1.5s ease-out 2s both;
+}
+
+/* Without an end value the elements return to their own background */
+@keyframes wb-target-fade {
+  from {
+    background-color: var(--bs-primary-bg-subtle);
+  }
 }
 
 /* Collapsible list items, e.g. policies */
