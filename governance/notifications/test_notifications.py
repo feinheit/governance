@@ -233,6 +233,38 @@ class NotificationsTest(TestCase):
             ],
         )
 
+    def test_greeting(self):
+        """Mails greet the recipient by their first name in their language
+        and end with a link to the overview of the mails"""
+        self.bob.full_name = "Bob Müller"
+        self.bob.save()
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            role=self.cook,
+            tension="Better name",
+            created_at=timezone.now(),
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{self.cook.pk}/name",
+                    "original_value": "Cook",
+                    "value": "Chef",
+                }
+            ],
+            names={f"roles/{self.cook.pk}": "Cook"},
+        )
+        with (
+            self.settings(MAIL_COPIES=["copy@example.com"]),
+            self.captureOnCommitCallbacks(execute=True),
+        ):
+            publish(proposal)
+        bodies = {(m.to or m.cc)[0]: m.body for m in mail.outbox}
+        self.assertTrue(bodies["ada@example.com"].startswith("Hello Ada,\n\n"))
+        self.assertTrue(bodies["bob@example.com"].startswith("Hallo Bob,\n\n"))
+        self.assertTrue(bodies["copy@example.com"].startswith("Hello,\n\n"))
+        self.assertIn("/help/mails/", bodies["ada@example.com"])
+
     def test_setting(self):
         self.client.force_login(self.zoe)
         response = self.client.get(f"/people/{self.zoe.pk}/")

@@ -53,7 +53,8 @@ der letzten Aktivität), nicht einzeln.
 
 ## Wie
 
-Eine Mail als reiner Text pro Person, in der Sprache ihrer Seite. Die
+Eine Mail als reiner Text pro Person, in der Sprache ihrer Seite, mit
+dem Vornamen begrüsst und am Ende mit einem Link auf diese Seite. Die
 Mails gehen raus, sobald die Änderung gespeichert ist. Einzeln
 abbestellen lassen sie sich nicht, filtere sie in deinem Mailprogramm.
 Die Admins haben vielleicht eine Adresse eingerichtet, die

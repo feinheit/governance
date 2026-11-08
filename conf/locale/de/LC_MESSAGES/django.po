@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:30+0100\n"
+"POT-Creation-Date: 2026-11-08 14:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -679,6 +679,20 @@ msgstr "Meeting beenden"
 #: governance/notifications/apps.py
 msgid "notifications"
 msgstr "Benachrichtigungen"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Hello %(name)s,"
+msgstr "Hallo %(name)s,"
+
+#: governance/notifications/mails.py
+msgid "Hello,"
+msgstr "Hallo,"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Why you get this mail: %(url)s"
+msgstr "Weshalb du diese Mail erhältst: %(url)s"
 
 #: governance/notifications/mails.py
 #, python-format

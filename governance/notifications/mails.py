@@ -49,12 +49,24 @@ def send(users, subject, template, context):
     return sent
 
 
+def first_name(user):
+    return user.full_name.split()[0] if user and user.full_name.strip() else ""
+
+
 def _send(user, address, subject, template, context, *, copy=False):
     language = user.language if user else None
     with override(language or settings.LANGUAGE_CODE):
+        # Greeted by the first name (copies have nobody's), why they get
+        # it at the end (docs/mails.md)
+        name = "" if copy else first_name(user)
+        greeting = _("Hello %(name)s,") % {"name": name} if name else _("Hello,")
+        body = render_to_string(template, context | {"user": user}).strip()
+        footer = _("Why you get this mail: %(url)s") % {
+            "url": f"{settings.BASE_URL}/help/mails/"
+        }
         EmailMessage(
             subject=str(subject()),
-            body=render_to_string(template, context | {"user": user}),
+            body=f"{greeting}\n\n{body}\n\n-- \n{footer}\n",
             to=[] if copy else [address],
             cc=[address] if copy else [],
         ).send()

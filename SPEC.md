@@ -477,7 +477,9 @@ Open meetings are listed on the attendees' person pages.
 ## 5. Notifications
 
 `docs/mails.md` lists them for the users (when, to whom); keep it up to
-date with this section.
+date with this section. Every mail greets the recipient by their first
+name ("Hallo Ada,", copies "Hallo,") and ends with a link to that page
+(`mails._send()`).
 
 Plain text mails per active recipient in their language (none for
 people who left, also as proposers), after the transaction commits (`notifications/mails.py`), to the circle's members: published
