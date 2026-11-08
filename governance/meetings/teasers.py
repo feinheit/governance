@@ -7,9 +7,10 @@ from governance.meetings.models import AgendaItem
 
 
 def with_teasers(meetings, shown=3):
-    """The meetings with ``teaser`` (up to ``shown`` texts) and
-    ``teaser_more`` (how many more)"""
+    """The meetings with ``teaser`` (up to ``shown`` texts as plain text)
+    and ``teaser_more`` (how many more)"""
     from governance.proposals.models import Proposal
+    from governance.templatetags.governance import plain
 
     meetings = list(
         meetings.prefetch_related(
@@ -33,6 +34,6 @@ def with_teasers(meetings, shown=3):
         texts = [str(proposal) for proposal in meeting.adopted_proposals] or [
             text for item in meeting.teaser_items if (text := str(item))
         ]
-        meeting.teaser = texts[:shown]
+        meeting.teaser = " · ".join(plain(text) for text in texts[:shown])
         meeting.teaser_more = max(0, len(texts) - shown)
     return meetings
