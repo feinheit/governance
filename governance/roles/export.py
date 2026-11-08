@@ -18,9 +18,9 @@ def plain_mentions(text):
     )
 
 
-def governance_markdown(*, with_people=False, dated=True):
-    """Who holds the roles only when asked for: personal data. Without the
-    date for the backup, whose git history has it (else it changes daily)"""
+def governance_markdown(*, with_people=False):
+    """Who holds the roles only when asked for: personal data. No date: the
+    download's file name has it, the backup's git history too"""
     circles = Role.objects.depth_first()
     role_leads = {}
     if with_people:
@@ -48,7 +48,6 @@ def governance_markdown(*, with_people=False, dated=True):
         "roles/governance.txt",
         {
             "circles": circles,
-            "now": timezone.localtime() if dated else None,
             "with_people": with_people,
         },
     )

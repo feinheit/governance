@@ -460,7 +460,6 @@ class CLITest(TestCase):
         self.assertEqual(json.loads((directory / "meetings.json").read_text()), [])
         markdown = (directory / "governance.md").read_text()
         self.assertIn("Cooking soup", markdown)
-        self.assertNotIn("As of", markdown)
         self.assertIn("Ada", markdown)  # With the people
         # Files by ID: a renamed role keeps its file. Each run replaces the
         # files, the people go when not asked for

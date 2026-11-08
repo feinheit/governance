@@ -42,8 +42,7 @@ def backup(directory, with_people):
     if directory is None:
         echo_json(data)
         return
-    # Without the date, which would change it every day
-    markdown = request("GET", "export/", params=params | {"dated": "false"})["markdown"]
+    markdown = request("GET", "export/", params=params)["markdown"]
     roles = directory / "roles"
     roles.mkdir(parents=True, exist_ok=True)
     # Roles are archived, not deleted, but the directory has today's only

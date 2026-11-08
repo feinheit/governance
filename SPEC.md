@@ -762,8 +762,8 @@ people. `scripts/fetch_backup.py REPO` runs it and commits everything
 daily (`git add --all`) to a git repository, like the GlassFrog export
 before (the backlog has the rest). Stable order for small diffs: lists by ID (moving or
 reordering changes a field), the history by day, keys sorted;
-`governance.md` without its date (git has it) and in the organization's
-order with the ID breaking ties.
+`governance.md` in the organization's order with the ID breaking ties
+(the Markdown has no date: the download's file name has it).
 The current state for reading is the Markdown export, exact IDs come
 from `gov search --json` and `gov roles show --json`.
 

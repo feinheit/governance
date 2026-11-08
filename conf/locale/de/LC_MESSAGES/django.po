@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 21:27+0100\n"
+"POT-Creation-Date: 2026-11-08 21:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -3033,11 +3033,6 @@ msgstr "Als Liste"
 msgid "No circles yet."
 msgstr "Noch keine Kreise."
 
-#: governance/templates/roles/governance.txt
-#, python-format
-msgid "As of %(date)s."
-msgstr "Stand %(date)s."
-
 #: governance/templates/roles/mail_addresses.html
 msgid "To copy into a mail. Unfilled Facilitator and Secretary roles count the person standing in: the Secretary or Facilitator, else the Circle Leads."
 msgstr "Zum Kopieren in eine Mail. Bei unbesetzten Rollen Facilitator und Secretary zählt die Vertretung: Secretary oder Facilitator, sonst die Circle Leads."
@@ -3207,6 +3202,10 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#, python-format
+#~ msgid "As of %(date)s."
+#~ msgstr "Stand %(date)s."
 
 #, python-format
 #~ msgid "Default (%(language)s)"
