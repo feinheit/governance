@@ -2,6 +2,7 @@
 
 import click
 from rich.markdown import Markdown
+from rich.text import Text
 
 from gov.core import (
     cli,
@@ -81,3 +82,48 @@ def show(id, as_json):
     """A role with its purpose, accountabilities, domains, policies and
     holders"""
     show_role(id, as_json=as_json)
+
+
+def _policy_line(policy, indent=""):
+    return Text.assemble(
+        f"{indent}- Policy ", link(policy["title"], policy["url"]), f" ({policy['id']})"
+    )
+
+
+def _domain_lines(domain, indent=""):
+    yield f"{indent}- Domain: {domain['text']}"
+    for policy in domain["policies"]:
+        yield _policy_line(policy, indent + "  ")
+
+
+@roles.command("context")
+@click.argument("id", type=int, shell_complete=complete_roles)
+@click.option("--json", "as_json", is_flag=True)
+def context(id, as_json):
+    """The domains and policies affecting a role or circle from outside:
+    per circle containing it, outermost first (--json with the policies'
+    texts)"""
+    circles = request("GET", f"roles/{id}/context/")
+    if as_json:
+        echo_json(circles)
+        return
+    for index, circle in enumerate(circles):
+        if index:
+            console.print()
+        console.print(
+            Text.assemble(link(circle["name"], circle["url"]), f" ({circle['id']})"),
+            style="bold",
+        )
+        lines = []
+        for domain in circle["domains"]:
+            lines.extend(_domain_lines(domain))
+        lines.extend(_policy_line(policy) for policy in circle["policies"])
+        for other in circle["roles"]:
+            lines.append(
+                Text.assemble(link(other["name"], other["url"]), f" ({other['id']})")
+            )
+            lines.extend(f"  - Domain: {text}" for text in other["core_domains"])
+            for domain in other["domains"]:
+                lines.extend(_domain_lines(domain, "  "))
+        for line in lines or ["No domains and policies."]:
+            console.print(line, highlight=False)

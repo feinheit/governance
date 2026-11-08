@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from ninja import Router, Schema
 
+from governance.roles.context import affecting
 from governance.roles.export import governance_markdown
 from governance.roles.models import Assignment, Domain, Policy, Role
 from governance.search import search_results
@@ -333,6 +334,64 @@ def domains(request, circle_id: int | None = None):
             "policies": domain.active,
         })
     return result
+
+
+class ContextDomainOut(Schema):
+    id: int
+    text: str
+    # The role's policies for the domain
+    policies: list[PolicyOut]
+
+    @staticmethod
+    def resolve_policies(obj):
+        return obj.role_policies
+
+
+class ContextRoleOut(Schema):
+    id: int
+    name: str
+    url: str
+    # The constitution's domains of core roles
+    core_domains: list[str]
+    domains: list[ContextDomainOut]
+
+
+class ContextCircleOut(Schema):
+    id: int
+    name: str
+    url: str
+    domains: list[ContextDomainOut]
+    # Those not for one of its domains
+    policies: list[PolicyOut]
+    roles: list[ContextRoleOut]
+
+
+@router.get("roles/{int:pk}/context/", response=list[ContextCircleOut])
+def role_context(request, pk: int):
+    """What constrains the role from outside, like its page's context: per
+    circle containing it, outermost first, the circle's domains and
+    policies and the domains of its other roles with their policies"""
+    role = get_object_or_404(Role.objects.select_related("circle"), pk=pk)
+    return [
+        {
+            "id": entry["circle"].pk,
+            "name": entry["circle"].name,
+            "url": absolute(entry["circle"]),
+            "domains": entry["domains"],
+            "policies": entry["policies"],
+            "roles": [
+                {
+                    "id": other["role"].pk,
+                    "name": other["role"].name,
+                    "url": absolute(other["role"]),
+                    "core_domains": [str(text) for text in other["core_domains"]],
+                    "domains": other["domains"],
+                }
+                for other in entry["roles"]
+            ],
+        }
+        for entry in affecting(role)
+    ]
 
 
 class ExportOut(Schema):

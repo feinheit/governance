@@ -13,7 +13,7 @@ from django.utils.translation import deactivate_all
 from governance import cli_version
 from governance.accounts.models import APIToken, User
 from governance.proposals.models import Proposal
-from governance.roles.models import Accountability, Assignment, Role
+from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
 
 
 class Response:
@@ -426,6 +426,20 @@ class CLITest(TestCase):
         path = self.directory / "governance.md"
         self.gov("export", "--output", path)
         self.assertIn("Cooking soup", path.read_text())
+
+    def test_role_context(self):
+        """What affects a role from outside, per circle containing it"""
+        Policy.objects.create(role=self.kitchen, title="Tea time", body="At four")
+        Domain.objects.create(role=self.cook, text="The knives")
+        pantry = Role.objects.create(name="Pantry", circle=self.kitchen, is_circle=True)
+        shelf = Role.objects.create(name="Shelf", circle=pantry)
+        result = self.gov("roles", "context", shelf.pk)
+        self.assertIn("Kitchen", result.output)
+        self.assertIn("Policy Tea time", result.output)
+        self.assertIn("Domain: The knives", result.output)
+        circles = json.loads(self.gov("roles", "context", shelf.pk, "--json").output)
+        self.assertEqual([c["name"] for c in circles], ["Kitchen", "Pantry"])
+        self.assertEqual(circles[0]["policies"][0]["body"], "At four")
 
     def test_constitution(self):
         self.assertIn("# **Holacracy Constitution**", self.gov("constitution").output)

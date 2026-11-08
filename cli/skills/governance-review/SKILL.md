@@ -12,7 +12,7 @@ rewordings; the user decides which ones become proposals (with the
 If `gov` isn't installed or configured, tell the user to run
 `uv tool install "git+https://github.com/feinheit/governance#subdirectory=cli"`
 and `gov login URL`. Reading is enough for the review. `gov constitution`
-needs `gov` 0.9.0 or later: `uv tool upgrade governance-cli`.
+and `gov roles context` need `gov` 0.10.0 or later: `uv tool upgrade governance-cli`.
 
 ## 1. Read the governance
 
@@ -22,6 +22,7 @@ everything with its exact texts:
 
     gov circles show <circle_id> --json     # the circle, its roles and policies
     gov roles show <role_id> --json         # a role, its holders
+    gov roles context <role_id> --json      # what affects it from outside
     gov policies --circle <circle_id> --json  # also the roles' domain policies
     gov domains --circle <circle_id>
 
@@ -31,6 +32,24 @@ role and the policies for its domains, and read its circle for context:
 every text is interpreted in the light of the circle's purpose (4.2), and
 overlaps with sibling roles only show there. Review sub-circles only when
 the user asks for them.
+
+**The context** (`gov roles context`, for circles too): per circle
+containing the role or circle, from the anchor circle down, the circles'
+domains and policies and the domains of their other roles with their
+policies. Policies apply in sub-circles too unless they say otherwise
+(5.2.1), and a domain of another role (e.g. the anchor circle's IT
+holding the laptops) limits everybody else (4.1.2). For a sub-circle
+this is essential: read it before judging, and report
+
+- policies of the circle repeating, contradicting or loosening those
+  of a super-circle (a sub-circle can't grant authority its
+  super-circle constrains; it may only override a super-circle's
+  change of a constitutional default, unless that policy forbids it),
+- accountabilities and domains which overlap with what a super-circle
+  or one of its roles holds, or which need another role's domain to be
+  enacted without saying so,
+- gaps the context makes visible, e.g. a super-circle's policy that
+  refers to a role or process the circle lacks.
 
 Texts mention roles as `@[Name](role:ID)`; quote them by name.
 

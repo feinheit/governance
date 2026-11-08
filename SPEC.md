@@ -716,7 +716,8 @@ django-ninja at `/api/` (docs at `/api/docs`), the same rules as the web
 interface, session or personal tokens (`APIToken`, read only or read and
 write, valid until 30 days after their last use, created on the API
 tokens page): `GET circles/`, `GET
-roles/{id}/` (core roles with the constitution's texts, without IDs), `GET search/`, `GET proposals/` (`?open=true`: the published ones of the user's
+roles/{id}/` (core roles with the constitution's texts, without IDs), `GET
+roles/{id}/context/` (the role's page's context, `roles/context.py`), `GET constitution/`, `GET search/`, `GET proposals/` (`?open=true`: the published ones of the user's
 circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
@@ -747,7 +748,7 @@ repository, like the GlassFrog export before (the backlog has the rest).
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
 write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
-`gov domains`, `gov export`, `gov constitution`, `gov search` and `gov proposals` (list, show,
+`gov roles context`, `gov domains`, `gov export`, `gov constitution`, `gov search` and `gov proposals` (list, show,
 create, update, publish; open, consent, request-meeting, comment). The Claude Code skill `governance-proposal`
 (`cli/skills/`) prepares a draft from a tension with it; publishing stays
 the user's decision. `governance-review` reviews a circle's or a role's
