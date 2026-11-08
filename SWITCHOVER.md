@@ -34,8 +34,8 @@ nightly import mirrors.
 
    From now on the nightly `fairy_tasks` adopts imported proposals whose
    deadline passed, also any which passed since the final import.
-4. **The handbook's links**: point them to the app, using the GlassFrog
-   IDs of roles and policies (`glassfrog_id`).
+4. **The handbook's links**: merge feinheit/handbuch#126, which points
+   them to the app (roles and policies found by their `glassfrog_id`).
 5. **Backup**: on the fetcher's server, run `scripts/fetch_backup.py`
    daily (with a read-only API token of the app) into a new repository
    instead of `scripts/fetch_glassfrog.py`. To consider then or
