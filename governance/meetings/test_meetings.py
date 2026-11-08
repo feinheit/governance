@@ -92,6 +92,8 @@ class MeetingsTest(TestCase):
         above = Meeting.objects.create(
             circle=anchor, kind=Meeting.TACTICAL, started_at=timezone.now()
         )
+        # It invites all of the anchor's roles, the kitchen too
+        above.invited_roles.set(anchor.roles.active())
         self.assertNotContains(
             self.client.get(f"/roles/{self.kitchen.pk}/meetings/"),
             above.get_absolute_url(),

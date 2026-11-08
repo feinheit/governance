@@ -39,7 +39,9 @@ class MeetingQuerySet(models.QuerySet):
         tactical meetings it was invited to, and a role's (not a circle's)
         those of its circle, which invite all its roles (constitution 3.1;
         GlassFrog's tactical meetings came without invited roles)"""
-        meetings = Q(circle=role) | Q(invited_roles=role)
+        # A super-circle's regular tactical meetings invite its sub-circles
+        # too, only ad hoc ones count
+        meetings = Q(circle=role) | Q(circle=None, invited_roles=role)
         if not role.is_circle and role.circle_id:
             meetings |= Q(circle=role.circle_id)
         return self.filter(meetings).distinct()
