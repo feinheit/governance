@@ -66,7 +66,8 @@ def circle_leads(circle):
 
 def role_leads(role):
     """Who fills a role: its holders, while nobody holds it its circle's
-    Circle Leads (1.4.2); archived roles have none"""
+    Circle Leads (1.4.2), except an unfilled Circle Rep, which is nobody's;
+    archived roles have none"""
     from governance.accounts.models import User
 
     if role.archived_on:
@@ -74,7 +75,7 @@ def role_leads(role):
     holders = User.objects.active().filter(
         pk__in=Assignment.objects.current().filter(role=role).values("user")
     )
-    if holders.exists() or role.circle is None:
+    if holders.exists() or role.circle is None or role.core_role == REP:
         return holders
     return circle_leads(role.circle)
 

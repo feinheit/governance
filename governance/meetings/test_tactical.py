@@ -436,6 +436,17 @@ class TacticalTest(TestCase):
         self.assertContains(response, "You don&#x27;t hold any of these roles.")
         self.assertFalse(Meeting.objects.exists())
 
+    def test_ad_hoc_unfilled_rep(self):
+        """An unfilled Circle Rep is nobody's, not the Circle Leads' (unlike
+        other unfilled roles)"""
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=self.eve
+        )
+        rep = self.kitchen.roles.get(core_role="rep")
+        self.client.force_login(self.eve)
+        response = self.client.get(f"/meetings/tactical/new/?role={rep.pk}")
+        self.assertContains(response, "You don&#x27;t hold any of these roles.")
+
     def test_ad_hoc(self):
         """Any partner calls one and invites roles of any circle"""
         self.client.force_login(self.eve)
