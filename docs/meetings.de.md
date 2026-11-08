@@ -6,28 +6,23 @@ bestätigt das. Alle folgen auf einem geteilten oder dem eigenen
 Bildschirm und fügen Agendapunkte vom eigenen Gerät aus hinzu; die Seite
 aktualisiert sich von selbst.
 
-- **Wer leitet**: Der Secretary des Meetings hat die Buttons: Schritte,
+- **Wer leitet**: Wer im Meeting Secretary ist, hat die Buttons: Schritte,
   Agendapunkte bearbeiten, Annehmen, Wahlen, Teilnehmende, das
   Meeting beenden, dazu das Ändern der Vorschläge. Das ist, wer das
-  Meeting startet: meist der Secretary des Kreises, ist die Rolle nicht
-  besetzt, eine Vertretung (der Facilitator, dann die Circle Leads,
-  Verfassung 5.3.6); andere bestätigen den Start zuerst. "Übernehmen"
-  neben dem Secretary macht jemand anderen zum Secretary des Meetings,
-  z.B. wenn der Secretary des Kreises dazukommt; wer nicht als Secretary
+  Meeting startet: meist, wer im Kreis Secretary ist; ist die Rolle nicht besetzt, eine Vertretung (Facilitator, dann die Circle Leads,
+  Verfassung 5.3.6); andere bestätigen den Start zuerst. "Übernehmen" bei "Secretary" lässt eine andere Person das Meeting als Secretary leiten, z.B. wenn die Person mit der Rolle Secretary des Kreises dazukommt; wer nicht als Secretary
   des Kreises handelt, bestätigt das zuerst.
 - **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
-  hervorgehoben, eine Übersicht, was der Vorschlag ändert (aktualisiert,
-  während der Secretary ihn anpasst), und öffnen ihn mit "Vorschlag
+  hervorgehoben, eine Übersicht, was der Vorschlag ändert (aktualisiert, während er angepasst wird), und öffnen ihn mit "Vorschlag
   öffnen". In Tactical Meetings schauen sie sich mit einem Klick eine
   andere Übersicht (Checklisten, Metriken, Updates) auf dem eigenen
   Bildschirm an, "Zurück zum Meeting" kehrt zurück. Solange du tippst oder etwas offen hast, aktualisiert sich die
-  Seite nicht; ein Hinweis oben sagt es (nicht, während der Secretary den
-  Vorschlag ändert).
+  Seite nicht; ein Hinweis oben sagt es (nicht beim Ändern des Vorschlags im Meeting).
 - **Notizen** unten: was zu keinem Agendapunkt gehört, z.B. die Absicht
-  eines speziellen Meetings. Der Secretary schreibt sie, sie speichern
+  eines speziellen Meetings. Wer Secretary ist, schreibt sie, sie speichern
   sich selbst; die Mail mit den Ergebnissen enthält sie.
 - **Teilnehmende** ("Teilnehmende" im Kopf der Agenda) sind die
-  Mitglieder des Kreises beim Start; der Secretary lädt dort weitere ein
+  Mitglieder des Kreises beim Start; wer Secretary ist, lädt dort weitere ein
   oder entfernt sie. "Meeting beenden" (■ daneben, gross in der
   Abschlussrunde) fragt zuerst, solange Punkte unbearbeitet sind.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.
@@ -40,36 +35,32 @@ aktualisiert sich von selbst.
 "Governance Meeting starten" auf der Seite des Kreises, das darf jedes
 Mitglied. Ablauf: Check-in, Agenda, Abschluss. Wer eine Rolle hat,
 startet eines auf der Seite der Rolle (im Menü "…"), um sie in Rollen aufzuteilen: mit
-der ersten angenommenen Rolle wird sie zum Kreis, die Inhaber:innen
-werden seine Circle Leads. Das Tool fragt vorher nach, Abbrechen ist
+der ersten angenommenen Rolle wird sie zum Kreis, wer die Rolle hat, wird Circle Lead des neuen Kreises. Das Tool fragt vorher nach, Abbrechen ist
 vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 
 - **Agenda**: eine Spannung in ein, zwei Wörtern, oder einer deiner
-  Vorschläge (wartende, asynchron veröffentlichte, Entwürfe); der
-  Secretary sieht auch die "Vorschläge anderer", getrennt aufgeführt
+  Vorschläge (wartende, asynchron veröffentlichte, Entwürfe); wer Secretary ist, sieht auch die "Vorschläge anderer", getrennt aufgeführt
   (andere bitten dich mit "im Meeting besprechen", deinen einzubringen). "Entfernen"
   legt einen Vorschlag zurück: ein Entwurf bleibt deiner, ein asynchroner
   behält seine Frist; wurde er im Meeting behandelt, ist er wieder dein
   Entwurf, zum Veröffentlichen für eine neue Runde.
-- **Behandeln**: der Facilitator wählt einen Agendapunkt, der Secretary
-  klickt ihn an ("Behandeln") und zieht die Punkte an ihren Griffen in
+- **Behandeln**: wer Facilitator ist, wählt einen Agendapunkt, wer Secretary ist, klickt ihn an ("Behandeln") und zieht die Punkte an ihren Griffen in
   eine andere Reihenfolge; die Schritte des
   integrativen Entscheidungsprozesses leiten, erzwingen aber nichts.
-- **Vorschlag**: nur der Secretary hält ihn aus einer Spannung fest und
+- **Vorschlag**: nur wer Secretary ist, hält ihn aus einer Spannung fest und
   ändert ihn, im Meeting: solange es läuft, verweist die Seite des
   Vorschlags dorthin, und die Agenda führt nur die anderen zu den Seiten
   der Vorschläge. "Verwerfen" zieht ihn zurück (z.B. ist er nicht gültig,
   oder die vorschlagende Person ist nicht mehr da); die vorschlagende
   Person kann ihn auf der Seite des Vorschlags "Neu entwerfen". "Erledigt"
   ohne Annehmen oder Verwerfen lässt ihn auf das nächste Meeting warten.
-- **Einwände** werden nicht festgehalten: Der Facilitator fragt in der
-  Einwandrunde danach und prüft sie, der Secretary arbeitet die
+- **Einwände** werden nicht festgehalten: Wer Facilitator ist, fragt in der Einwandrunde danach und prüft sie, wer Secretary ist, arbeitet die
   gültigen in den Vorschlag ein; die Notizen halten fest, was wichtig
   ist. "Annehmen" (zuunterst, wie "Verwerfen") wendet die
   Änderung sofort an, die Mail kommt am Ende des Meetings.
 - **Dieselbe Rolle mehrmals**: hat ein früher angenommener Vorschlag eine
   Rolle oder Policy geändert, die auch der aktuelle ändert, zeigt das
-  Meeting den Konflikt vor dem Annehmen. Der Secretary öffnet die Rolle
+  Meeting den Konflikt vor dem Annehmen. Wer Secretary ist, öffnet die Rolle
   im Vorschlag ("Bearbeiten") und führt beide Fassungen zusammen: in
   Textfeldern stehen beide zwischen Markierungen (`<<<<<<<`, `=======`,
   `>>>>>>>`), die vor dem Speichern weg müssen; unter Name und Titel
@@ -77,8 +68,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   Ändert der Vorschlag eine inzwischen entfernte Accountability oder
   Domain, steht ihr Text zwischen Markierungen bei den neuen: behalten
   oder löschen. Der Vorschlag geht dann vom aktuellen Stand aus.
-- **Wahlen**: der Facilitator führt die Wahl durch, "Wahl festhalten"
-  des Secretarys speichert Person und Ende der Amtszeit (Facilitator, Secretary, Circle
+- **Wahlen**: wer Facilitator ist, führt die Wahl durch; wer Secretary ist, speichert mit "Wahl festhalten" Person und Ende der Amtszeit (Facilitator, Secretary, Circle
   Rep und durch Policy gewählte Rollen). Wird dieselbe Rolle im Meeting
   nochmals festgehalten, ersetzt das das frühere Ergebnis, als wäre es
   nie festgehalten worden. Gewählte und Abgelöste erfahren davon, wenn
@@ -96,7 +86,7 @@ Ablauf: Check-in, Checklisten, Metriken, Updates, Agenda, Abschluss. Die
 Updates zeigen die Links des Kreises und der eingeladenen Rollen (z.B.
 zum Aufgaben-Tool) und die Ergebnisse der letzten drei Tactical Meetings,
 um nachzufragen ("Frühere Meetings anzeigen" für mehr).
-Zu jedem Agendapunkt kann der Secretary ein "Ergebnis" und einen "Link"
+Zu jedem Agendapunkt kann, wer Secretary ist, ein "Ergebnis" und einen "Link"
 festhalten, die sich beim Tippen speichern (die anderen sehen sie),
 "Speichern und erledigt" oder einfach "Erledigt". Die Ergebnisse der
 erledigten Punkte stapeln sich rechts (hochscrollen für frühere), die

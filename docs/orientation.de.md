@@ -44,8 +44,7 @@ die diese Rolle betreffen" zeigt, was von aussen für sie gilt: die
 Domains und Policies ihrer Kreise und die Domains von deren Rollen, vom
 äussersten Kreis nach innen. Ihre Meetings (selten, siehe [Meetings](meetings.de.md))
 stehen im Menü "…".
-Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
-unbesetzten Circle Lead die des übergeordneten Kreises.
+Unbesetzte Rollen haben die Circle Leads, ausser der Rolle Circle Rep; ist die Rolle Circle Lead unbesetzt, haben sie die Circle Leads des übergeordneten Kreises.
 
 **Deine Personenseite**, die Startseite, zeigt deine Rollen, deine Entwürfe und Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine
@@ -80,7 +79,7 @@ veröffentlichte und angenommene Vorschläge, geänderte Policies einer
 Domain und die Ergebnisse von Meetings. Du erfährst auch von Rollen, die
 du erhältst oder abgibst, von Änderungen deines Fokus und als Secretary, wer deinem Kreis beitritt
 oder ihn verlässt. Wer einen Vorschlag macht, erfährt von Fragen und
-Wünschen nach einem Meeting, der Secretary von letzteren, und auf deine
+Wünschen nach einem Meeting, wer Secretary ist, von letzteren, und auf deine
 Fragen kommt die Antwort per Mail. Auf deiner Personenseite kannst du dich über alles in
 allen Kreisen informieren lassen. [Mails](mails.de.md) listet alle auf.
 

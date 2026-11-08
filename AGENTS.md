@@ -110,12 +110,17 @@ Domains, Policies, Tactical and Governance Meeting), as do the core roles'
 names and constitutional texts; circles, roles, proposals, tensions and
 metrics are Kreise, Rollen, Vorschläge, Spannungen and Metriken; a meeting's agenda and its items
 are Agenda and Agendapunkte like in the German constitution
-(`docs/constitution`), not Traktanden. Gender-neutral German: avoid
-pronouns for people and roles where possible ("ist die Rolle nicht
-besetzt" instead of "fehlt er"); where gendered words can't be avoided,
-neutral forms (Mitarbeitende, Teilnehmende), else the colon
-(Reviewer:in, Inhaber:innen), not the asterisk: it survives bad Markdown
-parsers like GlassFrog's. Pronouns for things (proposals, circles) stay
+(`docs/constitution`), not Traktanden. Gender-neutral German, try hard: avoid pronouns for people and roles
+("ist die Rolle nicht besetzt" instead of "fehlt er"), and articles on
+the core roles' names, which make their holders male: "wer Secretary
+ist", "die Rolle Circle Rep", "seine Rollen Facilitator, Secretary und
+Circle Rep", the names alone in lists ("sonst Facilitator"), not "der
+Secretary" or "ein Circle Lead"; roles take "ihre" ("%(role)s für ihre
+Domains"). Rephrase before reaching for forms: "wer die Rolle hat"
+instead of "Inhaber:innen", "alle" instead of "jeder"; else neutral
+forms (Mitarbeitende, Teilnehmende), the colon (Reviewer:in) only as a
+last resort, never the asterisk: the colon survives bad Markdown parsers
+like GlassFrog's. Pronouns for things (proposals, circles) stay
 grammatical. Tests run in English
 (`LANGUAGE_CODE` when testing), `governance/test_translations.py` checks the
 German texts.

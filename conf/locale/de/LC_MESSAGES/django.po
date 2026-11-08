@@ -50,7 +50,7 @@ msgstr "über alles in allen Kreisen informieren"
 
 #: governance/accounts/models.py
 msgid "By default mails are about the circles one is a member of."
-msgstr "Standardmässig gehen Mails nur zu den Kreisen, in denen man Mitglied ist."
+msgstr "Standardmässig gehen Mails nur zu den Kreisen, in denen du Mitglied bist."
 
 #: governance/accounts/models.py governance/meetings/models.py
 #: governance/proposals/models.py governance/roles/models.py
@@ -316,7 +316,7 @@ msgstr "Die Amtszeit endet in der Zukunft."
 
 #: governance/meetings/elections.py
 msgid "A Circle Lead can't be the Circle Rep."
-msgstr "Ein Circle Lead kann nicht Circle Rep sein."
+msgstr "Wer Circle Lead ist, kann nicht Circle Rep sein."
 
 #: governance/meetings/elections.py
 #, python-format
@@ -536,7 +536,7 @@ msgstr "Der Link muss mit https:// beginnen."
 
 #: governance/meetings/views.py
 msgid "Any partner may call a tactical meeting and invite the roles they need. Hold Ctrl or Cmd to select several."
-msgstr "Alle Partner:innen dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen. Mit Ctrl oder Cmd mehrere auswählen."
+msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen. Mit Ctrl oder Cmd mehrere auswählen."
 
 #: governance/meetings/views.py governance/templates/roles/role_detail.html
 msgid "Call a tactical meeting"
@@ -922,7 +922,7 @@ msgstr "%(object)s existiert nicht mehr."
 #: governance/proposals/instructions.py
 #, python-format
 msgid "%(policy)s is a policy of %(role)s for its domains, the role changes it."
-msgstr "%(policy)s ist eine Policy von %(role)s für seine Domains, die Rolle ändert sie."
+msgstr "%(policy)s ist eine Policy von %(role)s für ihre Domains, die Rolle ändert sie."
 
 #: governance/proposals/instructions.py
 #, python-format
@@ -946,7 +946,7 @@ msgstr "Eine neue Rolle oder Policy braucht einen Namen."
 #: governance/proposals/instructions.py
 #, python-format
 msgid "%(role)s only has policies for its domains."
-msgstr "%(role)s hat nur Policies für seine Domains."
+msgstr "%(role)s hat nur Policies für ihre Domains."
 
 #: governance/proposals/instructions.py
 #, python-format
@@ -2009,7 +2009,7 @@ msgstr "Speichern und erledigt"
 
 #: governance/templates/meetings/_current.html
 msgid "The secretary captures the outcome."
-msgstr "Der Secretary hält das Ergebnis fest."
+msgstr "Wer Secretary ist, hält das Ergebnis fest."
 
 #: governance/templates/meetings/_current.html
 #: governance/templates/meetings/meeting_detail.html
@@ -2053,7 +2053,7 @@ msgstr "So kann der Vorschlag nicht angenommen werden:"
 
 #: governance/templates/meetings/_current.html
 msgid "When a role or policy has been changed in the meantime, the secretary edits it in the proposal, where the form shows the current texts, and saves it."
-msgstr "Wurde eine Rolle oder Policy inzwischen geändert, bearbeitet der Secretary sie im Vorschlag, wo das Formular den aktuellen Text zeigt, und speichert sie."
+msgstr "Wurde eine Rolle oder Policy inzwischen geändert, bearbeitet, wer Secretary ist, sie im Vorschlag, wo das Formular den aktuellen Text zeigt, und speichert sie."
 
 #: governance/templates/meetings/_current.html
 #: governance/templates/notifications/_changes.txt
@@ -2098,7 +2098,7 @@ msgstr "Verwerfen"
 
 #: governance/templates/meetings/_current.html
 msgid "A tension without a proposal yet: the secretary captures the proposal, or the item is done."
-msgstr "Eine Spannung noch ohne Vorschlag: der Secretary hält den Vorschlag fest, oder der Agendapunkt ist erledigt."
+msgstr "Eine Spannung noch ohne Vorschlag: wer Secretary ist, hält den Vorschlag fest, oder der Agendapunkt ist erledigt."
 
 #: governance/templates/meetings/_current.html
 msgid "Capture a proposal"
@@ -2246,15 +2246,15 @@ msgstr "Governance Meeting von %(role)s starten?"
 #: governance/templates/meetings/meeting_confirm.html
 #, python-format
 msgid "The Secretary schedules the circle's meetings: %(names)s."
-msgstr "Der Secretary plant die Meetings des Kreises: %(names)s."
+msgstr "Die Meetings des Kreises plant, wer Secretary ist: %(names)s."
 
 #: governance/templates/meetings/meeting_confirm.html
 msgid "The Secretary schedules the circle's meetings."
-msgstr "Der Secretary plant die Meetings des Kreises."
+msgstr "Die Meetings des Kreises plant, wer Secretary ist."
 
 #: governance/templates/meetings/meeting_confirm.html
 msgid "Start it yourself when it's planned anyway, e.g. when they're absent or asked you to. You'll be the meeting's secretary."
-msgstr "Starte es selbst, wenn es ohnehin geplant ist, z.B. in Vertretung oder auf Bitte des Secretary. Du bist dann Secretary des Meetings."
+msgstr "Starte es selbst, wenn es ohnehin geplant ist, z.B. in Vertretung oder auf Bitte der Person mit der Rolle Secretary. Du bist dann Secretary des Meetings."
 
 #: governance/templates/meetings/meeting_confirm.html
 msgid "A governance meeting in a role is the role's own governance (constitution 1.3.1): its holders break it down into roles of its own. Adopting the first role makes it a circle, with its holders as Circle Leads."
@@ -2496,12 +2496,12 @@ msgstr "Fokus: %(focus)s"
 #: governance/templates/proposals/_consequences.html
 #, python-format
 msgid "%(circle)s loses its last roles: it turns back into a role when the meeting ends, its Facilitator, Secretary and Circle Rep and their terms end."
-msgstr "%(circle)s verliert seine letzten Rollen: Der Kreis wird wieder zu einer Rolle, wenn das Meeting endet, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
+msgstr "%(circle)s verliert seine letzten Rollen: Der Kreis wird wieder zu einer Rolle, wenn das Meeting endet, seine Rollen Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
 
 #: governance/templates/proposals/_consequences.html
 #, python-format
 msgid "%(circle)s loses its last roles: adopting the proposal turns it back into a role, its Facilitator, Secretary and Circle Rep and their terms end."
-msgstr "%(circle)s verliert seine letzten Rollen: Wird der Vorschlag angenommen, wird der Kreis wieder zu einer Rolle, sein Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
+msgstr "%(circle)s verliert seine letzten Rollen: Wird der Vorschlag angenommen, wird der Kreis wieder zu einer Rolle, seine Rollen Facilitator, Secretary und Circle Rep und ihre Amtszeiten enden."
 
 #: governance/templates/proposals/_consequences.html
 #, python-format
@@ -2511,7 +2511,7 @@ msgstr "Seine Policies werden archiviert: %(policies)s."
 #: governance/templates/proposals/_consequences.html
 #, python-format
 msgid "%(user)s would lead %(circle)s while being its Circle Rep: adopting the proposal ends that assignment (constitution 5.1.1), the circle elects a new Circle Rep."
-msgstr "%(user)s würde %(circle)s leiten und wäre zugleich sein Circle Rep: Wird der Vorschlag angenommen, endet diese Zuweisung (Verfassung 5.1.1), der Kreis wählt einen neuen Circle Rep."
+msgstr "%(user)s würde %(circle)s leiten und hätte zugleich seine Rolle Circle Rep: Wird der Vorschlag angenommen, endet diese Zuweisung (Verfassung 5.1.1), der Kreis wählt die Rolle neu."
 
 #: governance/templates/proposals/_drafting.html
 msgid "Propose changes"
@@ -2594,7 +2594,7 @@ msgstr "Zurück zum Entwurf"
 
 #: governance/templates/proposals/proposal_detail.html
 msgid "The proposal is being processed in a governance meeting. The secretary amends it in the meeting."
-msgstr "Der Vorschlag wird in einem Governance Meeting behandelt. Der Secretary passt ihn im Meeting an."
+msgstr "Der Vorschlag wird in einem Governance Meeting behandelt. Wer Secretary ist, passt ihn im Meeting an."
 
 #: governance/templates/proposals/proposal_detail.html
 msgid "Go to the meeting"
@@ -2682,7 +2682,7 @@ msgstr "Details und Geschichte"
 
 #: governance/templates/roles/_ending_reps.html
 msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
-msgstr "Ein Circle Lead kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen neue Circle Reps:"
+msgstr "Wer Circle Lead ist, kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen die Rolle Circle Rep neu:"
 
 #: governance/templates/roles/_holders_card.html
 #: governance/templates/roles/assignments.html

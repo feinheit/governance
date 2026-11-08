@@ -20,8 +20,7 @@ regeln, bleiben bei ihr), oder machst eine Rolle zum Kreis und zurück. Der Entw
 entfernten Wörter rot, die hinzugefügten grün), dazu,
 was das Annehmen bewirken würde oder weshalb es so nicht geht.
 
-Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; ihre Inhaber:innen
-schlagen das selbst vor. Policies kommen erst danach: Eine Rolle legt die
+Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; wer sie hat, schlägt das selbst vor. Policies kommen erst danach: Eine Rolle legt die
 Policies für ihre Domains auf ihrer Seite fest. Ein Kreis ohne eigene Rollen wird beim Annehmen
 wieder zur Rolle, oder, wenn das eigene Meeting des Kreises seine letzten
 Rollen entfernt hat, wenn dieses Meeting endet (nach der
@@ -49,8 +48,7 @@ sie:
 - **Frage oder Kommentar**: du erhältst eine Mail und beantwortest sie;
   deine Antwort geht per Mail an alle, die gefragt oder kommentiert haben.
 - **im Meeting besprechen**, wenn nötig mit dem Bedenken. Der Vorschlag
-  wartet dann auf das nächste Governance Meeting; du und der Secretary des
-  Kreises erhalten eine Mail.
+  wartet dann auf das nächste Governance Meeting; du und wer im Kreis Secretary ist, erhaltet eine Mail.
 
 Sind alle anderen ohne Einwand, ist der Vorschlag sofort angenommen,
 sonst in der Nacht nach der Frist ("wird angenommen am"). Geht das dann
@@ -66,8 +64,7 @@ aktuellen Mitglieder), Fragen und Bedenken stehen mit Namen.
 
 Veröffentlichte Vorschläge lassen sich nicht ändern: "Zurück zum Entwurf"
 (der Kreis beginnt danach von vorne) oder "Zurückziehen". Beides erfahren
-die Mitglieder des Kreises per Mail. Während sein Meeting läuft, verwirft
-ihn stattdessen der Secretary dort.
+die Mitglieder des Kreises per Mail. Während sein Meeting läuft, verwirft ihn stattdessen, wer dort Secretary ist.
 
 ## Ohne Vorschlag
 
@@ -77,5 +74,4 @@ ihn stattdessen der Secretary dort.
   und schickt eine Mail. Die Policies ziehen mit der Rolle um; wird die
   Domain, die Rolle oder ihr Kreis entfernt, gehen sie mit. Vorschläge
   des Kreises ändern sie nicht, sie können die Domain entfernen.
-- **Rechtschreibung** läuft über Governance: der Secretary korrigiert in
-  einem Governance Meeting.
+- **Rechtschreibung** läuft über Governance: wer Secretary ist, korrigiert in einem Governance Meeting.

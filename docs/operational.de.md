@@ -11,33 +11,28 @@ Einiges ändert sich ohne Governance:
 | Policies einer Domain | wer die Rolle mit der Domain hat |
 | Einstellungen (Frist für asynchrone Vorschläge, durch Policy gewählte Rollen) | Secretary |
 
-- Ein Kreis kann mehrere Circle Leads haben, jeder darf all das. Die
+- Ein Kreis kann mehrere Circle Leads haben, alle dürfen all das. Die
   Circle Leads eines Sub-Kreises weisen die Circle Leads des
   übergeordneten Kreises zu; solange niemand einen Sub-Kreis leitet,
   leiten ihn die Circle Leads des übergeordneten Kreises (Verfassung
   1.4.2). Gewählte Rollen werden gewählt, nicht zugewiesen.
-- Ein Circle Lead kann nicht Circle Rep des Kreises sein (Verfassung
-  5.1.1). Würde eine Zuweisung oder ihr Entfernen einen Circle Rep zum
-  Circle Lead seines Kreises machen, auch vom übergeordneten Kreis her,
-  warnt das Tool und beendet dann die Zuweisung als Circle Rep; der Kreis
-  wählt einen neuen. Ein Vorschlag, der einen Kreis verschiebt, zeigt
+- Wer Circle Lead ist, kann nicht Circle Rep des Kreises sein (Verfassung 5.1.1). Würde die Person in der Rolle Circle Rep durch eine Zuweisung oder ihr Entfernen (auch vom übergeordneten Kreis her) Circle Lead ihres Kreises, warnt das Tool und beendet dann die Zuweisung als Circle Rep; der Kreis wählt die Rolle neu. Ein Vorschlag, der einen Kreis verschiebt, zeigt
   das vor dem Annehmen, das Deaktivieren einer Person beendet sie ohne
   Rückfrage.
 - Wer eine Rolle abgeben will, wendet sich an die Circle Leads, die die
   Person entfernen, auch aus gewählten Rollen ("Entfernen" unter
   "Besetzung" auf der Rollenseite).
-- Der Secretary darf im Tool alles, was die Circle Leads dürfen, damit es
+- Wer Secretary ist, darf im Tool alles, was die Circle Leads dürfen, damit es
   eine Stellvertretung gibt.
 - Admins dürfen all das überall, und auch die Meetings aller Kreise
   leiten, z.B. im obersten Kreis, über dem es keine Circle Leads gibt.
-  Buttons für das, was die Verfassung anderen überlässt, sind für Admins
-  und den stellvertretenden Secretary gelb ("Als Admin" beim Darüberfahren),
+  Buttons für das, was die Verfassung anderen überlässt, sind für Admins und für Secretary in Stellvertretung gelb ("Als Admin" beim Darüberfahren),
   und ihre Formulare sagen es: Nur verwenden, wenn du weisst, dass es nötig
   ist. Buttons, die etwas löschen oder entfernen, sind rot und fragen
   zuerst nach.
 - Wird eine Rolle zum Kreis, werden ihre Policies die des Kreises, die
   sich durch seine Governance ändern. Wird er wieder zur Rolle, bleiben
-  die Policies für ihre Domains, ihre Inhaber:innen ändern sie wieder,
+  die Policies für ihre Domains, wer die Rolle hat, ändert sie wieder,
   die anderen werden archiviert.
 - Die Einstellungen setzen um, was Policies des Kreises festlegen.
   Sub-Kreise ohne eigene Frist für asynchrone Vorschläge verwenden die

@@ -22,7 +22,7 @@ vorsieht. Diese Hilfe erklärt das Tool, nicht Holacracy.
   Aufgabe fest.
 - **Termine**: Meetings plant ihr im Kalender. Im Tool beginnt ein Meeting,
   wenn jemand es startet.
-- **Wahlen** führt der Facilitator im Meeting durch, das Tool hält nur das
+- **Wahlen** führt, wer Facilitator ist, im Meeting durch, das Tool hält nur das
   Ergebnis fest.
 - **Absprachen zwischen Personen**: Beziehungsvereinbarungen, um Erlaubnis
   für eine Domain fragen, Ausgaben ankündigen oder individuelle Initiative
