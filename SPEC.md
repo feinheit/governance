@@ -739,7 +739,8 @@ questions and concerns, also earlier consents with a text, without
 others' drafts), `meetings`
 (with agenda, elections), `metrics`, `checklist_items`,
 `links`. Lists ordered by ID with the models' field names and GlassFrog
-IDs. `scripts/fetch_backup.py REPO` commits them daily to a git
+IDs. `gov export --json` prints them, `scripts/fetch_backup.py REPO`
+commits them daily to a git
 repository, like the GlassFrog export before (the backlog has the rest).
 
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the

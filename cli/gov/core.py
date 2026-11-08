@@ -478,8 +478,7 @@ def _send(method, url, path, token, **kwargs):
             method,
             urljoin(url, f"/api/{path}"),
             headers={"authorization": f"Bearer {token}", "x-governance-cli": VERSION},
-            timeout=30,
-            **kwargs,
+            **{"timeout": 30} | kwargs,
         )
     except requests.RequestException as exc:
         terminate(str(exc))
