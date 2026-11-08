@@ -524,7 +524,7 @@ class MeetingE2ETest(LiveServerTestCase):
         )
         page = self.page
         page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
-        page.locator("a", has_text="Purpose changed").click()
+        page.locator('main a[href*="day=2026-01-02"]').click()
         page.wait_for_url(
             re.compile(r"/history/\?role=\d+&day=2026-01-02#day-2026-01-02$")
         )

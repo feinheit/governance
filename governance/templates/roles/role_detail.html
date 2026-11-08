@@ -346,11 +346,11 @@
             </li>
           {% endif %}
           {% for kind, obj in history %}
-            {% if kind == "proposal" %}{% include "proposals/_proposal_row.html" with proposal=obj more=False %}{% else %}{% include "history/_change_row.html" with change=obj more=False %}{% endif %}
+            {% include "history/_card_entry.html" with more=False %}
           {% endfor %}
           {% include "_show_more.html" with more=history_more %}
           {% for kind, obj in history_more %}
-            {% if kind == "proposal" %}{% include "proposals/_proposal_row.html" with proposal=obj more=True %}{% else %}{% include "history/_change_row.html" with change=obj more=True %}{% endif %}
+            {% include "history/_card_entry.html" with more=True %}
           {% endfor %}
           {% if not history %}<li class="list-group-item text-body-secondary">
               {% translate "No changes." %}

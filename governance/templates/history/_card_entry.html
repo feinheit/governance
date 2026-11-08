@@ -1,0 +1,12 @@
+{% load governance i18n tz %}
+{# An entry of the history card on the role's page, like the history's (_entry.html), its date linking to the day there #}
+<li class="list-group-item{% if more %} wb-more{% endif %}">
+  {% include "history/_entry.html" with show_role=False %}
+  {% if kind == "proposal" %}{% localtime on %}{% firstof obj.decided_at|date:"Y-m-d" as day %}{% endlocaltime %}{% else %}{% firstof obj.date|date:"Y-m-d" as day %}{% endif %}
+  <div class="small mt-1">
+    <a
+      class="text-body-secondary"
+      href="{{ role.get_history_url }}&amp;day={{ day }}#day-{{ day }}"
+    >{% if kind == "proposal" %}{{ obj.decided_at|date:"SHORT_DATE_FORMAT" }}{% else %}{{ obj.date|date:"SHORT_DATE_FORMAT" }}{% endif %}</a>
+  </div>
+</li>
