@@ -29,6 +29,7 @@ from governance.meetings.models import (
     Meeting,
 )
 from governance.meetings.outputs import meeting_outputs
+from governance.meetings.teasers import with_teasers
 from governance.modals import is_modal
 from governance.proposals.describe import summarize
 from governance.proposals.drafting import can_edit
@@ -63,6 +64,8 @@ def meeting_list(request, pk):
     meetings = Meeting.objects.of_role(circle)
     if kind := filters.get("kind"):
         meetings = meetings.filter(kind=kind)
+    page = Paginator(meetings, 50).get_page(request.GET.get("page"))
+    page.object_list = with_teasers(page.object_list)
     return render(
         request,
         "meetings/meeting_list.html",
@@ -70,7 +73,7 @@ def meeting_list(request, pk):
             "circle": circle,
             "filters": filters,
             "ancestors": [*circle.ancestors(), circle],
-            "page": Paginator(meetings, 50).get_page(request.GET.get("page")),
+            "page": page,
             "can_start_meeting": can_start_meeting(request.user, circle),
             "asks_before_starting": asks_before_starting(request.user, circle),
             # One meeting at a time per circle

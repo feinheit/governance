@@ -6,6 +6,15 @@
         class="wb-row-title"
         href="{{ meeting.get_absolute_url }}"
       >{% if meeting.started_at %}{{ meeting.started_at|date:"SHORT_DATE_FORMAT" }}{% else %}{% translate "not started yet" %}{% endif %}</a>
+      {# What it was about (meetings/teasers.py) #}
+      {% if meeting.teaser %}<div class="wb-row-meta">
+          <span>{% for text in meeting.teaser %}{{ text|plain }}{% if not forloop.last %}
+                ·
+              {% endif %}{% endfor %}{% if meeting.teaser_more %}
+              <span
+                class="text-nowrap"
+              >{% blocktranslate count more=meeting.teaser_more %}+ {{ more }} more{% plural %}+ {{ more }} more{% endblocktranslate %}</span>{% endif %}</span>
+        </div>{% endif %}
     </div>
     <div class="wb-row-aside">
       <span class="badge {{ meeting.kind|tone }}">{{ meeting.get_kind_display }}</span>

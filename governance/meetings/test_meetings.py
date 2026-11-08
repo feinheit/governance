@@ -519,3 +519,42 @@ class MeetingsTest(TestCase):
             self.client.post(url, {"user": guest.pk, "action": "remove"}).status_code,
             403,
         )
+
+
+class TeaserTest(TestCase):
+    def test_teasers(self):
+        """Lists of meetings tease what they were about: the adopted
+        proposals of governance meetings, else the agenda items"""
+        from governance.proposals.models import Proposal
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        now = timezone.now()
+        tactical = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.TACTICAL, started_at=now, ended_at=now
+        )
+        for position, label in enumerate(["Stove", "Fridge", "Knives", "Pots", "Salt"]):
+            AgendaItem.objects.create(meeting=tactical, label=label, position=position)
+        governance = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.GOVERNANCE, started_at=now, ended_at=now
+        )
+        AgendaItem.objects.create(meeting=governance, label="Names")
+        Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="A role for the dishes",
+            status=Proposal.ADOPTED,
+            meeting=governance,
+            created_at=now,
+            decided_at=now,
+        )
+        self.client.force_login(ada)
+
+        for url in [f"/roles/{kitchen.pk}/meetings/", kitchen.get_absolute_url()]:
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertContains(response, "Stove · Fridge · Knives")
+                self.assertContains(response, "+ 2 more")
+                self.assertNotContains(response, "Pots")
+                self.assertContains(response, "A role for the dishes")
+                self.assertNotContains(response, "Names")

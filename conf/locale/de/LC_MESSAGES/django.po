@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:37+0100\n"
+"POT-Creation-Date: 2026-11-08 14:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1244,7 +1244,7 @@ msgstr "betroffene Policies"
 msgid "GlassFrog tension ID"
 msgstr "GlassFrog-ID der Spannung"
 
-#: governance/proposals/models.py governance/templates/history/_timeline.html
+#: governance/proposals/models.py governance/templates/history/_entry.html
 msgid "(no tension)"
 msgstr "(ohne Spannung)"
 
@@ -1989,12 +1989,12 @@ msgstr "Abbrechen"
 msgid "Save"
 msgstr "Speichern"
 
-#: governance/templates/history/_timeline.html
+#: governance/templates/history/_entry.html
 #: governance/templates/meetings/meeting_detail.html
 msgid "Proposal"
 msgstr "Vorschlag"
 
-#: governance/templates/history/_timeline.html
+#: governance/templates/history/_entry.html
 #: governance/templates/meetings/_outputs.html
 #: governance/templates/meetings/meeting_detail.html
 #: governance/templates/notifications/meeting_ended.txt
@@ -2003,7 +2003,7 @@ msgstr "Vorschlag"
 msgid "until %(date)s"
 msgstr "bis %(date)s"
 
-#: governance/templates/history/_timeline.html
+#: governance/templates/history/_entry.html
 msgid "Show"
 msgstr "Anzeigen"
 
@@ -2268,6 +2268,13 @@ msgstr "niemand gewählt"
 #: governance/templates/roles/person_detail.html
 msgid "not started yet"
 msgstr "noch nicht begonnen"
+
+#: governance/templates/meetings/_meeting_rows.html
+#, python-format
+msgid "+ %(more)s more"
+msgid_plural "+ %(more)s more"
+msgstr[0] "+ %(more)s weiterer"
+msgstr[1] "+ %(more)s weitere"
 
 #: governance/templates/meetings/_meeting_rows.html
 #: governance/templates/meetings/meeting_detail.html

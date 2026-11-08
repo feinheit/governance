@@ -8,6 +8,7 @@ from governance.accounts.models import User
 from governance.history.views import ASSIGNMENT_KINDS, timeline
 from governance.meetings.elections import due_elections
 from governance.meetings.models import Meeting
+from governance.meetings.teasers import with_teasers
 from governance.proposals.models import Proposal
 from governance.proposals.process import waiting_for
 from governance.roles.constitution import FACILITATOR, REP, SECRETARY
@@ -200,9 +201,14 @@ def role_detail(request, pk):
     if not role.core_role and not role.archived_on:
         # Circles, and roles whose holders break them down in their inner
         # circle (1.3.1, governance meetings only)
-        context["meetings"] = role.meetings.filter(
-            Q(ended_at=None) | Q(pk__in=role.meetings.order_by("-started_at")[:3])
-        ).order_by("-started_at", "-pk")[:6]
+        # With what they were about, a circle's page lists them
+        context["meetings"] = with_teasers(
+            role.meetings.filter(
+                Q(ended_at=None) | Q(pk__in=role.meetings.order_by("-started_at")[:3])
+            ).order_by("-started_at", "-pk")[:6]
+            if role.is_circle
+            else role.meetings.none()
+        )
         context["can_start_meeting"] = can_start_meeting(request.user, role)
         context["asks_before_starting"] = asks_before_starting(request.user, role)
         context["running_meeting"] = role.meetings.running().first()

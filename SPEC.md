@@ -577,6 +577,9 @@ their account, else the default), not when they received it themselves
 - **Roles show their purpose, domains and accountabilities in this order**
   everywhere: the pages, "as of", the export, `gov roles show`, the
   drafting forms (and the instructions they make), the admin.
+- **Lists of meetings** tease what they were about (`meetings/teasers.py`):
+  the adopted proposals of governance meetings, else the agenda items,
+  three of them and how many more.
 - **Circle and role pages** are laid out for the desktop: on the left
   what the role is (purpose, domains, accountabilities, its own
   policies), on the right what is used most (holders or core roles, a

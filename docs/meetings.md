@@ -93,6 +93,9 @@ circle.
   menu "More actions" (…) of a role's page lists the meetings the role was
   invited to.
 
+Lists of meetings show what they were about: the adopted proposals,
+else the agenda items.
+
 Steps: check-in, checklists, metrics, updates, agenda, closing. The
 updates show the links of the circle and the invited roles (e.g. to the
 task management tool) and the outcomes of the last three tactical
