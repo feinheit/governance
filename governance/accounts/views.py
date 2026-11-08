@@ -1,6 +1,7 @@
 import re
 
 from authlib.google import GoogleOAuth2Client
+from django import forms
 from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
@@ -8,12 +9,18 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.utils.translation import gettext, gettext as _
+from django.utils.translation import (
+    activate,
+    get_language,
+    gettext,
+    gettext as _,
+    gettext_lazy,
+)
 from django.views.decorators.cache import never_cache
-from django.views.decorators.http import require_POST
 
 from governance import cli_version
 from governance.accounts.models import API_TOKEN_LIFETIME, APIToken, User
+from governance.forms import ModelForm, next_url
 
 
 def _next_url(request):
@@ -170,20 +177,64 @@ def cli_login(request):
     )
 
 
-@require_POST
+class SettingsForm(ModelForm):
+    """The own name, language and mails, changed together"""
+
+    # Signing in with Google matches it: shown, not changed here
+    email = forms.EmailField(
+        label=gettext_lazy("Mail address"),
+        disabled=True,
+        required=False,
+        help_text=gettext_lazy("You sign in with it, it can't be changed here."),
+    )
+    notify_all = forms.TypedChoiceField(
+        label=gettext_lazy("Mails"),
+        choices=[
+            (False, gettext_lazy("About the circles I'm a member of")),
+            (True, gettext_lazy("About everything in all circles")),
+        ],
+        coerce=lambda value: value == "True",
+        widget=forms.RadioSelect,
+    )
+
+    class Meta:
+        model = User
+        fields = ["email", "full_name", "short_name", "language", "notify_all"]
+        help_texts = {
+            "short_name": gettext_lazy(
+                "In the menu at the top; without one the start of your mail address."
+            ),
+            "language": gettext_lazy("Of the pages and the mails."),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["full_name"].required = True
+        # No empty choice: without a language the pages follow the browser
+        # but the mails are German; saving sets the page's language
+        self.fields["language"].choices = settings.LANGUAGES
+        self.fields["language"].required = True
+        if not self.instance.language:
+            self.initial["language"] = get_language()
+
+
 @login_required  # /accounts/ is exempt from the login middleware
-def notifications(request):
-    """Mails about the own circles (the default) or about everything"""
-    request.user.notify_all = request.POST.get("notify_all") == "1"
-    request.user.save(update_fields=["notify_all"])
-    return redirect(request.user)
-
-
-@require_POST
-@login_required
-def language(request):
-    """The language of the pages and mails (empty: the default)"""
-    if (value := request.POST.get("language")) in dict(settings.LANGUAGES):
-        request.user.language = value
-        request.user.save(update_fields=["language"])
-    return redirect(request.user)
+def user_settings(request):
+    """Name, short name, language and mails; back to ``?next=`` (the page
+    the menu opened it from), else the own page"""
+    form = SettingsForm(request.POST or None, instance=request.user)
+    if form.is_valid():
+        user = form.save()
+        # The language of the message and the next page
+        activate(user.language)
+        messages.success(request, gettext("Your settings have been saved."))
+        return redirect(next_url(request) or user)
+    return render(
+        request,
+        "generic/object_form.html",
+        {
+            "title": gettext("Settings"),
+            "form": form,
+            "cancel_url": next_url(request) or request.user.get_absolute_url(),
+        },
+    )

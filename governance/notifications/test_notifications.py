@@ -271,20 +271,22 @@ class NotificationsTest(TestCase):
         self.assertIn("/help/mails/", bodies["ada@example.com"])
 
     def test_setting(self):
+        """Mails about everything, chosen in the settings"""
         self.client.force_login(self.zoe)
         response = self.client.get(f"/people/{self.zoe.pk}/")
-        self.assertContains(response, "the circles you're a member of")
-        self.client.post("/accounts/notifications/", {"notify_all": "1"})
+        self.assertContains(response, "About the circles I'm a member of")
+        self.client.post(
+            "/accounts/settings/",
+            {"full_name": "Zoe", "language": "en", "notify_all": "True"},
+        )
         self.zoe.refresh_from_db()
         self.assertTrue(self.zoe.notify_all)
         self.assertContains(
-            self.client.get(f"/people/{self.zoe.pk}/"), "everything in all circles"
+            self.client.get(f"/people/{self.zoe.pk}/"),
+            "About everything in all circles",
         )
         # Not on others' pages
         self.assertNotContains(self.client.get(f"/people/{self.ada.pk}/"), "Mails")
-        self.client.post("/accounts/notifications/", {"notify_all": "0"})
-        self.zoe.refresh_from_db()
-        self.assertFalse(self.zoe.notify_all)
 
 
 class AffectedTest(TestCase):

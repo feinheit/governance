@@ -2,8 +2,8 @@
 
 When the tool sends mails and to whom. **Members** of a circle are the
 people holding a role in it, also as Circle Lead or Circle Rep of a
-sub-circle. **"Everything"** means the people who chose "Inform me about
-everything in all circles" on their page.
+sub-circle. **"Everything"** means the people who chose the mails "About
+everything in all circles" in their settings.
 
 ## Proposals
 

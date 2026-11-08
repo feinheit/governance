@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 20:50+0100\n"
+"POT-Creation-Date: 2026-11-08 21:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -146,6 +146,44 @@ msgstr "Skripte und gov, die es verwenden, verlieren ihren Zugriff."
 #: governance/templates/roles/role_detail.html
 msgid "Delete"
 msgstr "Löschen"
+
+#: governance/accounts/views.py
+msgid "Mail address"
+msgstr "Mailadresse"
+
+#: governance/accounts/views.py
+msgid "You sign in with it, it can't be changed here."
+msgstr "Damit meldest du dich an, sie lässt sich hier nicht ändern."
+
+#: governance/accounts/views.py governance/templates/roles/person_detail.html
+msgid "Mails"
+msgstr "Mails"
+
+#: governance/accounts/views.py governance/templates/roles/person_detail.html
+msgid "About the circles I'm a member of"
+msgstr "Zu den Kreisen, in denen ich Mitglied bin"
+
+#: governance/accounts/views.py governance/templates/roles/person_detail.html
+msgid "About everything in all circles"
+msgstr "Zu allem in allen Kreisen"
+
+#: governance/accounts/views.py
+msgid "In the menu at the top; without one the start of your mail address."
+msgstr "Im Menü oben; ohne ihn der Anfang deiner Mailadresse."
+
+#: governance/accounts/views.py
+msgid "Of the pages and the mails."
+msgstr "Der Seiten und der Mails."
+
+#: governance/accounts/views.py
+msgid "Your settings have been saved."
+msgstr "Deine Einstellungen wurden gespeichert."
+
+#: governance/accounts/views.py governance/templates/base.html
+#: governance/templates/roles/person_detail.html
+#: governance/templates/roles/role_detail.html
+msgid "Settings"
+msgstr "Einstellungen"
 
 #: governance/audit/apps.py
 msgid "audit log"
@@ -806,6 +844,7 @@ msgid "proposals"
 msgstr "Vorschläge"
 
 #: governance/proposals/describe.py governance/proposals/drafting.py
+#: governance/templates/roles/person_detail.html
 msgid "Name"
 msgstr "Name"
 
@@ -2011,7 +2050,6 @@ msgstr "Abbrechen"
 
 #: governance/templates/generic/object_form.html
 #: governance/templates/meetings/_notes.html
-#: governance/templates/roles/person_detail.html
 msgid "Save"
 msgstr "Speichern"
 
@@ -2746,6 +2784,7 @@ msgid "Change or remove a role"
 msgstr "Rolle ändern oder entfernen"
 
 #: governance/templates/proposals/_drafting.html
+#: governance/templates/roles/person_detail.html
 #: governance/templates/roles/role_detail.html
 msgid "Change"
 msgstr "Ändern"
@@ -3031,31 +3070,6 @@ msgid "Earlier roles"
 msgstr "Frühere Rollen"
 
 #: governance/templates/roles/person_detail.html
-#: governance/templates/roles/role_detail.html
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: governance/templates/roles/person_detail.html
-msgid "Mails"
-msgstr "Mails"
-
-#: governance/templates/roles/person_detail.html
-msgid "You get mails about everything in all circles."
-msgstr "Du erhältst Mails zu allem in allen Kreisen."
-
-#: governance/templates/roles/person_detail.html
-msgid "You get mails about the circles you're a member of."
-msgstr "Du erhältst Mails zu den Kreisen, in denen du Mitglied bist."
-
-#: governance/templates/roles/person_detail.html
-msgid "Only my circles"
-msgstr "Nur meine Kreise"
-
-#: governance/templates/roles/person_detail.html
-msgid "Inform me about everything in all circles"
-msgstr "Über alles in allen Kreisen informieren"
-
-#: governance/templates/roles/person_detail.html
 msgid "Language"
 msgstr "Sprache"
 
@@ -3184,6 +3198,19 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#, python-format
+#~ msgid "Default (%(language)s)"
+#~ msgstr "Standard (%(language)s)"
+
+#~ msgid "You get mails about everything in all circles."
+#~ msgstr "Du erhältst Mails zu allem in allen Kreisen."
+
+#~ msgid "Only my circles"
+#~ msgstr "Nur meine Kreise"
+
+#~ msgid "Inform me about everything in all circles"
+#~ msgstr "Über alles in allen Kreisen informieren"
 
 #~ msgid "held by"
 #~ msgstr "besetzt durch"

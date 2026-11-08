@@ -265,6 +265,15 @@ h3,
   background-color: var(--wb-field-bg);
 }
 
+/* Disabled fields (e.g. the mail address in the settings): Bootstrap's
+   grey is the fields' own here, so no fill, a dashed border, muted text */
+:is(.form-control, .form-select):disabled {
+  background-color: transparent;
+  border-style: dashed;
+  color: var(--bs-secondary-color);
+  cursor: not-allowed;
+}
+
 .wb-filters .form-check-input {
   --bs-form-check-bg: var(--wb-field-bg);
 }

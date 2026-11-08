@@ -13,6 +13,5 @@ urlpatterns = [
         views.api_token_delete,
         name="api_token_delete",
     ),
-    path("notifications/", views.notifications, name="notifications"),
-    path("language/", views.language, name="language"),
+    path("settings/", views.user_settings, name="user_settings"),
 ]

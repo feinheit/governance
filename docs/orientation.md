@@ -62,8 +62,10 @@ Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.
 
 **Your page**, the start page, shows your roles, your drafts and tensions, proposals
-waiting for your response, your meetings and your settings: mails and
-language (German or English).
+waiting for your response, your meetings and your settings: name, short
+name (in the menu at the top), language (German or English) and mails.
+"Settings" in the menu with your name changes them in one form; the
+mail address is only shown, you sign in with it.
 
 Running meetings you attend are shown at the top of every page.
 
@@ -94,8 +96,8 @@ published and adopted proposals, changed policies of a domain and the
 outputs of meetings. You also hear about roles you get or lose and changes of your focus, and as
 Secretary about people joining or leaving your circle. As proposer you
 hear about questions and requests for a meeting, as Secretary about the
-latter, and your questions get their answers by mail. On your page you
-can choose to be informed about everything in all circles. [Mails](mails.md)
+latter, and your questions get their answers by mail. In your settings you
+can choose mails about everything in all circles. [Mails](mails.md)
 lists them all.
 
 ## API

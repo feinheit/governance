@@ -104,25 +104,59 @@ class AuditTest(TestCase):
 
 
 class SettingsTest(TestCase):
-    def test_language(self):
-        """People choose their language in the settings on their page"""
+    def test_settings(self):
+        """Name, short name, language and mails in one form, from the own
+        page and the menu; the mail address only shown: signing in uses it"""
         ada = User.objects.create_user("ada@example.com", full_name="Ada")
         bob = User.objects.create_user("bob@example.com", full_name="Bob")
         self.client.force_login(ada)
         response = self.client.get(ada.get_absolute_url())
-        self.assertContains(response, 'action="/accounts/language/"')
+        self.assertContains(response, 'href="/accounts/settings/"')
+        self.assertContains(response, 'href="/accounts/settings/?next=/people/')
         self.assertNotContains(
-            self.client.get(bob.get_absolute_url()), "/accounts/language/"
+            self.client.get(bob.get_absolute_url()), 'href="/accounts/settings/"'
         )
+        response = self.client.get("/accounts/settings/")
+        self.assertContains(response, 'value="ada@example.com"')
+        self.assertContains(response, "disabled")
 
-        response = self.client.post("/accounts/language/", {"language": "de"})
+        data = {
+            "email": "eve@example.com",
+            "full_name": "Ada Lovelace",
+            "short_name": "Ada L.",
+            "language": "de",
+            "notify_all": "True",
+        }
+        response = self.client.post("/accounts/settings/?next=/proposals/", data)
+        self.assertRedirects(response, "/proposals/", fetch_redirect_response=False)
+        ada.refresh_from_db()
+        self.assertEqual(
+            (ada.email, ada.full_name, ada.short_name, ada.language, ada.notify_all),
+            ("ada@example.com", "Ada Lovelace", "Ada L.", "de", True),
+        )
+        # The message and the page in the new language
+        response = self.client.get(ada.get_absolute_url())
+        self.assertContains(response, "Einstellungen")
+        self.assertContains(response, "gespeichert")
+
+        # Only the app's languages, a name, no other sites
+        response = self.client.post(
+            "/accounts/settings/", data | {"language": "fr", "full_name": ""}
+        )
+        self.assertEqual(response.status_code, 200)
+        ada.refresh_from_db()
+        self.assertEqual((ada.language, ada.full_name), ("de", "Ada Lovelace"))
+        response = self.client.post(
+            "/accounts/settings/?next=https://example.com/", data | {"language": "en"}
+        )
         self.assertRedirects(response, ada.get_absolute_url())
+        # A language is required: without one pages follow the browser but
+        # mails are German. Preselected: the page's
+        self.client.post("/accounts/settings/", data | {"language": ""})
         ada.refresh_from_db()
-        self.assertEqual(ada.language, "de")
-        self.assertContains(self.client.get(ada.get_absolute_url()), "Einstellungen")
-        # Only the app's languages
-        self.client.post("/accounts/language/", {"language": "fr"})
-        ada.refresh_from_db()
-        self.assertEqual(ada.language, "de")
-        self.client.post("/accounts/language/", {"language": "en"})
-        self.assertContains(self.client.get(ada.get_absolute_url()), "Settings")
+        self.assertEqual(ada.language, "en")
+        User.objects.filter(pk=ada.pk).update(language="")
+        response = self.client.get(
+            "/accounts/settings/", headers={"accept-language": "de"}
+        )
+        self.assertContains(response, '<option value="de" selected>')

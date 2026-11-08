@@ -2,8 +2,8 @@
 
 Wann das Tool Mails verschickt und an wen. **Mitglieder** eines Kreises
 sind alle, die darin eine Rolle haben, auch als Circle Lead oder Circle
-Rep eines Sub-Kreises. **"Alles"** sind die, die auf ihrer Seite "Über
-alles in allen Kreisen informieren" gewählt haben.
+Rep eines Sub-Kreises. **"Alles"** sind die, die in ihren Einstellungen
+die Mails "Zu allem in allen Kreisen" gewählt haben.
 
 ## Vorschläge
 

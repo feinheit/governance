@@ -646,7 +646,13 @@ verify the mails; removed once they've proven themselves.
   not encoded for headers.
 - **Person page**: roles grouped by circle in depth-first order, earlier
   roles; one's own also drafts, proposals waiting for a response, open
-  meetings, due elections, `notify_all`.
+  meetings, due elections and the settings.
+- **Settings** (`/accounts/settings/`, a modal from the menu with one's
+  name and from one's page): name, short name, language (required:
+  without one pages follow the browser but mails are German; preselected
+  the page's) and mails (`notify_all`) in one form with one save button;
+  the mail address shown but disabled, Google sign-in matches it
+  (decided 2026-11-08).
 - **Circle browser** (`/circles/`, `frontend/circles`, circle packing):
   zoom by clicking, `?circle=ID`, "My roles", colors for assigned,
   elected/core and unfilled roles with a legend, validated for light and

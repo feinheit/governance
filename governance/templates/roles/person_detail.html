@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load governance i18n %}
 {% block title %}{{ person }} – {{ block.super }}{% endblock %}
 
 {% block content %}
@@ -93,44 +93,30 @@
       {% endif %}
       {% if person == request.user %}
         <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Settings" %}</h2></div>
-          <div class="card-body">
-            <h3 class="h6">{% translate "Mails" %}</h3>
-            <p class="mb-2">
-              {% if person.notify_all %}
-                {% translate "You get mails about everything in all circles." %}
-              {% else %}
-                {% translate "You get mails about the circles you're a member of." %}
-              {% endif %}
-            </p>
-            <form method="post" action="{% url 'notifications' %}">
-              {% csrf_token %}
-              {% if person.notify_all %}
-                <button type="submit" name="notify_all" value="0" class="btn btn-sm btn-quiet">
-                  {% translate "Only my circles" %}
-                </button>
-              {% else %}
-                <button type="submit" name="notify_all" value="1" class="btn btn-sm btn-quiet">
-                  {% translate "Inform me about everything in all circles" %}
-                </button>
-              {% endif %}
-            </form>
-            <h3 class="h6 mt-3">{% translate "Language" %}</h3>
-            <form method="post" action="{% url 'language' %}" class="d-flex gap-1">
-              {% csrf_token %}
-              {% get_current_language as current_language %}
-              {% get_available_languages as available_languages %}
-              {% get_language_info_list for available_languages as languages %}
-              <select name="language" class="form-select form-select-sm w-auto" aria-label="{% translate 'Language' %}">
-                {% for language in languages %}
-                  <option value="{{ language.code }}" {% if language.code == current_language %}selected{% endif %}>
-                    {{ language.name_local }}
-                  </option>
-                {% endfor %}
-              </select>
-              <button type="submit" class="btn btn-sm btn-quiet">{% translate "Save" %}</button>
-            </form>
+          <div class="card-header d-flex align-items-center gap-2">
+            <h2 class="h6 mb-0 me-auto">{% translate "Settings" %}</h2>
+            <a class="btn btn-sm btn-quiet" href="{% url 'user_settings' %}" data-modal>
+              {% icon "gear" %} {% translate "Change" %}
+            </a>
           </div>
+          <dl class="card-body mb-0 wb-fields">
+            <dt>{% translate "Name" %}</dt>
+            <dd>{{ person }} ({{ person.get_short_name }})</dd>
+            <dt>{% translate "Language" %}</dt>
+            <dd>
+              {% get_current_language as current_language %}
+              {% get_language_info for current_language as language %}
+              {{ language.name_local }}
+            </dd>
+            <dt>{% translate "Mails" %}</dt>
+            <dd class="mb-0">
+              {% if person.notify_all %}
+                {% translate "About everything in all circles" %}
+              {% else %}
+                {% translate "About the circles I'm a member of" %}
+              {% endif %}
+            </dd>
+          </dl>
         </section>
       {% endif %}
     </div>

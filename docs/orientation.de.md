@@ -62,7 +62,10 @@ Unbesetzte Rollen haben die Circle Leads, ausser der Rolle Circle Rep; ist die R
 
 **Deine Personenseite**, die Startseite, zeigt deine Rollen, deine Entwürfe und Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine
-Einstellungen: Mails und Sprache (Deutsch oder Englisch).
+Einstellungen: Name, Kurzname (im Menü oben), Sprache (Deutsch oder
+Englisch) und Mails. "Einstellungen" im Menü mit deinem Namen ändert sie
+in einem Formular; die Mailadresse wird nur angezeigt, damit meldest du
+dich an.
 
 Laufende Meetings, an denen du teilnimmst, stehen oben auf jeder Seite.
 
@@ -94,8 +97,8 @@ Domain und die Ergebnisse von Meetings. Du erfährst auch von Rollen, die
 du erhältst oder abgibst, von Änderungen deines Fokus und als Secretary, wer deinem Kreis beitritt
 oder ihn verlässt. Wer einen Vorschlag macht, erfährt von Fragen und
 Wünschen nach einem Meeting, wer Secretary ist, von letzteren, und auf deine
-Fragen kommt die Antwort per Mail. Auf deiner Personenseite kannst du dich über alles in
-allen Kreisen informieren lassen. [Mails](mails.de.md) listet alle auf.
+Fragen kommt die Antwort per Mail. In deinen Einstellungen kannst du
+Mails zu allem in allen Kreisen wählen. [Mails](mails.de.md) listet alle auf.
 
 ## API
 
