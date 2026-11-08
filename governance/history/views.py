@@ -241,7 +241,12 @@ def history(request):
     if role_id := filters.get("role"):
         subject = role = get_object_or_404(Role, pk=role_id)
     if subject and not subject.is_circle:
-        changes = changes.filter(role=role)
+        # Formerly a circle: its roles coming and going, not their history
+        changes = changes.filter(
+            Q(role=role)
+            | Q(role__circle=role, kind__in=["added", "removed"])
+            | Q(kind="moved", old=role.pk)
+        )
         adopted = adopted.filter(pk__in=role.changed_by_proposals.values("pk"))
     elif subject:
         circle = subject

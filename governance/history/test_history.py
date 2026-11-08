@@ -689,3 +689,30 @@ class MovedAwayTest(TestCase):
         response = self.client.get(f"/history/?role={kitchen.pk}")
         self.assertContains(response, "Moved to another circle")
         self.assertContains(response, cook.get_absolute_url())
+
+
+class FormerCircleTest(TestCase):
+    def test_roles_of_a_circle_turned_back(self):
+        """A circle turned back into a role shows its roles leaving in its
+        history, not their whole history"""
+        from governance.accounts.models import User
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        bakery = Role.objects.create(name="Bakery", circle=kitchen)  # Turned back
+        baker = Role.objects.create(
+            name="Baker", circle=bakery, archived_on=dt.date(2025, 3, 1)
+        )
+        oven = Role.objects.create(name="Oven", circle=kitchen)
+        for kind, role, old, new in [
+            ("name", baker, "Becker", "Baker"),
+            ("removed", baker, "Baker", ""),
+            ("moved", oven, bakery.pk, kitchen.pk),
+        ]:
+            Change.objects.create(
+                date=dt.date(2025, 3, 1), role=role, kind=kind, old=old, new=new
+            )
+        response = self.client.get(f"/history/?role={bakery.pk}")
+        self.assertContains(response, baker.get_absolute_url())
+        self.assertContains(response, oven.get_absolute_url())
+        self.assertNotContains(response, "Becker")

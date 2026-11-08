@@ -580,7 +580,9 @@ verify the mails; removed once they've proven themselves.
   changed). The history is one page (`/history/`, `?role=`): a circle
   with its roles (a sub-circle as a role; "With sub-circles" with what's
   inside them; today's roles, whose past moved along with them, those
-  which left show their move, decided 2026-11-08) or a role alone, with assignments, with links, metrics and
+  which left show their move, decided 2026-11-08) or a role alone (a
+  former circle with its roles coming, going and moving out, not their
+  history), with assignments, with links, metrics and
   checklists; links to a day (`?day=`) open its page. A policy's page has
   its own history (its changes, the adopted proposals changing it), the
   days linking to its role's. The proposals by status,
