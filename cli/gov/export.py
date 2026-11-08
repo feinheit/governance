@@ -1,4 +1,4 @@
-"""The whole governance as one Markdown document, or the JSON backup"""
+"""The whole current governance as one Markdown document, or as JSON"""
 
 import json
 
@@ -17,8 +17,7 @@ from gov.core import cli, request
     "--json",
     "as_json",
     is_flag=True,
-    help="The JSON backup instead: everything you see, one key per file,"
-    " with the people (needs --with-people).",
+    help="As JSON: the active roles by ID with everything belonging to them.",
 )
 @click.option(
     "-o",
@@ -28,15 +27,12 @@ from gov.core import cli, request
     help="Write to this file instead of stdout.",
 )
 def export(with_people, as_json, output):
-    """The whole current governance as Markdown: circles, roles, policies
-    (and who holds the roles, if asked for); with --json --with-people
-    everything, also the people, proposals, meetings and the history"""
+    """The whole current governance as Markdown: circles, roles, their texts
+    and policies (and who holds the roles, if asked for); as JSON also the
+    metrics, checklist items and links"""
+    params = {"people": "true"} if with_people else {}
     if as_json:
-        if not with_people:
-            # Personal data is opt-in, and the backup can't leave it out
-            raise click.UsageError("The JSON backup has the people: add --with-people.")
-        files = request("GET", "backup/", timeout=300)
-        output.write(json.dumps(files, indent=2, ensure_ascii=False) + "\n")
+        data = request("GET", "export/json/", params=params)
+        output.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
         return
-    data = request("GET", "export/", params={"people": "true"} if with_people else {})
-    output.write(data["markdown"])
+    output.write(request("GET", "export/", params=params)["markdown"])

@@ -25,6 +25,7 @@ everything with its exact texts:
     gov roles context <role_id> --json      # what affects it from outside
     gov policies --circle <circle_id> --json  # also the roles' domain policies
     gov domains --circle <circle_id>
+    gov export --json                       # the whole organization as a tree
 
 For a circle, review the circle's own purpose, accountabilities and
 domains, each of its roles and all of its policies. For a role, review the

@@ -36,10 +36,10 @@ nightly import mirrors.
    deadline passed, also any which passed since the final import.
 4. **The handbook's links**: on the branch of feinheit/handbuch#126
    (`governance` in `~/projects/handbuch`), point the remaining links to
-   GlassFrog to the app (`gov` 0.12.0 or later):
+   GlassFrog to the app (`gov` 0.14.0 or later):
 
    ```
-   gov export --json --with-people | python3 -I scripts/governance_links.py source
+   gov export --json | python3 -I scripts/governance_links.py source
    ```
 
    It lists links whose text doesn't contain the current name (most are

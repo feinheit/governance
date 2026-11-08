@@ -447,10 +447,17 @@ class CLITest(TestCase):
         self.assertIn("# **Holacracy Verfassung**", result.output)
 
     def test_export_json(self):
-        """The JSON backup, one key per file, has the people: opt-in"""
-        files = json.loads(self.gov("export", "--json", "--with-people").output)
-        self.assertIn("Cook", [role["name"] for role in files["roles.json"]])
-        self.assertNotEqual(self.gov("export", "--json").exit_code, 0)
+        """The current governance as data, the people when asked for"""
+        data = json.loads(self.gov("export", "--json").output)
+        [kitchen] = data["roles"]  # The anchor circle, with its roles
+        cook = next(role for role in kitchen["roles"] if role["name"] == "Cook")
+        self.assertEqual(cook["accountabilities"][0]["text"], "Cooking soup")
+        self.assertNotIn("role_leads", cook)
+        data = json.loads(self.gov("export", "--json", "--with-people").output)
+        cook = next(
+            role for role in data["roles"][0]["roles"] if role["id"] == self.cook.pk
+        )
+        self.assertEqual(cook["role_leads"][0]["name"], "Ada")
 
     def complete(self, args, incomplete):
         self.gov("me")  # Stores a token

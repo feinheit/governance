@@ -665,7 +665,13 @@ verify the mails; removed once they've proven themselves.
 - **Export**: the whole governance as Markdown, `/export/governance.md`
   (the people only with `?people=1`, `--with-people`: personal data
   is opt-in, decided 2026-11-08); no button, `gov export` (`GET
-  export/`) offers it.
+  export/`) offers it. `gov export --json` (`GET export/json/`,
+  `governance_data()`) is the same current state as data for scripts and
+  agents: a tree from the anchor circle down (a circle's roles under
+  `roles`), each role with its texts, domains with their policies, its
+  policies, metrics, checklist items, links and, with `--with-people`, its
+  Role Leads; mentions with the current names. The history, proposals
+  and meetings are the backup's (decided 2026-11-08).
 - **Help** (`/help/`, `governance/help.py`): the user documentation in
   `docs/` (Markdown, also readable on GitHub: `name.md` in English,
   `name.de.md` in German, shown in the page's language) and the
@@ -679,7 +685,7 @@ verify the mails; removed once they've proven themselves.
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
   the handbook's links are updated at the switchover using the imported
   GlassFrog IDs (a script in the handbook's pull request reading
-  `gov export --json --with-people`).
+  `gov export --json`).
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
   policies of a domain and settings on the role's page, a Role Lead's focus,
@@ -728,7 +734,7 @@ roles/{id}/context/` (the role's page's context, `roles/context.py`), `GET const
 circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
-the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET me/`
+the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET export/json/`, `GET me/`
 (the user, the token's access and their roles); objects come with the URL
 of their page, times in local time (their first ten characters are the
 day the pages show), proposals with `adopted_on`. Clients send instructions only (e.g. written by an LLM from
@@ -748,7 +754,7 @@ questions and concerns, also earlier consents with a text, without
 others' drafts), `meetings`
 (with agenda, elections), `metrics`, `checklist_items`,
 `links`. Lists ordered by ID with the models' field names and GlassFrog
-IDs. `gov export --json --with-people` prints them, `scripts/fetch_backup.py REPO`
+IDs. `scripts/fetch_backup.py REPO`
 commits them daily to a git
 repository, like the GlassFrog export before (the backlog has the rest).
 
