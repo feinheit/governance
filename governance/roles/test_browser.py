@@ -38,7 +38,7 @@ class CircleBrowserTest(TestCase):
                     "name": "Cook",
                     "url": f"/roles/{cook.pk}/",
                     "kind": "role",
-                    "holders": ["Ada"],
+                    "role_leads": ["Ada"],
                     "elected": False,
                     "lead": False,
                     "mine": True,

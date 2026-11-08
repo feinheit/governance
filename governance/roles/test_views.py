@@ -268,7 +268,7 @@ class ViewsTest(TestCase):
         lead = kitchen.roles.get(core_role="lead")
         Assignment.objects.create(role=lead, user=self.user)
 
-        # Holders of the kitchen's role in the anchor circle: lead and rep
+        # Role Leads of the kitchen's role in the anchor circle: lead and rep
         bob = User.objects.create_user("bob@example.com", full_name="Bob Example")
         Assignment.objects.create(role=kitchen, user=self.user)
         Assignment.objects.create(role=kitchen, user=bob)
@@ -276,7 +276,7 @@ class ViewsTest(TestCase):
 
         response = self.client.get(anchor.get_absolute_url())
         self.assertContains(response, "(Circle Rep)", count=1)  # Bob, not Ada
-        # The circle's own page: its holders are those of its core roles,
+        # The circle's own page: its Role Leads are those of its core roles,
         # first in the sidebar
         kitchen_page = self.client.get(kitchen.get_absolute_url()).content.decode()
         self.assertNotIn("(Circle Rep)", kitchen_page)

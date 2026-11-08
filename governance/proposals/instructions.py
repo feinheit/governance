@@ -27,7 +27,7 @@ from governance.roles.assignments import (
     end_assignment,
     new_reps_leading,
     reps_leading_their_circle,
-    sync_circle_holders,
+    sync_circle_role_leads,
 )
 from governance.roles.constitution import CORE_ROLES, LEAD
 from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
@@ -483,7 +483,7 @@ class Applier:
             role.save(update_fields=["is_circle"])
             role.create_core_roles()
             self.converted.append(role)
-            # The role's holders lead the new circle
+            # The role's Role Leads lead the new circle
             lead = role.roles.active().get(core_role=LEAD)
             for assignment in Assignment.objects.current().filter(role=role):
                 Assignment.objects.create(
@@ -542,12 +542,12 @@ class Applier:
             self.convert(circle, to_circle=False)
             self.reverted.append(circle)
         for role in self.converted:
-            sync_circle_holders(role, self.day)
+            sync_circle_role_leads(role, self.day)
         # E.g. a circle without a Circle Lead of its own moved under one its
         # Circle Rep leads (1.4.2)
         for rep in new_reps_leading(self.reps_before):
             self.end_assignment(rep)
-            sync_circle_holders(rep.role.circle, self.day)
+            sync_circle_role_leads(rep.role.circle, self.day)
             self.ended_reps.append(rep)
 
 
@@ -606,7 +606,7 @@ def revert_after_meeting(meeting):
     if own:
         # For the meeting's outputs; announced otherwise, not again in
         # the mail of a super-circle's meeting still running
-        proposal.ended_holders.add(*applier.ended_users)
+        proposal.ended_role_leads.add(*applier.ended_users)
     close_circles([circle], proposal)
     update_changes(since=timezone.localdate())
 
@@ -689,7 +689,7 @@ def adopt(proposal):
     proposal.reverting_circles.add(*applier.deferred)
     proposal.policies.add(*applier.policies)
     # For the meeting's mail: assignments started today are deleted
-    proposal.ended_holders.add(*applier.ended_users)
+    proposal.ended_role_leads.add(*applier.ended_users)
     close_circles([*applier.removed, *applier.reverted], proposal)
     update_changes(since=timezone.localdate())
     if not (proposal.meeting and proposal.meeting.is_running):

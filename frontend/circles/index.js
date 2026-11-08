@@ -48,7 +48,7 @@ function useAnimatedView(target) {
 function status(data) {
   if (data.kind === "circle") return "circle"
   const core = data.kind === "core" || data.elected
-  if (!data.holders.length) return core ? "vacant" : "unassigned"
+  if (!data.role_leads.length) return core ? "vacant" : "unassigned"
   return core ? "core" : "assigned"
 }
 
@@ -326,25 +326,25 @@ function CircleBrowser({ data }) {
                 node.data.name.length > maxChars
                   ? `${node.data.name.slice(0, maxChars - 1)}…`
                   : node.data.name
-              let holders =
-                !circle && r > 70 ? node.data.holders.join(", ") : ""
-              const maxHolderChars = Math.floor((r * 1.7) / 7.5)
-              if (holders.length > maxHolderChars) {
-                holders = `${holders.slice(0, maxHolderChars - 1)}…`
+              let role_leads =
+                !circle && r > 70 ? node.data.role_leads.join(", ") : ""
+              const maxRoleLeadChars = Math.floor((r * 1.7) / 7.5)
+              if (role_leads.length > maxRoleLeadChars) {
+                role_leads = `${role_leads.slice(0, maxRoleLeadChars - 1)}…`
               }
               return (
                 <text
                   key={`label-${node.data.kind}-${node.data.id}`}
                   x={cx}
-                  y={circle ? cy - r + 26 : holders ? cy - 10 : cy}
+                  y={circle ? cy - r + 26 : role_leads ? cy - 10 : cy}
                   className={`cb-label cb-label-${status(node.data)}`}
                   text-anchor="middle"
                   dominant-baseline="middle"
                 >
                   {name}
-                  {holders ? (
-                    <tspan x={cx} dy={22} className="cb-label-holders">
-                      {holders}
+                  {role_leads ? (
+                    <tspan x={cx} dy={22} className="cb-label-role-leads">
+                      {role_leads}
                     </tspan>
                   ) : null}
                 </text>
@@ -378,7 +378,7 @@ function Tooltip({ node, x, y, width, height }) {
         </div>
       ) : (
         <div className="text-body-secondary small">
-          {data.holders.length ? data.holders.join(", ") : data.unfilled}
+          {data.role_leads.length ? data.role_leads.join(", ") : data.unfilled}
           {data.elected ? ` · ${label("elected")}` : ""}
         </div>
       )}

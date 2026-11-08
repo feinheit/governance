@@ -79,7 +79,7 @@ class AssignmentMailsTest(TestCase):
         )
 
     def test_focus(self):
-        """The holder hears about their focus changing, nobody else"""
+        """The Role Lead hears about their focus changing, nobody else"""
         assignment = Assignment.objects.create(
             role=self.cook, user=self.eve, focus="Soup"
         )

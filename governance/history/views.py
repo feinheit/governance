@@ -83,7 +83,7 @@ def user_of(change):
 
 def without_following(changes):
     """Without the assignments of a circle's role which follow those of its
-    Circle Leads and Reps on the same day (``sync_circle_holders()``)"""
+    Circle Leads and Reps on the same day (``sync_circle_role_leads()``)"""
     core = {
         (change.date, change.kind, user_of(change), change.role.circle_id)
         for change in changes
@@ -308,7 +308,7 @@ def role_as_of(request, pk):
         a["user"] for e in entries.values() for a in e["assignments"]
     })
 
-    def holders(data):
+    def role_leads(data):
         return [
             (users.get(a["user"]), a.get("elected_until")) for a in data["assignments"]
         ]
@@ -318,7 +318,7 @@ def role_as_of(request, pk):
         for child_pk, child in entries.items():
             if child["circle"] == role.pk:
                 children.append(
-                    {"pk": int(child_pk), "holders": holders(child)} | child
+                    {"pk": int(child_pk), "role_leads": role_leads(child)} | child
                 )
         children.sort(
             key=lambda child: (
@@ -327,7 +327,7 @@ def role_as_of(request, pk):
                 child["name"],
             )
         )
-        entry = entry | {"holders": holders(entry)}
+        entry = entry | {"role_leads": role_leads(entry)}
     policies = [
         {"pk": int(policy_pk)} | policy
         for policy_pk, policy in data["policies"].items()

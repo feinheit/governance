@@ -170,7 +170,7 @@ class ElectionsTest(TestCase):
         )
 
     def test_corrected_back(self):
-        """A result corrected back to the holder in the meeting undoes it: Ada
+        """A result corrected back to the Role Lead in the meeting undoes it: Ada
         keeps her assignment with the new term, the role mails go out when
         the meeting ends, only the net change (none here)"""
         from governance.meetings.activity import end_meeting
@@ -340,7 +340,7 @@ class ElectionsTest(TestCase):
         )
 
     def test_held_without_a_term(self):
-        """A role becoming elected while somebody holds it: its holder has no
+        """A role becoming elected while somebody holds it: its Role Lead has no
         term, the role is due for an election"""
         cook = Role.objects.create(name="Cook", circle=self.kitchen)
         Assignment.objects.create(role=cook, user=self.bob)

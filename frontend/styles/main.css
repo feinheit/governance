@@ -330,7 +330,7 @@ h3,
   gap: 0.25rem 1rem;
 }
 
-/* Rows with small buttons only (the holders): beside them on phones too,
+/* Rows with small buttons only (the Role Leads): beside them on phones too,
    one line centered with them */
 .wb-row.wb-row-compact {
   flex-direction: row;
@@ -1330,13 +1330,13 @@ a.wb-row-title:hover {
   fill: var(--cb-core-ink);
 }
 
-.cb-label-holders {
+.cb-label-role-leads {
   font-size: 14px;
   font-weight: 400;
 }
 
-.cb-label-unassigned .cb-label-holders,
-.cb-label-vacant .cb-label-holders {
+.cb-label-unassigned .cb-label-role-leads,
+.cb-label-vacant .cb-label-role-leads {
   fill: var(--bs-secondary-color);
 }
 

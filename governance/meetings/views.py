@@ -310,7 +310,7 @@ def meeting_create(request, pk):
 
 
 def callable_roles():
-    """The roles an ad hoc tactical meeting may invite, with their holders,
+    """The roles an ad hoc tactical meeting may invite, with their Role Leads,
     by circle in the organization's order"""
     order = {
         circle.pk: index for index, circle in enumerate(Role.objects.depth_first())
@@ -336,7 +336,7 @@ def callable_roles():
 
 def invitees(roles):
     """The people invited with the roles, each once with their roles and
-    focus: the holders, an unfilled role's Circle Leads (1.4.2)"""
+    focus: the Role Leads, an unfilled role's Circle Leads (1.4.2)"""
     focus = {
         (assignment.user_id, assignment.role_id): assignment.focus
         for assignment in Assignment.objects.current().filter(role__in=roles)
@@ -350,7 +350,7 @@ def invitees(roles):
 
 def tactical_call(request):
     """An ad hoc tactical meeting, called by anybody: the roles first, then
-    who of their holders is invited (constitution 3.1)"""
+    who of their Role Leads is invited (constitution 3.1)"""
     data = request.POST if request.method == "POST" else request.GET
     chosen = list(
         Role.objects

@@ -21,7 +21,7 @@ def circle_tree(user=None):
     roles = list(
         Role.objects.active().select_related("circle").order_by("position", "name")
     )
-    holders = defaultdict(list)
+    role_leads = defaultdict(list)
     mine = set()
     for role_id, user_id, name, email in (
         Assignment.objects
@@ -30,7 +30,7 @@ def circle_tree(user=None):
         .order_by("user__full_name")
         .values_list("role", "user", "user__full_name", "user__email")
     ):
-        holders[role_id].append(name or email)
+        role_leads[role_id].append(name or email)
         if user is not None and user_id == user.pk:
             mine.add(role_id)
     children = defaultdict(list)
@@ -45,7 +45,7 @@ def circle_tree(user=None):
             "kind": "circle"
             if role.is_circle
             else ("core" if role.core_role else "role"),
-            "holders": holders[role.pk],
+            "role_leads": role_leads[role.pk],
         }
         if role.is_circle:
             data["mine"] = role.pk in mine  # Circle Lead or Rep there
@@ -53,7 +53,7 @@ def circle_tree(user=None):
             data["elected"] = role.is_elected
             data["lead"] = role.core_role == LEAD
             data["mine"] = role.pk in mine
-            if not holders[role.pk]:
+            if not role_leads[role.pk]:
                 data["unfilled"] = str(role.unfilled)
         if role.is_circle:
             data["children"] = [node(child) for child in children[role.pk]]

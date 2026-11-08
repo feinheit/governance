@@ -40,7 +40,7 @@ def holds_core_role(user, circle, core_role):
 
 
 def circle_leads(circle):
-    """The circle's Circle Leads: the holders of its Circle Lead role, while
+    """The circle's Circle Leads: the Role Leads of its Circle Lead role, while
     nobody holds it those of the super-circle (1.4.2: its Circle Leads lead
     the unfilled role, and so its inner circle), recursively. The anchor
     circle has none unless assigned (1.4). A role's inner circle is led by
@@ -65,23 +65,23 @@ def circle_leads(circle):
 
 
 def role_leads(role):
-    """Who fills a role: its holders, while nobody holds it its circle's
+    """Who fills a role: its Role Leads, while nobody holds it its circle's
     Circle Leads (1.4.2), except an unfilled Circle Rep, which is nobody's;
     archived roles have none"""
     from governance.accounts.models import User
 
     if role.archived_on:
         return User.objects.none()
-    holders = User.objects.active().filter(
+    role_leads = User.objects.active().filter(
         pk__in=Assignment.objects.current().filter(role=role).values("user")
     )
-    if holders.exists() or role.circle is None or role.core_role == REP:
-        return holders
+    if role_leads.exists() or role.circle is None or role.core_role == REP:
+        return role_leads
     return circle_leads(role.circle)
 
 
 def stand_ins(circle, core_roles, *, day=None):
-    """The holders of the first of the circle's core roles somebody holds,
+    """The Role Leads of the first of the circle's core roles somebody holds,
     else its Circle Leads: who stands in for unfilled roles, in the order
     given (constitution 5.3.6)"""
     from governance.accounts.models import User
@@ -125,7 +125,7 @@ def can_lead(user, circle):
 
 def can_end_assignment(user, role):
     """Circle Leads end assignments of their circle's roles, also of elected
-    roles: their holders resign through them (1.4.1). The super-circle's
+    roles: their Role Leads resign through them (1.4.1). The super-circle's
     Circle Leads do it for a sub-circle's Circle Lead."""
     if role.archived_on or role.is_circle or not role.circle:
         return NOT_ALLOWED
@@ -148,7 +148,7 @@ def members(circle):
 
     if not circle.is_circle:
         # A role's inner circle, before it has roles (constitution 1.3.1):
-        # its holders, while nobody holds it its circle's Circle Leads (1.4.2)
+        # its Role Leads, while nobody holds it its circle's Circle Leads (1.4.2)
         return role_leads(circle)
     return User.objects.active().filter(
         Q(
@@ -175,7 +175,7 @@ def proposer_roles(user, circle):
     the Circle Lead isn't eligible for it.
     """
     if not circle.is_circle:
-        # Adding roles inside the role: its holders (or Circle Leads), for
+        # Adding roles inside the role: its Role Leads (or Circle Leads), for
         # the role itself
         if not role_leads(circle).filter(pk=user.pk).exists():
             return Role.objects.none()

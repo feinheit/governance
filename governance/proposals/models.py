@@ -133,7 +133,7 @@ class Proposal(models.Model):
             " ran; they turn back into roles when it ends."
         ),
     )
-    ended_holders = models.ManyToManyField(
+    ended_role_leads = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
         related_name="+",

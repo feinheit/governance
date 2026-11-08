@@ -14,8 +14,8 @@
       {% if child.mine and child.kind != "circle" %}<span
           class="badge wb-tone-primary"
         >{% translate "your role" %}</span>{% endif %}
-      {% if child.holders %}
-        <span class="text-body-secondary small">{{ child.holders|join:", " }}</span>
+      {% if child.role_leads %}
+        <span class="text-body-secondary small">{{ child.role_leads|join:", " }}</span>
       {% elif child.kind != "circle" %}
         <span class="text-body-secondary small">{% translate "unassigned" %}</span>
       {% endif %}

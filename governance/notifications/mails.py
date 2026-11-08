@@ -204,7 +204,7 @@ def moved_between(proposals):
 
 
 def proposal_adopted(proposal, members_before=()):
-    """``members_before``: the members when adopting began, e.g. the holders
+    """``members_before``: the members when adopting began, e.g. the Role Leads
     of roles the proposal removed or moved away"""
     return send(
         everybody(proposal)
@@ -306,7 +306,7 @@ def roles_changed(started, ended):
 
 
 def focus_changed(assignment, before):
-    """To the holder, whose focus changed from ``before``"""
+    """To the Role Lead, whose focus changed from ``before``"""
     role = assignment.role
     return send(
         User.objects.filter(pk=assignment.user_id),
@@ -403,7 +403,7 @@ def meeting_ended(meeting):
     if meeting.circle:
         users |= Q(pk__in=recipients(meeting.circle))
     if outputs["proposals"]:
-        # The holders of roles the adopted proposals changed or moved away,
+        # The Role Leads of roles the adopted proposals changed or moved away,
         # also when absent, like adopting async (members before adopting)
         from governance.proposals.models import Proposal
         from governance.roles.models import Assignment
@@ -413,14 +413,14 @@ def meeting_ended(meeting):
         users |= Q(
             pk__in=Assignment.objects
             .filter(role__changed_by_proposals__in=proposals)
-            # Those of archived roles are the proposals' ended_holders
+            # Those of archived roles are the proposals' ``ended_role_leads``
             .filter(role__archived_on=None)
             .filter(Q(ends_on=None) | Q(ends_on__gte=started))
             .values("user")
         ) | Q(
             # Also roles archived with them, e.g. inside a removed circle,
             # and assignments deleted because they started the same day
-            pk__in=Proposal.ended_holders.through.objects.filter(
+            pk__in=Proposal.ended_role_leads.through.objects.filter(
                 proposal__in=proposals
             ).values("user")
         )

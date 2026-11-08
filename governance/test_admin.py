@@ -74,7 +74,7 @@ class DeactivateTest(TestCase):
         """People leaving don't keep their roles; their proposals stay"""
         import datetime as dt
 
-        from governance.roles.assignments import sync_circle_holders
+        from governance.roles.assignments import sync_circle_role_leads
 
         admin_user = User.objects.create_superuser("root@example.com")
         eve = User.objects.create_user("eve@example.com", full_name="Eve")
@@ -88,7 +88,7 @@ class DeactivateTest(TestCase):
         Assignment.objects.create(
             role=bakery.roles.get(core_role="lead"), user=eve, starts_on=since
         )
-        sync_circle_holders(bakery, since)
+        sync_circle_role_leads(bakery, since)
         self.assertTrue(Assignment.objects.current().filter(role=bakery).exists())
         published = Proposal.objects.create(
             circle=kitchen,

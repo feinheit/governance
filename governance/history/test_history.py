@@ -175,7 +175,7 @@ class FollowingTest(TestCase):
 
 class FocusTest(TestCase):
     def test_focus_changed(self):
-        """A holder's focus changing is in the role's history: the day's
+        """A Role Lead's focus changing is in the role's history: the day's
         first focus and its last, not on the day of assigning"""
         import time_machine
         from django.db import connection
@@ -301,7 +301,7 @@ class HistoryViewsTest(TestCase):
         cook = Role.objects.create(name="Cook", circle=circle)
         waiter = Role.objects.create(name="Waiter", circle=circle)
         policy = Policy.objects.create(role=circle, title="Tea")
-        # Holders come from the assignments
+        # Role Leads come from the assignments
         Assignment.objects.create(role=cook, user=user, ends_on=dt.date(2026, 1, 2))
         day = dt.date(2026, 1, 1)
         base = {

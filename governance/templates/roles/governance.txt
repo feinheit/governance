@@ -4,7 +4,7 @@
 {% for circle in circles %}
 {{ circle.heading }} {{ circle.name }}
 
-{% if with_people and circle.export_holders %}*{% translate "Role Leads" %}: {% for assignment in circle.export_holders %}{{ assignment.user }}{% if not forloop.last %}, {% endif %}{% endfor %}*
+{% if with_people and circle.export_role_leads %}*{% translate "Role Leads" %}: {% for assignment in circle.export_role_leads %}{{ assignment.user }}{% if not forloop.last %}, {% endif %}{% endfor %}*
 
 {% endif %}{% if circle.display_purpose %}**{% translate "Purpose" %}**
 
@@ -22,7 +22,7 @@
 
 {% endfor %}{% for role in circle.export_roles %}{{ circle.subheading }} {{ role.name }}
 
-{% if with_people %}*{% for assignment in role.export_holders %}{% if forloop.first %}{% translate "Role Leads" %}: {% endif %}{{ assignment.user }}{% if assignment.focus %} ({{ assignment.focus }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}{{ role.unfilled }}{% endfor %}*
+{% if with_people %}*{% for assignment in role.export_role_leads %}{% if forloop.first %}{% translate "Role Leads" %}: {% endif %}{{ assignment.user }}{% if assignment.focus %} ({{ assignment.focus }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}{{ role.unfilled }}{% endfor %}*
 
 {% endif %}{% if role.display_purpose %}{{ role.display_purpose }}
 

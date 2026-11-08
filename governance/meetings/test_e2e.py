@@ -571,7 +571,7 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertFalse(text.is_visible())
         self.assertEqual(self.errors, [])
 
-    def test_holders(self):
+    def test_role_leads(self):
         """Assigning and removing on the role's page, in modals"""
         Assignment.objects.create(
             role=self.kitchen.roles.get(core_role="lead"), user=self.ada
@@ -646,7 +646,7 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertIsNone(page.locator("#circle-list").get_attribute("open"))
         self.assertEqual(len([url for url in scripts if "/circles." in url]), 1)
 
-        # Hovering a role shows its holders next to the mouse, the labels
+        # Hovering a role shows its Role Leads next to the mouse, the labels
         # are shortened
         box = page.locator('circle.cb-node[aria-label="Cook"]').bounding_box()
         x, y = box["x"] + box["width"] / 2, box["y"] + box["height"] / 2

@@ -220,14 +220,14 @@
     </div>
 
     <div class="col-lg-5">
-      {# Who holds it: a role's holders, a circle's core roles #}
+      {# Who holds it: a role's Role Leads, a circle's core roles #}
       {% if role.is_circle %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Core roles" %}</h2></div>
           <ul class="list-group list-group-flush">{% include "roles/_role_rows.html" with roles=core_roles %}</ul>
         </section>
       {% elif role.circle %}
-        {% include "roles/_holders_card.html" %}
+        {% include "roles/_role_leads_card.html" %}
       {% endif %}
 
       {% if role.is_circle and show_meetings %}

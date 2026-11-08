@@ -693,7 +693,7 @@ class DraftingTest(TestCase):
         self.assertIsNone(other.ended_at)
 
     def test_removed_role_inside(self):
-        """Proposals for inside a role (its holders' own governance) close
+        """Proposals for inside a role (its Role Leads' own governance) close
         with the role; one left over isn't adopted into the archived role"""
         inside = Proposal.objects.create(
             circle=self.cook,
@@ -949,7 +949,7 @@ class DraftingTest(TestCase):
         self.assertEqual(problems(proposal), [])
 
     def test_roles_inside_a_role(self):
-        """The role's holders add roles inside it, which makes it a circle"""
+        """The role's Role Leads add roles inside it, which makes it a circle"""
         self.assertContains(
             self.client.get(self.cook.get_absolute_url()), "New proposal"
         )
@@ -962,7 +962,7 @@ class DraftingTest(TestCase):
         self.client.post(
             f"/proposals/{proposal.pk}/roles/new/", {"name": "Sous-chef", "purpose": ""}
         )
-        # Ada is the role's only holder: adopted when publishing
+        # Ada is the role's only Role Lead: adopted when publishing
         self.client.post(f"/proposals/{proposal.pk}/publish/")
         proposal.refresh_from_db()
         self.cook.refresh_from_db()

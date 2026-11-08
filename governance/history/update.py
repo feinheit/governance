@@ -39,7 +39,7 @@ def _audit_rows(since):
         yield from cursor
 
 
-class Holders:
+class RoleLeads:
     """Who held which role on a day, from all assignments in memory"""
 
     def __init__(self):
@@ -58,14 +58,14 @@ class Holders:
         }
 
     def on(self, day):
-        holders = defaultdict(list)
+        role_leads = defaultdict(list)
         for role, user, starts_on, ends_on, elected in self.assignments:
             if (not starts_on or starts_on <= day) and (not ends_on or ends_on > day):
-                holders[role].append({
+                role_leads[role].append({
                     "user": user,
                     "elected_until": elected.isoformat() if elected else None,
                 })
-        return holders
+        return role_leads
 
 
 @transaction.atomic
@@ -77,17 +77,17 @@ def update_changes(*, since=None):
         changes = changes.filter(date__gte=since)
     changes.delete()
 
-    holders = Holders()
+    role_leads = RoleLeads()
     by_day = defaultdict(list)
     for table, action, data, created_at in _audit_rows(since):
         by_day[timezone.localdate(created_at)].append((TABLES[table], action, data))
     days = sorted(
-        set(by_day) | {day for day in holders.days() if not since or day >= since}
+        set(by_day) | {day for day in role_leads.days() if not since or day >= since}
     )
     if since:
         previous_day = since - dt.timedelta(days=1)
         rows = rows_on(previous_day)
-        previous = structure(rows, holders.on(previous_day), previous_day)
+        previous = structure(rows, role_leads.on(previous_day), previous_day)
     else:
         rows, previous = defaultdict(dict), None
 
@@ -100,7 +100,7 @@ def update_changes(*, since=None):
                 rows[kind].pop(int(data["id"]), None)
             else:
                 rows[kind][int(data["id"])] = data
-        current = structure(rows, holders.on(day), day)
+        current = structure(rows, role_leads.on(day), day)
         if previous is not None:
             for role, kind, old, value in diff_roles(previous, current):
                 if role in roles:
@@ -125,14 +125,14 @@ def update_changes(*, since=None):
                         )
                     )
         previous = current
-    new.extend(reelections(holders, since))
+    new.extend(reelections(role_leads, since))
     new.extend(focus_changes(since, roles))
     Change.objects.bulk_create(new, batch_size=1000)
     return len(new)
 
 
-def reelections(holders, since):
-    """Elections of the person holding the role for a new term: the holders
+def reelections(role_leads, since):
+    """Elections of the person holding the role for a new term: the Role Leads
     don't change, the term does (the assignment keeps only the last one)"""
     from governance.meetings.models import Election
 
@@ -142,8 +142,8 @@ def reelections(holders, since):
         day = timezone.localdate(election.created_at)
         if since and day < since:
             continue
-        before = holders.on(day - dt.timedelta(days=1)).get(election.role_id, [])
-        if any(holder["user"] == election.user_id for holder in before):
+        before = role_leads.on(day - dt.timedelta(days=1)).get(election.role_id, [])
+        if any(role_lead["user"] == election.user_id for role_lead in before):
             yield Change(
                 date=day,
                 role_id=election.role_id,
@@ -154,7 +154,7 @@ def reelections(holders, since):
 
 
 def focus_changes(since, roles):
-    """A holder's focus changing: per assignment and day the first focus and
+    """A Role Lead's focus changing: per assignment and day the first focus and
     the last (from the audit log, the assignment keeps only the last), not on
     the day of assigning"""
     after = "AND created_at >= %s" if since else ""

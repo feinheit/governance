@@ -377,8 +377,8 @@ class TacticalTest(TestCase):
         self.assertEqual(response.status_code, 403)
         self.assertFalse(meeting.agenda_items.exists())
 
-    def test_ad_hoc_some_holders(self):
-        """The caller may invite only some holders of a role (constitution
+    def test_ad_hoc_some_role_leads(self):
+        """The caller may invite only some Role Leads of a role (constitution
         3.1); an unfilled role's Circle Leads hold it"""
         zoe = User.objects.create_user("zoe@example.com", full_name="Zoe")
         Assignment.objects.create(role=self.cook, user=zoe, focus="Soup")
@@ -460,7 +460,7 @@ class TacticalTest(TestCase):
     def test_ad_hoc(self):
         """Any partner calls one and invites roles of any circle"""
         self.client.force_login(self.eve)
-        # The roles, filtered in the browser, with their holders
+        # The roles, filtered in the browser, with their Role Leads
         response = self.client.get("/meetings/tactical/new/")
         self.assertContains(response, "data-filter-rows")
         self.assertRegex(

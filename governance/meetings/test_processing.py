@@ -644,7 +644,7 @@ class ProcessingTest(TestCase):
         self.assertIn("+ Chef", body)
         self.assertIn("Facilitator: Eve", body)
 
-    def test_outputs_reach_holders_of_removed_roles(self):
+    def test_outputs_reach_role_leads_of_removed_roles(self):
         """Somebody absent whose role the meeting removes still gets the
         outputs, like when adopting async"""
         max_ = User.objects.create_user("max@example.com", full_name="Max")

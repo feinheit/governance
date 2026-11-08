@@ -66,7 +66,7 @@ people. A snapshot is valid until the next commit. Quirks:
 - Until 2019-05-18 roles came in `linked.supported_roles` and policies
   linked their owner with `circle_id`/`role_id`.
 - Only the circles' policies, no accountability texts (IDs only), some
-  sub-circles' holders missing in the super-circle.
+  sub-circles' Role Leads missing in the super-circle.
 - Roles without people are held by the Circle Leads.
 - The API shows people who left as "Removed" with a redacted email; the
   snapshots still have their names.
@@ -123,7 +123,7 @@ accountability texts are known where proposals or `roles.json` have them.
   `ends_on`; ending keeps the row. A person holds a role once (a
   constraint), the focus lists everything; the import merges GlassFrog's
   assignments per focus (`importer.merged()`). Circle membership isn't stored: the
-  holders of a circle's roles plus the Circle Leads and Circle Reps of its
+  Role Leads of a circle's roles plus the Circle Leads and Circle Reps of its
   sub-circles (`permissions.members()`).
 - **`Metric`**, **`ChecklistItem`**: `role` (a circle for its own items),
   `description`, `frequency` (weekly, monthly, quarterly, yearly or none;
@@ -229,11 +229,11 @@ accountabilities and domains through its own governance (1.3.3).
 **Roles and circles convert automatically** (like GlassFrog 5):
 
 - Adding roles inside a role is the role's own governance (1.3.1): its
-  holders propose in the role, adopting makes it a circle with them as
+  Role Leads propose in the role, adopting makes it a circle with them as
   Circle Leads; proposals from the role itself then come from its Circle
   Lead role (e.g. the next ones of the same meeting, decided
-  2026-11-07). With a single holder publishing adopts right away. Only
-  the holders get the mails, not the circle containing the role: its
+  2026-11-07). With a single Role Lead publishing adopts right away. Only
+  the Role Leads get the mails, not the circle containing the role: its
   structure inside is the role's own business (decided 2026-11-07). Moving
   roles into a role is the circle's governance and converts it too.
 - A circle losing its last own roles turns back into a role (held by
@@ -244,7 +244,7 @@ accountabilities and domains through its own governance (1.3.3).
   super-circle, `Proposal.reverting_circles`) records the step; its core roles are archived and their assignments end, its
   policies without a domain are archived (a role only has policies for
   its domains, 1.3.2; the same proposal may move them up), those for its
-  domains stay the role's, its holders change them again. Drafts say so beforehand, the
+  domains stay the role's, its Role Leads change them again. Drafts say so beforehand, the
   adopted proposal records the steps. A role made a circle on purpose
   (without roles yet) stays one, also when its first meetings end
   without adding any: only a proposal emptying it turns it back.
@@ -290,7 +290,7 @@ rule.
 **Outside the process**, recorded for the history:
 
 - **Policies of a domain's role** (1.3.2, `roles/domain_policies.py`):
-  the role's holders (the Circle Leads while unfilled) add, change and
+  the role's Role Leads (the Circle Leads while unfilled) add, change and
   remove its policies on the role page, each with one of its domains.
   Every change is recorded as an adopted proposal, mailed to the
   members of the role's circle and all its sub-circles, `notify_all`
@@ -304,8 +304,8 @@ rule.
 - **Assignments** are operational: the Circle Leads assign and remove
   people and their focus (the super-circle's Circle Leads for a
   sub-circle's Circle Leads, admins for the anchor's). Elected roles aren't
-  assigned this way. Holders resign through their Circle Leads, who end
-  assignments of elected roles too ("Holders" on the role's page;
+  assigned this way. Role Leads resign through their Circle Leads, who end
+  assignments of elected roles too ("Role Leads" on the role's page;
   `can_end_assignment()`, a Rep's hold of the circle's role ends with it).
 - **Circle Leads**: a circle may have several, each with all the rights
   (texts speak of Circle Leads). While nobody holds a circle's Circle
@@ -313,7 +313,7 @@ rule.
   Leads lead it, recursively (1.4.2, `permissions.circle_leads()`):
   they assign, propose from its unfilled roles and are its members. The
   same for a role nobody holds: its circle's Circle Leads are its
-  holders (`role_leads()`), also for its inner circle. The anchor circle
+  Role Leads (`role_leads()`), also for its inner circle. The anchor circle
   has Circle Leads only when assigned. Archived circles and roles have
   nobody: archiving ends their assignments, and nobody from above fills
   them in. Facilitator and Secretary follow
@@ -321,7 +321,7 @@ rule.
   meetings the other members don't have, except the secretary amending. An
   assignment removed on the day it started was a mistake and is deleted.
   Adopted proposals record whose assignments they ended
-  (`Proposal.ended_holders`), so that the meeting's outputs reach them
+  (`Proposal.ended_role_leads`), so that the meeting's outputs reach them
   too. A circle's role follows its Circle Leads and Reps. Nobody leading a
   circle, also from above, is its Circle Rep (5.1.1): not elected, and
   when assigning or removing would make a Circle Rep lead their circle,
@@ -344,7 +344,7 @@ GlassFrog's scratch pad), current item
 and step. Starting is calling: there is no prepared state, scheduling and
 announcing happen in the calendar. Any circle member (and admins) starts
 one (`can_start_meeting()`, not in archived circles; the list of
-meetings and the circle's page lead to the running one instead), the holders of a role a governance meeting
+meetings and the circle's page lead to the running one instead), the Role Leads of a role a governance meeting
 inside it (1.3.1: its inner circle, adding roles makes it a circle; no
 tactical meetings in a role). Starting asks first (`asks_before_starting()`,
 a modal): in a role always, cancelling being the default (rarely what
@@ -460,9 +460,9 @@ Leads aren't the Rep: an unfilled Circle Rep is nobody's (not held by the
 Circle Leads like other unfilled roles, not a role to propose from, nobody invited with it to ad hoc tactical meetings). Re-electing changes the term, electing somebody else
 ends the previous assignment (removed if it only started today), a Rep
 also holds the circle's role in the super-circle. Elected roles have one
-holder: recording the same role again in the meeting (a correction, a
+Role Lead: recording the same role again in the meeting (a correction, a
 second vote) replaces the earlier result, undone first (`Election`
-keeps what it changed: the previous holder keeps their assignment). Due elections (within 30 days, nobody elected, or held without a
+keeps what it changed: the previous Role Lead keeps their assignment). Due elections (within 30 days, nobody elected, or held without a
 term, e.g. a role made elected by policy while held; terms end in the
 future) show on
 the circle page and the Facilitator's and Secretary's person pages;
@@ -473,7 +473,7 @@ on Mondays.
 starts a regular one (all roles of the circle invited, attendees its
 members); anybody calls an ad-hoc one from the user's menu (`tactical_call`): the
 roles of any circles first (a field filters them as you type,
-`frontend/filter_rows.js`, also by the holders' focus), then who of their Role Leads attend (with their focus), all
+`frontend/filter_rows.js`, also by the Role Leads' focus), then who of their Role Leads attend (with their focus), all
 checked, some unchecked to narrow the invitation (3.1); the caller fills one of the roles at least (also as Circle Lead of an unfilled one, 1.4.2), else the roles are chosen again, and attends (not uncheckable). Ad hoc tactical meetings (without a circle) have
 a badge of their own, hollow and dashed ("Ad hoc Tactical Meeting",
 `Meeting.is_ad_hoc`). Steps: check-in, checklist review, metrics review (the
@@ -507,12 +507,12 @@ async proposals, those taken back, those their proposer withdraws
 can't be adopted async and wait for a meeting (a conflict at the
 deadline or the last consent, `mails.proposal_to_meeting()` with the
 problems; not imported ones, which the nightly import sets back), adopted ones with the diff (also to
-the proposer, and to the members before adopting, e.g. the holders of
+the proposer, and to the members before adopting, e.g. the Role Leads of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves
 roles or policies into or out of, `mails.moved_between()`), domain policy changes (section 3), and when a meeting ends
 its outputs (adopted proposals, elections, notes, tactical outcomes;
-also to the attendees and, like adopting async, the holders of roles
+also to the attendees and, like adopting async, the Role Leads of roles
 the adopted proposals changed, removed or moved away, also deeper inside:
 roles of a removed circle, core roles of a circle turned back, and the
 sub-circles' Secretaries and Circle Leads like adopting async). A
@@ -526,7 +526,7 @@ roles archived by the circle turning back then (the outputs list them,
 `elections.announce_elections()`, decided 2026-11-07) tell people the roles
 they get (with their focus) and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
-left the circle; changing a holder's focus tells the holder
+left the circle; changing a Role Lead's focus tells the Role Lead
 (`mails.focus_changed()`, nobody else, decided 2026-11-07); changes by adopted proposals are in their mails, the
 nightly GlassFrog import announces nothing. Responses to proposals
 (`mails.response_given()`): questions and comments go to the proposer,
@@ -571,12 +571,12 @@ verify the mails; removed once they've proven themselves.
   which made them, texts replaced by similar ones as a diff (`pairs()`,
   the most similar first).
 - **Assignments** have `starts_on`/`ends_on`, reconstructed from GlassFrog's
-  history; they are the holders of the history too. A circle's role has its
-  Circle Leads and Reps as holders, GlassFrog's data missed some of them;
+  history; they are the Role Leads of the history too. A circle's role has its
+  Circle Leads and Reps as Role Leads, GlassFrog's data missed some of them;
   the history lists the core role's assignment, not the circle's role's
   following it the same day (`views.without_following()`).
   An assignment keeps only its last term: re-elections (electing the
-  holder for a new term) come from the app's elections
+  Role Lead for a new term) come from the app's elections
   (`update.reelections()`), GlassFrog's aren't known. Likewise only its
   last focus: changes of the focus come from the audit log's updates of
   assignments (`update.focus_changes()`, per day the first and the last,
@@ -609,7 +609,7 @@ verify the mails; removed once they've proven themselves.
   three of them and how many more.
 - **Circle and role pages** are laid out for the desktop: on the left
   what the role is (purpose, domains, each with a button adding a policy
-  for it, accountabilities, its own policies if it has any), on the right what is used most (holders or core roles, a
+  for it, accountabilities, its own policies if it has any), on the right what is used most (Role Leads or core roles, a
   circle's meetings, pending proposals, due elections), then checklists,
   links and history; a circle's roles below both. What constrains it
   from outside is in the menu "…", in a modal ("Domains and policies
@@ -620,9 +620,9 @@ verify the mails; removed once they've proven themselves.
   meeting has a button in the header. A role's governance meetings (for its inside, 1.3.1) are rare, its menu starts them and links its meetings (a circle's menu too, besides its Meetings card: easier to find), also the ad hoc tactical meetings it was invited to and a role's those of its circle, which invite all its roles (since it moved into the circle, if it did; `Meeting.objects.of_role()`; GlassFrog's tactical meetings have no invited roles; a circle's list has its own, not its super-circle's).
 - **Circle page**: purpose, strategy, domains, accountabilities, its
   policies, core roles, meetings, pending proposals, due elections,
-  metrics, checklists, links, history, roles with holders and sub-circles.
+  metrics, checklists, links, history, roles with Role Leads and sub-circles.
 - **Role page**: purpose, domains (linking to their
-  policies, which the link opens, `frontend/open_details.js`), accountabilities, its policies, holders with focus and
+  policies, which the link opens, `frontend/open_details.js`), accountabilities, its policies, Role Leads with focus and
   terms (next to the name; lists of current assignments don't say since
   when, the focus is often younger: `roles/_assignment_note.html`), pending proposals
   (also for its inside), metrics, checklists, links, history (its former
@@ -676,10 +676,10 @@ verify the mails; removed once they've proven themselves.
   `gov export --json --with-people`).
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
-  policies of a domain and settings on the role's page, a holder's focus,
-  a draft's tension, and a role's holders (a card
+  policies of a domain and settings on the role's page, a Role Lead's focus,
+  a draft's tension, and a role's Role Leads (a card
   on its page: assigning, the focus and removing, confirmed first, back
-  to the page with `?next=`; a circle's page lists its roles' holders,
+  to the page with `?next=`; a circle's page lists its roles' Role Leads,
   changed on their pages), and the confirmations of deleting metrics,
   checklist items and links and of removing a domain's policy
   of deleting a draft or an API token and of withdrawing (`generic/confirm.html`, GET asks, POST does it). A `<dialog>` loaded by htmx
@@ -807,7 +807,7 @@ Deliberately not modelled:
   sub-circle's Circle Lead), no delegation removing them. The
   documentation has to say so. Neither do Facilitator, Secretary and
   Circle Rep get any (1.3.3, 5.1.1 would allow it; decided 2026-11-07):
-  their holders would set the policies of such domains, and our data has
+  their Role Leads would set the policies of such domains, and our data has
   none.
 - **Linked roles** (1.3.4): no demand in our data, much complexity.
 - **Redirecting references** from outside the circle (1.4.4): an edge
@@ -840,7 +840,7 @@ Deliberately not modelled:
 
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
-  holding the role; today its members are only its holders (`members()`).
+  holding the role; today its members are only its Role Leads (`members()`).
   Then revisit `can_add_items` (`meetings/access.py`): whoever holds an
   invited role adds items to an ad hoc tactical meeting, also when the
   caller unchecked them; fine while holding the role is what counts

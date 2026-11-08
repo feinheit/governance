@@ -103,8 +103,8 @@ class AssignmentsTest(TestCase):
             self.client.get(f"/assignments/{assignment.pk}/").status_code, 404
         )
 
-    def test_holders_on_the_role_page(self):
-        """The role's page lists its holders; assigning, changing the focus
+    def test_role_leads_on_the_role_page(self):
+        """The role's page lists its Role Leads; assigning, changing the focus
         and removing open in modals and go back to the page"""
         modal = {"HTTP_HX_REQUEST": "true", "HTTP_HX_MODAL": "true"}
         page = f"/roles/{self.cook.pk}/"
@@ -136,7 +136,7 @@ class AssignmentsTest(TestCase):
         self.assertEqual(response["HX-Redirect"], page)
         self.assertFalse(Assignment.objects.filter(role=self.cook).exists())
 
-        # Others see the holders without the buttons
+        # Others see the Role Leads without the buttons
         Assignment.objects.create(role=self.cook, user=self.eve)
         self.client.force_login(self.eve)
         response = self.client.get(page)

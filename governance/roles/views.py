@@ -47,7 +47,7 @@ def current_assignments():
 
 
 def mark_reps(circles):
-    """Marks the holders of the circles' roles who are their Circle Reps
+    """Marks the Role Leads of the circles' roles who are their Circle Reps
 
     The constitution makes Circle Reps members of the super-circle just
     like Circle Leads, so both hold the circle's role there.
@@ -111,7 +111,7 @@ def split_more(objects, shown):
 
 def recent_history(role, count=10):
     """The newest adopted proposals and changes of the role, like the
-    history page's but without the assignments (the holders card has them)"""
+    history page's but without the assignments (the Role Leads card has them)"""
     proposals = role.changed_by_proposals.filter(status="adopted").select_related(
         "proposer"
     )[:count]
@@ -162,7 +162,7 @@ def role_detail(request, pk):
         "can_edit_checklist": can_edit_items(request.user, role, ChecklistItem),
         "can_edit_links": can_edit_items(request.user, role, Link),
         "links": role.links.all(),
-        # From a role of theirs in the circle, in a role its holders (adding
+        # From a role of theirs in the circle, in a role its Role Leads (adding
         # roles inside), like proposal_create(); admins too only then
         "can_propose": not role.archived_on
         and not role.core_role
@@ -202,7 +202,7 @@ def role_detail(request, pk):
         mark_reps(context["roles"])
         context["due_elections"] = due_elections([role])
     if not role.core_role and not role.archived_on:
-        # Circles, and roles whose holders break them down in their inner
+        # Circles, and roles whose Role Leads break them down in their inner
         # circle (1.3.1, governance meetings only)
         # With what they were about, a circle's page lists them
         context["meetings"] = with_teasers(

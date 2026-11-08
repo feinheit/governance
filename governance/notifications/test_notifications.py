@@ -288,7 +288,7 @@ class NotificationsTest(TestCase):
 
 
 class AffectedTest(TestCase):
-    def test_holders_of_removed_roles(self):
+    def test_role_leads_of_removed_roles(self):
         """Who loses a role with the proposal is told, though not a member
         anymore when the mail goes out"""
         from governance.proposals.instructions import adopt
@@ -313,7 +313,7 @@ class AffectedTest(TestCase):
             sorted(m.to[0] for m in mail.outbox), ["ada@example.com", "eve@example.com"]
         )
 
-    def test_holders_since_today_of_roles_removed_in_a_meeting(self):
+    def test_role_leads_since_today_of_roles_removed_in_a_meeting(self):
         """Who got the role today and loses it in a meeting gets its outputs
         too, like adopting async"""
         from governance.meetings.activity import end_meeting

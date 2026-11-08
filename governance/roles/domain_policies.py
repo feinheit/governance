@@ -2,7 +2,7 @@
 
 A role controlling a domain may issue policies regulating it within its own
 governance (constitution 1.3.2), e.g. who may access a server. The role's
-holders add, change and remove them directly, and the Circle Lead while
+Role Leads add, change and remove them directly, and the Circle Lead while
 nobody holds the role (1.4.2). Each change is recorded as an adopted
 proposal of its own kind, so that the history shows it with its diff, and
 mailed to everybody affected: the members of the role's circle and its
@@ -30,15 +30,15 @@ from governance.roles.permissions import (
 
 
 def can_change_domain_policies(user, role):
-    """Its holders, while nobody holds it its Circle Leads (1.4.2)"""
+    """Its Role Leads, while nobody holds it its Circle Leads (1.4.2)"""
     if role.archived_on or role.is_circle or role.core_role:
         return NOT_ALLOWED
     if not role.domains.exists():
         return NOT_ALLOWED
-    holders = Assignment.objects.current().filter(role=role)
-    if holders.filter(user=user).exists():
+    role_leads = Assignment.objects.current().filter(role=role)
+    if role_leads.filter(user=user).exists():
         return ALLOWED
-    return (not holders.exists() and can_lead(user, role.circle)) or as_admin(user)
+    return (not role_leads.exists() and can_lead(user, role.circle)) or as_admin(user)
 
 
 class DomainPolicyForm(ModelForm):

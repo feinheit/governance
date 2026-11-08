@@ -178,7 +178,7 @@ class GovernanceMeetingScenarioTest(TestCase):
             for change in Change.objects.filter(date=timezone.localdate())
         }
         # From day to day: Pastry is new today, not a role made a circle;
-        # the roles removed with the bakery lose their holders with them
+        # the roles removed with the bakery lose their Role Leads with them
         self.assertLessEqual(
             {
                 (pastry, "added"),
@@ -470,8 +470,8 @@ class CircleEndsItselfScenarioTest(TestCase):
 
 
 class RoleMeetingScenarioTest(TestCase):
-    def test_holders_break_down_their_role(self):
-        """The inside of every role is a circle (1.3.1): its holders hold
+    def test_role_leads_break_down_their_role(self):
+        """The inside of every role is a circle (1.3.1): its Role Leads hold
         governance meetings there, adding roles makes it a circle"""
         ada = User.objects.create_user("ada@example.com", full_name="Ada")
         bob = User.objects.create_user("bob@example.com", full_name="Bob")
@@ -645,7 +645,7 @@ class CircleEmptiedFromAboveScenarioTest(TestCase):
         )
 
     def test_circle_rep_leaves_the_role(self):
-        """A circle turned back into a role keeps its Circle Leads as holders,
+        """A circle turned back into a role keeps its Circle Leads as Role Leads,
         not its Circle Rep"""
         ada = User.objects.create_user("ada@example.com", full_name="Ada")
         bob = User.objects.create_user("bob@example.com", full_name="Bob")

@@ -9,7 +9,7 @@ the changed fields of an update, gone after a delete. Assignments keep their
 history themselves (``starts_on``, ``ends_on``).
 
 ``structure_on()`` returns the structure in the shape the history uses:
-``roles`` (with their texts and holders) and ``policies``, keyed by primary
+``roles`` (with their texts and Role Leads) and ``policies``, keyed by primary
 keys as strings. Texts which weren't recorded (GlassFrog only had their IDs)
 are ``None``.
 """
@@ -230,7 +230,7 @@ def structure_from_database(day):
 
 
 def canonical(data):
-    """``data`` without the order of texts and holders, for comparing"""
+    """``data`` without the order of texts and Role Leads, for comparing"""
     return {
         "roles": {
             pk: entry

@@ -22,7 +22,7 @@ from governance.roles.assignments import (
     announce_changes,
     end_assignment,
     holdings,
-    sync_circle_holders,
+    sync_circle_role_leads,
 )
 from governance.roles.constitution import FACILITATOR, REP, SECRETARY
 from governance.roles.models import Assignment, Role
@@ -54,7 +54,7 @@ def record_election(meeting, role, user, term_ends_on):
     the meeting ends (``announce_elections()``)"""
     day = timezone.localdate()
     # Recorded again in the meeting (a correction, a second vote): the
-    # latest result replaces the earlier one, the role has one holder
+    # latest result replaces the earlier one, the role has one Role Lead
     for earlier in meeting.elections.filter(role=role):
         undo_election(earlier, day)
         earlier.delete()
@@ -82,7 +82,7 @@ def record_election(meeting, role, user, term_ends_on):
             role=role, user=user, starts_on=day, elected_until=term_ends_on
         )
     if role.core_role == REP:
-        sync_circle_holders(role.circle, day)
+        sync_circle_role_leads(role.circle, day)
     update_today()
     election.save()
     return election
@@ -91,13 +91,15 @@ def record_election(meeting, role, user, term_ends_on):
 def undo_election(election, day):
     """Reverses what recording the election changed"""
     role = election.role
-    holder = Assignment.objects.current().filter(role=role, user=election.user).first()
-    if holder and election.started:
+    role_lead = (
+        Assignment.objects.current().filter(role=role, user=election.user).first()
+    )
+    if role_lead and election.started:
         # Never held, also when the meeting ran past midnight meanwhile
-        holder.delete()
-    elif holder:
-        holder.elected_until = election.previous_term
-        holder.save(update_fields=["elected_until"])
+        role_lead.delete()
+    elif role_lead:
+        role_lead.elected_until = election.previous_term
+        role_lead.save(update_fields=["elected_until"])
     for data in election.replaced:
         if not Assignment.objects.filter(pk=data["pk"]).update(ends_on=None):
             # Removed because it started the same day
@@ -109,7 +111,7 @@ def undo_election(election, day):
                 elected_until=data["elected_until"],
             )
     if role.core_role == REP:
-        sync_circle_holders(role.circle, day)
+        sync_circle_role_leads(role.circle, day)
 
 
 class _Undone(Exception):
@@ -120,7 +122,7 @@ def announce_elections(meeting):
     """When the meeting ends: the people about the roles they got and lost
     in its elections, the Secretaries about people joining and leaving (a
     Circle Rep in the super-circle), the results after corrections only"""
-    # Not those of roles removed meanwhile, their proposal told the holders
+    # Not those of roles removed meanwhile, their proposal told the Role Leads
     elections = list(
         meeting.elections
         .filter(role__archived_on=None)
@@ -150,7 +152,7 @@ def announce_elections(meeting):
 
 def due_elections(circles, *, day=None):
     """``(role, assignment)`` of elected roles whose term ends within 30 days
-    or which nobody holds (``assignment`` is None then); holders without a
+    or which nobody holds (``assignment`` is None then); Role Leads without a
     term (the role became elected while they held it) too"""
     day = day or timezone.localdate()
     limit = day + dt.timedelta(days=REMINDER_DAYS)

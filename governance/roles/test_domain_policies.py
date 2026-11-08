@@ -36,7 +36,7 @@ class DomainPoliciesTest(TestCase):
         )
         self.url = f"/roles/{self.admin.pk}/domain-policies/new/"
 
-    def test_holders_change_policies(self):
+    def test_role_leads_change_policies(self):
         self.client.force_login(self.ada)
         response = self.client.get(f"/roles/{self.admin.pk}/")
         # On the domain's line, no card of policies without any
@@ -194,7 +194,7 @@ class DomainPoliciesTest(TestCase):
             )
 
         # Moved into the sub-circle: the policies stay the role's, its
-        # holders still change them
+        # Role Leads still change them
         governance(
             self.web,
             {

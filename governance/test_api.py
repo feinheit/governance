@@ -265,7 +265,7 @@ class APITest(TestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_proposal_inside_a_role(self):
-        """Holders add roles inside their role (1.3.1), also through the API
+        """Role Leads add roles inside their role (1.3.1), also through the API
         like on the role's page"""
         response = self.api(
             "post",

@@ -6,7 +6,7 @@
         <a class="wb-row-title" href="{{ role.get_absolute_url }}">{{ role }}</a>
         {% if role.is_circle %}<span class="badge wb-tone-circle">{% translate "Circle" %}</span>{% endif %}
       </div>
-      <div class="wb-row-meta"><span>{% include "roles/_holders.html" %}</span></div>
+      <div class="wb-row-meta"><span>{% include "roles/_role_leads.html" %}</span></div>
     </div>
   </li>
 {% endfor %}

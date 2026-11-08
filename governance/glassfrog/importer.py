@@ -579,7 +579,7 @@ class Importer:
             for role_id, (_day, entry) in self.history.roles.items()
             for person_id in entry["people"]
         } | {key: list(rows) for key, rows in current.items()}
-        # Not of archived roles: GlassFrog still lists the holders of the core
+        # Not of archived roles: GlassFrog still lists the Role Leads of the core
         # roles of circles which are roles here (normalize())
         wanted = {
             key: rows

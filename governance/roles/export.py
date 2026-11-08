@@ -21,10 +21,10 @@ def plain_mentions(text):
 def governance_markdown(*, with_people=False):
     """Who holds the roles only when asked for: personal data"""
     circles = Role.objects.depth_first()
-    holders = {}
+    role_leads = {}
     if with_people:
         for assignment in Assignment.objects.current().select_related("user"):
-            holders.setdefault(assignment.role_id, []).append(assignment)
+            role_leads.setdefault(assignment.role_id, []).append(assignment)
     for circle in circles:
         circle.heading = "#" * min(circle.depth + 2, 5)
         circle.subheading = "#" * min(circle.depth + 3, 6)
@@ -37,7 +37,7 @@ def governance_markdown(*, with_people=False):
         )
         circle.export_policies = list(circle.policies.active())
         for role in [circle, *circle.export_roles]:
-            role.export_holders = holders.get(role.pk, [])
+            role.export_role_leads = role_leads.get(role.pk, [])
             role.export_role_policies = (
                 list(role.policies.active()) if role is not circle else []
             )

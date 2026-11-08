@@ -82,7 +82,7 @@ def announce_changes(circles, before, after):
 
 
 def affected_circles(role):
-    """The circles whose roles and members change with the role's holders:
+    """The circles whose roles and members change with the role's Role Leads:
     a Circle Lead also leads the sub-circles nobody leads (1.4.2)"""
     circles = [role.circle]
     if role.core_role in {LEAD, REP} and role.circle:
@@ -92,8 +92,8 @@ def affected_circles(role):
     return circles
 
 
-def sync_circle_holders(circle, day):
-    """The holders of a circle's role are its Circle Leads and Circle Reps
+def sync_circle_role_leads(circle, day):
+    """The Role Leads of a circle's role are its Circle Leads and Circle Reps
 
     GlassFrog stores them like this and the circle page shows them in the
     super-circle, so the circle's role follows its core roles.
@@ -172,7 +172,7 @@ class EndingReps(Exception):
 
 
 def change_assignments(request, role, change):
-    """Runs the change of the role's holders with its mails. Circle Reps it
+    """Runs the change of the role's Role Leads with its mails. Circle Reps it
     makes lead their circle (5.1.1) end with it once ``end_reps`` confirms
     it; until then ``EndingReps`` rolls the change back."""
     before = reps_leading_their_circle()
@@ -189,7 +189,7 @@ def change_assignments(request, role, change):
 
 def after_change(role, day):
     if role.core_role in {LEAD, REP}:
-        sync_circle_holders(role.circle, day)
+        sync_circle_role_leads(role.circle, day)
     update_today()
 
 
@@ -234,8 +234,8 @@ def assignable_role(request, pk, check=can_assign):
 
 @locking_structure
 def assignments(request, pk):
-    """The role's holders, with the form to add one (elected roles are
-    elected, their holders only removed here); in a modal only the form"""
+    """The role's Role Leads, with the form to add one (elected roles are
+    elected, their Role Leads only removed here); in a modal only the form"""
     role = assignable_role(request, pk, check=can_end_assignment)
     form = None
     if can_assign(request.user, role):
@@ -345,5 +345,5 @@ def assignment_end(request, pk):
 
 
 def back(request, role):
-    """After a change: ``?next=`` (the role's page), else its holders"""
+    """After a change: ``?next=`` (the role's page), else its Role Leads"""
     return next_url(request) or reverse("role_assignments", kwargs={"pk": role.pk})

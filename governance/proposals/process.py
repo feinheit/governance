@@ -45,7 +45,7 @@ def check_role(proposal):
         and Role.objects.filter(pk=proposal.circle_id, is_circle=True).exists()
     ):
         # From inside a role which became a circle meanwhile, e.g. by an
-        # earlier proposal of the meeting: its holders are its Circle Leads
+        # earlier proposal of the meeting: its Role Leads are its Circle Leads
         proposal.circle.refresh_from_db()
         if lead := proposal.circle.roles.active().filter(core_role=LEAD).first():
             proposal.role = lead
@@ -80,7 +80,7 @@ def publish(proposal):
     )
     proposal.save()  # Also sets the roles and policies it changes
     if everybody_consented(proposal):
-        # Nobody else to ask, e.g. a role's only holder adding roles inside
+        # Nobody else to ask, e.g. a role's only Role Lead adding roles inside
         try_adopting(proposal)
         return proposal
     transaction.on_commit(lambda: mails.proposal_published(proposal))

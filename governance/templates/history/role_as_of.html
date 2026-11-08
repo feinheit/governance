@@ -21,7 +21,7 @@
         </h1>
         <div class="wb-meta">
           <span><span class="wb-meta-label">{% translate "Role Leads" %}</span>
-            {% for user, elected_until in entry.holders %}{{ user|default:"?" }}{% if elected_until %}
+            {% for user, elected_until in entry.role_leads %}{{ user|default:"?" }}{% if elected_until %}
                 ({% blocktranslate %}elected until {{ elected_until }}{% endblocktranslate %}){% endif %}{% if not forloop.last %},
               {% endif %}{% empty %}–{% endfor %}
           </span>
@@ -97,7 +97,8 @@
                       >{% translate "Circle" %}</span>{% endif %}
                   </div>
                   <div class="wb-row-meta">
-                    <span>{% for user, elected_until in child.holders %}{{ user|default:"?" }}{% if not forloop.last %},
+                    <span
+                    >{% for user, elected_until in child.role_leads %}{{ user|default:"?" }}{% if not forloop.last %},
                         {% endif %}{% empty %}–{% endfor %}</span>
                   </div>
                 </li>

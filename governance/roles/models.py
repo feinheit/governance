@@ -29,7 +29,7 @@ class RoleQuerySet(models.QuerySet):
         return self.filter(is_circle=True)
 
     def with_inside(self):
-        """Circles, and roles whose holders may break them down in their
+        """Circles, and roles whose Role Leads may break them down in their
         inner circle (proposals, governance meetings, constitution 1.3.1):
         all roles except the core roles"""
         return self.filter(core_role="")

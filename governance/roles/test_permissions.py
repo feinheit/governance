@@ -75,7 +75,7 @@ class CircleLeadsTest(TestCase):
 
 class ArchivedTest(TestCase):
     def test_nobody_leads_archived_circles_and_roles(self):
-        """Archived circles and roles have no holders (archiving ends their
+        """Archived circles and roles have no Role Leads (archiving ends their
         assignments), and nobody from above fills them in"""
         ada = User.objects.create_user("ada@example.com", full_name="Ada")
         anchor = Role.objects.create(name="Example Ltd", is_circle=True)

@@ -290,7 +290,7 @@ class Election(models.Model):
     term_ends_on = models.DateField(_("term ends on"))
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     # What recording it changed, so that a correction in the meeting undoes
-    # it (``elections.undo_election()``): a new assignment or the holder's
+    # it (``elections.undo_election()``): a new assignment or the Role Lead's
     # previous term, and the assignments it ended
     started = models.BooleanField(default=True, editable=False)
     previous_term = models.DateField(null=True, blank=True, editable=False)
