@@ -113,7 +113,7 @@ metrics are Kreise, Rollen, Vorschläge, Spannungen and Metriken; a meeting's ag
 are Agenda and Agendapunkte like in the German constitution
 (`docs/constitution`), not Traktanden. Gender-neutral German, try hard: avoid pronouns for people and roles
 ("ist die Rolle nicht besetzt" instead of "fehlt er"), and articles on
-the core roles' names, which make their Role Leads male: "wer Secretary
+the core roles' names, which make whoever fills them male: "wer Secretary
 ist", "die Rolle Circle Rep", "seine Rollen Facilitator, Secretary und
 Circle Rep", the names alone in lists ("sonst Facilitator"), not "der
 Secretary" or "ein Circle Lead"; roles take "ihre" ("%(role)s für ihre
