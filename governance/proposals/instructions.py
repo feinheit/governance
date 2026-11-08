@@ -652,9 +652,10 @@ def adopt(proposal):
     lock_structure()
     if proposal.status == Proposal.ADOPTED:
         raise ProposalError([_("The proposal has already been adopted.")])
-    if proposal.glassfrog_id and not (proposal.meeting and proposal.meeting.is_running):
-        # Until the switchover GlassFrog decides them async, meetings here
-        # may adopt them (the nightly import sets them back)
+    if proposal.decided_in_glassfrog and not (
+        proposal.meeting and proposal.meeting.is_running
+    ):
+        # Meetings here may adopt them (the nightly import sets them back)
         raise ProposalError([
             _("Proposals imported from GlassFrog are adopted in a meeting.")
         ])

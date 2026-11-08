@@ -42,3 +42,7 @@ Tool Struktur, Besetzung und Vorschläge aus GlassFrog und überschreibt
 dabei, was hier an diesen Daten geändert wurde. Aus GlassFrog importierte
 Vorschläge lassen sich zum Ausprobieren in einem Governance Meeting hier
 annehmen, die nächste Nacht setzt sie zurück.
+
+Nach der Umstellung laufen offene Vorschläge aus GlassFrog hier mit ihrer
+Frist weiter: niemand muss sie neu einreichen. Fragen und Zustimmungen
+aus GlassFrog werden nicht übernommen.

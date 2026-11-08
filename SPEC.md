@@ -149,7 +149,9 @@ as a link; textareas autocomplete "@" (`mentions.js`, `GET /api/roles/`).
 **`Proposal`**: `circle`, `proposer`, `role` (the proposer's role with
 the tension; GlassFrog's have none), `tension`, `instructions`
 (GlassFrog's format), `names` (for rendering), `status`, `published_at`,
-`deadline`, `decided_at`, `meeting`, `glassfrog_id`. No kind: the
+`deadline`, `decided_at`, `meeting`, `glassfrog_id`,
+`adopted_in_glassfrog` (its instructions keep GlassFrog's IDs, set by
+the import). No kind: the
 policies of domains are recorded as adopted proposals (titled by what
 they change), spelling goes through governance (decided 2026-11-08).
 
@@ -188,7 +190,11 @@ imported as drafts: their proposers bring them again or delete them, admins
 can't withdraw other people's proposals. GlassFrog stays the source of
 truth for imported proposals until the switchover: the import overwrites
 their status. Meetings here may adopt them to try the process (the next
-import sets proposal and structure back), the async process doesn't. Drafts are private to the proposer until published
+import sets proposal and structure back), the async process doesn't
+while `GLASSFROG_TOKEN` is set (`Proposal.decided_in_glassfrog`). Without
+it, after the switchover, it adopts them at their GlassFrog deadline like
+its own: nobody resubmits a proposal nobody objected to (decided
+2026-11-08; GlassFrog's responses aren't imported). Drafts are private to the proposer until published
 or brought into a meeting; a draft without instructions is a tension (the
 tension inbox; GlassFrog's open tensions are imported as such, the
 nightly import leaves them once they have changes or aren't drafts
@@ -852,22 +858,15 @@ Deliberately not modelled:
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
   wrong assignment or announce wrongly. Remove this item afterwards.
-- **Switchover**: a final import, update the handbook's links, cancel
-  GlassFrog, then stop the nightly `import_glassfrog --api`. Run
-  `scripts/fetch_backup.py` daily on the fetcher's server (with a read
-  only token) instead of `fetch_glassfrog.py`, into a new repository: to
-  consider then or afterwards, converting the GlassFrog export's commits
-  into the backup's format. Let the
-  open imported proposals be adopted async too (`adopt()` refuses
-  proposals with a `glassfrog_id` outside of running meetings until then,
-  e.g. at GlassFrog's deadlines; until then the app's async process moves
-them to "waiting for a meeting" at the last consent or the deadline, and
-the nightly import sets them back: accepted, decided 2026-11-06; it also
-overwrites the status and amendments of one on the agenda of a meeting
-running at 03:00, i.e. active after midnight: accepted too, decided
-2026-11-07). Remove
-  "Until the switchover" from `docs/README.md` (and `README.de.md`) and the notes about GlassFrog
-  being the source of truth in `AGENTS.md` and this file.
+- **Switchover**: the steps are in `SWITCHOVER.md` (final import,
+  removing `GLASSFROG_TOKEN` with the nightly import, which lets the open
+  imported proposals be adopted async, the handbook's links, the backup,
+  cancelling GlassFrog, cleaning up). Until then the app's async process
+  moves imported proposals to "waiting for a meeting" at the last
+  consent or the deadline, and the nightly import sets them back:
+  accepted, decided 2026-11-06; it also overwrites the status and
+  amendments of one on the agenda of a meeting running at 03:00, i.e.
+  active after midnight: accepted too, decided 2026-11-07.
 - **Published interpretations** (4.2.1): the Secretary's rulings, binding
   for the circle and its sub-circles, shown on the circle page. Postponed,
   we never had the case.

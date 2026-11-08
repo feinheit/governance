@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 16:11+0100\n"
+"POT-Creation-Date: 2026-11-08 17:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1254,6 +1254,14 @@ msgstr "betroffene Policies"
 #: governance/proposals/models.py
 msgid "GlassFrog tension ID"
 msgstr "GlassFrog-ID der Spannung"
+
+#: governance/proposals/models.py
+msgid "adopted in GlassFrog"
+msgstr "in GlassFrog angenommen"
+
+#: governance/proposals/models.py
+msgid "Its instructions use GlassFrog's IDs."
+msgstr "Die Anweisungen verwenden die IDs von GlassFrog."
 
 #: governance/proposals/models.py governance/templates/history/_entry.html
 msgid "(no tension)"

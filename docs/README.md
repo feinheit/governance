@@ -42,3 +42,7 @@ takes the structure, the assignments and the proposals from GlassFrog,
 overwriting what was changed in these data here. Proposals imported from
 GlassFrog can be adopted in a governance meeting here to try it out, the
 next night sets them back.
+
+After the switchover, open proposals from GlassFrog continue here with
+their deadline: nobody submits them again. Questions and consents given
+in GlassFrog don't carry over.

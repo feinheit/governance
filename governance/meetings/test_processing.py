@@ -1,7 +1,7 @@
 import datetime as dt
 
 from django.core import mail
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from governance.accounts.models import User
@@ -209,6 +209,7 @@ class ProcessingTest(TestCase):
         tension.refresh_from_db()
         self.assertEqual(tension.status, Proposal.IN_MEETING)
 
+    @override_settings(GLASSFROG_TOKEN="token")
     def test_imported_proposal(self):
         """Open proposals imported from GlassFrog are adopted in meetings
         (the nightly import sets them back until the switchover), not at
@@ -240,6 +241,33 @@ class ProcessingTest(TestCase):
         self.assertEqual(self.cook.name, "Chef")
         # Its instructions have the app's IDs, unlike those adopted in GlassFrog
         response = self.client.get(self.proposal.get_absolute_url())
+        self.assertContains(response, self.cook.get_absolute_url())
+
+    @override_settings(GLASSFROG_TOKEN="")
+    def test_imported_proposal_after_the_switchover(self):
+        """Without the nightly import, open proposals imported from GlassFrog
+        are adopted at their deadline like the app's own: nobody resubmits
+        them. They have no role, unlike those adopted here before"""
+        self.cook.glassfrog_id = 999  # Not the app's ID
+        self.cook.save()
+        published = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            tension="Async",
+            status=Proposal.PUBLISHED,
+            published_at=timezone.now() - dt.timedelta(days=9),
+            deadline=timezone.now() - dt.timedelta(days=2),
+            created_at=timezone.now() - dt.timedelta(days=9),
+            instructions=self.proposal.instructions,
+            names=self.proposal.names,
+            glassfrog_id=124,
+        )
+        self.assertEqual(adopt_due_proposals(), [published])
+        published.refresh_from_db()
+        self.cook.refresh_from_db()
+        self.assertEqual((published.status, self.cook.name), (Proposal.ADOPTED, "Chef"))
+        self.client.force_login(self.ada)
+        response = self.client.get(published.get_absolute_url())
         self.assertContains(response, self.cook.get_absolute_url())
 
     def test_amended_in_the_meeting(self):

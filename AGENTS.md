@@ -176,7 +176,8 @@ variables named like the settings: `DATABASE_URL`, `SECRET_KEY`,
 `EMAIL_URL`, `MAIL_COPIES` (e.g. `["a@example.com"]`, who gets a copy of
 each mail), `BASE_URL`, `GOOGLE_CLIENT_ID`,
 `GOOGLE_CLIENT_SECRET`, `SENTRY_DSN` and `SENTRY_ENVIRONMENT`, and until
-the switchover `GLASSFROG_TOKEN`. Only
+the switchover `GLASSFROG_TOKEN` (removing it lets the app adopt imported
+proposals async; the steps of the switchover are in `SWITCHOVER.md`). Only
 existing, active users sign in; new people come from the import until the
 switchover, afterwards admins add them in the Django admin. The
 cron jobs are in argocd's `governance/values.yaml`: `import_glassfrog

@@ -155,6 +155,11 @@ class Proposal(models.Model):
     glassfrog_tension_id = models.BigIntegerField(
         _("GlassFrog tension ID"), null=True, blank=True, unique=True
     )
+    adopted_in_glassfrog = models.BooleanField(
+        _("adopted in GlassFrog"),
+        default=False,
+        help_text=_("Its instructions use GlassFrog's IDs."),
+    )
 
     objects = ProposalQuerySet.as_manager()
 
@@ -194,6 +199,13 @@ class Proposal(models.Model):
 
     def get_absolute_url(self):
         return reverse("proposal", kwargs={"pk": self.pk})
+
+    @property
+    def decided_in_glassfrog(self):
+        """Imported proposals are GlassFrog's to decide async while the
+        nightly import runs, i.e. until the switchover removes its token;
+        afterwards the app's async process adopts them at their deadline"""
+        return bool(self.glassfrog_id and settings.GLASSFROG_TOKEN)
 
     @property
     def adopted_on(self):

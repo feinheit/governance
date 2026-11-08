@@ -579,6 +579,7 @@ class ImportTest(TestCase):
             (anchor, ada, "No bread"),
         )
         self.assertEqual(proposal.status, Proposal.ADOPTED)
+        self.assertTrue(proposal.adopted_in_glassfrog)  # GlassFrog's IDs
         self.assertEqual(
             proposal.names,
             {
@@ -721,6 +722,7 @@ class ImportTest(TestCase):
         translates GlassFrog's IDs in their instructions to the app's"""
         import_glassfrog(self.path, log=lambda message: None)
         draft = Proposal.objects.get(glassfrog_id=705)
+        self.assertFalse(draft.adopted_in_glassfrog)
         kitchen = Role.objects.get(glassfrog_id=102)
         fridge = Domain.objects.get(glassfrog_id=802)
         self.assertEqual(

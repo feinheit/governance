@@ -223,7 +223,7 @@ def try_adopting(proposal):
         # Those who got it learn why it didn't pass async; not for those
         # imported from GlassFrog, which the nightly import sets back
         problems = exc.problems
-        if to_meeting(proposal) and not proposal.glassfrog_id:
+        if to_meeting(proposal) and not proposal.decided_in_glassfrog:
             transaction.on_commit(lambda: mails.proposal_to_meeting(proposal, problems))
         return False
     return True

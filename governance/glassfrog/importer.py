@@ -793,6 +793,7 @@ class Importer:
                     "deadline": parse(proposal.get("response_deadline")),
                     "decided_at": decided_at,
                     "glassfrog_tension_id": tension.get("id"),
+                    "adopted_in_glassfrog": status == Proposal.ADOPTED,
                 },
             )
             self.set_affected(obj, instructions)

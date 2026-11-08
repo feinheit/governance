@@ -131,6 +131,7 @@ class ProposalsTest(TestCase):
             created_at=now - dt.timedelta(days=2),
             decided_at=now,
             glassfrog_id=1,
+            adopted_in_glassfrog=True,
         )
         adopted.roles.set([cook])
         draft = Proposal.objects.create(
