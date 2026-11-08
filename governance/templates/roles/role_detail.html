@@ -45,22 +45,14 @@
           class="btn btn-sm btn-quiet d-none d-sm-inline-block"
           href="{% url 'circle_browser' %}?circle={{ role.pk }}"
         >{% translate "Circle browser" %}</a>{% endif %}
-      {% if not role.archived_on %}
+      {% if not role.archived_on and role.is_circle or not role.archived_on and has_meetings or not role.archived_on and can_start_meeting and not running_meeting %}
         {# What isn't needed often (frontend/menus.js) #}
         <details class="dropdown wb-menu">
           <summary class="btn btn-sm btn-quiet" title="{% translate 'More actions' %}">
             {% icon "three-dots" %}<span class="visually-hidden">{% translate "More actions" %}</span>
           </summary>
           <div class="dropdown-menu dropdown-menu-end">
-            <a
-              class="dropdown-item"
-              href="{% url 'tactical_call' %}?role={{ role.pk }}"
-            >{% translate "Call a tactical meeting" %}</a>
-            {% if role.is_circle %}<a
-                class="dropdown-item"
-                href="{% url 'mail_addresses' %}#circle-{{ role.pk }}"
-              >{% translate "Mail addresses of the members" %}</a>{% endif %}
-            {# Also on a circle's page beside its meetings: easier to find in both places #}
+            {# Its meetings first, also on a circle's page beside its meetings: easier to find in both places #}
             {% if can_start_meeting and not running_meeting %}
               {% url 'meeting_create' role.pk as start_url %}
               {% if asks_before_starting %}
@@ -93,6 +85,13 @@
                 class="dropdown-item"
                 href="{% url 'meetings' role.pk %}"
               >{% translate "All meetings" %}</a>{% endif %}
+            {% if role.is_circle %}
+              <hr class="dropdown-divider">
+              <a
+                class="dropdown-item"
+                href="{% url 'mail_addresses' %}#circle-{{ role.pk }}"
+              >{% translate "Mail addresses of the members" %}</a>
+            {% endif %}
           </div>
         </details>
       {% endif %}

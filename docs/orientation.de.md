@@ -11,7 +11,8 @@ anderer.
   vergrössert einen Kreis, ein zweiter öffnet seine Seite; der Hintergrund
   oder Escape verkleinert wieder. "Meine Rollen" hebt deine Rollen hervor.
   Darunter steht dieselbe Struktur als Liste.
-- **Dein Name** (oben rechts) öffnet ein Menü: deine Seite,
+- **Dein Name** (oben rechts) öffnet ein Menü: deine Seite, "Tactical
+  Meeting einberufen",
   **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API und
   Abmelden.
 - **Vorschläge**: alle Vorschläge, nach Status gefiltert.

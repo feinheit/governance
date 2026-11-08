@@ -739,7 +739,7 @@ class MeetingE2ETest(LiveServerTestCase):
         elsewhere and with Escape"""
         page = self.page
         page.goto(f"{self.live_server_url}{self.kitchen.get_absolute_url()}")
-        link = page.locator("a", has_text="Call a tactical meeting")
+        link = page.locator("main details.wb-menu a", has_text="All meetings")
         self.assertFalse(link.is_visible())
         summary = page.locator("main details.wb-menu summary")
         summary.click()
@@ -751,7 +751,7 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertFalse(link.is_visible())
         summary.click()
         link.click()
-        page.wait_for_url(f"**/meetings/tactical/new/?role={self.kitchen.pk}")
+        page.wait_for_url(f"**/roles/{self.kitchen.pk}/meetings/")
         self.assertEqual(self.errors, [])
 
     def test_mail_addresses(self):

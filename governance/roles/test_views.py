@@ -49,7 +49,8 @@ class ViewsTest(TestCase):
         )
 
     def test_one_link_for_tactical_meetings(self):
-        """Circles and roles link to an ad-hoc tactical meeting once"""
+        """Ad-hoc tactical meetings aren't tied to a circle or role: the
+        user's menu calls them, once on every page"""
         anchor = Role.objects.create(name="Example Ltd", is_circle=True)
         kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
         kitchen.create_core_roles()
@@ -57,9 +58,7 @@ class ViewsTest(TestCase):
         for role in [anchor, kitchen, cook]:
             with self.subTest(role=role):
                 response = self.client.get(role.get_absolute_url())
-                self.assertContains(
-                    response, f"/meetings/tactical/new/?role={role.pk}", count=1
-                )
+                self.assertContains(response, 'href="/meetings/tactical/new/"', count=1)
                 self.assertContains(response, "Call a tactical meeting", count=1)
 
     def test_proposals_inside_a_role(self):

@@ -11,7 +11,8 @@ active person. Everybody signed in sees everything except others' drafts.
   click zooms into a circle, a second one opens its page; the background
   or Escape zooms out again. "My roles" highlights your roles. Below is
   the same structure as a list.
-- **Your name** (top right) opens a menu: your page, **People**
+- **Your name** (top right) opens a menu: your page, "Call a tactical
+  meeting", **People**
   (everybody with their roles), **Mail addresses**, Help, API and
   signing out.
 - **Proposals**: all proposals, filtered by status.

@@ -596,8 +596,10 @@ their account, else the default), not when they received it themselves
   waits for the person; the anchor circle is `/organization/` (the
   navigation's "Organization", <kbd>Alt-O</kbd>).
 - **Navigation**: Organization, Circles, Proposals, History and the
-  search; the user's name opens a menu with their page, People, Mail
-  addresses, Help, API and signing out.
+  search; the user's name opens a menu with their page, calling a tactical
+  meeting (not tied to a circle or role), People, Mail addresses, Help,
+  API and signing out. The menus "…" of circles and roles list the
+  meetings first.
 - **Mail addresses** (`/people/addresses/`, `roles/addresses.py`): to
   copy (`frontend/copy.js`) or to write to ("New mail", `mailto:`):
   everybody holding a role, all Circle Leads, Facilitators and

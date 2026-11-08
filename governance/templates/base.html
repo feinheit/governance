@@ -90,6 +90,10 @@
               </summary>
               <div class="dropdown-menu dropdown-menu-end">
                 <a class="dropdown-item" href="{{ request.user.get_absolute_url }}">{% translate "Your page" %}</a>
+                <hr class="dropdown-divider">
+                {# Not tied to a circle: with any roles, also from several circles #}
+                <a class="dropdown-item" href="{% url 'tactical_call' %}">{% translate "Call a tactical meeting" %}</a>
+                <hr class="dropdown-divider">
                 <a class="dropdown-item" href="{% url 'people' %}">{% translate "People" %}</a>
                 <a class="dropdown-item" href="{% url 'mail_addresses' %}">{% translate "Mail addresses" %}</a>
                 <a class="dropdown-item" href="{% url 'help' %}">{% translate "Help" %}</a>
