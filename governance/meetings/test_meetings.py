@@ -290,7 +290,10 @@ class MeetingsTest(TestCase):
         # Ad-hoc tactical meetings have no circle, they may run at any time
         response = self.client.post(
             "/meetings/tactical/new/",
-            {"role": [self.cook.pk], "attendee": [self.eve.pk]},
+            {
+                "role": [self.kitchen.roles.get(core_role="secretary").pk],
+                "attendee": [self.eve.pk],
+            },
         )
         self.assertEqual(Meeting.objects.filter(ended_at=None).count(), 2)
 

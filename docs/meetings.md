@@ -89,8 +89,9 @@ circle.
   right): first the roles, also from several circles (the field filters
   them by role, circle or person), then "Next: who is invited" lists
   their holders (for unfilled roles the Circle Leads), all checked; to
-  invite only some of them (constitution 3.1), uncheck the others. "Start
-  the meeting" starts it, you attend too. "All meetings" in the menu "More
+  invite only some of them (constitution 3.1), uncheck the others. You
+  hold one of the roles at least (or stand in for an unfilled one as
+  Circle Lead) and attend. "Start the meeting" starts it. "All meetings" in the menu "More
   actions" (…) of a role's page lists its circle's meetings and those the
   role was invited to.
 

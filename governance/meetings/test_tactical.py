@@ -386,14 +386,20 @@ class TacticalTest(TestCase):
             role=self.kitchen.roles.get(core_role="lead"), user=self.eve
         )
         waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
-        self.client.force_login(self.ada)
+        # Eve fills the unfilled Waiter as the kitchen's Circle Lead
+        self.client.force_login(self.eve)
         response = self.client.get(
             f"/meetings/tactical/new/?role={self.cook.pk}&role={waiter.pk}"
         )
-        for user in [self.bob, zoe, self.eve]:
+        for user in [self.bob, zoe]:
             self.assertRegex(
                 response.content.decode(), rf'name="attendee"\s+value="{user.pk}"'
             )
+        # The caller attends, unchecking isn't possible
+        self.assertRegex(
+            response.content.decode(),
+            rf'name="attendee"\s+value="{self.eve.pk}"\s+checked\s+disabled',
+        )
         self.client.post(
             "/meetings/tactical/new/",
             {
@@ -404,10 +410,25 @@ class TacticalTest(TestCase):
         meeting = Meeting.objects.get()
         self.assertEqual(set(meeting.invited_roles.all()), {self.cook, waiter})
         # The caller too, not who wasn't invited
-        self.assertEqual(set(meeting.attendees.all()), {zoe, self.ada})
+        self.assertEqual(set(meeting.attendees.all()), {zoe, self.eve})
         # Without roles nothing
         self.client.post("/meetings/tactical/new/", {"attendee": [zoe.pk]})
         self.assertEqual(Meeting.objects.count(), 1)
+
+    def test_ad_hoc_own_role(self):
+        """The caller holds one of the roles at least, else the roles are
+        chosen again"""
+        self.client.force_login(self.ada)
+        response = self.client.get(f"/meetings/tactical/new/?role={self.cook.pk}")
+        self.assertContains(response, "You don&#x27;t hold any of these roles.")
+        self.assertContains(response, "Next: who is invited")
+        self.assertNotContains(response, "Start the meeting")
+        response = self.client.post(
+            "/meetings/tactical/new/",
+            {"role": [self.cook.pk], "attendee": [self.bob.pk]},
+        )
+        self.assertContains(response, "You don&#x27;t hold any of these roles.")
+        self.assertFalse(Meeting.objects.exists())
 
     def test_ad_hoc(self):
         """Any partner calls one and invites roles of any circle"""

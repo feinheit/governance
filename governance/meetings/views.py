@@ -356,7 +356,14 @@ def tactical_call(request):
         .select_related("circle")
     )
     people = invitees(chosen)
-    if request.method == "POST" and chosen:
+    # The caller fills one of the roles at least (also as Circle Lead of an
+    # unfilled one, 1.4.2)
+    error = (
+        gettext("You don't hold any of these roles.")
+        if chosen and all(user != request.user for user, _roles in people)
+        else None
+    )
+    if request.method == "POST" and chosen and not error:
         checked = set(data.getlist("attendee"))
         meeting = Meeting.objects.create(
             kind=Meeting.TACTICAL,
@@ -370,7 +377,7 @@ def tactical_call(request):
             *(user for user, _roles in people if str(user.pk) in checked),
         ])
         return redirect(meeting)
-    choosing = not chosen or "change" in data
+    choosing = not chosen or bool(error) or "change" in data
     return render(
         request,
         "meetings/tactical_call.html",
@@ -378,6 +385,7 @@ def tactical_call(request):
             "choosing": choosing,
             "chosen": chosen,
             "chosen_pks": {role.pk for role in chosen},
+            "error": error,
             "groups": [
                 (circle, list(roles))
                 for circle, roles in groupby(

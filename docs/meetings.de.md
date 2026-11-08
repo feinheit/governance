@@ -83,7 +83,9 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   sie nach Rolle, Kreis oder Person), dann listet "Weiter: wer eingeladen
   ist" auf, wer sie hat (bei unbesetzten Rollen die Circle Leads), alle
   angekreuzt; um nur einen Teil einzuladen (Verfassung 3.1), die anderen
-  abwählen. "Meeting starten" startet es, du nimmst auch teil. "Alle
+  abwählen. Du hast mindestens eine der Rollen (oder vertrittst eine
+  unbesetzte als Circle Lead) und nimmst teil. "Meeting starten" startet
+  es. "Alle
   Meetings" im Menü "Weitere Aktionen" (…) einer Rollenseite listet die
   Meetings ihres Kreises auf und die, zu denen die Rolle eingeladen war.
 
