@@ -4,7 +4,7 @@ Einiges ändert sich ohne Governance:
 
 | Was | Wer |
 | --- | --- |
-| Zuweisungen und Fokus ("Besetzung" auf der Rollenseite) | Circle Leads |
+| Zuweisungen und Fokus ("Role Leads" auf der Rollenseite) | Circle Leads |
 | Strategie des Kreises | Circle Leads |
 | Metriken | Circle Leads |
 | Checklisten-Punkte und Links | alle |
@@ -21,7 +21,7 @@ Einiges ändert sich ohne Governance:
   Rückfrage.
 - Wer eine Rolle abgeben will, wendet sich an die Circle Leads, die die
   Person entfernen, auch aus gewählten Rollen ("Entfernen" unter
-  "Besetzung" auf der Rollenseite).
+  "Role Leads" auf der Rollenseite).
 - Wer Secretary ist, darf im Tool alles, was die Circle Leads dürfen, damit es
   eine Stellvertretung gibt.
 - Admins dürfen all das überall, und auch die Meetings aller Kreise

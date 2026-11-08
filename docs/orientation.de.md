@@ -47,7 +47,8 @@ Auf dem Mac <kbd>Ctrl</kbd> statt <kbd>Alt</kbd>. Fährst du mit der Maus
 Ein **Kreis** zeigt Purpose, Strategie, Domains, Accountabilities, seine
 Policies, seine Kernrollen und Meetings, offene Vorschläge, anstehende
 Wahlen, Checklisten und Metriken, Links, die Geschichte und seine Rollen
-mit Besetzung.
+mit ihren Role Leads (wer eine Rolle ausfüllt, Verfassung 1.1; die Role
+Leads eines Kreises sind die Circle Leads darin, 1.4).
 
 Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,
 wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und

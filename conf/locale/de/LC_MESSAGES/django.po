@@ -2074,7 +2074,7 @@ msgstr "Diese Rolle gab es an diesem Tag nicht."
 #: governance/templates/roles/assignments.html
 #: governance/templates/roles/governance.txt
 msgid "Role Leads"
-msgstr "Besetzung"
+msgstr "Role Leads"
 
 #: governance/templates/history/role_as_of.html
 #, python-format

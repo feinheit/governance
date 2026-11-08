@@ -106,7 +106,8 @@ formats end with `.txt` (e.g. the Markdown export `roles/governance.txt`).
 Edit `conf/locale/de/LC_MESSAGES/django.po` manually. Remove the `#, fuzzy`
 flag before any new entry or it won't be used. The Holacracy terms stay
 English like in the handbook and in GlassFrog (Purpose, Accountabilities,
-Domains, Policies, Tactical and Governance Meeting), as do the core roles'
+Domains, Policies, Tactical and Governance Meeting, Role Lead for who
+fills a role, next to Circle Lead), as do the core roles'
 names and constitutional texts; circles, roles, proposals, tensions and
 metrics are Kreise, Rollen, Vorschläge, Spannungen and Metriken; a meeting's agenda and its items
 are Agenda and Agendapunkte like in the German constitution
