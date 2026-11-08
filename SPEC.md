@@ -834,6 +834,27 @@ Deliberately not modelled:
   - The lists of current assignments (focus and term next to the name)
     haven't been looked at in the browser (light and dark, long focus
     texts, narrow screens).
+- **Verification** (round of 2026-11-08; fixed: an unfilled Circle Rep
+  invited the Circle Leads to ad hoc tactical meetings, a sub-circle
+  listed its super-circle's regular tactical meetings). Open:
+  - Copies of personal mails (`MAIL_COPIES`, `_send(copy=True)`) don't
+    say whose they are ("You now hold Cook"); `roles_changed` and
+    `elections_due` send one copy per person, not one per event.
+  - The history of a circle (`?role=`, "With sub-circles") and the
+    proposals' "With sub-circles" use today's structure: a role moved
+    away takes its past along, archived roles of a circle turned back
+    into a role and archived sub-circles are missing. Decide what a
+    circle's history means (its roles at the time or now).
+  - Unproven: `can_add_items` lets holders of invited roles add items to
+    an ad hoc meeting even when the caller unchecked them; ad hoc
+    meetings are "tactical meeting" in the outputs mail and "Running
+    now" (`str(meeting)`, not `kind_label`); `former_names()` repeats
+    names going back and forth; the proposals' role filter misses
+    never-published drafts; `of_role` of a moved role lists its new
+    circle's meetings from before the move.
+  - Decisions to confirm: the focus of elected roles can't be edited
+    (`can_assign` refuses them); a role's list includes its circle's
+    governance meetings; ad hoc meetings' outputs go to attendees only.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
