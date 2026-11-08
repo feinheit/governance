@@ -52,8 +52,14 @@
 .bi-chevron-down::before {
   content: "\f282";
 }
+.bi-clipboard::before {
+  content: "\f290";
+}
 .bi-clock-history::before {
   content: "\f292";
+}
+.bi-envelope::before {
+  content: "\f32f";
 }
 .bi-gear::before {
   content: "\f3e5";

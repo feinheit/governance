@@ -1,0 +1,28 @@
+{% load governance i18n %}
+{# A group's addresses to copy (frontend/copy.js), or a new mail to them #}
+<li class="list-group-item" id="{{ group.key }}">
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+    <span class="fw-semibold">{% if group.circle %}<a
+          href="{{ group.circle.get_absolute_url }}"
+        >{{ group.label }}</a>{% else %}{{ group.label }}{% endif %}</span>
+    <span
+      class="small text-body-secondary"
+    >{% blocktranslate count count=group.users|length %}{{ count }} person{% plural %}{{ count }} people{% endblocktranslate %}</span>
+    {% if group.users %}
+      <span class="ms-auto d-flex gap-1">
+        <button type="button" class="btn btn-sm btn-quiet" data-copy="addresses-{{ group.key }}" hidden>
+          {% icon "clipboard" %} <span data-copy-label>{% translate "Copy" %}</span>
+        </button>
+        <a class="btn btn-sm btn-quiet" href="mailto:{{ group.mailto }}">{% icon "envelope" %}
+          {% translate "New mail" %}</a>
+      </span>
+    {% endif %}
+  </div>
+  {% if group.users %}<textarea
+      id="addresses-{{ group.key }}"
+      class="form-control form-control-sm"
+      rows="2"
+      readonly
+      aria-label="{% blocktranslate with group=group.label %}Mail addresses: {{ group }}{% endblocktranslate %}"
+    >{{ group.addresses }}</textarea>{% endif %}
+</li>

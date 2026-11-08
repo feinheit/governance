@@ -1,9 +1,15 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load governance i18n %}
 {% block title %}{% translate "People" %} – {{ block.super }}{% endblock %}
 
 {% block content %}
-  <div class="wb-page-header"><h1>{% translate "People" %}</h1></div>
+  <div class="wb-page-header">
+    <h1>{% translate "People" %}</h1>
+    <div class="wb-page-actions">
+      <a class="btn btn-sm btn-quiet" href="{% url 'mail_addresses' %}">{% icon "envelope" %}
+        {% translate "Mail addresses" %}</a>
+    </div>
+  </div>
   <section class="card">
     <ul class="list-group list-group-flush">
       {% for user in users %}

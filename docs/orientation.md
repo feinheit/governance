@@ -11,11 +11,20 @@ active person. Everybody signed in sees everything except others' drafts.
   click zooms into a circle, a second one opens its page; the background
   or Escape zooms out again. "My roles" highlights your roles. Below is
   the same structure as a list.
-- **People**: everybody with their roles.
+- **Your name** (top right) opens a menu: your page, **People**
+  (everybody with their roles), **Mail addresses**, Help, API and
+  signing out.
 - **Proposals**: all proposals, filtered by status.
 - **History**: what changed when, on request with the assignments.
 - **Search** finds roles, accountabilities, domains and policies
   containing all the words entered.
+
+**Mail addresses** lists the addresses of everybody holding a role, of
+all Circle Leads, Facilitators, Secretaries and Circle Reps (for
+unfilled Facilitators and Secretaries who stands in: the Secretary or
+Facilitator, else the Circle Leads) and of each circle's members, to
+copy into a mail ("Copy") or to write to them ("New mail"). A circle's
+menu "…" links its members.
 
 ## Keyboard shortcuts
 
@@ -84,7 +93,7 @@ lists them all.
 
 ## API
 
-For scripts and other tools: under "API" you create a token (read only,
+For scripts and other tools: under "API" (in the menu of your name) you create a token (read only,
 or read and write, valid until 30 days after its last use). The API reads the structure and
 proposals and creates drafts; its documentation is at `/api/docs`.
 

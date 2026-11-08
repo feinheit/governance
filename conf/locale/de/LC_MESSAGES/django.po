@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 13:45+0100\n"
+"POT-Creation-Date: 2026-11-08 13:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1278,6 +1278,26 @@ msgstr "Alle sind einverstanden, der Vorschlag ist angenommen."
 msgid "The proposal goes to the next governance meeting."
 msgstr "Der Vorschlag kommt ins nächste Governance Meeting."
 
+#: governance/roles/addresses.py
+msgid "Everybody holding a role"
+msgstr "Alle mit einer Rolle"
+
+#: governance/roles/addresses.py
+msgid "All Circle Leads"
+msgstr "Alle Circle Leads"
+
+#: governance/roles/addresses.py
+msgid "All Facilitators, or who stands in"
+msgstr "Alle Facilitators oder wer vertritt"
+
+#: governance/roles/addresses.py
+msgid "All Secretaries, or who stands in"
+msgstr "Alle Secretaries oder wer vertritt"
+
+#: governance/roles/addresses.py
+msgid "All Circle Reps"
+msgstr "Alle Circle Reps"
+
 #: governance/roles/apps.py governance/roles/browser.py
 #: governance/roles/models.py
 msgid "roles"
@@ -1816,10 +1836,6 @@ msgstr "Governance"
 msgid "Sign in with Google"
 msgstr "Mit Google anmelden"
 
-#: governance/templates/base.html governance/templates/roles/people.html
-msgid "People"
-msgstr "Personen"
-
 #: governance/templates/base.html
 #: governance/templates/history/organization_history.html
 #: governance/templates/history/role_as_of.html
@@ -1827,6 +1843,20 @@ msgstr "Personen"
 #: governance/templates/roles/role_detail.html
 msgid "History"
 msgstr "Geschichte"
+
+#: governance/templates/base.html
+msgid "Your page"
+msgstr "Deine Seite"
+
+#: governance/templates/base.html governance/templates/roles/people.html
+msgid "People"
+msgstr "Personen"
+
+#: governance/templates/base.html
+#: governance/templates/roles/mail_addresses.html
+#: governance/templates/roles/people.html
+msgid "Mail addresses"
+msgstr "Mailadressen"
 
 #: governance/templates/base.html
 msgid "API"
@@ -2693,6 +2723,26 @@ msgstr "%(circle)s hat keine Sub-Kreise."
 msgid "Back to the proposal"
 msgstr "Zurück zum Vorschlag"
 
+#: governance/templates/roles/_address_group.html
+#, python-format
+msgid "%(count)s person"
+msgid_plural "%(count)s people"
+msgstr[0] "%(count)s Person"
+msgstr[1] "%(count)s Personen"
+
+#: governance/templates/roles/_address_group.html
+msgid "Copy"
+msgstr "Kopieren"
+
+#: governance/templates/roles/_address_group.html
+msgid "New mail"
+msgstr "Neue Mail"
+
+#: governance/templates/roles/_address_group.html
+#, python-format
+msgid "Mail addresses: %(group)s"
+msgstr "Mailadressen: %(group)s"
+
 #: governance/templates/roles/_assignment_note.html
 #: governance/templates/roles/_holders.html
 #, python-format
@@ -2796,6 +2846,18 @@ msgstr "Stand %(date)s."
 msgid "Held by"
 msgstr "Besetzt durch"
 
+#: governance/templates/roles/mail_addresses.html
+msgid "To copy into a mail. Unfilled Facilitator and Secretary roles count the person standing in: the Secretary or Facilitator, else the Circle Leads."
+msgstr "Zum Kopieren in eine Mail. Bei unbesetzten Rollen Facilitator und Secretary zählt die Vertretung: Secretary oder Facilitator, sonst die Circle Leads."
+
+#: governance/templates/roles/mail_addresses.html
+msgid "Core roles in all circles"
+msgstr "Kernrollen in allen Kreisen"
+
+#: governance/templates/roles/mail_addresses.html
+msgid "Members of the circles"
+msgstr "Mitglieder der Kreise"
+
 #: governance/templates/roles/people.html
 msgid "Nobody holds a role yet."
 msgstr "Noch niemand hat eine Rolle."
@@ -2894,6 +2956,10 @@ msgstr "Kreis-Browser"
 #: governance/templates/roles/role_detail.html
 msgid "More actions"
 msgstr "Weitere Aktionen"
+
+#: governance/templates/roles/role_detail.html
+msgid "Mail addresses of the members"
+msgstr "Mailadressen der Mitglieder"
 
 #: governance/templates/roles/role_detail.html
 #, python-format
@@ -3004,9 +3070,6 @@ msgstr "Als Secretary, stellvertretend für die Circle Leads"
 
 #~ msgid "No proposals changed this role."
 #~ msgstr "Noch kein Vorschlag hat diese Rolle geändert."
-
-#~ msgid "the Circle Leads"
-#~ msgstr "die Circle Leads"
 
 #, python-format
 #~ msgid "since %(date)s"

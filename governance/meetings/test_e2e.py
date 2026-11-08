@@ -597,7 +597,7 @@ class MeetingE2ETest(LiveServerTestCase):
         page = self.page
         page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
         # A role's meetings are in the menu
-        page.locator("details.wb-menu summary").click()
+        page.locator("main details.wb-menu summary").click()
         page.locator("a[data-modal]", has_text="Start a governance meeting").click()
         page.wait_for_selector("#modal[open] [data-modal-close]:focus")
         page.keyboard.press("Enter")
@@ -738,7 +738,7 @@ class MeetingE2ETest(LiveServerTestCase):
         page.goto(f"{self.live_server_url}{self.kitchen.get_absolute_url()}")
         link = page.locator("a", has_text="Call a tactical meeting")
         self.assertFalse(link.is_visible())
-        summary = page.locator("details.wb-menu summary")
+        summary = page.locator("main details.wb-menu summary")
         summary.click()
         self.assertTrue(link.is_visible())
         page.locator("h1").click()
@@ -749,6 +749,23 @@ class MeetingE2ETest(LiveServerTestCase):
         summary.click()
         link.click()
         page.wait_for_url(f"**/meetings/tactical/new/?role={self.kitchen.pk}")
+        self.assertEqual(self.errors, [])
+
+    def test_mail_addresses(self):
+        """The user's menu leads to the mail addresses, a button copies a
+        group's"""
+        self.context.grant_permissions(
+            ["clipboard-read", "clipboard-write"], origin=self.live_server_url
+        )
+        page = self.page
+        page.goto(f"{self.live_server_url}/")
+        page.locator("nav details.wb-menu summary").click()
+        page.locator("nav a", has_text="Mail addresses").click()
+        page.wait_for_url("**/people/addresses/")
+        page.locator(f"#circle-{self.kitchen.pk} [data-copy]").click()
+        self.assertEqual(
+            page.evaluate("navigator.clipboard.readText()"), "Ada <ada@example.com>"
+        )
         self.assertEqual(self.errors, [])
 
     def test_take_over_as_secretary(self):

@@ -1,6 +1,7 @@
 from django.urls import path
 
 from governance.roles import (
+    addresses,
     assignments,
     browser,
     domain_policies,
@@ -71,6 +72,7 @@ urlpatterns = [
     ),
     path("circles/", browser.circle_browser, name="circle_browser"),
     path("people/", views.people, name="people"),
+    path("people/addresses/", addresses.mail_addresses, name="mail_addresses"),
     path("people/<int:pk>/", views.person_detail, name="person"),
     path("export/governance.md", export_markdown, name="export_markdown"),
 ]

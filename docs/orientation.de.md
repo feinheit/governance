@@ -11,12 +11,21 @@ anderer.
   vergrössert einen Kreis, ein zweiter öffnet seine Seite; der Hintergrund
   oder Escape verkleinert wieder. "Meine Rollen" hebt deine Rollen hervor.
   Darunter steht dieselbe Struktur als Liste.
-- **Personen**: alle mit ihren Rollen.
+- **Dein Name** (oben rechts) öffnet ein Menü: deine Seite,
+  **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API und
+  Abmelden.
 - **Vorschläge**: alle Vorschläge, nach Status gefiltert.
 - **Geschichte**: was sich wann geändert hat, auf Wunsch mit den
   Zuweisungen.
 - **Suchen** findet Rollen, Accountabilities, Domains und Policies, die
   alle eingegebenen Wörter enthalten.
+
+**Mailadressen** listet die Adressen aller mit einer Rolle, aller Circle
+Leads, Facilitators, Secretaries und Circle Reps (bei unbesetzten Rollen
+Facilitator und Secretary die Vertretung: Secretary oder Facilitator,
+sonst die Circle Leads) und der Mitglieder jedes Kreises auf, zum
+Kopieren in eine Mail ("Kopieren") oder um ihnen zu schreiben ("Neue
+Mail"). Das Menü "…" eines Kreises verlinkt seine Mitglieder.
 
 ## Tastenkürzel
 
@@ -84,7 +93,7 @@ allen Kreisen informieren lassen. [Mails](mails.de.md) listet alle auf.
 
 ## API
 
-Für Skripte und andere Tools: unter "API" erstellst du ein Token (nur
+Für Skripte und andere Tools: unter "API" (im Menü deines Namens) erstellst du ein Token (nur
 lesen oder lesen und schreiben, gültig bis 30 Tage nach der letzten
 Verwendung). Die API liest die
 Struktur und Vorschläge und legt Entwürfe an; ihre Dokumentation steht

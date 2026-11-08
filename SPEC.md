@@ -588,6 +588,16 @@ their account, else the default), not when they received it themselves
 - **Start page** (`/`, <kbd>Alt-H</kbd>): the own person page, with what
   waits for the person; the anchor circle is `/organization/` (the
   navigation's "Organization", <kbd>Alt-O</kbd>).
+- **Navigation**: Organization, Circles, Proposals, History and the
+  search; the user's name opens a menu with their page, People, Mail
+  addresses, Help, API and signing out.
+- **Mail addresses** (`/people/addresses/`, `roles/addresses.py`): to
+  copy (`frontend/copy.js`) or to write to ("New mail", `mailto:`):
+  everybody holding a role, all Circle Leads, Facilitators and
+  Secretaries (unfilled ones: who stands in, like for the reminders of
+  elections and `acting_secretaries()`), Circle Reps, and each circle's
+  members (its menu links them). Names as they are, quoted when needed,
+  not encoded for headers.
 - **Person page**: roles grouped by circle in depth-first order, earlier
   roles; one's own also drafts, proposals waiting for a response, open
   meetings, due elections, `notify_all`.

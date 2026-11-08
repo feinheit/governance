@@ -1,4 +1,4 @@
-{% load i18n rspack_assets running_meetings static %}
+{% load governance i18n rspack_assets running_meetings static %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" data-bs-theme="light">
   <head>
@@ -40,7 +40,6 @@
           <ul class="navbar-nav me-auto wb-nav-links">
             {% url 'organization' as organization_url %}
             {% url 'circle_browser' as circles_url %}
-            {% url 'people' as people_url %}
             <li class="nav-item">
               <a class="nav-link" href="{{ organization_url }}" data-shortcut="o">{% translate "Organization" %}</a>
             </li>
@@ -49,12 +48,6 @@
                 class="nav-link{% if request.path == circles_url %} active{% endif %}"
                 href="{{ circles_url }}"
               >{% translate "Circles" %}</a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link{% if request.path == people_url %} active{% endif %}"
-                href="{{ people_url }}"
-              >{% translate "People" %}</a>
             </li>
             {% url 'proposals' as proposals_url %}
             <li class="nav-item">
@@ -87,34 +80,27 @@
               value="{{ request.GET.q }}"
             >
           </form>
-          <div class="wb-nav-user d-flex align-items-center">
+          <div class="wb-nav-user d-flex align-items-center gap-2">
             {% include "_theme_toggle.html" %}
-            <a class="navbar-text me-3" href="{{ request.user.get_absolute_url }}">{{ request.user.get_short_name }}</a>
-            <a class="navbar-text me-3" href="{% url 'help' %}">{% translate "Help" %}</a>
-            <a class="navbar-text me-3 d-none d-lg-inline" href="{% url 'api_tokens' %}">{% translate "API" %}</a>
-            <form method="post" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <button
-                type="submit"
-                class="btn btn-sm btn-quiet"
-                title="{% translate 'Sign out' %}"
-                aria-label="{% translate 'Sign out' %}"
-              >
-                <span class="d-none d-lg-inline">{% translate "Sign out" %}</span>
-                <svg
-                  class="d-lg-none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                  aria-hidden="true"
-                >
-                  <path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
-                  <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
-                </svg>
-              </button>
-            </form>
+            {# The own page, help, API and signing out in a menu (frontend/menus.js) #}
+            <details class="dropdown wb-menu">
+              <summary class="btn btn-sm btn-quiet">
+                {{ request.user.get_short_name }}
+                {% icon "chevron-down" %}
+              </summary>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="{{ request.user.get_absolute_url }}">{% translate "Your page" %}</a>
+                <a class="dropdown-item" href="{% url 'people' %}">{% translate "People" %}</a>
+                <a class="dropdown-item" href="{% url 'mail_addresses' %}">{% translate "Mail addresses" %}</a>
+                <a class="dropdown-item" href="{% url 'help' %}">{% translate "Help" %}</a>
+                <a class="dropdown-item" href="{% url 'api_tokens' %}">{% translate "API" %}</a>
+                <hr class="dropdown-divider">
+                <form method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">{% translate "Sign out" %}</button>
+                </form>
+              </div>
+            </details>
           </div>
         {% endif %}
       </div>

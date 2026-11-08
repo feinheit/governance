@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Mail addresses" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-page-header">
+    <div>
+      <h1>{% translate "Mail addresses" %}</h1>
+      <div class="wb-meta">
+        <span
+        >{% translate "To copy into a mail. Unfilled Facilitator and Secretary roles count the person standing in: the Secretary or Facilitator, else the Circle Leads." %}</span>
+      </div>
+    </div>
+  </div>
+  <section class="card mb-4">
+    <div class="card-header"><h2 class="h6 mb-0">{% translate "Core roles in all circles" %}</h2></div>
+    <ul class="list-group list-group-flush">
+      {% for group in groups %}{% include "roles/_address_group.html" %}{% endfor %}
+    </ul>
+  </section>
+  <section class="card">
+    <div class="card-header"><h2 class="h6 mb-0">{% translate "Members of the circles" %}</h2></div>
+    <ul class="list-group list-group-flush">
+      {% for group in circle_groups %}{% include "roles/_address_group.html" %}{% endfor %}
+    </ul>
+  </section>
+{% endblock content %}

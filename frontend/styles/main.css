@@ -494,6 +494,11 @@ a.wb-row-title:hover {
 
 /* The part of the page a link points to, e.g. a day in the history
    (opened by open_details.js) */
+.list-group-item:target {
+  scroll-margin-top: 1rem;
+  background: var(--bs-primary-bg-subtle);
+}
+
 .card:target {
   scroll-margin-top: 1rem;
   border-color: var(--bs-primary);
