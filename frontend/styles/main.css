@@ -19,6 +19,8 @@
   --bs-link-hover-color-rgb: 47, 63, 153;
   --bs-border-radius: 0.5rem;
   --wb-surface: #fff;
+  /* Fields on the page's background, e.g. filters */
+  --wb-field-bg: #fff;
   --wb-surface-border: #e1e4e9;
   --wb-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
@@ -33,6 +35,7 @@
   --bs-link-hover-color: #b5bff5;
   --bs-link-hover-color-rgb: 181, 191, 245;
   --wb-surface: #15181d;
+  --wb-field-bg: #000;
   --wb-surface-border: #2b2f37;
   --wb-shadow: none;
 }
@@ -249,6 +252,15 @@ h3,
 .wb-filters select {
   width: auto;
   max-width: 16em;
+}
+
+/* Not grey on the grey page: unchecked boxes would disappear */
+.wb-filters :is(.form-select, .form-control) {
+  background-color: var(--wb-field-bg);
+}
+
+.wb-filters .form-check-input {
+  --bs-form-check-bg: var(--wb-field-bg);
 }
 
 .wb-meta {
