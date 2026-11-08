@@ -27,7 +27,7 @@ class ExportTest(TestCase):
         # No button, the URL (and later the CLI) offers it
         response = self.client.get(anchor.get_absolute_url())
         self.assertNotContains(response, "/export/governance.md")
-        response = self.client.get("/export/governance.md")
+        response = self.client.get("/export/governance.md?holders=1")
         self.assertEqual(response["Content-Type"], "text/markdown; charset=utf-8")
         text = response.content.decode()
         self.assertIn("## Example Ltd", text)
@@ -47,5 +47,6 @@ class ExportTest(TestCase):
         self.assertIn("- All governance records of the Circle", text)
         self.assertLess(text.index("## Example Ltd"), text.index("### Kitchen"))
 
-        text = self.client.get("/export/governance.md?holders=0").content.decode()
+        # Who holds the roles only when asked for: personal data
+        text = self.client.get("/export/governance.md").content.decode()
         self.assertNotIn("Ada Example", text)

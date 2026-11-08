@@ -18,7 +18,8 @@ def plain_mentions(text):
     )
 
 
-def governance_markdown(*, with_holders=True):
+def governance_markdown(*, with_holders=False):
+    """Who holds the roles only when asked for: personal data"""
     circles = Role.objects.depth_first()
     holders = {}
     if with_holders:
@@ -49,7 +50,7 @@ def governance_markdown(*, with_holders=True):
 
 def export_markdown(request):
     response = HttpResponse(
-        governance_markdown(with_holders=request.GET.get("holders") != "0"),
+        governance_markdown(with_holders=request.GET.get("holders") == "1"),
         content_type="text/markdown; charset=utf-8",
     )
     response["Content-Disposition"] = (

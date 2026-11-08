@@ -657,7 +657,8 @@ verify the mails; removed once they've proven themselves.
   them (mentions with the current names, the core roles' constitutional
   texts); snippets as plain text.
 - **Export**: the whole governance as Markdown, `/export/governance.md`
-  (`?holders=0` without the people); no button, `gov export` (`GET
+  (the people only with `?holders=1`, `--with-holders`: personal data
+  is opt-in, decided 2026-11-08); no button, `gov export` (`GET
   export/`) offers it.
 - **Help** (`/help/`, `governance/help.py`): the user documentation in
   `docs/` (Markdown, also readable on GitHub: `name.md` in English,

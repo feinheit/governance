@@ -9,15 +9,16 @@ from gov.core import cli, request
 
 @cli.command()
 @click.option(
-    "--without-holders",
+    "--with-holders",
     is_flag=True,
-    help="Leave out who holds the roles, e.g. to share it outside.",
+    help="Include who holds the roles (personal data).",
 )
 @click.option(
     "--json",
     "as_json",
     is_flag=True,
-    help="The JSON backup instead: everything you see, one key per file.",
+    help="The JSON backup instead: everything you see, one key per file,"
+    " also the people.",
 )
 @click.option(
     "-o",
@@ -26,17 +27,15 @@ from gov.core import cli, request
     default="-",
     help="Write to this file instead of stdout.",
 )
-def export(without_holders, as_json, output):
+def export(with_holders, as_json, output):
     """The whole current governance as Markdown: circles, roles, policies
-    (and who holds the roles); with --json everything, also proposals,
-    meetings and the history"""
+    (and who holds the roles, if asked for); with --json everything, also
+    the people, proposals, meetings and the history"""
     if as_json:
-        if without_holders:
+        if with_holders:
             raise click.UsageError("The JSON backup always has the holders.")
         files = request("GET", "backup/", timeout=300)
         output.write(json.dumps(files, indent=2, ensure_ascii=False) + "\n")
         return
-    data = request(
-        "GET", "export/", params={"holders": "false"} if without_holders else {}
-    )
+    data = request("GET", "export/", params={"holders": "true"} if with_holders else {})
     output.write(data["markdown"])

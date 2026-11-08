@@ -421,8 +421,8 @@ class CLITest(TestCase):
         result = self.gov("export")
         self.assertIn("Kitchen", result.output)
         self.assertIn("Cooking soup", result.output)
-        self.assertIn("Ada", result.output)
-        self.assertNotIn("Ada", self.gov("export", "--without-holders").output)
+        self.assertNotIn("Ada", result.output)  # Personal data when asked for
+        self.assertIn("Ada", self.gov("export", "--with-holders").output)
         path = self.directory / "governance.md"
         self.gov("export", "--output", path)
         self.assertIn("Cooking soup", path.read_text())
@@ -450,8 +450,8 @@ class CLITest(TestCase):
         """The JSON backup, one key per file"""
         files = json.loads(self.gov("export", "--json").output)
         self.assertIn("Cook", [role["name"] for role in files["roles.json"]])
-        # The backup has the people, no version without them
-        result = self.gov("export", "--json", "--without-holders")
+        # The backup always has the people
+        result = self.gov("export", "--json", "--with-holders")
         self.assertNotEqual(result.exit_code, 0)
 
     def complete(self, args, incomplete):
