@@ -181,10 +181,11 @@ class Proposal(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.status in {self.PUBLISHED, self.IN_MEETING}:
+        if self.status in {self.DRAFT, self.PUBLISHED, self.IN_MEETING}:
             # Pending: the roles and policies it changes now (the pages of
             # roles and policies list it), also when brought into a meeting
-            # or amended there; adopt() adds those it creates or defers
+            # or amended there; adopt() adds those it creates or defers.
+            # Drafts too, for the proposals' filter (pages list pending ones)
             from governance.proposals.process import affected
 
             roles, policies = affected(self)

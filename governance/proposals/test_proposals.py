@@ -357,6 +357,26 @@ class ProposalFiltersTest(TestCase):
         )
         self.assertEqual(tensions(f"role={cook.pk}"), {"Hot stove"})
         self.assertEqual(tensions("status=draft"), set())
+        # Also one's drafts, never published
+        Proposal.objects.create(
+            circle=kitchen,
+            proposer=ada,
+            tension="Better name",
+            created_at=now,
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{cook.pk}/name",
+                    "original_value": "Cook",
+                    "value": "Chef",
+                }
+            ],
+            names={f"roles/{cook.pk}": "Cook"},
+        )
+        self.assertIn(
+            "Better name",
+            self.client.get(f"/proposals/?role={cook.pk}").content.decode(),
+        )
         response = self.client.get(f"/proposals/?role={cook.pk}&page=1")
         self.assertContains(response, "data-autosubmit")
         # The role chosen, though the select lists circles

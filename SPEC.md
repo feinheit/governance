@@ -272,7 +272,8 @@ secretary discards it there, decided 2026-11-07). Somebody leaving the circle do
 everybody remaining has consented: it waits for its deadline like
 announced (decided 2026-11-06). Role and policy pages show pending
 proposals (published or in a meeting): `Proposal.save()` keeps their
-`roles` and `policies` those the instructions change now, also when
+`roles` and `policies` (also drafts', for the proposals' filter by
+role) those the instructions change now, also when
 brought into or amended in a meeting; `adopt()` adds those it creates or
 defers. The weekday restriction of one circle's policy stays a soft
 rule.
