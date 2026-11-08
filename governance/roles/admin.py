@@ -25,7 +25,7 @@ class RoleAdmin(admin.ModelAdmin):
     list_filter = ["is_circle", "core_role", "archived_on"]
     search_fields = ["name", "purpose"]
     raw_id_fields = ["circle"]
-    inlines = [AccountabilityInline, DomainInline, AssignmentInline]
+    inlines = [DomainInline, AccountabilityInline, AssignmentInline]
 
 
 @admin.register(models.Policy)

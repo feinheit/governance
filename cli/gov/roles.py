@@ -36,8 +36,8 @@ def show_role(id, *, as_json):
             console.print(f"\n{title}", style="bold")
             console.print(Markdown(text))
     for title, items in [
-        ("Accountabilities", role["accountabilities"]),
         ("Domains", role["domains"]),
+        ("Accountabilities", role["accountabilities"]),
     ]:
         if items:
             console.print(f"\n{title}", style="bold")

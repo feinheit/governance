@@ -1,11 +1,11 @@
-{% load i18n %}{% autoescape off %}{% if role.core.accountabilities or role.accountabilities.all %}**{% translate "Accountabilities" %}**
-
-{% for text in role.core.accountabilities %}- {{ text }}
-{% endfor %}{% for accountability in role.accountabilities.all %}- {{ accountability.text }}
-{% endfor %}
-{% endif %}{% if role.core.domains or role.domains.all %}**{% translate "Domains" %}**
+{% load i18n %}{% autoescape off %}{% if role.core.domains or role.domains.all %}**{% translate "Domains" %}**
 
 {% for text in role.core.domains %}- {{ text }}
 {% endfor %}{% for domain in role.domains.all %}- {{ domain.text }}
+{% endfor %}
+{% endif %}{% if role.core.accountabilities or role.accountabilities.all %}**{% translate "Accountabilities" %}**
+
+{% for text in role.core.accountabilities %}- {{ text }}
+{% endfor %}{% for accountability in role.accountabilities.all %}- {{ accountability.text }}
 {% endfor %}
 {% endif %}{% endautoescape %}

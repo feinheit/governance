@@ -556,6 +556,9 @@ their account, else the default), not when they received it themselves
 
 ## 7. Views
 
+- **Roles show their purpose, domains and accountabilities in this order**
+  everywhere: the pages, "as of", the export, `gov roles show`, the
+  drafting forms (and the instructions they make), the admin.
 - **Circle and role pages** are laid out for the desktop: on the left
   what the role is (purpose, domains, accountabilities, its own
   policies), on the right what is used most (holders or core roles, a

@@ -146,9 +146,10 @@ class DraftingTest(TestCase):
                 "/roles/n1",
                 "/roles/n1/name",
                 "/roles/n1/aim",
-                "/roles/n1/accountabilities/n2/description",
+                # Domains first, like on the role's page
+                "/roles/n1/domains/n2/description",
                 "/roles/n1/accountabilities/n3/description",
-                "/roles/n1/domains/n4/description",
+                "/roles/n1/accountabilities/n4/description",
             ],
         )
         response = self.client.get(proposal.get_absolute_url())

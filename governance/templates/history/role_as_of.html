@@ -44,6 +44,16 @@
             {% endif %}
           </div>
         </section>
+        {% if entry.domains %}
+          <section class="card mb-4">
+            <div class="card-header"><h2 class="h6 mb-0">{% translate "Domains" %}</h2></div>
+            <ul class="list-group list-group-flush">
+              {% for text in entry.domains %}<li class="list-group-item wb-markdown">
+                  {{ text|markdown }}
+                </li>{% endfor %}
+            </ul>
+          </section>
+        {% endif %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Accountabilities" %}</h2></div>
           <ul class="list-group list-group-flush">
@@ -56,16 +66,6 @@
             {% if not entry.accountabilities %}<li class="list-group-item text-body-secondary">–</li>{% endif %}
           </ul>
         </section>
-        {% if entry.domains %}
-          <section class="card mb-4">
-            <div class="card-header"><h2 class="h6 mb-0">{% translate "Domains" %}</h2></div>
-            <ul class="list-group list-group-flush">
-              {% for text in entry.domains %}<li class="list-group-item wb-markdown">
-                  {{ text|markdown }}
-                </li>{% endfor %}
-            </ul>
-          </section>
-        {% endif %}
         {% if policies %}
           <section class="card mb-4">
             <div class="card-header"><h2 class="h6 mb-0">{% translate "Policies" %}</h2></div>

@@ -28,9 +28,10 @@ from governance.roles.models import Policy, Role
 from governance.roles.permissions import proposer_roles
 
 
+# Domains before accountabilities, like on the role's page
 TEXT_KINDS = [
-    ("accountabilities", _("Accountability"), _("New accountabilities")),
     ("domains", _("Domain"), _("New domains")),
+    ("accountabilities", _("Accountability"), _("New accountabilities")),
 ]
 
 
