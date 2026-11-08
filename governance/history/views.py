@@ -248,8 +248,13 @@ def history(request):
         circles = [circle]
         if filters.get("sub_circles"):
             circles.extend(circle.sub_circles())
-        # The circles and their roles (a sub-circle as a role too)
-        changes = changes.filter(Q(role__in=circles) | Q(role__circle__in=circles))
+        # The circles and their roles (a sub-circle as a role too), today's;
+        # roles which left say so, their past moved along with them
+        changes = changes.filter(
+            Q(role__in=circles)
+            | Q(role__circle__in=circles)
+            | Q(kind="moved", old__in=[c.pk for c in circles])
+        )
         adopted = adopted.filter(circle__in=circles)
     all_days = sorted(
         set(changes.order_by().values_list("date", flat=True).distinct())

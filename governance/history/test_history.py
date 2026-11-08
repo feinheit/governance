@@ -650,3 +650,25 @@ class OneHistoryTest(TestCase):
             response = self.client.get("/history/?day=2026-01-02")
             self.assertContains(response, 'id="day-2026-01-02"')
             self.assertEqual(response.context["page"].number, 2)
+
+
+class MovedAwayTest(TestCase):
+    def test_circle_shows_roles_leaving(self):
+        """A circle's history shows the roles which left it (their past
+        moved along, their own history has it)"""
+        from governance.accounts.models import User
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        bakery = Role.objects.create(name="Bakery", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=bakery)
+        Change.objects.create(
+            date=dt.date(2025, 2, 2),
+            role=cook,
+            kind="moved",
+            old=kitchen.pk,
+            new=bakery.pk,
+        )
+        response = self.client.get(f"/history/?role={kitchen.pk}")
+        self.assertContains(response, "Moved to another circle")
+        self.assertContains(response, cook.get_absolute_url())

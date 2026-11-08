@@ -575,7 +575,8 @@ their account, else the default), not when they received it themselves
   `generic/_filters.html`, `frontend/filters.js`: GET forms submitting when
   changed). The history is one page (`/history/`, `?role=`): a circle
   with its roles (a sub-circle as a role; "With sub-circles" with what's
-  inside them) or a role alone, with assignments, with links, metrics and
+  inside them; today's roles, whose past moved along with them, those
+  which left show their move, decided 2026-11-08) or a role alone, with assignments, with links, metrics and
   checklists; links to a day (`?day=`) open its page. A policy's page has
   its own history (its changes, the adopted proposals changing it), the
   days linking to its role's. The proposals by status,
@@ -836,15 +837,14 @@ Deliberately not modelled:
     texts, narrow screens).
 - **Verification** (round of 2026-11-08; fixed: an unfilled Circle Rep
   invited the Circle Leads to ad hoc tactical meetings, a sub-circle
-  listed its super-circle's regular tactical meetings). Open:
+  listed its super-circle's regular tactical meetings; decided: the
+  focus of elected roles stays unchangeable, a role's meetings include
+  its circle's governance meetings, ad hoc meetings' outputs go to their
+  attendees only, a circle's history shows today's roles and the moves
+  of those which left). Open:
   - Copies of personal mails (`MAIL_COPIES`, `_send(copy=True)`) don't
     say whose they are ("You now hold Cook"); `roles_changed` and
     `elections_due` send one copy per person, not one per event.
-  - The history of a circle (`?role=`, "With sub-circles") and the
-    proposals' "With sub-circles" use today's structure: a role moved
-    away takes its past along, archived roles of a circle turned back
-    into a role and archived sub-circles are missing. Decide what a
-    circle's history means (its roles at the time or now).
   - Unproven: `can_add_items` lets holders of invited roles add items to
     an ad hoc meeting even when the caller unchecked them; ad hoc
     meetings are "tactical meeting" in the outputs mail and "Running
@@ -852,9 +852,6 @@ Deliberately not modelled:
     names going back and forth; the proposals' role filter misses
     never-published drafts; `of_role` of a moved role lists its new
     circle's meetings from before the move.
-  - Decisions to confirm: the focus of elected roles can't be edited
-    (`can_assign` refuses them); a role's list includes its circle's
-    governance meetings; ad hoc meetings' outputs go to attendees only.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
