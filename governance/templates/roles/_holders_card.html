@@ -1,7 +1,7 @@
 {% load governance i18n %}
 {# A role's holders; the Circle Leads assign, change the focus and remove them in modals, back to the page #}
 <section class="card mb-4">
-  <div class="card-header"><h2 class="h6 mb-0">{% translate "Holders" %}</h2></div>
+  <div class="card-header"><h2 class="h6 mb-0">{% translate "Role Leads" %}</h2></div>
   <ul class="list-group list-group-flush">
     {% for assignment in role.current_assignments %}
       <li class="list-group-item wb-row wb-row-compact">

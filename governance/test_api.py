@@ -115,7 +115,7 @@ class APITest(TestCase):
         )
         data = self.api("get", f"/api/roles/{self.cook.pk}/").json()
         self.assertEqual(data["accountabilities"][0]["text"], "Cooking soup")
-        self.assertEqual(data["holders"][0]["focus"], "Soup")
+        self.assertEqual(data["role_leads"][0]["focus"], "Soup")
         data = self.api("get", f"/api/roles/{self.kitchen.pk}/").json()
         self.assertEqual(len(data["roles"]), 4)
         self.assertIn(

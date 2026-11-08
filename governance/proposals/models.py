@@ -137,7 +137,7 @@ class Proposal(models.Model):
         settings.AUTH_USER_MODEL,
         blank=True,
         related_name="+",
-        verbose_name=_("holders losing roles"),
+        verbose_name=_("Role Leads losing roles"),
         help_text=_(
             "Whose assignments the adopted proposal ended, for the mails;"
             " assignments started the same day are deleted."

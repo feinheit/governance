@@ -4,7 +4,7 @@ Some things change without governance:
 
 | What | Who |
 | --- | --- |
-| Assignments and focus ("Holders" on the role's page) | Circle Leads |
+| Assignments and focus ("Role Leads" on the role's page) | Circle Leads |
 | The circle's strategy | Circle Leads |
 | Metrics | Circle Leads |
 | Checklist items and links | everybody |
@@ -23,7 +23,7 @@ Some things change without governance:
   moving a circle shows it before it's adopted, deactivating somebody
   ends it without asking.
 - Whoever wants to give up a role turns to the Circle Leads, who remove
-  them, also from elected roles ("Remove" under "Holders" on the role's
+  them, also from elected roles ("Remove" under "Role Leads" on the role's
   page).
 - The secretary may do everything in the tool the Circle Leads may, so
   that there's a stand-in.
@@ -35,7 +35,7 @@ Some things change without governance:
   deleting or removing something are red and ask first.
 - When a role becomes a circle, its policies become the circle's, which
   change through its governance. When it turns back into a role, the
-  policies for its domains stay and its holders change them again, the
+  policies for its domains stay and its Role Leads change them again, the
   others are archived.
 - The settings implement what the circle's policies define. Sub-circles
   without a deadline for async proposals of their own use the one of the

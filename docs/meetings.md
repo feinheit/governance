@@ -36,7 +36,7 @@ the page updates by itself.
 
 ## Governance meeting
 
-"Start a governance meeting" on the circle's page (in its Meetings and in the menu "…", with "All meetings"), every member may do that. Steps: check-in, agenda, closing. The holders of a role start one
+"Start a governance meeting" on the circle's page (in its Meetings and in the menu "…", with "All meetings"), every member may do that. Steps: check-in, agenda, closing. The Role Leads of a role start one
 on the role's page (in the menu "…") to break it down into roles: adopting the first role
 makes it a circle, with them as its Circle Leads. The tool asks first,
 cancelling is the default: changing the role itself is proposed in its
@@ -88,7 +88,7 @@ circle.
 - **Ad hoc**: "Call a tactical meeting" in the menu of your name (top
   right): first the roles, also from several circles (the field filters
   them by role, circle, person or focus), then "Next: who is invited"
-  lists their holders with their focus (for unfilled roles the Circle
+  lists their Role Leads with their focus (for unfilled roles the Circle
   Leads), all checked; to
   invite only some of them (constitution 3.1), uncheck the others. You
   hold one of the roles at least (or stand in for an unfilled one as

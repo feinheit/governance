@@ -20,7 +20,7 @@
             <span class="badge wb-tone-circle fs-6">{% translate "Circle" %}</span>{% endif %}
         </h1>
         <div class="wb-meta">
-          <span><span class="wb-meta-label">{% translate "held by" %}</span>
+          <span><span class="wb-meta-label">{% translate "Role Leads" %}</span>
             {% for user, elected_until in entry.holders %}{{ user|default:"?" }}{% if elected_until %}
                 ({% blocktranslate %}elected until {{ elected_until }}{% endblocktranslate %}){% endif %}{% if not forloop.last %},
               {% endif %}{% empty %}–{% endfor %}

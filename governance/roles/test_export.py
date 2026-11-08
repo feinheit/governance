@@ -35,7 +35,7 @@ class ExportTest(TestCase):
         self.assertIn("#### Cook", text)
         self.assertIn("Fresh first", text)
         self.assertIn("- Asking @Kitchen", text)  # Mentions with the current name
-        self.assertIn("*Ada Example (Soups)*", text.replace("Held by: ", ""))
+        self.assertIn("*Ada Example (Soups)*", text.replace("Role Leads: ", ""))
         # Unfilled: not the Circle Rep (5.1.1), a circle's Circle Lead the
         # super-circle's (1.4.2)
         self.assertIn("#### Circle Rep\n\n*Nobody*", text)

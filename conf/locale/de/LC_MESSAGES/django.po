@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 17:17+0100\n"
+"POT-Creation-Date: 2026-11-08 20:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1240,7 +1240,7 @@ msgid "Circles the proposal left without roles while their own meeting ran; they
 msgstr "Kreise, die der Vorschlag ohne Rollen liess, während ihr eigenes Meeting lief; sie werden wieder zu Rollen, wenn es endet."
 
 #: governance/proposals/models.py
-msgid "holders losing roles"
+msgid "Role Leads losing roles"
 msgstr "Personen, die Rollen verlieren"
 
 #: governance/proposals/models.py
@@ -2070,8 +2070,11 @@ msgid "This role didn't exist on that day."
 msgstr "Diese Rolle gab es an diesem Tag nicht."
 
 #: governance/templates/history/role_as_of.html
-msgid "held by"
-msgstr "besetzt durch"
+#: governance/templates/roles/_holders_card.html
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/governance.txt
+msgid "Role Leads"
+msgstr "Besetzung"
 
 #: governance/templates/history/role_as_of.html
 #, python-format
@@ -2437,7 +2440,7 @@ msgid "Start it yourself when it's planned anyway, e.g. when they're absent or a
 msgstr "Starte es selbst, wenn es ohnehin geplant ist, z.B. in Vertretung oder auf Bitte der Person mit der Rolle Secretary. Du bist dann Secretary des Meetings."
 
 #: governance/templates/meetings/meeting_confirm.html
-msgid "A governance meeting in a role is the role's own governance (constitution 1.3.1): its holders break it down into roles of its own. Adopting the first role makes it a circle, with its holders as Circle Leads."
+msgid "A governance meeting in a role is the role's own governance (constitution 1.3.1): its Role Leads break it down into roles of its own. Adopting the first role makes it a circle, with its Role Leads as Circle Leads."
 msgstr "Ein Governance Meeting in einer Rolle ist die eigene Governance der Rolle (Verfassung 1.3.1): wer sie hat, teilt sie in eigene Rollen auf. Mit der ersten angenommenen Rolle wird sie zum Kreis, wer sie hat, wird Circle Lead."
 
 #: governance/templates/meetings/meeting_confirm.html
@@ -2565,7 +2568,7 @@ msgid "Nobody holds these roles."
 msgstr "Niemand hat diese Rollen."
 
 #: governance/templates/meetings/tactical_call.html
-msgid "The holders of the roles are invited, unfilled roles' Circle Leads; you may invite only some of them (constitution 3.1). You attend too."
+msgid "The roles' Role Leads are invited, unfilled roles' Circle Leads; you may invite only some of them (constitution 3.1). You attend too."
 msgstr "Eingeladen ist, wer die Rollen hat, bei unbesetzten Rollen die Circle Leads; du kannst nur einen Teil davon einladen (Verfassung 3.1). Du nimmst auch teil."
 
 #: governance/templates/meetings/tactical_call.html
@@ -2910,11 +2913,6 @@ msgstr "Wer Circle Lead ist, kann nicht Circle Rep sein (Verfassung 5.1.1). Die 
 
 #: governance/templates/roles/_holders_card.html
 #: governance/templates/roles/assignments.html
-msgid "Holders"
-msgstr "Besetzung"
-
-#: governance/templates/roles/_holders_card.html
-#: governance/templates/roles/assignments.html
 msgid "Edit focus"
 msgstr "Fokus bearbeiten"
 
@@ -2946,7 +2944,7 @@ msgstr "%(user)s aus %(role)s entfernen?"
 
 #: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
-msgid "Elected roles are elected in governance meetings; their holders resign here."
+msgid "Elected roles are elected in governance meetings; their Role Leads resign here."
 msgstr "Gewählte Rollen werden in Governance Meetings gewählt; wer sie innehat, tritt hier zurück."
 
 #: governance/templates/roles/assignment_end.html
@@ -2991,10 +2989,6 @@ msgstr "Noch keine Kreise."
 #, python-format
 msgid "As of %(date)s."
 msgstr "Stand %(date)s."
-
-#: governance/templates/roles/governance.txt
-msgid "Held by"
-msgstr "Besetzt durch"
 
 #: governance/templates/roles/mail_addresses.html
 msgid "To copy into a mail. Unfilled Facilitator and Secretary roles count the person standing in: the Secretary or Facilitator, else the Circle Leads."
@@ -3190,6 +3184,15 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "held by"
+#~ msgstr "besetzt durch"
+
+#~ msgid "Holders"
+#~ msgstr "Besetzung"
+
+#~ msgid "Held by"
+#~ msgstr "Besetzt durch"
 
 #~ msgid "None of its own."
 #~ msgstr "Keine eigenen."

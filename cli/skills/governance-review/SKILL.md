@@ -21,7 +21,7 @@ Find the circle or role (`gov circles` shows the tree with IDs,
 everything with its exact texts:
 
     gov circles show <circle_id> --json     # the circle, its roles and policies
-    gov roles show <role_id> --json         # a role, its holders
+    gov roles show <role_id> --json         # a role, its Role Leads
     gov roles context <role_id> --json      # what affects it from outside
     gov policies --circle <circle_id> --json  # also the roles' domain policies
     gov domains --circle <circle_id>
@@ -148,7 +148,7 @@ rule of the constitution where it allows that. Check that each one:
 - if it's a role's policy, concerns that role's domain.
 
 Also look at the whole: activities nobody holds, roles without
-accountabilities or holders, roles whose name promises more than their
+accountabilities or Role Leads, roles whose name promises more than their
 accountabilities, and anything which looks out of date. Say that it's a
 guess where you only suspect it.
 

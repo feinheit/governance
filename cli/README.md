@@ -44,7 +44,7 @@ day, your roles for an hour, proposals for five minutes.
 
     gov circles                 # the circles as a tree
     gov circles show 12         # a circle with its roles and policies
-    gov roles show 34           # a role with its texts and holders
+    gov roles show 34           # a role with its texts and Role Leads
     gov roles context 34        # domains and policies affecting it from outside
     gov policies --circle 12    # a circle's policies, also its roles'
     gov policies show 78        # a policy with its text

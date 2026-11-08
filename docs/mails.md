@@ -13,7 +13,7 @@ everything in all circles" on their page.
 | The proposer takes it back to a draft | The same |
 | The proposer withdraws it | The same |
 | It can't be adopted async and waits for a meeting (an objection, a conflict) | The same |
-| It's adopted async (by the last consent or at the deadline) | The same, and the holders of roles it removes or moves away, and the Secretaries and Circle Leads of sub-circles it moves roles or policies into or out of |
+| It's adopted async (by the last consent or at the deadline) | The same, and the Role Leads of roles it removes or moves away, and the Secretaries and Circle Leads of sub-circles it moves roles or policies into or out of |
 | A question or comment | The proposer |
 | The proposer answers | Who asked or commented (still members of the circle) |
 | Somebody asks for a meeting | The proposer and the circle's Secretary (else the Facilitator, else the Circle Leads) |
@@ -21,7 +21,7 @@ everything in all circles" on their page.
 
 Who wrote a response doesn't get it. Consents send nothing, the mail
 comes when the proposal is adopted. When nobody else has to
-consent (e.g. a role's only holder adding roles inside), publishing
+consent (e.g. a role's only Role Lead adding roles inside), publishing
 adopts it right away: only the mail about adopting.
 
 ## Roles and domains
@@ -37,7 +37,7 @@ adopts it right away: only the mail about adopting.
 
 | When | Who gets a mail |
 |---|---|
-| A meeting ends, with outputs or notes | The attendees, the circle's members, "everything"; for adopted proposals also the holders of roles they changed, removed or moved away, and the Secretaries and Circle Leads of sub-circles they move roles or policies into or out of |
+| A meeting ends, with outputs or notes | The attendees, the circle's members, "everything"; for adopted proposals also the Role Leads of roles they changed, removed or moved away, and the Secretaries and Circle Leads of sub-circles they move roles or policies into or out of |
 | Elections are due (Mondays) | The Facilitator (else the Secretary, else the Circle Leads) of each circle with terms ending within 30 days, unfilled elected roles or roles held without a term |
 
 Proposals adopted and elections held in a meeting come with its outputs

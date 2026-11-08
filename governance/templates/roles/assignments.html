@@ -4,7 +4,7 @@
   In a modal (e.g. "Assign" on the circle's page, governance/modals.py) only
   the form, which goes back to ?next=
 {% endcomment %}
-{% block title %}{% translate "Holders" %} – {{ role }} – {{ block.super }}{% endblock %}
+{% block title %}{% translate "Role Leads" %} – {{ role }} – {{ block.super }}{% endblock %}
 
 {% block content %}
   <div class="wb-form-page">
@@ -16,7 +16,7 @@
             {% blocktranslate %}Assign somebody to {{ role }}{% endblocktranslate %}
           </h1>
         {% else %}
-          <h1 class="mb-0"><a href="{{ role.get_absolute_url }}">{{ role }}</a>: {% translate "Holders" %}</h1>
+          <h1 class="mb-0"><a href="{{ role.get_absolute_url }}">{{ role }}</a>: {% translate "Role Leads" %}</h1>
         {% endif %}
         <div class="wb-meta">
           <span
@@ -61,7 +61,7 @@
 
     {% if not form %}
       <p class="text-body-secondary">
-        {% translate "Elected roles are elected in governance meetings; their holders resign here." %}
+        {% translate "Elected roles are elected in governance meetings; their Role Leads resign here." %}
       </p>
       <a class="btn btn-quiet" href="{{ role.get_absolute_url }}">{% translate "Back to the role" %}</a>
     {% else %}

@@ -51,13 +51,13 @@ def show_role(id, *, as_json):
                 link(policy["id"], policy["url"]), link(policy["title"], policy["url"])
             )
         console.print(table)
-    if role["holders"]:
-        table = make_table("Holder", "Focus", "Elected until", title="Holders")
-        for holder in role["holders"]:
+    if role["role_leads"]:
+        table = make_table("Role Lead", "Focus", "Elected until", title="Role Leads")
+        for lead in role["role_leads"]:
             table.add_row(
-                link(holder["name"], holder["url"]),
-                holder["focus"],
-                holder["elected_until"] or "",
+                link(lead["name"], lead["url"]),
+                lead["focus"],
+                lead["elected_until"] or "",
             )
         console.print(table)
     if role["roles"]:
@@ -80,7 +80,7 @@ def roles():
 @click.option("--json", "as_json", is_flag=True)
 def show(id, as_json):
     """A role with its purpose, accountabilities, domains, policies and
-    holders"""
+    Role Leads"""
     show_role(id, as_json=as_json)
 
 

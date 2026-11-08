@@ -47,7 +47,8 @@ link with the mouse shows its shortcut.
 A **circle** shows its purpose, strategy, domains, accountabilities, its
 policies, its core roles and meetings, open proposals, due elections,
 checklists and metrics, links, the history and its roles with their
-holders.
+Role Leads (who fills a role, constitution 1.1; a circle's Role Leads
+are the Circle Leads inside it, 1.4).
 
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove
@@ -81,7 +82,7 @@ you mention a role: the field suggests names, the link always shows the
 role's current name.
 
 Short forms (strategy, metrics, checklist items, links, policies of a
-domain, settings, assigning, a holder's focus and removing them, the
+domain, settings, assigning, a Role Lead's focus and removing them, the
 tension of a draft) open above the page. Escape closes them; once something has
 been entered, only when pressed twice.
 

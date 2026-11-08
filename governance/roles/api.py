@@ -47,7 +47,7 @@ class PolicyOut(Schema):
         return absolute(obj)
 
 
-class HolderOut(Schema):
+class RoleLeadOut(Schema):
     user_id: int
     name: str
     focus: str
@@ -80,7 +80,7 @@ class RoleOut(Schema):
     accountabilities: list[TextOut]
     domains: list[TextOut]
     policies: list[PolicyOut]
-    holders: list[HolderOut]
+    role_leads: list[RoleLeadOut]
     roles: list[RoleSummaryOut]
     url: str
 
@@ -138,7 +138,7 @@ def roles(request):
 
 @router.get("roles/{int:pk}/", response=RoleOut)
 def role(request, pk: int):
-    """A role or circle with its texts, policies, holders and roles"""
+    """A role or circle with its texts, policies, Role Leads and roles"""
     role = get_object_or_404(Role, pk=pk)
 
     def constitutional(kind):
@@ -160,7 +160,7 @@ def role(request, pk: int):
         "domains": constitutional("domains")
         + [{"id": d.pk, "text": d.text} for d in role.domains.all()],
         "policies": list(role.policies.active()),
-        "holders": [
+        "role_leads": [
             {
                 "user_id": a.user_id,
                 "name": str(a.user),
