@@ -824,6 +824,10 @@ Deliberately not modelled:
 - **Non-core members of a role** (later, not yet): people taking part in
   a role's inner circle (its proposals and governance meetings) without
   holding the role; today its members are only its holders (`members()`).
+  Then revisit `can_add_items` (`meetings/access.py`): whoever holds an
+  invited role adds items to an ad hoc tactical meeting, also when the
+  caller unchecked them; fine while holding the role is what counts
+  (decided 2026-11-08).
 - **Before the switchover** (assessment of 2026-11-07; GlassFrog stays
   the source of truth until then, so bugs cost little now):
   - Another verification round or two: each round so far still found
@@ -845,9 +849,7 @@ Deliberately not modelled:
   its circle's governance meetings, ad hoc meetings' outputs go to their
   attendees only, a circle's history shows today's roles and the moves
   of those which left). Open:
-  - Unproven: `can_add_items` lets holders of invited roles add items to
-    an ad hoc meeting even when the caller unchecked them; ad hoc
-    meetings are "tactical meeting" in the outputs mail and "Running
+  - Unproven: ad hoc meetings are "tactical meeting" in the outputs mail and "Running
     now" (`str(meeting)`, not `kind_label`); `former_names()` repeats
     names going back and forth; the proposals' role filter misses
     never-published drafts; `of_role` of a moved role lists its new
