@@ -559,9 +559,10 @@ their account, else the default), not when they received it themselves
   circle's meetings, pending proposals, due elections), then checklists,
   links and history; a circle's roles below both. What constrains it
   from outside is a link away, in a modal ("Domains and policies
-  affecting this role", `role_context`): the domains and policies of its
-  circles from the anchor circle down (5.2.1) and the domains of the
-  other roles in its circle with their policies (1.3.2). A running
+  affecting this role", `role_context`): per circle from the anchor circle down,
+  the circle's domains and policies (5.2.1) and the domains of its roles
+  with their policies (1.3.2; e.g. a role of the anchor circle holding
+  the laptops). A running
   meeting has a button in the header. A role's governance meetings (for
   its inside, 1.3.1) are rare, its menu starts them and links them.
 - **Circle page**: purpose, strategy, domains, accountabilities, its

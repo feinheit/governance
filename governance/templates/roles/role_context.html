@@ -1,9 +1,9 @@
 {% extends modal|yesno:"modal.html,base.html" %}
 {% load governance i18n %}
 {% comment %}
-  What constrains the role from outside (views.role_context): the domains
-  and policies of its circles, outermost first, and the domains of the
-  other roles in its circle; in a modal opened from the role's page
+  What constrains the role from outside (views.role_context): per circle
+  containing it, outermost first, the circle's domains and policies and
+  the domains of its roles; in a modal opened from the role's page
 {% endcomment %}
 {% block title %}{{ title }} – {{ role }} – {{ block.super }}{% endblock %}
 
@@ -38,43 +38,33 @@
         </h2>
       </div>
       <ul class="list-group list-group-flush">
+        {% if entry.roles and entry.domains or entry.roles and entry.policies %}<li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
+            {% translate "The circle's own" %}
+          </li>{% endif %}
         {% for domain in entry.domains %}
           {% include "roles/_context_domain.html" %}
         {% endfor %}
         {% for policy in entry.policies %}
           <li class="list-group-item">{% include "roles/_context_policy.html" %}</li>
         {% endfor %}
-        {% if not entry.domains and not entry.policies %}<li class="list-group-item text-body-secondary">
+        {# The domains of its roles, which the others may not impact (1.3.2) #}
+        {% for other in entry.roles %}
+          <li class="list-group-item py-1 small fw-semibold wb-group-heading">
+            <a href="{{ other.role.get_absolute_url }}">{{ other.role }}</a>
+          </li>
+          {% for text in other.core_domains %}
+            <li class="list-group-item">
+              {{ text }} <span class="badge wb-tone-core">{% translate "constitution" %}</span>
+            </li>
+          {% endfor %}
+          {% for domain in other.domains %}
+            {% include "roles/_context_domain.html" %}
+          {% endfor %}
+        {% endfor %}
+        {% if not entry.domains and not entry.policies and not entry.roles %}<li class="list-group-item text-body-secondary">
             {% translate "No domains and policies." %}
           </li>{% endif %}
       </ul>
     </section>
   {% endfor %}
-
-  {% if others %}
-    <section class="card mb-3">
-      <div class="card-header">
-        <h2 class="h6 mb-0">
-          {% blocktranslate with circle=role.circle.name %}Domains of other roles in {{ circle }}{% endblocktranslate %}
-        </h2>
-      </div>
-      <ul class="list-group list-group-flush">
-        {% for entry in others %}
-          <li class="list-group-item py-1 small fw-semibold wb-group-heading">
-            <a href="{{ entry.role.get_absolute_url }}">{{ entry.role }}</a>
-          </li>
-          {% for text in entry.core_domains %}
-            <li class="list-group-item">
-              {{ text }} <span class="badge wb-tone-core">{% translate "constitution" %}</span>
-            </li>
-          {% endfor %}
-          {% for domain in entry.domains %}
-            {% include "roles/_context_domain.html" %}
-          {% endfor %}
-        {% endfor %}
-      </ul>
-    </section>
-  {% endif %}
-
-  {% if not circles and not others %}<p class="text-body-secondary">{% translate "None" %}</p>{% endif %}
 {% endblock content %}

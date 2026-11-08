@@ -41,8 +41,8 @@ wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und
 entfernen), Checklisten, Metriken und Links. Eine Domain mit Policies
 verlinkt sie ("2 Policies") und klappt sie auf. "Domains und Policies,
 die diese Rolle betreffen" zeigt, was von aussen für sie gilt: die
-Domains und Policies ihrer Kreise und die Domains der anderen Rollen in
-ihrem Kreis. Ihre Meetings (selten, siehe [Meetings](meetings.de.md))
+Domains und Policies ihrer Kreise und die Domains von deren Rollen, vom
+äussersten Kreis nach innen. Ihre Meetings (selten, siehe [Meetings](meetings.de.md))
 stehen im Menü "…".
 Unbesetzte Rollen haben die Circle Leads, ausser dem Circle Rep; einen
 unbesetzten Circle Lead die des übergeordneten Kreises.

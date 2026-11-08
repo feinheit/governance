@@ -309,12 +309,15 @@ class ViewsTest(TestCase):
 
 class RoleContextTest(TestCase):
     def test_domains_and_policies_affecting_a_role(self):
-        """The domains and policies of its circles, outermost first, and the
-        domains of the other roles in its circle with their policies"""
+        """Per circle containing it, outermost first, the circle's domains and
+        policies and the domains of its roles with their policies"""
         self.client.force_login(User.objects.create_user("ada@example.com"))
         anchor = Role.objects.create(name="Company", is_circle=True)
         Domain.objects.create(role=anchor, text="The brand")
         Policy.objects.create(role=anchor, title="Tea time")
+        # A role of the anchor circle regulates something for everybody
+        it = Role.objects.create(name="IT", circle=anchor)
+        Domain.objects.create(role=it, text="The laptops")
         kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
         kitchen.create_core_roles()
         stove = Domain.objects.create(role=kitchen, text="The stove")
@@ -330,15 +333,18 @@ class RoleContextTest(TestCase):
         for expected in [
             "The brand",
             "Tea time",
+            "The laptops",
             "The stove",
             "Gas off",
             "The oven",
             "Ask first",
             # The Secretary's constitutional domain
-            "Domains of other roles in Kitchen",
+            "All governance records of the Circle",
         ]:
             self.assertIn(expected, text)
-        self.assertLess(text.index("The brand"), text.index("The stove"))
+        self.assertLess(text.index("The laptops"), text.index("The stove"))
+        # The kitchen once, as the circle on the way, not as a role
+        self.assertEqual(text.count("The stove"), 1)
         # Not its own
         self.assertNotIn("The knives", text)
         # Only the form in a modal

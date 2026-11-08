@@ -40,8 +40,8 @@ who holds it (with focus and term, the Circle Leads assign and remove
 here), checklists, metrics and links. A domain with policies links to
 them ("2 policies"), which opens them. "Domains and policies affecting
 this role" shows what applies to it from outside: the domains and
-policies of its circles and the domains of the other roles in its
-circle. Its meetings (rare, see [Meetings](meetings.md)) are in the menu
+policies of its circles and the domains of their roles, from the
+outermost circle down. Its meetings (rare, see [Meetings](meetings.md)) are in the menu
 "…".
 Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.

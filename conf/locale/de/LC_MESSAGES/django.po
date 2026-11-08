@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 09:42+0100\n"
+"POT-Creation-Date: 2026-11-08 09:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2840,13 +2840,8 @@ msgid "Policies apply in sub-circles too unless they say otherwise."
 msgstr "Policies gelten auch in Sub-Kreisen, ausser sie sagen etwas anderes."
 
 #: governance/templates/roles/role_context.html
-msgid "No domains and policies."
-msgstr "Keine Domains und Policies."
-
-#: governance/templates/roles/role_context.html
-#, python-format
-msgid "Domains of other roles in %(circle)s"
-msgstr "Domains anderer Rollen in %(circle)s"
+msgid "The circle's own"
+msgstr "Die eigenen des Kreises"
 
 #: governance/templates/roles/role_context.html
 #: governance/templates/roles/role_detail.html
@@ -2854,9 +2849,8 @@ msgid "constitution"
 msgstr "Verfassung"
 
 #: governance/templates/roles/role_context.html
-#: governance/templates/roles/role_detail.html
-msgid "None"
-msgstr "Keine"
+msgid "No domains and policies."
+msgstr "Keine Domains und Policies."
 
 #: governance/templates/roles/role_detail.html
 #, python-format
@@ -2887,6 +2881,10 @@ msgstr[1] "%(count)s Policies"
 #: governance/templates/roles/role_detail.html
 msgid "Holds the circle's Purpose and its Accountabilities as far as no role or process in the circle covers them; assigns the roles and defines priorities and strategies."
 msgstr "Hält den Purpose des Kreises und seine Accountabilities, soweit keine Rolle und kein Prozess im Kreis sie abdeckt; weist die Rollen zu und definiert Prioritäten und Strategien."
+
+#: governance/templates/roles/role_detail.html
+msgid "None"
+msgstr "Keine"
 
 #: governance/templates/roles/role_detail.html
 msgid "None of its own."
@@ -2966,15 +2964,16 @@ msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
 
 #, python-format
+#~ msgid "Domains of other roles in %(circle)s"
+#~ msgstr "Domains anderer Rollen in %(circle)s"
+
+#, python-format
 #~ msgid "From the super-circle <a href=\"%(url)s\">%(circle)s</a>, they apply here too unless they say otherwise:"
 #~ msgstr "Aus dem Super-Kreis <a href=\"%(url)s\">%(circle)s</a>, sie gelten auch hier, ausser sie sagen etwas anderes:"
 
 #, python-format
 #~ msgid "From the circle <a href=\"%(url)s\">%(circle)s</a>, they apply to this role too unless they say otherwise:"
 #~ msgstr "Aus dem Kreis <a href=\"%(url)s\">%(circle)s</a>, sie gelten auch für diese Rolle, ausser sie sagen etwas anderes:"
-
-#~ msgid "The circle's own policies:"
-#~ msgstr "Die eigenen Policies des Kreises:"
 
 #~ msgid "The role's own policies:"
 #~ msgstr "Die eigenen Policies der Rolle:"
