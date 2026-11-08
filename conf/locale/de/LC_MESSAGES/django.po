@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 21:00+0100\n"
+"POT-Creation-Date: 2026-11-08 21:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2383,6 +2383,7 @@ msgid "No proposals adopted, no elections, no outcomes."
 msgstr "Keine angenommenen Vorschläge, keine Wahlen, keine Ergebnisse."
 
 #: governance/templates/meetings/_progress.html
+#: governance/templates/roles/_governance_lists.txt
 #: governance/templates/roles/role_detail.html
 msgid "Links"
 msgstr "Links"
@@ -2949,6 +2950,14 @@ msgstr "Details und Geschichte"
 #: governance/templates/roles/_ending_reps.html
 msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change ends these assignments, the circles elect new Circle Reps:"
 msgstr "Wer Circle Lead ist, kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen die Rolle Circle Rep neu:"
+
+#: governance/templates/roles/_governance_lists.txt
+msgid "Metrics"
+msgstr "Metriken"
+
+#: governance/templates/roles/_governance_lists.txt
+msgid "Checklist items"
+msgstr "Checklistenpunkte"
 
 #: governance/templates/roles/_role_leads_card.html
 #: governance/templates/roles/assignments.html

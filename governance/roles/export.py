@@ -32,7 +32,9 @@ def governance_markdown(*, with_people=False):
             circle.roles
             .active()
             .filter(is_circle=False)
-            .prefetch_related("accountabilities", "domains")
+            .prefetch_related(
+                "accountabilities", "domains", "metrics", "checklistitems", "links"
+            )
             .order_by("position", "name")
         )
         circle.export_policies = list(circle.policies.active())

@@ -662,7 +662,8 @@ verify the mails; removed once they've proven themselves.
   matching, ignoring case and accents, in the texts as the pages show
   them (mentions with the current names, the core roles' constitutional
   texts); snippets as plain text.
-- **Export**: the whole governance as Markdown, `/export/governance.md`
+- **Export**: the whole current governance as Markdown (circles, roles,
+  their texts, policies, metrics, checklist items and links), `/export/governance.md`
   (the people only with `?people=1`, `--with-people`: personal data
   is opt-in, decided 2026-11-08); no button, `gov export` (`GET
   export/`) offers it.

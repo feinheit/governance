@@ -8,4 +8,16 @@
 {% for text in role.core.accountabilities %}- {{ text }}
 {% endfor %}{% for accountability in role.accountabilities.all %}- {{ accountability.text }}
 {% endfor %}
+{% endif %}{% if role.metrics.all %}**{% translate "Metrics" %}**
+
+{% for item in role.metrics.all %}- {{ item.description }}{% if item.frequency %} ({{ item.get_frequency_display }}){% endif %}{% if item.link %}, {{ item.link }}{% endif %}
+{% endfor %}
+{% endif %}{% if role.checklistitems.all %}**{% translate "Checklist items" %}**
+
+{% for item in role.checklistitems.all %}- {{ item.description }}{% if item.frequency %} ({{ item.get_frequency_display }}){% endif %}{% if item.link %}, {{ item.link }}{% endif %}
+{% endfor %}
+{% endif %}{% if role.links.all %}**{% translate "Links" %}**
+
+{% for link in role.links.all %}- [{{ link.title }}]({{ link.url }}){% if link.description %}: {{ link.description }}{% endif %}
+{% endfor %}
 {% endif %}{% endautoescape %}

@@ -1,7 +1,15 @@
 from django.test import TestCase
 
 from governance.accounts.models import User
-from governance.roles.models import Accountability, Assignment, Policy, Role
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    ChecklistItem,
+    Link,
+    Metric,
+    Policy,
+    Role,
+)
 
 
 class ExportTest(TestCase):
@@ -23,6 +31,11 @@ class ExportTest(TestCase):
         Policy.objects.create(role=anchor, title="Tea", body="Always")
         Policy.objects.create(role=cook, title="Stove", body="Off at night")
         Assignment.objects.create(role=cook, user=user, focus="Soups")
+        Metric.objects.create(role=cook, description="Soups sold", frequency="weekly")
+        ChecklistItem.objects.create(role=cook, description="Fridge cleaned")
+        Link.objects.create(
+            role=cook, title="Recipes", url="https://example.com/", description="All"
+        )
 
         # No button, the URL (and later the CLI) offers it
         response = self.client.get(anchor.get_absolute_url())
@@ -44,6 +57,9 @@ class ExportTest(TestCase):
         )
         self.assertIn("#### Facilitator\n\n*Held by the Circle Leads*", text)
         self.assertIn("Off at night", text)
+        self.assertIn("**Metrics**\n\n- Soups sold (weekly)", text)
+        self.assertIn("**Checklist items**\n\n- Fridge cleaned", text)
+        self.assertIn("- [Recipes](https://example.com/): All", text)
         self.assertIn("- All governance records of the Circle", text)
         self.assertLess(text.index("## Example Ltd"), text.index("### Kitchen"))
 
