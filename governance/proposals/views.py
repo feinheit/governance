@@ -7,6 +7,7 @@ from django.utils.formats import date_format
 from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.http import require_POST
 
+from governance.filters import FilterForm, RoleField
 from governance.forms import Form
 from governance.proposals import process
 from governance.proposals.describe import describe
@@ -82,31 +83,39 @@ def links(proposal, changes):
     return urls
 
 
+class ProposalFilters(FilterForm):
+    status = forms.ChoiceField(
+        label=_("Status"),
+        choices=[("", _("All statuses")), *Proposal.STATUS_CHOICES],
+        required=False,
+    )
+    # Where it's decided: a circle, or a role for its inside (1.3.1)
+    circle = RoleField(label=_("Circle"), empty_label=_("All circles"))
+    sub_circles = forms.BooleanField(label=_("With sub-circles"), required=False)
+    role = RoleField(label=_("Changing"), empty_label=_("Changing any role"))
+
+
 def proposal_list(request):
+    filters = ProposalFilters(request.GET)
     proposals = Proposal.objects.visible_to(request.user).select_related(
         "circle", "proposer"
     )
-    circle = None
-    if circle_id := request.GET.get("circle"):
+    if circle_id := filters.get("circle"):
         circle = get_object_or_404(Role, pk=circle_id)
-        proposals = proposals.filter(circle=circle)
-    role = None
-    if role_id := request.GET.get("role"):
-        role = get_object_or_404(Role, pk=role_id)
-        proposals = proposals.filter(roles=role)
-    if status := request.GET.get("status"):
+        circles = [
+            circle,
+            *(circle.sub_circles() if filters.get("sub_circles") else []),
+        ]
+        proposals = proposals.filter(circle__in=circles)
+    if role_id := filters.get("role"):
+        proposals = proposals.filter(roles=role_id)
+    if status := filters.get("status"):
         proposals = proposals.filter(status=status)
-    page = Paginator(proposals, 50).get_page(request.GET.get("page"))
+    page = Paginator(proposals.distinct(), 50).get_page(request.GET.get("page"))
     return render(
         request,
         "proposals/proposal_list.html",
-        {
-            "page": page,
-            "circle": circle,
-            "role": role,
-            "status": status,
-            "status_choices": Proposal.STATUS_CHOICES,
-        },
+        {"page": page, "filters": filters},
     )
 
 

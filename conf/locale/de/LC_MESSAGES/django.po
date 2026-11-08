@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:22+0100\n"
+"POT-Creation-Date: 2026-11-08 14:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -165,6 +165,7 @@ msgid "Your gov is too old, please upgrade it: %(command)s"
 msgstr "Dein gov ist zu alt, bitte aktualisiere es: %(command)s"
 
 #: governance/filters.py governance/history/views.py
+#: governance/proposals/views.py
 msgid "All circles"
 msgstr "Alle Kreise"
 
@@ -370,7 +371,7 @@ msgstr "Domains entfernt"
 msgid "Circle or role"
 msgstr "Kreis oder Rolle"
 
-#: governance/history/views.py
+#: governance/history/views.py governance/proposals/views.py
 msgid "With sub-circles"
 msgstr "Mit Sub-Kreisen"
 
@@ -615,6 +616,22 @@ msgid "The link has to start with https://."
 msgstr "Der Link muss mit https:// beginnen."
 
 #: governance/meetings/views.py
+msgid "Kind"
+msgstr "Art"
+
+#: governance/meetings/views.py governance/templates/roles/role_detail.html
+msgid "All meetings"
+msgstr "Alle Meetings"
+
+#: governance/meetings/views.py
+msgid "Governance Meetings"
+msgstr "Governance Meetings"
+
+#: governance/meetings/views.py
+msgid "Tactical Meetings"
+msgstr "Tactical Meetings"
+
+#: governance/meetings/views.py
 msgid "Any partner may call a tactical meeting and invite the roles they need. Hold Ctrl or Cmd to select several."
 msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen. Mit Ctrl oder Cmd mehrere auswählen."
 
@@ -798,7 +815,7 @@ msgstr "Rolle"
 msgid "Policy"
 msgstr "Policy"
 
-#: governance/proposals/describe.py
+#: governance/proposals/describe.py governance/proposals/views.py
 #: governance/templates/history/role_as_of.html
 #: governance/templates/roles/_role_rows.html
 #: governance/templates/roles/person_detail.html
@@ -1302,6 +1319,22 @@ msgstr "Bitte begründen."
 #: governance/proposals/views.py
 msgid "No objection takes no text: ask a question or request a meeting."
 msgstr "Zu „kein Einwand“ gehört kein Text: stelle eine Frage oder verlange ein Meeting."
+
+#: governance/proposals/views.py
+msgid "Status"
+msgstr "Status"
+
+#: governance/proposals/views.py
+msgid "All statuses"
+msgstr "Alle Status"
+
+#: governance/proposals/views.py
+msgid "Changing"
+msgstr "Ändert"
+
+#: governance/proposals/views.py
+msgid "Changing any role"
+msgstr "Ändert eine beliebige Rolle"
 
 #: governance/proposals/views.py
 #, python-format
@@ -2451,18 +2484,6 @@ msgid "Meetings"
 msgstr "Meetings"
 
 #: governance/templates/meetings/meeting_list.html
-msgid "All"
-msgstr "Alle"
-
-#: governance/templates/meetings/meeting_list.html
-msgid "Governance Meetings"
-msgstr "Governance Meetings"
-
-#: governance/templates/meetings/meeting_list.html
-msgid "Tactical Meetings"
-msgstr "Tactical Meetings"
-
-#: governance/templates/meetings/meeting_list.html
 #: governance/templates/roles/role_detail.html
 msgid "Join the running meeting"
 msgstr "Zum laufenden Meeting"
@@ -2741,10 +2762,6 @@ msgid "Adopted when everybody consented, or at the deadline unless somebody requ
 msgstr "Angenommen, wenn alle einverstanden sind, oder bei Fristablauf, wenn niemand ein Meeting verlangt hat. Einwände werden im Meeting erhoben und getestet."
 
 #: governance/templates/proposals/proposal_list.html
-msgid "all"
-msgstr "alle"
-
-#: governance/templates/proposals/proposal_list.html
 msgid "No proposals."
 msgstr "Keine Vorschläge."
 
@@ -3011,10 +3028,6 @@ msgid "More actions"
 msgstr "Weitere Aktionen"
 
 #: governance/templates/roles/role_detail.html
-msgid "All meetings"
-msgstr "Alle Meetings"
-
-#: governance/templates/roles/role_detail.html
 msgid "Mail addresses of the members"
 msgstr "Mailadressen der Mitglieder"
 
@@ -3105,6 +3118,15 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "All kinds"
+#~ msgstr "Alle Arten"
+
+#~ msgid "All"
+#~ msgstr "Alle"
+
+#~ msgid "all"
+#~ msgstr "alle"
 
 #~ msgid "Remove the filter"
 #~ msgstr "Filter entfernen"

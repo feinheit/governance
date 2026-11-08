@@ -1,5 +1,6 @@
 from urllib.parse import urlencode
 
+from django import forms
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -11,6 +12,7 @@ from django.utils.translation import gettext, gettext_lazy as _, ngettext
 from django.views.decorators.http import require_POST
 
 from governance.accounts.models import User
+from governance.filters import FilterForm
 from governance.forms import ModelForm
 from governance.meetings.access import (
     autosaving,
@@ -43,16 +45,30 @@ from governance.roles.permissions import (
 )
 
 
+class MeetingFilters(FilterForm):
+    kind = forms.ChoiceField(
+        label=_("Kind"),
+        choices=[
+            ("", _("All meetings")),
+            (Meeting.GOVERNANCE, _("Governance Meetings")),
+            (Meeting.TACTICAL, _("Tactical Meetings")),
+        ],
+        required=False,
+    )
+
+
 def meeting_list(request, pk):
     circle = get_object_or_404(Role.objects.with_inside(), pk=pk)
+    filters = MeetingFilters(request.GET)
     meetings = Meeting.objects.of_role(circle)
-    if kind := request.GET.get("kind"):
+    if kind := filters.get("kind"):
         meetings = meetings.filter(kind=kind)
     return render(
         request,
         "meetings/meeting_list.html",
         {
             "circle": circle,
+            "filters": filters,
             "ancestors": [*circle.ancestors(), circle],
             "page": Paginator(meetings, 50).get_page(request.GET.get("page")),
             "can_start_meeting": can_start_meeting(request.user, circle),

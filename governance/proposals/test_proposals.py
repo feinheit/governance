@@ -325,3 +325,47 @@ class AdoptedOnTest(TestCase):
         ]:
             proposal.deadline = deadline
             self.assertEqual(proposal.adopted_on, day, deadline)
+
+
+class ProposalFiltersTest(TestCase):
+    def test_filters(self):
+        """Filters like Workbench's: status, the circle (with its
+        sub-circles on request) and the role changed"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        now = timezone.now()
+        for circle, tension, kind in [
+            (kitchen, "Hot stove", Proposal.GOVERNANCE),
+            (bakery, "Cold oven", Proposal.SPELLING),
+        ]:
+            Proposal.objects.create(
+                circle=circle,
+                proposer=ada,
+                tension=tension,
+                kind=kind,
+                status=Proposal.ADOPTED,
+                created_at=now,
+                decided_at=now,
+            )
+        Proposal.objects.get(tension="Hot stove").roles.set([cook])
+        self.client.force_login(ada)
+
+        def tensions(query):
+            text = self.client.get(f"/proposals/?{query}").content.decode()
+            return {t for t in ["Hot stove", "Cold oven"] if t in text}
+
+        self.assertEqual(tensions(""), {"Hot stove", "Cold oven"})
+        self.assertEqual(tensions(f"circle={kitchen.pk}"), {"Hot stove"})
+        self.assertEqual(
+            tensions(f"circle={kitchen.pk}&sub_circles=on"), {"Hot stove", "Cold oven"}
+        )
+        self.assertEqual(tensions(f"role={cook.pk}"), {"Hot stove"})
+        self.assertEqual(tensions("status=draft"), set())
+        response = self.client.get(f"/proposals/?role={cook.pk}&page=1")
+        self.assertContains(response, "data-autosubmit")
+        # The role chosen, though the select lists circles
+        self.assertContains(
+            response, f'<option value="{cook.pk}" selected>Cook</option>', html=True
+        )

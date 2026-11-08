@@ -15,7 +15,8 @@ anderer.
   Meeting einberufen",
   **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API und
   Abmelden.
-- **Vorschläge**: alle Vorschläge, nach Status gefiltert.
+- **Vorschläge**: alle Vorschläge, gefiltert nach Status, Kreis (mit
+  seinen Sub-Kreisen) und der Rolle, die sie ändern.
 - **Geschichte**: was sich wann geändert hat; für einen Kreis mit seinen
   Rollen ("Mit Sub-Kreisen" auch, was darin ist) oder für eine Rolle, auf
   Wunsch mit den Zuweisungen und mit Links, Metriken und Checklisten. Die

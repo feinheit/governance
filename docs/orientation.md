@@ -15,7 +15,8 @@ active person. Everybody signed in sees everything except others' drafts.
   meeting", **People**
   (everybody with their roles), **Mail addresses**, Help, API and
   signing out.
-- **Proposals**: all proposals, filtered by status.
+- **Proposals**: all proposals, filtered by status, circle (with
+  its sub-circles) and the role they change.
 - **History**: what changed when; for a circle with its roles ("With
   sub-circles" also what's inside them) or for a role, on request with
   the assignments and with links, metrics and checklists. The pages of
