@@ -75,7 +75,12 @@ people. A snapshot is valid until the next commit. Quirks:
 `assignments` (focus, election term), `policies` (also those of roles for
 their domains), `proposals` (1281, with tensions and instructions),
 `tensions`, `governance_meetings`, `tactical_meetings` (agenda labels only,
-no outcomes), `metrics`, `checklist_items`, `projects`.
+no outcomes), `metrics`, `checklist_items`, `projects`. 257 governance
+meetings (2018–2022) and 617 tactical meetings (2018–2023) have no circle
+(`links.circle` is null, without proposals to infer it from): imported
+without one, they belong to no list. GlassFrog's tactical meetings have
+no invited roles, so tactical meetings without a circle in the app are
+the ad hoc ones called here.
 
 **Proposal instructions** are JSON-patch-like with old values:
 
