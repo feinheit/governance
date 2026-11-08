@@ -34,8 +34,19 @@ nightly import mirrors.
 
    From now on the nightly `fairy_tasks` adopts imported proposals whose
    deadline passed, also any which passed since the final import.
-4. **The handbook's links**: merge feinheit/handbuch#126, which points
-   them to the app (roles and policies found by their `glassfrog_id`).
+4. **The handbook's links**: in `~/projects/handbuch`, on the branch of
+   feinheit/handbuch#126 (`governance`), point the remaining links to
+   GlassFrog to the app (with an API token of yours,
+   `/accounts/api-tokens/`):
+
+   ```
+   GOVERNANCE_URL=https://governance.feinheit.ch GOVERNANCE_TOKEN=… \
+     python3 -I ~/projects/sites/governance/scripts/handbook_links.py source
+   ```
+
+   It lists links whose text doesn't contain the current name (most are
+   descriptive, like "hier"), archived and unknown ones; check those and
+   `git diff`, commit, push and merge the pull request.
 5. **Backup**: on the fetcher's server, run `scripts/fetch_backup.py`
    daily (with a read-only API token of the app) into a new repository
    instead of `scripts/fetch_glassfrog.py`. To consider then or

@@ -671,7 +671,7 @@ verify the mails; removed once they've proven themselves.
   (`governance/not_found.py`).
 - **No redirects** from GlassFrog URLs (app.glassfrog.com can't redirect);
   the handbook's links are updated at the switchover using the imported
-  GlassFrog IDs.
+  GlassFrog IDs (`scripts/handbook_links.py`).
 - **Modals** like Workbench's for short forms opened from a page and
   going back to it: the strategy, metrics, checklist items, links,
   policies of a domain and settings on the role's page, a holder's focus,
