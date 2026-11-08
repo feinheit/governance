@@ -55,21 +55,10 @@ class Proposal(models.Model):
     ``original_value`` and ``from``), see ``SPEC.md``. ``names`` maps the
     paths' objects (``roles/123``) to their names at the time of the
     proposal, so that proposals can be rendered after the objects are gone.
-    A draft without instructions is a tension. Spelling corrections by the
-    Secretary were adopted proposals of their own kind, without the process;
-    they're kept in the history, spelling changes through governance now.
+    A draft without instructions is a tension. A role's policies for its
+    domains (constitution 1.3.2) are recorded as adopted proposals too,
+    without the process (``governance/roles/domain_policies.py``).
     """
-
-    GOVERNANCE = ""
-    SPELLING = "spelling"
-    # A role's policies for its domains, changed by the role (constitution
-    # 1.3.2), see governance/roles/domain_policies.py
-    DOMAIN_POLICY = "domain_policy"
-    KIND_CHOICES = [
-        (GOVERNANCE, _("governance")),
-        (SPELLING, _("spelling correction")),
-        (DOMAIN_POLICY, _("policy of a domain")),
-    ]
 
     DRAFT = "draft"
     PUBLISHED = "published"
@@ -97,9 +86,6 @@ class Proposal(models.Model):
         blank=True,
         related_name="proposals",
         verbose_name=_("proposer"),
-    )
-    kind = models.CharField(
-        _("kind"), max_length=20, choices=KIND_CHOICES, blank=True, default=GOVERNANCE
     )
     role = models.ForeignKey(
         "roles.Role",
@@ -184,11 +170,8 @@ class Proposal(models.Model):
             (line for line in lines if line and not line.startswith("#")), ""
         )
         if not first_line:
-            # Spelling corrections and domain policies by their kind
-            if self.kind and self.kind != self.GOVERNANCE:
-                return str(self.get_kind_display()).capitalize()
-            # Imported ones (GlassFrog's elections have no tension) by what
-            # they change
+            # Imported ones (GlassFrog's elections have no tension) and the
+            # policies of domains by what they change
             from governance.proposals.describe import describe
 
             if changes := describe(self.instructions, self.names):

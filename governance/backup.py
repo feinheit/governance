@@ -86,7 +86,6 @@ def proposals(user):
             "circle",
             "role",
             "proposer",
-            "kind",
             "status",
             "tension",
             "instructions",

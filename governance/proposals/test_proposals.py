@@ -271,7 +271,7 @@ class DatesTest(TestCase):
 class ProposalTitleTest(TestCase):
     def test_without_tension(self):
         """Imported elections have no tension, the title can't be empty"""
-        proposal = Proposal(tension="", kind="")
+        proposal = Proposal(tension="")
         self.assertEqual(str(proposal), "(no tension)")
         # Named after what they change, e.g. three elections of a meeting
         proposal.instructions = [
@@ -308,8 +308,6 @@ class ProposalTitleTest(TestCase):
             proposal.instructions.append({"op": "remove", "path": f"/roles/{pk}"})
             proposal.names[f"roles/{pk}"] = f"Role {pk}"
         self.assertEqual(str(proposal), "Role: Baker, Role 10 and 4 more")
-        proposal.instructions, proposal.kind = [], Proposal.SPELLING
-        self.assertEqual(str(proposal), "Spelling correction")
 
 
 class AdoptedOnTest(TestCase):
@@ -336,15 +334,11 @@ class ProposalFiltersTest(TestCase):
         bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
         cook = Role.objects.create(name="Cook", circle=kitchen)
         now = timezone.now()
-        for circle, tension, kind in [
-            (kitchen, "Hot stove", Proposal.GOVERNANCE),
-            (bakery, "Cold oven", Proposal.SPELLING),
-        ]:
+        for circle, tension in [(kitchen, "Hot stove"), (bakery, "Cold oven")]:
             Proposal.objects.create(
                 circle=circle,
                 proposer=ada,
                 tension=tension,
-                kind=kind,
                 status=Proposal.ADOPTED,
                 created_at=now,
                 decided_at=now,

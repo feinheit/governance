@@ -9,10 +9,6 @@
     </div>
   </div>
   <div class="wb-row-aside">
-    {# The title is the kind when there's no tension #}
-    {% if proposal.kind and proposal.kind != "governance" and proposal.tension %}<span
-        class="badge {{ proposal.kind|tone }}"
-      >{{ proposal.get_kind_display }}</span>{% endif %}
     {% if proposal.status != "adopted" %}<span
         class="badge {{ proposal.status|tone }}"
       >{{ proposal.get_status_display }}</span>{% endif %}

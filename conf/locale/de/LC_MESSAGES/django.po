@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:27+0100\n"
+"POT-Creation-Date: 2026-11-08 14:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1133,18 +1133,6 @@ msgstr "Die Werte von Instruktion %(number)s müssen Texte sein."
 #, python-format
 msgid "%(subjects)s and %(count)s more"
 msgstr "%(subjects)s und %(count)s weitere"
-
-#: governance/proposals/models.py
-msgid "governance"
-msgstr "Governance"
-
-#: governance/proposals/models.py
-msgid "spelling correction"
-msgstr "Rechtschreibkorrektur"
-
-#: governance/proposals/models.py
-msgid "policy of a domain"
-msgstr "Policy einer Domain"
 
 #: governance/proposals/models.py
 msgid "draft"
@@ -3118,6 +3106,15 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "governance"
+#~ msgstr "Governance"
+
+#~ msgid "spelling correction"
+#~ msgstr "Rechtschreibkorrektur"
+
+#~ msgid "policy of a domain"
+#~ msgstr "Policy einer Domain"
 
 #~ msgid "All kinds"
 #~ msgstr "Alle Arten"

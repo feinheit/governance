@@ -97,8 +97,6 @@ TONES = {
     # Meetings, and the special kinds of proposals
     "governance": "core",
     "tactical": "info",
-    "spelling": "neutral",
-    "domain_policy": "neutral",
 }
 
 

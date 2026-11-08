@@ -61,13 +61,12 @@ class DomainPoliciesTest(TestCase):
         proposal = Proposal.objects.get()
         self.assertEqual(
             (
-                proposal.kind,
                 proposal.status,
                 proposal.circle,
                 proposal.role,
                 proposal.proposer,
             ),
-            (Proposal.DOMAIN_POLICY, Proposal.ADOPTED, self.web, self.admin, self.ada),
+            (Proposal.ADOPTED, self.web, self.admin, self.ada),
         )
         self.assertEqual(list(proposal.policies.all()), [policy])
         self.assertEqual(

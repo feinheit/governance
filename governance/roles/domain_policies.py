@@ -62,7 +62,6 @@ def record(user, role, policy, instructions):
         circle=role.circle,
         proposer=user,
         role=role,
-        kind=Proposal.DOMAIN_POLICY,
         status=Proposal.ADOPTED,
         created_at=now,
         decided_at=now,

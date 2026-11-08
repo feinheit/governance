@@ -15,12 +15,11 @@ class ProposalAdmin(admin.ModelAdmin):
         "__str__",
         "circle",
         "status",
-        "kind",
         "proposer",
         "created_at",
         "decided_at",
     ]
-    list_filter = ["status", "kind"]
+    list_filter = ["status"]
     search_fields = ["tension", "circle__name", "proposer__full_name"]
     date_hierarchy = "created_at"
     raw_id_fields = ["circle", "proposer", "role", "meeting", "roles", "policies"]

@@ -46,7 +46,6 @@ def echo_proposal(proposal):
             ("Circle", f"{proposal['circle']} ({proposal['circle_id']})"),
             ("Proposer", proposal["proposer"]),
             ("Status", proposal["status"]),
-            ("Kind", proposal["kind"] if proposal["kind"] != "governance" else ""),
             ("Published", _day(proposal["published_at"])),
             (
                 "To be adopted on",

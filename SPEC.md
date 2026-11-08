@@ -143,9 +143,10 @@ as a link; textareas autocomplete "@" (`mentions.js`, `GET /api/roles/`).
 
 **`Proposal`**: `circle`, `proposer`, `role` (the proposer's role with
 the tension; GlassFrog's have none), `tension`, `instructions`
-(GlassFrog's format), `names` (for rendering), `kind` (governance, policy
-of a domain, legacy spelling correction), `status`, `published_at`,
-`deadline`, `decided_at`, `meeting`, `glassfrog_id`.
+(GlassFrog's format), `names` (for rendering), `status`, `published_at`,
+`deadline`, `decided_at`, `meeting`, `glassfrog_id`. No kind: the
+policies of domains are recorded as adopted proposals (titled by what
+they change), spelling goes through governance (decided 2026-11-08).
 
 GlassFrog's format makes the import 1:1, every proposal a readable diff,
 and `test`/`original_value` detect conflicts instead of silently
@@ -276,7 +277,7 @@ rule.
 - **Policies of a domain's role** (1.3.2, `roles/domain_policies.py`):
   the role's holders (the Circle Leads while unfilled) add, change and
   remove its policies on the role page, each with one of its domains.
-  Every change is an adopted proposal of its own kind, mailed to the
+  Every change is recorded as an adopted proposal, mailed to the
   members of the role's circle and all its sub-circles, `notify_all`
   users and the person making the change. They move with their role,
   and are archived with it, with its circle or with their domain (the

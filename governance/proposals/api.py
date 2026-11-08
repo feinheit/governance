@@ -84,7 +84,6 @@ class ProposalOut(Schema):
     proposer: str | None
     role_id: int | None
     status: str
-    kind: str
     title: str
     tension: str
     instructions: list
@@ -127,7 +126,6 @@ def out(request, proposal):
         "proposer": str(proposal.proposer) if proposal.proposer else None,
         "role_id": proposal.role_id,
         "status": proposal.status,
-        "kind": proposal.kind,
         "title": str(proposal),
         "tension": proposal.tension,
         "instructions": proposal.instructions,
