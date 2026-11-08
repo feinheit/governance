@@ -28,6 +28,8 @@ use `gov login URL --token`.
 Several installations work like in Workbench's `wb`: `gov auth list`,
 `gov auth switch NAME`, `GOVERNANCE_URL` for one terminal and
 `gov -i NAME` for one command.
+Scripts (e.g. the daily backup on a server) may set `GOVERNANCE_URL`
+and `GOVERNANCE_TOKEN` instead of logging in.
 
 Enable completing commands, options and IDs with Tab in your shell:
 
@@ -51,6 +53,7 @@ day, your roles for an hour, proposals for five minutes.
     gov domains --circle 12     # domains with their policies
     gov search soup kitchen     # all terms, ignoring case and accents
     gov export -o governance.md # everything as one Markdown document
+    gov backup backup/          # everything you see, a file per role (stdout without)
     gov constitution --language de  # the Holacracy Constitution as Markdown
     gov proposals --circle 12 --status published
     gov proposals show 56       # tension, changes, problems

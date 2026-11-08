@@ -742,21 +742,27 @@ changes the user's own drafts: the secretary amends others' proposals in a
 running meeting's page, not through scripts.
 
 `GET backup/` is the JSON backup (`backup.py`), what the token's user
-sees, one file per kind: `people`, `roles` (with accountabilities and
-domains), `assignments`, `policies`, `history` (the `Change`s since
-2018), `proposals` (with responses, anonymous like on the page except
-questions and concerns, also earlier consents with a text, without
-others' drafts), `meetings`
-(with agenda, elections), `metrics`, `checklist_items`,
-`links`. Lists ordered by ID with the models' field names and GlassFrog
-IDs. `scripts/fetch_backup.py REPO`
-commits them daily to a git
+sees, organized by role (decided 2026-11-08): `roles`, all of them
+(archived ones too) ordered by ID, each with its circle's ID,
+accountabilities, domains, policies (archived ones too, each with its
+history), `role_leads` (the assignments, past ones too), metrics,
+checklist items, links, its `history` (the `Change`s since 2018) and,
+as the circle of, its `proposals` (with responses, anonymous like on the
+page except questions and concerns, also earlier consents with a text,
+without others' drafts) and `meetings` (with agenda, elections);
+`meetings` without a circle (ad hoc tactical meetings); `people` only
+with `?people=true`, the rest refers to them by ID. The models' field
+names and GlassFrog IDs. `gov backup DIR --with-people` writes a file
+per role (`roles/<id>-<slug>.json`), `meetings.json` and `people.json`;
+`scripts/fetch_backup.py REPO` runs it and commits daily to a git
 repository, like the GlassFrog export before (the backlog has the rest).
+The current state for reading is the Markdown export, exact IDs come
+from `gov search --json` and `gov roles show --json`.
 
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
 write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
-`gov roles context`, `gov domains`, `gov export`, `gov constitution`, `gov search` and `gov proposals` (list, show,
+`gov roles context`, `gov domains`, `gov export`, `gov backup`, `gov constitution`, `gov search` and `gov proposals` (list, show,
 create, update, publish; open, consent, request-meeting, comment). The Claude Code skill `governance-proposal`
 (`cli/skills/`) prepares a draft from a tension with it; publishing stays
 the user's decision. `governance-review` reviews a circle's or a role's

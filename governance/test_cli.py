@@ -446,6 +446,39 @@ class CLITest(TestCase):
         result = self.gov("constitution", "--language", "de")
         self.assertIn("# **Holacracy Verfassung**", result.output)
 
+    def test_backup(self):
+        """Printed, or a file per role written into a directory; the people
+        only when asked for"""
+        data = json.loads(self.gov("backup").output)
+        self.assertIn("Cook", [role["name"] for role in data["roles"]])
+        self.assertNotIn("people", data)
+        directory = self.directory / "backup"
+        self.gov("backup", directory, "--with-people")
+        self.assertTrue((directory / "roles" / f"{self.cook.pk}-cook.json").exists())
+        self.assertIn("ada@example.com", (directory / "people.json").read_text())
+        self.assertEqual(json.loads((directory / "meetings.json").read_text()), [])
+        # A renamed role replaces its file, the people go when not asked for
+        Role.objects.filter(pk=self.cook.pk).update(name="Chef de cuisine")
+        self.gov("backup", directory)
+        files = {path.name for path in (directory / "roles").iterdir()}
+        self.assertIn(f"{self.cook.pk}-chef-de-cuisine.json", files)
+        self.assertNotIn(f"{self.cook.pk}-cook.json", files)
+        self.assertFalse((directory / "people.json").exists())
+
+    def test_token_from_the_environment(self):
+        """GOVERNANCE_URL and GOVERNANCE_TOKEN need no login, e.g. for the
+        daily backup on a server"""
+        _token, token = APIToken.create_for(
+            user=self.ada, title="Backup", access="read"
+        )
+        result = CliRunner().invoke(
+            gov.cli,
+            ["backup"],
+            env={"GOVERNANCE_URL": "http://testserver", "GOVERNANCE_TOKEN": token},
+        )
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Cook", result.output)
+
     def complete(self, args, incomplete):
         self.gov("me")  # Stores a token
         with patch.dict("os.environ", {"GOVERNANCE_URL": "http://testserver"}):

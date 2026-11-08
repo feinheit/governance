@@ -24,10 +24,10 @@ api.add_router("/", proposals_router)
 
 
 @api.get("backup/")
-def backup_files(request):
-    """The JSON backup's files, what the token's user sees
-    (``scripts/fetch_backup.py``)"""
-    return backup(request.user)
+def backup_data(request, *, people: bool = False):
+    """The JSON backup, what the token's user sees, the people only when
+    asked for (``gov backup``, ``scripts/fetch_backup.py``)"""
+    return backup(request.user, with_people=people)
 
 
 class ConstitutionOut(Schema):

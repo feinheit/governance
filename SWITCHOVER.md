@@ -46,9 +46,11 @@ nightly import mirrors.
    descriptive, like "hier"), archived and unknown ones. Check those and
    `git diff`, remove the script, commit, push and merge the pull
    request.
-5. **Backup**: on the fetcher's server, run `scripts/fetch_backup.py`
-   daily (with a read-only API token of the app) into a new repository
-   instead of `scripts/fetch_glassfrog.py`. To consider then or
+5. **Backup**: on the fetcher's server, install `gov` (`uv tool install
+   "git+https://github.com/feinheit/governance#subdirectory=cli"`) and
+   run `scripts/fetch_backup.py` daily (with `GOVERNANCE_URL` and a
+   read-only API token of the app in `GOVERNANCE_TOKEN`) into a new
+   repository instead of `scripts/fetch_glassfrog.py`. To consider then or
    afterwards: converting the GlassFrog export's commits into the
    backup's format.
 6. **Cancel GlassFrog** once the app's first adoptions went through.

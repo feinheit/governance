@@ -358,9 +358,12 @@ def _config():
     """URL and token of the current installation
 
     GOVERNANCE_URL selects another installation gov is logged in to, e.g. for
-    the commands of one terminal."""
+    the commands of one terminal; with GOVERNANCE_TOKEN too it needs no
+    login, e.g. on a server (``scripts/fetch_backup.py``)."""
     url = current_installation()
-    token = read_config()["installations"].get(url, {}).get("token")
+    token = os.environ.get("GOVERNANCE_TOKEN") or read_config()["installations"].get(
+        url, {}
+    ).get("token")
     if not url or not token:
         terminate("Not configured yet. Run `gov login URL` first.")
     announce_installation(url)

@@ -1,9 +1,14 @@
-"""The JSON backup: everything the user sees, one file per kind
+"""The JSON backup: everything the user sees, organized by role
 
-``GET /api/backup/`` returns the files, ``scripts/fetch_backup.py`` commits
-them daily to a git repository, like the GlassFrog export before. Lists of
-objects ordered by ID, with the models' field names; related objects by ID
-(``user`` refers to ``people.json``). See section 8 of ``SPEC.md``.
+``GET /api/backup/`` (``gov backup``): ``roles``, all of them (archived
+ones too) ordered by ID, each with its circle's ID and what belongs to it:
+texts, policies (with their history), Role Leads (past ones too), metrics,
+checklist items, links, its history (the day-to-day changes since 2018)
+and the proposals and meetings it's the circle of; ``meetings`` without a
+circle (ad hoc tactical meetings); ``people`` only when asked for
+(``?people=true``), the rest refers to them by ID. ``gov backup DIR``
+writes a file per role, ``scripts/fetch_backup.py`` commits them daily.
+The models' field names, see section 8 of ``SPEC.md``.
 """
 
 from collections import defaultdict
@@ -50,7 +55,20 @@ def nest(objects, **children):
     return objects
 
 
-def roles():
+def history(key, **filters):
+    """The day-to-day changes, grouped by role or policy (``key``)"""
+    return by(
+        key,
+        list(
+            Change.objects
+            .filter(**filters)
+            .order_by("date", "pk")
+            .values(key, "date", "kind", "old", "new")
+        ),
+    )
+
+
+def roles(user):
     texts = {
         name: by(
             "role",
@@ -58,6 +76,20 @@ def roles():
         )
         for name, model in [("accountabilities", Accountability), ("domains", Domain)]
     }
+    items = ["role", "description", "frequency", "link", "position", "glassfrog_id"]
+    policies = nest(
+        rows(
+            Policy.objects.all(),
+            "role",
+            "domain",
+            "title",
+            "body",
+            "position",
+            "archived_on",
+            "glassfrog_id",
+        ),
+        history=history("policy", policy__isnull=False),
+    )
     return nest(
         rows(
             Role.objects.all(),
@@ -75,6 +107,29 @@ def roles():
             "glassfrog_id",
         ),
         **texts,
+        policies=by("role", policies),
+        role_leads=by(
+            "role",
+            rows(
+                Assignment.objects.all(),
+                "role",
+                "user",
+                "focus",
+                "elected_until",
+                "starts_on",
+                "ends_on",
+                "glassfrog_id",
+            ),
+        ),
+        metrics=by("role", rows(Metric.objects.all(), *items)),
+        checklist_items=by("role", rows(ChecklistItem.objects.all(), *items)),
+        links=by(
+            "role",
+            rows(Link.objects.all(), "role", "title", "url", "description", "position"),
+        ),
+        history=history("role", role__isnull=False, policy__isnull=True),
+        proposals=by("circle", proposals(user)),
+        meetings=by("circle", [m for m in meetings() if m["circle"]]),
     )
 
 
@@ -167,48 +222,24 @@ def meetings():
     )
 
 
-def backup(user):
-    """The files of the backup, what ``user`` sees (not others' drafts)"""
-    items = ["role", "description", "frequency", "link", "position", "glassfrog_id"]
-    return {
-        "people.json": rows(
+def backup(user, *, with_people=False):
+    """What ``user`` sees (not others' drafts); the people only when asked
+    for, personal data"""
+    data = {
+        "roles": roles(user),
+        "meetings": [
+            {key: value for key, value in m.items() if key != "circle"}
+            for m in meetings()
+            if not m["circle"]
+        ],
+    }
+    if with_people:
+        data["people"] = rows(
             User.objects.all(),
             "full_name",
             "short_name",
             "email",
             "is_active",
             "glassfrog_id",
-        ),
-        "roles.json": roles(),
-        "assignments.json": rows(
-            Assignment.objects.all(),
-            "role",
-            "user",
-            "focus",
-            "elected_until",
-            "starts_on",
-            "ends_on",
-            "glassfrog_id",
-        ),
-        "policies.json": rows(
-            Policy.objects.all(),
-            "role",
-            "domain",
-            "title",
-            "body",
-            "position",
-            "archived_on",
-            "glassfrog_id",
-        ),
-        # The day-to-day changes, since 2018 from GlassFrog's history
-        "history.json": rows(
-            Change.objects.all(), "date", "role", "policy", "kind", "old", "new"
-        ),
-        "proposals.json": proposals(user),
-        "meetings.json": meetings(),
-        "metrics.json": rows(Metric.objects.all(), *items),
-        "checklist_items.json": rows(ChecklistItem.objects.all(), *items),
-        "links.json": rows(
-            Link.objects.all(), "role", "title", "url", "description", "position"
-        ),
-    }
+        )
+    return data
