@@ -52,8 +52,9 @@ mit Besetzung.
 Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,
 wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und
 entfernen), Checklisten, Metriken und Links. Eine Domain mit Policies
-verlinkt sie ("2 Policies") und klappt sie auf. "Domains und Policies,
-die diese Rolle betreffen" zeigt, was von aussen für sie gilt: die
+verlinkt sie ("2 Policies") und klappt sie auf; die Karte Policies
+erscheint nur, wenn die Rolle eigene hat. "Domains und Policies, die
+diese Rolle betreffen" im Menü "…" zeigt, was von aussen für sie gilt: die
 Domains und Policies ihrer Kreise und die Domains von deren Rollen, vom
 äussersten Kreis nach innen. Ihre Meetings, die ihres Kreises und die, zu denen sie eingeladen war (siehe [Meetings](meetings.de.md)), stehen im Menü "…".
 Unbesetzte Rollen haben die Circle Leads, ausser der Rolle Circle Rep; ist die Rolle Circle Lead unbesetzt, haben sie die Circle Leads des übergeordneten Kreises.

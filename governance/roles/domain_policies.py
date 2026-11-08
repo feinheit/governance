@@ -121,7 +121,13 @@ def domain_policy_edit(request, pk, policy_pk=None):
         "body": policy.body if policy else "",
         "domain": policy.domain_id if policy else None,
     }
-    form = DomainPolicyForm(request.POST or None, instance=policy, role=role)
+    form = DomainPolicyForm(
+        request.POST or None,
+        instance=policy,
+        role=role,
+        # Added from the domain's line on the role's page
+        initial=None if policy else {"domain": request.GET.get("domain")},
+    )
     if form.is_valid():
         is_new = policy is None
         policy = form.save(commit=False)

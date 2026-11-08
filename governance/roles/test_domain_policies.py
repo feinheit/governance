@@ -39,7 +39,14 @@ class DomainPoliciesTest(TestCase):
     def test_holders_change_policies(self):
         self.client.force_login(self.ada)
         response = self.client.get(f"/roles/{self.admin.pk}/")
-        self.assertContains(response, "Add a policy for its domains")
+        # On the domain's line, no card of policies without any
+        self.assertContains(response, f"{self.url}?domain={self.servers.pk}")
+        self.assertNotContains(response, '<h2 class="h6 mb-0">Policies</h2>')
+        # The domain chosen already
+        self.assertContains(
+            self.client.get(f"{self.url}?domain={self.servers.pk}"),
+            f'<option value="{self.servers.pk}" selected>',
+        )
         with self.captureOnCommitCallbacks(execute=True):
             response = self.client.post(
                 self.url,
@@ -57,6 +64,7 @@ class DomainPoliciesTest(TestCase):
         self.assertContains(response, f'data-open-details="policy-{policy.pk}"')
         self.assertContains(response, f'id="policy-{policy.pk}"')
         self.assertContains(response, "1 policy")
+        self.assertContains(response, '<h2 class="h6 mb-0">Policies</h2>')
         self.assertEqual((policy.role, policy.domain), (self.admin, self.servers))
         proposal = Proposal.objects.get()
         self.assertEqual(
@@ -135,7 +143,7 @@ class DomainPoliciesTest(TestCase):
         # Others don't, not the circle's policies, not roles without domains
         self.client.force_login(self.bob)
         self.assertNotContains(
-            self.client.get(f"/roles/{self.admin.pk}/"), "Add a policy for its domains"
+            self.client.get(f"/roles/{self.admin.pk}/"), "/domain-policies/new/"
         )
         self.assertEqual(self.client.get(self.url).status_code, 403)
         self.client.force_login(self.ada)

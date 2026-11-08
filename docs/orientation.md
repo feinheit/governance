@@ -52,10 +52,11 @@ holders.
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove
 here), checklists, metrics and links. A domain with policies links to
-them ("2 policies"), which opens them. "Domains and policies affecting
-this role" shows what applies to it from outside: the domains and
-policies of its circles and the domains of their roles, from the
-outermost circle down. Its meetings, those of its circle and those it was invited to (see [Meetings](meetings.md)), are in the menu "…".
+them ("2 policies"), which opens them; the policies card is there only
+when the role has policies of its own. "Domains and policies affecting
+this role" in the menu "…" shows what applies to it from outside: the
+domains and policies of its circles and the domains of their roles, from
+the outermost circle down. Its meetings, those of its circle and those it was invited to (see [Meetings](meetings.md)), are in the menu "…".
 Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.
 

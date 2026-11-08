@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 15:14+0100\n"
+"POT-Creation-Date: 2026-11-08 15:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -830,6 +830,7 @@ msgstr "Rolle"
 #: governance/templates/proposals/_move_into.html
 #: governance/templates/proposals/_move_out.html
 #: governance/templates/roles/governance.txt
+#: governance/templates/roles/role_detail.html
 msgid "Policy"
 msgstr "Policy"
 
@@ -3099,24 +3100,16 @@ msgstr[0] "%(count)s Policy"
 msgstr[1] "%(count)s Policies"
 
 #: governance/templates/roles/role_detail.html
+msgid "Add a policy for this domain"
+msgstr "Policy für diese Domain hinzufügen"
+
+#: governance/templates/roles/role_detail.html
 msgid "Holds the circle's Purpose and its Accountabilities as far as no role or process in the circle covers them; assigns the roles and defines priorities and strategies."
 msgstr "Hält den Purpose des Kreises und seine Accountabilities, soweit keine Rolle und kein Prozess im Kreis sie abdeckt; weist die Rollen zu und definiert Prioritäten und Strategien."
 
 #: governance/templates/roles/role_detail.html
 msgid "None"
 msgstr "Keine"
-
-#: governance/templates/roles/role_detail.html
-msgid "None of its own."
-msgstr "Keine eigenen."
-
-#: governance/templates/roles/role_detail.html
-msgid "Add a policy for its domains"
-msgstr "Policy für die Domains hinzufügen"
-
-#: governance/templates/roles/role_detail.html
-msgid "The role regulates its domains itself, without a governance process. Everybody affected is informed."
-msgstr "Die Rolle regelt ihre Domains selbst, ohne Governance-Prozess. Alle Betroffenen werden informiert."
 
 #: governance/templates/roles/role_detail.html
 msgid "Checklists and metrics"
@@ -3178,6 +3171,12 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "None of its own."
+#~ msgstr "Keine eigenen."
+
+#~ msgid "The role regulates its domains itself, without a governance process. Everybody affected is informed."
+#~ msgstr "Die Rolle regelt ihre Domains selbst, ohne Governance-Prozess. Alle Betroffenen werden informiert."
 
 #~ msgid "Any partner may call a tactical meeting and invite the roles they need; their holders are invited. Hold Ctrl or Cmd to select several. To invite only some holders of a role (constitution 3.1), remove the others from the attendees in the meeting."
 #~ msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen; eingeladen ist, wer sie hat. Mit Ctrl oder Cmd mehrere auswählen. Um nur einen Teil der Personen einer Rolle einzuladen (Verfassung 3.1), die anderen im Meeting aus den Teilnehmenden entfernen."

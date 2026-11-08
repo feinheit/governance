@@ -590,11 +590,11 @@ their account, else the default), not when they received it themselves
   the adopted proposals of governance meetings, else the agenda items,
   three of them and how many more.
 - **Circle and role pages** are laid out for the desktop: on the left
-  what the role is (purpose, domains, accountabilities, its own
-  policies), on the right what is used most (holders or core roles, a
+  what the role is (purpose, domains, each with a button adding a policy
+  for it, accountabilities, its own policies if it has any), on the right what is used most (holders or core roles, a
   circle's meetings, pending proposals, due elections), then checklists,
   links and history; a circle's roles below both. What constrains it
-  from outside is a link away, in a modal ("Domains and policies
+  from outside is in the menu "…", in a modal ("Domains and policies
   affecting this role", `role_context`): per circle from the anchor circle down,
   the circle's domains and policies (5.2.1) and the domains of its roles
   with their policies (1.3.2; e.g. a role of the anchor circle holding

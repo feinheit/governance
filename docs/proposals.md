@@ -68,7 +68,7 @@ mail. While its meeting runs, the secretary discards it there instead.
 ## Without a proposal
 
 - **Policies of a domain**: whoever holds a role with a domain sets its
-  policies on the role's page ("Add a policy for its domains"). The tool
+  policies on the role's page ("Policy" on the domain's line). The tool
   records the change as an adopted proposal and sends a mail. The policies
   move with the role; removing the domain, the role or its circle removes
   them too. Proposals of the circle don't change them, they may remove the

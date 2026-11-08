@@ -69,8 +69,8 @@ die Mitglieder des Kreises per Mail. Während sein Meeting läuft, verwirft ihn 
 ## Ohne Vorschlag
 
 - **Policies einer Domain**: wer eine Rolle mit Domain hat, legt deren
-  Policies auf der Rollenseite fest ("Policy für die Domains
-  hinzufügen"). Das Tool hält die Änderung als angenommenen Vorschlag fest
+  Policies auf der Rollenseite fest ("Policy" auf der Zeile der
+  Domain). Das Tool hält die Änderung als angenommenen Vorschlag fest
   und schickt eine Mail. Die Policies ziehen mit der Rolle um; wird die
   Domain, die Rolle oder ihr Kreis entfernt, gehen sie mit. Vorschläge
   des Kreises ändern sie nicht, sie können die Domain entfernen.
