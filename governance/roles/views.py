@@ -284,12 +284,26 @@ def role_context(request, pk):
 
 def policy_detail(request, pk):
     policy = get_object_or_404(Policy.objects.select_related("role", "domain"), pk=pk)
+    # Its changes and the adopted proposals changing it, few: all of them
+    history = [
+        entry
+        for _day, entries in timeline(
+            policy.changes.select_related("role", "policy"),
+            policy.changed_by_proposals.filter(status="adopted").select_related(
+                "circle", "proposer"
+            ),
+        )
+        for entry in entries
+    ]
+    history, history_more = split_more(history, 5)
     return render(
         request,
         "roles/policy_detail.html",
         {
             "policy": policy,
             "ancestors": [*policy.role.ancestors(), policy.role],
+            "history": history,
+            "history_more": history_more,
             "pending": policy.changed_by_proposals.filter(
                 status__in=PENDING
             ).select_related("proposer"),

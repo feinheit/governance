@@ -1,5 +1,5 @@
 {% load governance i18n %}
-{# A change or an adopted proposal in the history (_timeline.html, the history card of the role's page): ``kind``, ``obj``, ``show_role`` #}
+{# A change or an adopted proposal in the history (_timeline.html, the history card of the role's or the policy's page): ``kind``, ``obj``, ``show_role``, ``in_policy`` (not linking to itself) #}
 {% if kind == "proposal" %}
   <span class="badge wb-tone-primary">{% translate "Proposal" %}</span>
   <a class="fw-semibold" href="{{ obj.get_absolute_url }}">{{ obj|default:_("(no tension)") }}</a>
@@ -11,7 +11,7 @@
     {% if obj.policy %}<a href="{{ obj.policy.get_absolute_url }}">{{ obj.policy }}</a>{% elif obj.role %}<a
         href="{{ obj.role.get_absolute_url }}"
       >{{ obj.role }}</a>{% endif %}
-  {% elif obj.policy %}<a href="{{ obj.policy.get_absolute_url }}">{{ obj.policy }}</a>{% endif %}
+  {% elif obj.policy and not in_policy %}<a href="{{ obj.policy.get_absolute_url }}">{{ obj.policy }}</a>{% endif %}
   {% if obj.user %}<a href="{{ obj.user.get_absolute_url }}">{{ obj.user }}</a>{% endif %}
   {% if obj.old_role or obj.new_role %}<span class="small text-body-secondary">{{ obj.old_role|default:"–" }}
       → {{ obj.new_role|default:"–" }}</span>{% endif %}

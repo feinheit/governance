@@ -26,6 +26,22 @@
   <section class="card mb-4">
     <div class="card-body wb-markdown wb-description">{{ policy.body|markdown }}</div>
   </section>
+  <section class="card mb-4">
+    <div class="card-header"><h2 class="h6 mb-0">{% translate "History" %}</h2></div>
+    <ul class="list-group list-group-flush">
+      {# The days link to its role's or circle's history #}
+      {% for kind, obj in history %}
+        {% include "history/_card_entry.html" with more=False role=policy.role in_policy=True %}
+      {% endfor %}
+      {% include "_show_more.html" with more=history_more %}
+      {% for kind, obj in history_more %}
+        {% include "history/_card_entry.html" with more=True role=policy.role in_policy=True %}
+      {% endfor %}
+      {% if not history %}<li class="list-group-item text-body-secondary">
+          {% translate "No changes." %}
+        </li>{% endif %}
+    </ul>
+  </section>
   {% if pending %}
     <section class="card mb-4">
       <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposed" %}</h2></div>

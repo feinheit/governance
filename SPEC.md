@@ -576,7 +576,9 @@ their account, else the default), not when they received it themselves
   changed). The history is one page (`/history/`, `?role=`): a circle
   with its roles (a sub-circle as a role; "With sub-circles" with what's
   inside them) or a role alone, with assignments, with links, metrics and
-  checklists; links to a day (`?day=`) open its page. The proposals by status,
+  checklists; links to a day (`?day=`) open its page. A policy's page has
+  its own history (its changes, the adopted proposals changing it), the
+  days linking to its role's. The proposals by status,
   circle (with its sub-circles) and the role they change; the meetings of a circle or role by kind (governance, regular tactical,
   ad hoc tactical).
 - The audit log covers everything else the same way, row by row.

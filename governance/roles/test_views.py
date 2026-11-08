@@ -158,6 +158,35 @@ class ViewsTest(TestCase):
         self.assertContains(response, "Too much to do")
         self.assertContains(self.client.get(f"/roles/{cook.pk}/context/"), "Clean up")
 
+    def test_policy_history(self):
+        """A policy's page shows its history: the changes and the adopted
+        proposals changing it"""
+        from governance.history.models import Change
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        policy = Policy.objects.create(role=kitchen, title="Clean up", body="Always")
+        Change.objects.create(
+            date=dt.date(2026, 3, 2),
+            role=kitchen,
+            policy=policy,
+            kind="policy-body",
+            old="Sometimes",
+            new="Always",
+        )
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=self.user,
+            tension="Dirty dishes",
+            status=Proposal.ADOPTED,
+            created_at=timezone.now(),
+            decided_at=timezone.now(),
+        )
+        proposal.policies.add(policy)
+        response = self.client.get(policy.get_absolute_url())
+        self.assertContains(response, "Policy text changed")
+        self.assertContains(response, "Dirty dishes")
+        self.assertContains(response, f"/history/?role={kitchen.pk}&amp;day=2026-03-02")
+
     def test_new_proposal_only_for_proposers(self):
         """Admins outside the circle don't get "New proposal", which would
         refuse them"""
