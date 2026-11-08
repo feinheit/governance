@@ -65,6 +65,18 @@ class MeetingsTest(TestCase):
             self.client.get(f"/roles/{self.cook.pk}/meetings/"),
             meeting.get_absolute_url(),
         )
+        # Regular tactical meetings apart from ad hoc ones
+        ad_hoc = Meeting.objects.create(
+            kind=Meeting.TACTICAL, started_at=timezone.now(), called_by=self.eve
+        )
+        ad_hoc.invited_roles.add(self.cook)
+        url = f"/roles/{self.cook.pk}/meetings/"
+        response = self.client.get(f"{url}?kind=tactical")
+        self.assertContains(response, meeting.get_absolute_url())
+        self.assertNotContains(response, ad_hoc.get_absolute_url())
+        response = self.client.get(f"{url}?kind=ad_hoc")
+        self.assertNotContains(response, meeting.get_absolute_url())
+        self.assertContains(response, ad_hoc.get_absolute_url())
         anchor = Role.objects.create(name="Company", is_circle=True)
         self.kitchen.circle = anchor
         self.kitchen.save()

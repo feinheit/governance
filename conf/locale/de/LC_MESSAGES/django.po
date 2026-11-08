@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:45+0100\n"
+"POT-Creation-Date: 2026-11-08 14:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -630,6 +630,10 @@ msgstr "Governance Meetings"
 #: governance/meetings/views.py
 msgid "Tactical Meetings"
 msgstr "Tactical Meetings"
+
+#: governance/meetings/views.py
+msgid "Ad hoc Tactical Meetings"
+msgstr "Ad-hoc Tactical Meetings"
 
 #: governance/meetings/views.py
 msgid "Any partner may call a tactical meeting and invite the roles they need; their holders are invited. Hold Ctrl or Cmd to select several. To invite only some holders of a role (constitution 3.1), remove the others from the attendees in the meeting."

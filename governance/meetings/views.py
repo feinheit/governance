@@ -53,6 +53,8 @@ class MeetingFilters(FilterForm):
             ("", _("All meetings")),
             (Meeting.GOVERNANCE, _("Governance Meetings")),
             (Meeting.TACTICAL, _("Tactical Meetings")),
+            # Called with any roles, not a circle's (constitution 3.1)
+            ("ad_hoc", _("Ad hoc Tactical Meetings")),
         ],
         required=False,
     )
@@ -62,7 +64,12 @@ def meeting_list(request, pk):
     circle = get_object_or_404(Role.objects.with_inside(), pk=pk)
     filters = MeetingFilters(request.GET)
     meetings = Meeting.objects.of_role(circle)
-    if kind := filters.get("kind"):
+    kind = filters.get("kind")
+    if kind == "ad_hoc":
+        meetings = meetings.filter(kind=Meeting.TACTICAL, circle=None)
+    elif kind == Meeting.TACTICAL:
+        meetings = meetings.filter(kind=kind).exclude(circle=None)
+    elif kind:
         meetings = meetings.filter(kind=kind)
     page = Paginator(meetings, 50).get_page(request.GET.get("page"))
     page.object_list = with_teasers(page.object_list)
