@@ -131,12 +131,14 @@ def recent_history(role, count=10):
 
 
 def former_names(role):
-    """The names the role had before, oldest first, with the day they ended"""
-    names = []
+    """The names the role had before, each once with the day it last ended,
+    oldest first"""
+    names = {}
     for change in role.changes.filter(kind="name").order_by("date", "pk"):
         if change.old and change.old != role.name:
-            names.append((change.old, change.date))
-    return names
+            names.pop(change.old, None)
+            names[change.old] = change.date
+    return list(names.items())
 
 
 def role_detail(request, pk):

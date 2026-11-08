@@ -492,6 +492,23 @@ class RolePageHistoryTest(TestCase):
         )
 
 
+class FormerNamesTest(TestCase):
+    def test_once_each(self):
+        """Names used twice are listed once, with the day they last ended"""
+        from governance.roles.views import former_names
+
+        cook = Role.objects.create(name="Chef")
+        for day, old, new in [
+            (1, "Cook", "Chef"),
+            (2, "Chef", "Cook"),
+            (3, "Cook", "Chef"),
+        ]:
+            Change.objects.create(
+                date=dt.date(2025, 1, day), role=cook, kind="name", old=old, new=new
+            )
+        self.assertEqual(former_names(cook), [("Cook", dt.date(2025, 1, 3))])
+
+
 class MergedListsTest(TestCase):
     def test_accountabilities_of_a_day_are_one_change(self):
         """A day's added and removed accountabilities are one entry, texts
