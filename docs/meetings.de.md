@@ -80,8 +80,9 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   das darf jedes Mitglied; alle Rollen des Kreises sind eingeladen.
 - **Ad hoc**: "Tactical Meeting einberufen" im Menü deines Namens (oben
   rechts): zuerst die Rollen, auch aus mehreren Kreisen (das Feld filtert
-  sie nach Rolle, Kreis oder Person), dann listet "Weiter: wer eingeladen
-  ist" auf, wer sie hat (bei unbesetzten Rollen die Circle Leads), alle
+  sie nach Rolle, Kreis, Person oder Fokus), dann listet "Weiter: wer
+  eingeladen ist" auf, wer sie hat, mit dem Fokus (bei unbesetzten Rollen
+  die Circle Leads), alle
   angekreuzt; um nur einen Teil einzuladen (Verfassung 3.1), die anderen
   abwählen. Du hast mindestens eine der Rollen (oder vertrittst eine
   unbesetzte als Circle Lead) und nimmst teil. "Meeting starten" startet

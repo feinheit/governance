@@ -463,7 +463,7 @@ on Mondays.
 starts a regular one (all roles of the circle invited, attendees its
 members); anybody calls an ad-hoc one from the user's menu (`tactical_call`): the
 roles of any circles first (a field filters them as you type,
-`frontend/filter_rows.js`), then who of their Role Leads attend, all
+`frontend/filter_rows.js`, also by the holders' focus), then who of their Role Leads attend (with their focus), all
 checked, some unchecked to narrow the invitation (3.1); the caller fills one of the roles at least (also as Circle Lead of an unfilled one, 1.4.2), else the roles are chosen again, and attends (not uncheckable). Ad hoc tactical meetings (without a circle) have
 a badge of their own, hollow and dashed ("Ad hoc Tactical Meeting",
 `Meeting.is_ad_hoc`). Steps: check-in, checklist review, metrics review (the

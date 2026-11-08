@@ -381,16 +381,22 @@ class TacticalTest(TestCase):
         """The caller may invite only some holders of a role (constitution
         3.1); an unfilled role's Circle Leads hold it"""
         zoe = User.objects.create_user("zoe@example.com", full_name="Zoe")
-        Assignment.objects.create(role=self.cook, user=zoe)
+        Assignment.objects.create(role=self.cook, user=zoe, focus="Soup")
         Assignment.objects.create(
             role=self.kitchen.roles.get(core_role="lead"), user=self.eve
         )
         waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
         # Eve fills the unfilled Waiter as the kitchen's Circle Lead
         self.client.force_login(self.eve)
+        # The focus helps choosing, the roles' and the people's
+        self.assertRegex(
+            self.client.get("/meetings/tactical/new/").content.decode(),
+            r"Zoe\s+\(Soup\)",
+        )
         response = self.client.get(
             f"/meetings/tactical/new/?role={self.cook.pk}&role={waiter.pk}"
         )
+        self.assertRegex(response.content.decode(), r"Cook\s+\(Soup\)")
         for user in [self.bob, zoe]:
             self.assertRegex(
                 response.content.decode(), rf'name="attendee"\s+value="{user.pk}"'

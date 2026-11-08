@@ -44,7 +44,7 @@
                 {% for role in circle_roles %}
                   <label
                     class="list-group-item d-flex gap-2"
-                    data-filter-text="{{ role }} {{ circle }} {% for a in role.current_assignments %}{{ a.user }} {% endfor %}"
+                    data-filter-text="{{ role }} {{ circle }} {% for a in role.current_assignments %}{{ a.user }} {{ a.focus }} {% endfor %}"
                   >
                     <input
                       class="form-check-input flex-shrink-0"
@@ -57,7 +57,8 @@
                       {{ role }}
                       <span
                         class="small text-body-secondary"
-                      >{% for a in role.current_assignments %}{{ a.user }}{% if not forloop.last %},
+                      >{% for a in role.current_assignments %}{{ a.user }}{% if a.focus %}
+                            ({{ a.focus }}){% endif %}{% if not forloop.last %},
                           {% endif %}{% empty %}{% translate "unfilled" %}{% endfor %}</span>
                     </span>
                   </label>
@@ -100,9 +101,9 @@
                 >
                 <span>
                   {{ user }}
-                  <span
-                    class="small text-body-secondary"
-                  >{% for role in user_roles %}{{ role }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+                  <span class="small text-body-secondary">{% for role, focus in user_roles %}{{ role }}{% if focus %}
+                        ({{ focus }}){% endif %}{% if not forloop.last %},
+                      {% endif %}{% endfor %}</span>
                 </span>
               </label>
             {% empty %}

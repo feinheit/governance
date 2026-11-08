@@ -335,12 +335,16 @@ def callable_roles():
 
 
 def invitees(roles):
-    """The people invited with the roles, each once with their roles: the
-    holders, an unfilled role's Circle Leads (1.4.2)"""
+    """The people invited with the roles, each once with their roles and
+    focus: the holders, an unfilled role's Circle Leads (1.4.2)"""
+    focus = {
+        (assignment.user_id, assignment.role_id): assignment.focus
+        for assignment in Assignment.objects.current().filter(role__in=roles)
+    }
     people = {}
     for role in roles:
         for user in role_leads(role):
-            people.setdefault(user, []).append(role)
+            people.setdefault(user, []).append((role, focus.get((user.pk, role.pk))))
     return sorted(people.items(), key=lambda item: str(item[0]).lower())
 
 
