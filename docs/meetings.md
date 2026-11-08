@@ -90,7 +90,7 @@ circle.
   holds them, they're invited. To invite only some holders of a role
   (constitution 3.1), remove the others from the attendees in the
   meeting. "All meetings" in the
-  menu "More actions" (…) of a role's page lists the meetings the role was
+  menu "More actions" (…) of a role's page lists its circle's meetings and those the role was
   invited to.
 
 Lists of meetings show what they were about: the adopted proposals,

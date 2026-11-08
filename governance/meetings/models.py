@@ -35,9 +35,14 @@ class MeetingQuerySet(models.QuerySet):
         return self.filter(ended_at=None, started_at__isnull=False)
 
     def of_role(self, role):
-        """Its own (a circle's, or a role's for its inside) and the ad hoc
-        tactical meetings it was invited to"""
-        return self.filter(Q(circle=role) | Q(invited_roles=role)).distinct()
+        """Its own (a circle's, or a role's for its inside), the ad hoc
+        tactical meetings it was invited to, and a role's (not a circle's)
+        those of its circle, which invite all its roles (constitution 3.1;
+        GlassFrog's tactical meetings came without invited roles)"""
+        meetings = Q(circle=role) | Q(invited_roles=role)
+        if not role.is_circle and role.circle_id:
+            meetings |= Q(circle=role.circle_id)
+        return self.filter(meetings).distinct()
 
 
 class Meeting(models.Model):

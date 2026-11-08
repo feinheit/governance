@@ -82,8 +82,8 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   rechts), mit beliebigen Rollen, auch aus anderen Kreisen; die Liste
   zeigt, wer sie hat: diese Personen sind eingeladen. Um nur einen Teil
   davon einzuladen (Verfassung 3.1), die anderen im Meeting aus den
-  Teilnehmenden entfernen. "Alle Meetings" im Menü "Weitere Aktionen" (…) einer Rollenseite listet die
-  Meetings auf, zu denen die Rolle eingeladen war.
+  Teilnehmenden entfernen. "Alle Meetings" im Menü "Weitere Aktionen" (…) einer Rollenseite listet die Meetings ihres Kreises auf und die, zu
+  denen die Rolle eingeladen war.
 
 Listen von Meetings zeigen, worum es ging: die angenommenen Vorschläge,
 sonst die Agendapunkte.

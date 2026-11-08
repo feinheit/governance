@@ -50,6 +50,32 @@ class MeetingsTest(TestCase):
             meeting.get_absolute_url(),
         )
 
+    def test_role_in_its_circles_meetings(self):
+        """A role's meetings include its circle's, e.g. tactical meetings
+        imported from GlassFrog without invited roles; a circle's list has
+        its own, not those of its super-circle"""
+        self.client.force_login(self.eve)
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            ended_at=timezone.now(),
+        )
+        self.assertContains(
+            self.client.get(f"/roles/{self.cook.pk}/meetings/"),
+            meeting.get_absolute_url(),
+        )
+        anchor = Role.objects.create(name="Company", is_circle=True)
+        self.kitchen.circle = anchor
+        self.kitchen.save()
+        above = Meeting.objects.create(
+            circle=anchor, kind=Meeting.TACTICAL, started_at=timezone.now()
+        )
+        self.assertNotContains(
+            self.client.get(f"/roles/{self.kitchen.pk}/meetings/"),
+            above.get_absolute_url(),
+        )
+
     def test_lifecycle(self):
         self.client.force_login(self.bob)
         response = self.client.get(f"/roles/{self.kitchen.pk}/")
