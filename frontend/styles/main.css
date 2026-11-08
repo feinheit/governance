@@ -146,11 +146,6 @@ h3,
 }
 
 @media (max-width: 575.98px) {
-  /* The circle browser needs more room than phones have */
-  .wb-nav-links .wb-nav-circles {
-    display: none;
-  }
-
   .wb-nav-search {
     order: 3;
     width: 100%;

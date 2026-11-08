@@ -605,7 +605,7 @@ their account, else the default), not when they received it themselves
   zoom by clicking, `?circle=ID`, "My roles", colors for assigned,
   elected/core and unfilled roles with a legend, validated for light and
   dark mode. The page also lists the tree, which works without
-  JavaScript; phones don't show it in the navigation.
+  JavaScript.
 - **Search**: roles, accountabilities, domains and policies, all terms
   matching, ignoring case and accents, in the texts as the pages show
   them (mentions with the current names, the core roles' constitutional
