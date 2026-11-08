@@ -753,9 +753,17 @@ without others' drafts) and `meetings` (with agenda, elections);
 `meetings` without a circle (ad hoc tactical meetings); `people` only
 with `?people=true`, the rest refers to them by ID. The models' field
 names and GlassFrog IDs. `gov backup DIR --with-people` writes a file
-per role (`roles/<id>-<slug>.json`), `meetings.json` and `people.json`;
-`scripts/fetch_backup.py REPO` runs it and commits daily to a git
-repository, like the GlassFrog export before (the backlog has the rest).
+per role named by its ID (`roles/<id>.json`: a renamed role keeps its
+file, `git log roles/34.json` shows its whole life, decided 2026-11-08),
+`meetings.json`, `people.json` and `governance.md` (the Markdown export,
+to read; its daily diff reads like a changelog). Each run replaces the
+files: `roles/` is emptied first, `people.json` removed without the
+people. `scripts/fetch_backup.py REPO` runs it and commits everything
+daily (`git add --all`) to a git repository, like the GlassFrog export
+before (the backlog has the rest). Stable order for small diffs: lists by ID (moving or
+reordering changes a field), the history by day, keys sorted;
+`governance.md` without its date (git has it) and in the organization's
+order with the ID breaking ties.
 The current state for reading is the Markdown export, exact IDs come
 from `gov search --json` and `gov roles show --json`.
 

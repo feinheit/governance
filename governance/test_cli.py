@@ -454,16 +454,23 @@ class CLITest(TestCase):
         self.assertNotIn("people", data)
         directory = self.directory / "backup"
         self.gov("backup", directory, "--with-people")
-        self.assertTrue((directory / "roles" / f"{self.cook.pk}-cook.json").exists())
+        cook = directory / "roles" / f"{self.cook.pk}.json"
+        self.assertEqual(json.loads(cook.read_text())["name"], "Cook")
         self.assertIn("ada@example.com", (directory / "people.json").read_text())
         self.assertEqual(json.loads((directory / "meetings.json").read_text()), [])
-        # A renamed role replaces its file, the people go when not asked for
-        Role.objects.filter(pk=self.cook.pk).update(name="Chef de cuisine")
+        markdown = (directory / "governance.md").read_text()
+        self.assertIn("Cooking soup", markdown)
+        self.assertNotIn("As of", markdown)
+        self.assertIn("Ada", markdown)  # With the people
+        # Files by ID: a renamed role keeps its file. Each run replaces the
+        # files, the people go when not asked for
+        (directory / "roles" / "999.json").write_text("{}")
+        Role.objects.filter(pk=self.cook.pk).update(name="Chef")
         self.gov("backup", directory)
-        files = {path.name for path in (directory / "roles").iterdir()}
-        self.assertIn(f"{self.cook.pk}-chef-de-cuisine.json", files)
-        self.assertNotIn(f"{self.cook.pk}-cook.json", files)
+        self.assertEqual(json.loads(cook.read_text())["name"], "Chef")
+        self.assertFalse((directory / "roles" / "999.json").exists())
         self.assertFalse((directory / "people.json").exists())
+        self.assertNotIn("Ada", (directory / "governance.md").read_text())
 
     def test_token_from_the_environment(self):
         """GOVERNANCE_URL and GOVERNANCE_TOKEN need no login, e.g. for the

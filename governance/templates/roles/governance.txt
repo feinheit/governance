@@ -1,7 +1,7 @@
 {% load i18n %}{% autoescape off %}# {% translate "Governance" %}
 
-{% blocktranslate with date=now|date:"DATE_FORMAT" %}As of {{ date }}.{% endblocktranslate %}
-{% for circle in circles %}
+{% if now %}{% blocktranslate with date=now|date:"DATE_FORMAT" %}As of {{ date }}.{% endblocktranslate %}
+{% endif %}{% for circle in circles %}
 {{ circle.heading }} {{ circle.name }}
 
 {% if with_people and circle.export_role_leads %}*{% translate "Role Leads" %}: {% for assignment in circle.export_role_leads %}{{ assignment.user }}{% if not forloop.last %}, {% endif %}{% endfor %}*

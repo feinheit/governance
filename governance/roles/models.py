@@ -37,7 +37,7 @@ class RoleQuerySet(models.QuerySet):
     def depth_first(self):
         """The circles in depth-first order, with their ``depth``"""
         children = defaultdict(list)
-        for circle in self.active().circles().order_by("position", "name"):
+        for circle in self.active().circles().order_by("position", "name", "pk"):
             children[circle.circle_id].append(circle)
         result = []
 

@@ -18,8 +18,9 @@ def plain_mentions(text):
     )
 
 
-def governance_markdown(*, with_people=False):
-    """Who holds the roles only when asked for: personal data"""
+def governance_markdown(*, with_people=False, dated=True):
+    """Who holds the roles only when asked for: personal data. Without the
+    date for the backup, whose git history has it (else it changes daily)"""
     circles = Role.objects.depth_first()
     role_leads = {}
     if with_people:
@@ -35,7 +36,7 @@ def governance_markdown(*, with_people=False):
             .prefetch_related(
                 "accountabilities", "domains", "metrics", "checklistitems", "links"
             )
-            .order_by("position", "name")
+            .order_by("position", "name", "pk")
         )
         circle.export_policies = list(circle.policies.active())
         for role in [circle, *circle.export_roles]:
@@ -45,7 +46,11 @@ def governance_markdown(*, with_people=False):
             )
     text = render_to_string(
         "roles/governance.txt",
-        {"circles": circles, "now": timezone.localtime(), "with_people": with_people},
+        {
+            "circles": circles,
+            "now": timezone.localtime() if dated else None,
+            "with_people": with_people,
+        },
     )
     return plain_mentions(text)
 
