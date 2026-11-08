@@ -411,6 +411,7 @@ def export(request, *, people: bool = False):
 
 @router.get("export/json/")
 def export_json(request, *, people: bool = False):
-    """The current governance as data: the active roles by ID with
-    everything belonging to them, the Role Leads only when asked for"""
+    """The current governance as data: a tree of the active roles from the
+    anchor circle down with everything belonging to them, the Role Leads
+    only when asked for"""
     return governance_data(with_people=people)
