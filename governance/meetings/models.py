@@ -135,7 +135,11 @@ class Meeting(models.Model):
         ]
 
     def __str__(self):
-        return " ".join(filter(None, [self.get_kind_display(), str(self.circle or "")]))
+        # Within sentences ("Outputs of the …"), ad hoc ones apart
+        kind = (
+            _("ad hoc tactical meeting") if self.is_ad_hoc else self.get_kind_display()
+        )
+        return " ".join(filter(None, [str(kind), str(self.circle or "")]))
 
     def get_absolute_url(self):
         return reverse("meeting", kwargs={"pk": self.pk})

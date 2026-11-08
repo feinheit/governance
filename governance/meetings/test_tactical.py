@@ -447,6 +447,16 @@ class TacticalTest(TestCase):
         response = self.client.get(f"/meetings/tactical/new/?role={rep.pk}")
         self.assertContains(response, "You don&#x27;t hold any of these roles.")
 
+    def test_ad_hoc_named(self):
+        """Ad hoc tactical meetings are named so, e.g. in the outputs mail
+        and the running meetings"""
+        meeting = Meeting.objects.create(
+            kind=Meeting.TACTICAL, called_by=self.eve, started_at=timezone.now()
+        )
+        self.assertEqual(str(meeting), "ad hoc tactical meeting")
+        meeting.circle = self.kitchen
+        self.assertEqual(str(meeting), "tactical meeting Kitchen")
+
     def test_ad_hoc(self):
         """Any partner calls one and invites roles of any circle"""
         self.client.force_login(self.eve)
