@@ -427,6 +427,11 @@ class CLITest(TestCase):
         self.gov("export", "--output", path)
         self.assertIn("Cooking soup", path.read_text())
 
+    def test_constitution(self):
+        self.assertIn("# **Holacracy Constitution**", self.gov("constitution").output)
+        result = self.gov("constitution", "--language", "de")
+        self.assertIn("# **Holacracy Verfassung**", result.output)
+
     def test_export_json(self):
         """The JSON backup, one key per file"""
         files = json.loads(self.gov("export", "--json").output)

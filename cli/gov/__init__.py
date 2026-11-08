@@ -3,6 +3,7 @@
 from gov import (  # noqa: F401 Register the commands
     auth,
     circles,
+    constitution,
     domains,
     export,
     policies,
