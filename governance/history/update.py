@@ -12,7 +12,7 @@ from django.db import connection, transaction
 from django.utils import timezone
 
 from governance.history.audit import TABLES, day_end, rows_on, structure
-from governance.history.changes import diff_policies, diff_roles
+from governance.history.changes import diff_items, diff_policies, diff_roles
 from governance.history.models import Change
 from governance.roles.models import Assignment, Policy, Role
 
@@ -103,6 +103,11 @@ def update_changes(*, since=None):
         current = structure(rows, holders.on(day), day)
         if previous is not None:
             for role, kind, old, value in diff_roles(previous, current):
+                if role in roles:
+                    new.append(
+                        Change(date=day, role_id=role, kind=kind, old=old, new=value)
+                    )
+            for role, kind, old, value in diff_items(previous, current):
                 if role in roles:
                     new.append(
                         Change(date=day, role_id=role, kind=kind, old=old, new=value)

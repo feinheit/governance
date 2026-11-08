@@ -114,9 +114,12 @@ def recent_history(role, count=10):
         "proposer"
     )[:count]
     changes = (
-        role.changes.exclude(kind__in=ASSIGNMENT_KINDS)
+        role.changes
+        .exclude(kind__in=ASSIGNMENT_KINDS)
         # Only counts, the proposals of those days say more
         .exclude(kind__endswith="-unrecorded")
+        # Operational, the history page shows them on request
+        .exclude(kind__regex=r"^(link|metric|checklist)-")
     )
     # Whole days, their texts are merged into one change (merge_lists())
     days = changes.order_by("-date").values_list("date", flat=True).distinct()[:count]

@@ -2,8 +2,10 @@ import datetime as dt
 from difflib import SequenceMatcher
 from itertools import groupby
 
+from django import forms
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.db.models.functions import TruncDate
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
@@ -12,6 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 from governance.accounts.models import User
 from governance.diff import similar, tokens
+from governance.filters import CircleField, FilterForm
 from governance.history.audit import structure_on
 from governance.history.models import Change
 from governance.proposals.models import Proposal
@@ -44,8 +47,19 @@ LABELS = {
     "policy-body": _("Policy text changed"),
     "policy-moved": _("Policy moved"),
     "policy-domain": _("Policy moved to another domain"),
+    "link-added": _("Link added"),
+    "link-changed": _("Link changed"),
+    "link-removed": _("Link removed"),
+    "metric-added": _("Metric added"),
+    "metric-changed": _("Metric changed"),
+    "metric-removed": _("Metric removed"),
+    "checklist-added": _("Checklist item added"),
+    "checklist-changed": _("Checklist item changed"),
+    "checklist-removed": _("Checklist item removed"),
 }
 ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected", "focus"}
+# Links, metrics and checklist items: operational, shown on request
+ITEM_KINDS = ("link-", "metric-", "checklist-")
 # Added and removed texts of a role on a day, merged into one entry
 LISTS = {
     "accountabilities": (
@@ -157,6 +171,8 @@ def present(changes):
     roles = Role.objects.in_bulk(role_ids)
     for change in changes:
         change.label = LABELS.get(change.kind, change.kind)
+        # Links, metrics and checklist items: their text right away
+        change.is_item = change.kind.startswith(ITEM_KINDS)
         change.old_text = change.old if isinstance(change.old, str) else ""
         change.new_text = change.new if isinstance(change.new, str) else ""
         change.user = (
@@ -192,11 +208,32 @@ def timeline(changes, proposals):
     ]
 
 
+class RoleHistoryFilters(FilterForm):
+    assignments = forms.BooleanField(label=_("With assignments"), required=False)
+    operational = forms.BooleanField(
+        label=_("With links, metrics and checklists"), required=False
+    )
+
+
+class HistoryFilters(RoleHistoryFilters):
+    circle = CircleField(label=_("Circle"), empty_label=_("All circles"))
+    field_order = ["circle", "assignments", "operational"]
+
+
+def filtered(changes, filters):
+    """Without the assignments and the operational items unless chosen"""
+    if not filters.get("assignments"):
+        changes = changes.exclude(kind__in=ASSIGNMENT_KINDS)
+    if not filters.get("operational"):
+        for prefix in ITEM_KINDS:
+            changes = changes.exclude(kind__startswith=prefix)
+    return changes
+
+
 def role_history(request, pk):
     role = get_object_or_404(Role, pk=pk)
-    changes = role.changes.select_related("role", "policy")
-    if not request.GET.get("assignments"):
-        changes = changes.exclude(kind__in=ASSIGNMENT_KINDS)
+    filters = RoleHistoryFilters(request.GET)
+    changes = filtered(role.changes.select_related("role", "policy"), filters)
     proposals = role.changed_by_proposals.filter(
         status=Proposal.ADOPTED
     ).select_related("proposer")
@@ -207,20 +244,25 @@ def role_history(request, pk):
             "role": role,
             "ancestors": role.ancestors(),
             "timeline": timeline(changes, proposals),
-            "assignments": bool(request.GET.get("assignments")),
+            "filters": filters,
         },
     )
 
 
 def organization_history(request):
-    changes = Change.objects.select_related("role", "policy")
-    if not request.GET.get("assignments"):
-        changes = changes.exclude(kind__in=ASSIGNMENT_KINDS)
+    filters = HistoryFilters(request.GET)
+    changes = filtered(Change.objects.select_related("role", "policy"), filters)
     # The days of changes and of adopted proposals (local days), e.g. one
     # with elections only, whose changes are hidden
     adopted = Proposal.objects.filter(status=Proposal.ADOPTED).annotate(
         day=TruncDate("decided_at", tzinfo=timezone.get_current_timezone())
     )
+    if circle_id := filters.get("circle"):
+        # The circle, its roles and those of its sub-circles
+        circle = get_object_or_404(Role, pk=circle_id)
+        circles = [circle, *circle.sub_circles()]
+        changes = changes.filter(Q(role__in=circles) | Q(role__circle__in=circles))
+        adopted = adopted.filter(circle__in=circles)
     all_days = sorted(
         set(changes.order_by().values_list("date", flat=True).distinct())
         | set(adopted.order_by().values_list("day", flat=True).distinct()),
@@ -238,7 +280,7 @@ def organization_history(request):
         {
             "timeline": timeline(changes, proposals),
             "page": days,
-            "assignments": bool(request.GET.get("assignments")),
+            "filters": filters,
         },
     )
 

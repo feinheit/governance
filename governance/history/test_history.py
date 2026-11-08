@@ -2,7 +2,7 @@ import datetime as dt
 
 from django.test import TestCase
 
-from governance.history.changes import diff_policies, diff_roles
+from governance.history.changes import diff_items, diff_policies, diff_roles
 from governance.history.models import Change
 from governance.history.update import update_changes
 from governance.roles.models import Policy, Role
@@ -525,3 +525,57 @@ class MergedListsTest(TestCase):
             "Accountabilities changed",
             count=1,
         )
+
+
+class OperationalItemsTest(TestCase):
+    def test_diff(self):
+        old = {
+            "items": {
+                "link:1": {"kind": "link", "role": 7, "text": "[Board](https://a)"},
+                "metric:2": {"kind": "metric", "role": 7, "text": "Sales"},
+            }
+        }
+        new = {
+            "items": {
+                "link:1": {"kind": "link", "role": 7, "text": "[Tasks](https://a)"},
+                "checklist:3": {"kind": "checklist", "role": 8, "text": "Clean"},
+            }
+        }
+        self.assertEqual(
+            sorted(diff_items(old, new)),
+            [
+                (7, "link-changed", "[Board](https://a)", "[Tasks](https://a)"),
+                (7, "metric-removed", "Sales", ""),
+                (8, "checklist-added", "", "Clean"),
+            ],
+        )
+
+    def test_shown_on_request(self):
+        """Links, metrics and checklist items added in the app are changes,
+        the history shows them when asked for"""
+        from django.utils import timezone
+
+        from governance.accounts.models import User
+        from governance.history.audit import structure_from_database
+        from governance.roles.models import Link
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        day = timezone.localdate() - dt.timedelta(days=1)
+        history((day, structure_from_database(day)))
+        Link.objects.create(role=circle, title="Board", url="https://example.com/")
+        update_changes(since=timezone.localdate())
+        self.assertEqual(
+            list(Change.objects.values_list("kind", "role", "new")),
+            [("link-added", circle.pk, "[Board](https://example.com/)")],
+        )
+
+        url = f"/roles/{circle.pk}/history/"
+        self.assertNotContains(self.client.get(url), "Link added")
+        response = self.client.get(f"{url}?operational=1")
+        self.assertContains(response, "Link added")
+        self.assertContains(response, 'href="https://example.com/"')
+        self.assertNotContains(self.client.get("/history/"), "Link added")
+        self.assertContains(self.client.get("/history/?operational=1"), "Link added")
+        # Not on the role's page
+        self.assertNotContains(self.client.get(circle.get_absolute_url()), "Link added")

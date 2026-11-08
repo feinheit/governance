@@ -556,6 +556,13 @@ their account, else the default), not when they received it themselves
   last focus: changes of the focus come from the audit log's updates of
   assignments (`update.focus_changes()`, per day the first and the last,
   not on the day of assigning; also the nightly import's).
+- **Links, metrics and checklist items** are changes too (`link-added`
+  etc., `diff_items()`), operational: the history shows them on request,
+  the role's page not.
+- **Filters** like Workbench's (`governance/filters.py`,
+  `generic/_filters.html`, `frontend/filters.js`: GET forms submitting when
+  changed): the history by circle (with its sub-circles), with
+  assignments, with links, metrics and checklists.
 - The audit log covers everything else the same way, row by row.
 
 ## 7. Views

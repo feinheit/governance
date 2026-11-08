@@ -70,3 +70,19 @@ def diff_policies(old, new):
             # Another domain, not a domain renamed (days of GlassFrog
             # without the domain's ID in the app don't count)
             yield int(pk), b["role"], "domain", a["domain_text"], b["domain_text"]
+
+
+def diff_items(old, new):
+    """Yields ``(role, kind, old, new)`` for links, metrics and checklist
+    items added, changed and removed"""
+    old_items, new_items = old.get("items", {}), new.get("items", {})
+    for key in new_items.keys() - old_items.keys():
+        item = new_items[key]
+        yield item["role"], f"{item['kind']}-added", "", item["text"]
+    for key in old_items.keys() - new_items.keys():
+        item = old_items[key]
+        yield item["role"], f"{item['kind']}-removed", item["text"], ""
+    for key in new_items.keys() & old_items.keys():
+        a, b = old_items[key], new_items[key]
+        if a["text"] != b["text"]:
+            yield b["role"], f"{b['kind']}-changed", a["text"], b["text"]

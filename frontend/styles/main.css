@@ -237,6 +237,20 @@ h3,
   margin-top: 0.125rem;
 }
 
+/* Filters of lists (generic/_filters.html), like Workbench's */
+.wb-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.wb-filters select {
+  width: auto;
+  max-width: 16em;
+}
+
 .wb-meta {
   display: flex;
   flex-wrap: wrap;

@@ -15,8 +15,8 @@ anderer.
   **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API und
   Abmelden.
 - **Vorschläge**: alle Vorschläge, nach Status gefiltert.
-- **Geschichte**: was sich wann geändert hat, auf Wunsch mit den
-  Zuweisungen.
+- **Geschichte**: was sich wann geändert hat, nach Kreis gefiltert, auf
+  Wunsch mit den Zuweisungen und mit Links, Metriken und Checklisten.
 - **Suchen** findet Rollen, Accountabilities, Domains und Policies, die
   alle eingegebenen Wörter enthalten.
 

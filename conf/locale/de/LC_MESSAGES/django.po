@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 13:55+0100\n"
+"POT-Creation-Date: 2026-11-08 14:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -164,6 +164,10 @@ msgstr "protokollierte Änderungen"
 msgid "Your gov is too old, please upgrade it: %(command)s"
 msgstr "Dein gov ist zu alt, bitte aktualisiere es: %(command)s"
 
+#: governance/filters.py governance/history/views.py
+msgid "All circles"
+msgstr "Alle Kreise"
+
 #: governance/forms.py
 msgid "- Select an option -"
 msgstr "- Bitte auswählen -"
@@ -303,6 +307,42 @@ msgid "Policy moved to another domain"
 msgstr "Policy in eine andere Domain verschoben"
 
 #: governance/history/views.py
+msgid "Link added"
+msgstr "Link hinzugefügt"
+
+#: governance/history/views.py
+msgid "Link changed"
+msgstr "Link geändert"
+
+#: governance/history/views.py
+msgid "Link removed"
+msgstr "Link entfernt"
+
+#: governance/history/views.py
+msgid "Metric added"
+msgstr "Metrik hinzugefügt"
+
+#: governance/history/views.py
+msgid "Metric changed"
+msgstr "Metrik geändert"
+
+#: governance/history/views.py
+msgid "Metric removed"
+msgstr "Metrik entfernt"
+
+#: governance/history/views.py
+msgid "Checklist item added"
+msgstr "Checklisten-Punkt hinzugefügt"
+
+#: governance/history/views.py
+msgid "Checklist item changed"
+msgstr "Checklisten-Punkt geändert"
+
+#: governance/history/views.py
+msgid "Checklist item removed"
+msgstr "Checklisten-Punkt entfernt"
+
+#: governance/history/views.py
 msgid "Accountabilities changed"
 msgstr "Accountabilities geändert"
 
@@ -325,6 +365,24 @@ msgstr "Domains hinzugefügt"
 #: governance/history/views.py
 msgid "Domains removed"
 msgstr "Domains entfernt"
+
+#: governance/history/views.py
+msgid "With assignments"
+msgstr "Mit Zuweisungen"
+
+#: governance/history/views.py
+msgid "With links, metrics and checklists"
+msgstr "Mit Links, Metriken und Checklisten"
+
+#: governance/history/views.py governance/proposals/describe.py
+#: governance/templates/history/role_as_of.html
+#: governance/templates/roles/_role_rows.html
+#: governance/templates/roles/person_detail.html
+#: governance/templates/roles/role_context.html
+#: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
+msgid "Circle"
+msgstr "Kreis"
 
 #: governance/meetings/apps.py governance/meetings/models.py
 msgid "meetings"
@@ -741,16 +799,6 @@ msgstr "Rolle"
 #: governance/templates/roles/governance.txt
 msgid "Policy"
 msgstr "Policy"
-
-#: governance/proposals/describe.py
-#: governance/templates/history/role_as_of.html
-#: governance/templates/roles/_role_rows.html
-#: governance/templates/roles/person_detail.html
-#: governance/templates/roles/role_context.html
-#: governance/templates/roles/role_detail.html
-#: governance/templates/search/search.html
-msgid "Circle"
-msgstr "Kreis"
 
 #: governance/proposals/describe.py
 msgid "yes"
@@ -1866,6 +1914,18 @@ msgstr "API"
 msgid "Sign out"
 msgstr "Abmelden"
 
+#: governance/templates/generic/_filters.html
+msgid "Remove the filter"
+msgstr "Filter entfernen"
+
+#: governance/templates/generic/_filters.html
+msgid "Filter"
+msgstr "Filtern"
+
+#: governance/templates/generic/_filters.html
+msgid "Reset"
+msgstr "Zurücksetzen"
+
 #: governance/templates/generic/_right.html
 msgid "You can do this as an admin, not through one of your roles: the constitution leaves it to others. Only do it when you know it's needed."
 msgstr "Du kannst das als Admin tun, nicht über eine deiner Rollen: Die Verfassung überlässt es anderen. Tu es nur, wenn du weisst, dass es nötig ist."
@@ -1910,16 +1970,6 @@ msgstr "Anzeigen"
 #: governance/templates/roles/role_detail.html
 msgid "No changes."
 msgstr "Keine Änderungen."
-
-#: governance/templates/history/organization_history.html
-#: governance/templates/history/role_history.html
-msgid "Without assignments"
-msgstr "Ohne Zuweisungen"
-
-#: governance/templates/history/organization_history.html
-#: governance/templates/history/role_history.html
-msgid "With assignments"
-msgstr "Mit Zuweisungen"
 
 #: governance/templates/history/organization_history.html
 #: governance/templates/meetings/meeting_list.html
@@ -2249,6 +2299,7 @@ msgstr "Governance Meeting starten"
 
 #: governance/templates/meetings/_start_buttons.html
 #: governance/templates/meetings/meeting_confirm.html
+#: governance/templates/roles/role_detail.html
 msgid "Start a tactical meeting"
 msgstr "Tactical Meeting starten"
 
@@ -2962,6 +3013,10 @@ msgid "Mail addresses of the members"
 msgstr "Mailadressen der Mitglieder"
 
 #: governance/templates/roles/role_detail.html
+msgid "All meetings"
+msgstr "Alle Meetings"
+
+#: governance/templates/roles/role_detail.html
 #, python-format
 msgid "%(count)s policy"
 msgid_plural "%(count)s policies"
@@ -2987,10 +3042,6 @@ msgstr "Policy für die Domains hinzufügen"
 #: governance/templates/roles/role_detail.html
 msgid "The role regulates its domains itself, without a governance process. Everybody affected is informed."
 msgstr "Die Rolle regelt ihre Domains selbst, ohne Governance-Prozess. Alle Betroffenen werden informiert."
-
-#: governance/templates/roles/role_detail.html
-msgid "All meetings"
-msgstr "Alle Meetings"
 
 #: governance/templates/roles/role_detail.html
 msgid "Checklists and metrics"
@@ -3052,6 +3103,9 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "Without assignments"
+#~ msgstr "Ohne Zuweisungen"
 
 #, python-format
 #~ msgid "Domains of other roles in %(circle)s"

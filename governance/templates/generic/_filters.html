@@ -1,0 +1,26 @@
+{% load i18n %}
+{% comment %}
+  A list's filters (governance/filters.py), like Workbench's: the fields
+  submit when changed (frontend/filters.js), the button only without
+  JavaScript; ``chips`` are filters set elsewhere, e.g. a role, removed
+  with their link
+{% endcomment %}
+<form method="get" class="wb-filters" data-autosubmit>
+  {% for field in form %}
+    {% if field.widget_type == "checkbox" %}
+      <div class="form-check form-check-inline mb-0">
+        {{ field }}
+        <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      </div>
+    {% else %}
+      <label class="visually-hidden" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+    {% endif %}
+  {% endfor %}
+  {% for name, value, label, url in chips %}
+    <input type="hidden" name="{{ name }}" value="{{ value }}">
+    <a class="btn btn-sm btn-quiet" href="{{ url }}" title="{% translate 'Remove the filter' %}">× {{ label }}</a>
+  {% endfor %}
+  <button type="submit" class="btn btn-sm btn-quiet" data-filter-submit>{% translate "Filter" %}</button>
+  {% if form.is_filtered or chips %}<a class="btn btn-sm btn-link" href="?">{% translate "Reset" %}</a>{% endif %}
+</form>

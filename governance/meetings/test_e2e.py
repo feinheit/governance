@@ -614,7 +614,10 @@ class MeetingE2ETest(LiveServerTestCase):
             role=Role.objects.create(name="Baker", circle=bakery), user=self.ada
         )
         page.goto(f"{self.live_server_url}{bakery.get_absolute_url()}")
-        page.locator("a[data-modal]", has_text="Start a tactical meeting").click()
+        # The circle's Meetings card (the menu has it too)
+        page.locator(
+            "section a[data-modal]", has_text="Start a tactical meeting"
+        ).click()
         page.wait_for_selector("#modal[open] button[type=submit]:focus")
         page.keyboard.press("Enter")
         page.wait_for_url("**/meetings/*/")
@@ -766,6 +769,20 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertEqual(
             page.evaluate("navigator.clipboard.readText()"), "Ada <ada@example.com>"
         )
+        self.assertEqual(self.errors, [])
+
+    def test_filters(self):
+        """Changing a filter loads the list, the button is for browsers
+        without JavaScript"""
+        page = self.page
+        page.goto(f"{self.live_server_url}/history/")
+        self.assertFalse(page.locator("[data-filter-submit]").is_visible())
+        page.locator("label", has_text="With assignments").click()
+        page.wait_for_url("**/history/?assignments=on")
+        page.select_option("select[name=circle]", str(self.kitchen.pk))
+        page.wait_for_url(f"**/history/?assignments=on&circle={self.kitchen.pk}")
+        page.locator("a", has_text="Reset").click()
+        page.wait_for_url("**/history/?")
         self.assertEqual(self.errors, [])
 
     def test_take_over_as_secretary(self):

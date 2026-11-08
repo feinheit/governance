@@ -52,7 +52,8 @@ class StructureOnTest(AuditTestCase):
             structure_on(today)["roles"][str(cook.pk)]["strategy"], "Fresh first"
         )
         self.assertEqual(
-            structure_on(today - dt.timedelta(days=1)), {"roles": {}, "policies": {}}
+            structure_on(today - dt.timedelta(days=1)),
+            {"roles": {}, "policies": {}, "items": {}},
         )
 
 
@@ -91,7 +92,8 @@ class BackfillTest(AuditTestCase):
             with self.subTest(day=day):
                 self.assertEqual(canonical(structure_on(day)), canonical(data))
         self.assertEqual(
-            structure_on(dt.date(2025, 12, 31)), {"roles": {}, "policies": {}}
+            structure_on(dt.date(2025, 12, 31)),
+            {"roles": {}, "policies": {}, "items": {}},
         )
         # The accountability at the end is the real row
         rows = rows_on(day3)["accountabilities"]

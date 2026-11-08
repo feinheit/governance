@@ -31,7 +31,13 @@ TABLES = {
     "roles_policy": "policies",
     "roles_accountability": "accountabilities",
     "roles_domain": "domains",
+    # Operational, shown in the history on request
+    "roles_link": "links",
+    "roles_metric": "metrics",
+    "roles_checklistitem": "checklist",
 }
+# Kinds of the items, keyed by their structure's key
+ITEMS = {"links": "link", "metrics": "metric", "checklist": "checklist"}
 # The core roles' constitutional texts come from the code (constitution 5.0),
 # GlassFrog switched to it on this day; the texts of 4.1 are rows
 CONSTITUTION_5 = dt.date(2022, 12, 13)
@@ -99,6 +105,29 @@ def _int(value):
     return int(value) if value not in {None, ""} else None
 
 
+def item_text(kind, data):
+    """A link as Markdown, a metric's or checklist item's description"""
+    if kind == "links":
+        text = f"[{data.get('title') or ''}]({data.get('url') or ''})"
+        if description := data.get("description"):
+            text += f" – {description}"
+        return text
+    return data.get("description") or ""
+
+
+def items(rows):
+    """Links, metrics and checklist items: ``{"link:5": {…}}``"""
+    return {
+        f"{ITEMS[kind]}:{pk}": {
+            "kind": ITEMS[kind],
+            "role": _int(data["role_id"]),
+            "text": item_text(kind, data),
+        }
+        for kind in ITEMS
+        for pk, data in rows.get(kind, {}).items()
+    }
+
+
 def structure(rows, assignments, day):
     """The structure from the rows' states and the assignments of a day"""
     texts = {"accountabilities": defaultdict(list), "domains": defaultdict(list)}
@@ -145,6 +174,7 @@ def structure(rows, assignments, day):
             for pk, data in rows.get("policies", {}).items()
             if _active(data, day)
         },
+        "items": items(rows),
     }
 
 
@@ -156,7 +186,7 @@ def structure_on(day):
 def structure_from_database(day):
     """The current structure from the tables, e.g. for the last day of
     GlassFrog's history"""
-    from governance.roles.models import Policy, Role
+    from governance.roles.models import ChecklistItem, Link, Metric, Policy, Role
 
     roles = Role.objects.active().prefetch_related("accountabilities", "domains")
     assignments = assignments_on(day)
@@ -188,6 +218,14 @@ def structure_from_database(day):
             }
             for policy in Policy.objects.active().select_related("domain")
         },
+        "items": items({
+            kind: {obj.pk: obj.__dict__ for obj in model.objects.all()}
+            for kind, model in [
+                ("links", Link),
+                ("metrics", Metric),
+                ("checklist", ChecklistItem),
+            ]
+        }),
     }
 
 
@@ -206,4 +244,5 @@ def canonical(data):
             for pk, entry in data.get("roles", {}).items()
         },
         "policies": data.get("policies", {}),
+        # Not the items: the GlassFrog import doesn't backfill their past
     }

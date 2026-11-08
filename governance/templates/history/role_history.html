@@ -7,16 +7,12 @@
   <div class="wb-page-header">
     <div>
       <h1>{% translate "History" %}: <a href="{{ role.get_absolute_url }}">{{ role }}</a></h1>
-      <div class="wb-meta">
-        {% if assignments %}<a href="?">{% translate "Without assignments" %}</a>{% else %}<a
-            href="?assignments=1"
-          >{% translate "With assignments" %}</a>{% endif %}
-      </div>
     </div>
     <form class="wb-page-actions flex-nowrap" method="get" action="{% url 'role_as_of' role.pk %}">
       <input type="date" name="date" class="form-control form-control-sm" required>
       <button class="btn btn-sm btn-quiet text-nowrap">{% translate "Show as of" %}</button>
     </form>
   </div>
+  {% include "generic/_filters.html" with form=filters %}
   {% include "history/_timeline.html" %}
 {% endblock content %}
