@@ -833,30 +833,20 @@ Deliberately not modelled:
   (decided 2026-11-08).
 - **Before the switchover** (assessment of 2026-11-07; GlassFrog stays
   the source of truth until then, so bugs cost little now):
-  - Another verification round or two: each round so far still found
-    bugs combining features.
   - One or two real meetings in the app, also to see the mails in real
     clients (several role mails at a meeting's end since elections are
     announced then).
   - Only adopting takes `lock_structure()`; assignments, domain policies
     and elections at the same moment are untested.
-  - Recomputing the whole history (reinitializing, the import) at the
-    real size isn't measured.
-  - The lists of current assignments (focus and term next to the name)
-    haven't been looked at in the browser (light and dark, long focus
-    texts, narrow screens).
 - **Verification** (round of 2026-11-08; fixed: an unfilled Circle Rep
   invited the Circle Leads to ad hoc tactical meetings, a sub-circle
   listed its super-circle's regular tactical meetings; decided: the
   focus of elected roles stays unchangeable, a role's meetings include
   its circle's governance meetings, ad hoc meetings' outputs go to their
   attendees only, a circle's history shows today's roles and the moves
-  of those which left). Open:
-  - Unproven: ad hoc meetings are "tactical meeting" in the outputs mail and "Running
-    now" (`str(meeting)`, not `kind_label`); `former_names()` repeats
-    names going back and forth; the proposals' role filter misses
-    never-published drafts; `of_role` of a moved role lists its new
-    circle's meetings from before the move.
+  of those which left; its unproven risks fixed too). Enough rounds
+  for the switchover: more would still find bugs, but few that matter
+  (decided 2026-11-08); a round when features combine in new ways.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
