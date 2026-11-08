@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% comment %}
+  Calling an ad hoc tactical meeting (views.tactical_call): the roles
+  first, filtered in the browser (frontend/filter_rows.js), then who of
+  their holders is invited (constitution 3.1)
+{% endcomment %}
+{% block title %}{% translate "Call a tactical meeting" %} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0">{% translate "Call a tactical meeting" %}</h1>
+        <div class="wb-meta">
+          <span
+          >{% translate "Any partner may call a tactical meeting with the roles they need, also from several circles." %}</span>
+        </div>
+      </div>
+    </div>
+
+    {% if choosing %}
+      <form method="get">
+        <section class="card mb-3">
+          <div class="card-header d-flex flex-wrap align-items-center gap-2">
+            <h2 class="h6 mb-0 me-auto">{% translate "1. Which roles?" %}</h2>
+            <input
+              type="search"
+              class="form-control form-control-sm w-auto"
+              placeholder="{% translate 'Filter: role, circle or person' %}"
+              aria-label="{% translate 'Filter: role, circle or person' %}"
+              data-filter-rows="#callable-roles"
+              autofocus
+              hidden
+            >
+          </div>
+          <div class="list-group list-group-flush" id="callable-roles">
+            {% for circle, circle_roles in groups %}
+              <div data-filter-group>
+                <div class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
+                  {{ circle }}
+                </div>
+                {% for role in circle_roles %}
+                  <label
+                    class="list-group-item d-flex gap-2"
+                    data-filter-text="{{ role }} {{ circle }} {% for a in role.current_assignments %}{{ a.user }} {% endfor %}"
+                  >
+                    <input
+                      class="form-check-input flex-shrink-0"
+                      type="checkbox"
+                      name="role"
+                      value="{{ role.pk }}"
+                      {% if role.pk in chosen_pks %}checked{% endif %}
+                    >
+                    <span>
+                      {{ role }}
+                      <span
+                        class="small text-body-secondary"
+                      >{% for a in role.current_assignments %}{{ a.user }}{% if not forloop.last %},
+                          {% endif %}{% empty %}{% translate "unfilled" %}{% endfor %}</span>
+                    </span>
+                  </label>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+        <div class="wb-form-actions">
+          <button type="submit" class="btn btn-primary">{% translate "Next: who is invited" %}</button>
+          <a class="btn btn-quiet" href="/">{% translate "Cancel" %}</a>
+        </div>
+      </form>
+    {% else %}
+      <form method="post">
+        {% csrf_token %}
+        {% for role in chosen %}<input type="hidden" name="role" value="{{ role.pk }}">{% endfor %}
+        <section class="card mb-3">
+          <div class="card-header d-flex flex-wrap align-items-center gap-2">
+            <h2 class="h6 mb-0 me-auto">{% translate "2. Who is invited?" %}</h2>
+            <a
+              class="small"
+              href="?change=1{% for role in chosen %}&amp;role={{ role.pk }}{% endfor %}"
+            >{% translate "Change the roles" %}</a>
+          </div>
+          <div class="card-body py-2 small text-body-secondary">
+            {% translate "Roles" %}:
+            {% for role in chosen %}{{ role }} ({{ role.circle }}){% if not forloop.last %}, {% endif %}{% endfor %}
+          </div>
+          <div class="list-group list-group-flush">
+            {% for user, user_roles in people %}
+              <label class="list-group-item d-flex gap-2">
+                <input
+                  class="form-check-input flex-shrink-0"
+                  type="checkbox"
+                  name="attendee"
+                  value="{{ user.pk }}"
+                  checked
+                >
+                <span>
+                  {{ user }}
+                  <span
+                    class="small text-body-secondary"
+                  >{% for role in user_roles %}{{ role }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+                </span>
+              </label>
+            {% empty %}
+              <div class="list-group-item text-body-secondary">{% translate "Nobody holds these roles." %}</div>
+            {% endfor %}
+          </div>
+          <div class="card-body border-top py-2 small text-body-secondary">
+            {% translate "The holders of the roles are invited, unfilled roles' Circle Leads; you may invite only some of them (constitution 3.1). You attend too." %}
+          </div>
+        </section>
+        <div class="wb-form-actions">
+          <button type="submit" class="btn btn-primary">
+            {% icon "play-fill" %}
+            {% translate "Start the meeting" %}
+          </button>
+          <a class="btn btn-quiet" href="/">{% translate "Cancel" %}</a>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+{% endblock content %}

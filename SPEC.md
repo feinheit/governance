@@ -461,8 +461,11 @@ on Mondays.
 
 **Tactical meetings** (article 3): any circle member
 starts a regular one (all roles of the circle invited, attendees its
-members); anybody calls an ad-hoc one from a role page, inviting roles of
-any circle. Steps: check-in, checklist review, metrics review (the
+members); anybody calls an ad-hoc one from the user's menu (`tactical_call`): the
+roles of any circles first (a field filters them as you type,
+`frontend/filter_rows.js`), then who of their Role Leads attend, all
+checked, some unchecked to narrow the invitation (3.1); the caller
+attends too. Steps: check-in, checklist review, metrics review (the
 invited roles' entries, for regular ones also the circle's own, not a
 sub-circle's own), progress updates (the links of the circle and the
 invited roles, the outcomes and links of the circle's last three

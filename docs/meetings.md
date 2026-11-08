@@ -86,12 +86,13 @@ circle.
 - **Regular**: "Start a tactical meeting" on the circle's page, every
   member may do that; all of the circle's roles are invited.
 - **Ad hoc**: "Call a tactical meeting" in the menu of your name (top
-  right), with any roles, also from other circles; the list shows who
-  holds them, they're invited. To invite only some holders of a role
-  (constitution 3.1), remove the others from the attendees in the
-  meeting. "All meetings" in the
-  menu "More actions" (…) of a role's page lists its circle's meetings and those the role was
-  invited to.
+  right): first the roles, also from several circles (the field filters
+  them by role, circle or person), then "Next: who is invited" lists
+  their holders (for unfilled roles the Circle Leads), all checked; to
+  invite only some of them (constitution 3.1), uncheck the others. "Start
+  the meeting" starts it, you attend too. "All meetings" in the menu "More
+  actions" (…) of a role's page lists its circle's meetings and those the
+  role was invited to.
 
 Lists of meetings show what they were about: the adopted proposals,
 else the agenda items.

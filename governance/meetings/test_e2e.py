@@ -788,6 +788,25 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_url("**/history/?")
         self.assertEqual(self.errors, [])
 
+    def test_call_tactical_meeting(self):
+        """Calling an ad hoc meeting: roles filtered as you type, then who
+        is invited"""
+        Role.objects.create(name="Waiter", circle=self.kitchen)
+        page = self.page
+        page.goto(f"{self.live_server_url}/meetings/tactical/new/")
+        page.fill("[data-filter-rows]", "coo")
+        self.assertTrue(page.locator("label", has_text="Cook").is_visible())
+        self.assertFalse(page.locator("label", has_text="Waiter").is_visible())
+        page.locator("label", has_text="Cook").click()
+        page.fill("[data-filter-rows]", "")
+        page.locator("button", has_text="Next").click()
+        page.wait_for_selector("input[name=attendee]:checked")
+        page.locator("button", has_text="Start the meeting").click()
+        page.wait_for_url("**/meetings/*/")
+        meeting = Meeting.objects.get(circle=None)
+        self.assertEqual(list(meeting.invited_roles.all()), [self.cook])
+        self.assertEqual(self.errors, [])
+
     def test_take_over_as_secretary(self):
         """Somebody who isn't the circle's Secretary confirms taking over the
         meeting's secretary, dismissing changes nothing"""

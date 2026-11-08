@@ -1,3 +1,4 @@
+from itertools import groupby
 from urllib.parse import urlencode
 
 from django import forms
@@ -43,6 +44,7 @@ from governance.roles.permissions import (
     asks_before_starting,
     can_start_meeting,
     members,
+    role_leads,
 )
 
 
@@ -307,78 +309,84 @@ def meeting_create(request, pk):
     return redirect(meeting)
 
 
-class TacticalMeetingForm(ModelForm):
-    class Meta:
-        model = Meeting
-        fields = ["invited_roles"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        field = self.fields["invited_roles"]
-        field.required = True
-        field.queryset = (
-            Role.objects
-            .active()
-            .exclude(circle=None)
-            .select_related("circle")
-            .prefetch_related(
-                Prefetch(
-                    "assignments",
-                    queryset=Assignment.objects.current().select_related("user"),
-                    to_attr="current_assignments",
-                )
+def callable_roles():
+    """The roles an ad hoc tactical meeting may invite, with their holders,
+    by circle in the organization's order"""
+    order = {
+        circle.pk: index for index, circle in enumerate(Role.objects.depth_first())
+    }
+    roles = (
+        Role.objects
+        .active()
+        .exclude(circle=None)
+        .select_related("circle")
+        .prefetch_related(
+            Prefetch(
+                "assignments",
+                queryset=Assignment.objects.current().select_related("user"),
+                to_attr="current_assignments",
             )
-            .order_by("circle__name", "position", "name")
         )
-        field.label_from_instance = role_with_holders
-        field.widget.attrs["size"] = 15
-        field.help_text = _(
-            "Any partner may call a tactical meeting and invite the roles"
-            " they need; their holders are invited. Hold Ctrl or Cmd to select"
-            " several. To invite only some holders of a role (constitution"
-            " 3.1), remove the others from the attendees in the meeting."
-        )
-
-
-def role_with_holders(role):
-    """The role, its circle and who is invited with it"""
-    holders = ", ".join(
-        str(a.user) for a in role.current_assignments if a.user.is_active
     )
-    return f"{role} ({role.circle}): {holders or gettext('nobody')}"
+    return sorted(
+        (role for role in roles if role.circle_id in order),
+        key=lambda role: (order[role.circle_id], role.position, role.name),
+    )
+
+
+def invitees(roles):
+    """The people invited with the roles, each once with their roles: the
+    holders, an unfilled role's Circle Leads (1.4.2)"""
+    people = {}
+    for role in roles:
+        for user in role_leads(role):
+            people.setdefault(user, []).append(role)
+    return sorted(people.items(), key=lambda item: str(item[0]).lower())
 
 
 def tactical_call(request):
-    """An ad-hoc tactical meeting, called by anybody"""
-    initial = {"invited_roles": request.GET.getlist("role")}
-    form = TacticalMeetingForm(request.POST or None, initial=initial)
-    if form.is_valid():
-        meeting = form.save(commit=False)
-        meeting.kind = Meeting.TACTICAL
-        meeting.called_by = request.user
-        meeting.secretary = request.user
-        meeting.started_at = timezone.now()
-        meeting.save()
-        form.save_m2m()
-        meeting.attendees.set(
-            User.objects.active().filter(
-                Q(pk=request.user.pk)
-                | Q(
-                    pk__in=Assignment.objects
-                    .current()
-                    .filter(role__in=meeting.invited_roles.all())
-                    .values("user")
-                )
-            )
+    """An ad hoc tactical meeting, called by anybody: the roles first, then
+    who of their holders is invited (constitution 3.1)"""
+    data = request.POST if request.method == "POST" else request.GET
+    chosen = list(
+        Role.objects
+        .active()
+        .exclude(circle=None)
+        .filter(pk__in=[pk for pk in data.getlist("role") if pk.isdigit()])
+        .select_related("circle")
+    )
+    people = invitees(chosen)
+    if request.method == "POST" and chosen:
+        checked = set(data.getlist("attendee"))
+        meeting = Meeting.objects.create(
+            kind=Meeting.TACTICAL,
+            called_by=request.user,
+            secretary=request.user,
+            started_at=timezone.now(),
         )
+        meeting.invited_roles.set(chosen)
+        meeting.attendees.set([
+            request.user,
+            *(user for user, _roles in people if str(user.pk) in checked),
+        ])
         return redirect(meeting)
+    choosing = not chosen or "change" in data
     return render(
         request,
-        "generic/object_form.html",
+        "meetings/tactical_call.html",
         {
-            "title": gettext("Call a tactical meeting"),
-            "form": form,
-            "cancel_url": request.headers.get("referer") or "/",
+            "choosing": choosing,
+            "chosen": chosen,
+            "chosen_pks": {role.pk for role in chosen},
+            "groups": [
+                (circle, list(roles))
+                for circle, roles in groupby(
+                    callable_roles(), key=lambda role: role.circle
+                )
+            ]
+            if choosing
+            else [],
+            "people": people,
         },
     )
 

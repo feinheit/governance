@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 14:51+0100\n"
+"POT-Creation-Date: 2026-11-08 14:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -635,18 +635,6 @@ msgstr "Tactical Meetings"
 msgid "Ad hoc Tactical Meetings"
 msgstr "Ad-hoc Tactical Meetings"
 
-#: governance/meetings/views.py
-msgid "Any partner may call a tactical meeting and invite the roles they need; their holders are invited. Hold Ctrl or Cmd to select several. To invite only some holders of a role (constitution 3.1), remove the others from the attendees in the meeting."
-msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen; eingeladen ist, wer sie hat. Mit Ctrl oder Cmd mehrere auswählen. Um nur einen Teil der Personen einer Rolle einzuladen (Verfassung 3.1), die anderen im Meeting aus den Teilnehmenden entfernen."
-
-#: governance/meetings/views.py
-msgid "nobody"
-msgstr "niemand"
-
-#: governance/meetings/views.py governance/templates/base.html
-msgid "Call a tactical meeting"
-msgstr "Tactical Meeting einberufen"
-
 #: governance/meetings/views.py governance/templates/meetings/_notes.html
 #: governance/templates/notifications/meeting_ended.txt
 msgid "Notes"
@@ -890,6 +878,7 @@ msgstr "Wie der Vorschlag die Spannung im Beispiel adressiert"
 
 #: governance/proposals/drafting.py
 #: governance/templates/history/role_as_of.html
+#: governance/templates/meetings/tactical_call.html
 #: governance/templates/roles/role_detail.html
 #: governance/templates/search/search.html
 msgid "Roles"
@@ -1945,6 +1934,11 @@ msgstr "Geschichte"
 msgid "Your page"
 msgstr "Deine Seite"
 
+#: governance/templates/base.html
+#: governance/templates/meetings/tactical_call.html
+msgid "Call a tactical meeting"
+msgstr "Tactical Meeting einberufen"
+
 #: governance/templates/base.html governance/templates/roles/people.html
 msgid "People"
 msgstr "Personen"
@@ -1982,6 +1976,7 @@ msgstr "Du kannst das als Secretary tun, stellvertretend für die Circle Leads: 
 #: governance/templates/generic/confirm.html
 #: governance/templates/generic/object_form.html
 #: governance/templates/meetings/_confirm_cancel.html
+#: governance/templates/meetings/tactical_call.html
 #: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
 msgid "Cancel"
@@ -2508,6 +2503,46 @@ msgstr "Zum laufenden Meeting"
 #: governance/templates/meetings/meeting_list.html
 msgid "No meetings."
 msgstr "Keine Meetings."
+
+#: governance/templates/meetings/tactical_call.html
+msgid "Any partner may call a tactical meeting with the roles they need, also from several circles."
+msgstr "Alle dürfen ein Tactical Meeting mit den nötigen Rollen einberufen, auch aus mehreren Kreisen."
+
+#: governance/templates/meetings/tactical_call.html
+msgid "1. Which roles?"
+msgstr "1. Welche Rollen?"
+
+#: governance/templates/meetings/tactical_call.html
+msgid "Filter: role, circle or person"
+msgstr "Filtern: Rolle, Kreis oder Person"
+
+#: governance/templates/meetings/tactical_call.html
+msgid "unfilled"
+msgstr "unbesetzt"
+
+#: governance/templates/meetings/tactical_call.html
+msgid "Next: who is invited"
+msgstr "Weiter: wer eingeladen ist"
+
+#: governance/templates/meetings/tactical_call.html
+msgid "2. Who is invited?"
+msgstr "2. Wer ist eingeladen?"
+
+#: governance/templates/meetings/tactical_call.html
+msgid "Change the roles"
+msgstr "Rollen ändern"
+
+#: governance/templates/meetings/tactical_call.html
+msgid "Nobody holds these roles."
+msgstr "Niemand hat diese Rollen."
+
+#: governance/templates/meetings/tactical_call.html
+msgid "The holders of the roles are invited, unfilled roles' Circle Leads; you may invite only some of them (constitution 3.1). You attend too."
+msgstr "Eingeladen ist, wer die Rollen hat, bei unbesetzten Rollen die Circle Leads; du kannst nur einen Teil davon einladen (Verfassung 3.1). Du nimmst auch teil."
+
+#: governance/templates/meetings/tactical_call.html
+msgid "Start the meeting"
+msgstr "Meeting starten"
 
 #: governance/templates/notifications/domain_policy_changed.txt
 #, python-format
@@ -3135,6 +3170,12 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "Any partner may call a tactical meeting and invite the roles they need; their holders are invited. Hold Ctrl or Cmd to select several. To invite only some holders of a role (constitution 3.1), remove the others from the attendees in the meeting."
+#~ msgstr "Alle dürfen ein Tactical Meeting einberufen und die nötigen Rollen einladen; eingeladen ist, wer sie hat. Mit Ctrl oder Cmd mehrere auswählen. Um nur einen Teil der Personen einer Rolle einzuladen (Verfassung 3.1), die anderen im Meeting aus den Teilnehmenden entfernen."
+
+#~ msgid "nobody"
+#~ msgstr "niemand"
 
 #~ msgid "governance"
 #~ msgstr "Governance"

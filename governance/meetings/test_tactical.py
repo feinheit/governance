@@ -377,16 +377,63 @@ class TacticalTest(TestCase):
         self.assertEqual(response.status_code, 403)
         self.assertFalse(meeting.agenda_items.exists())
 
+    def test_ad_hoc_some_holders(self):
+        """The caller may invite only some holders of a role (constitution
+        3.1); an unfilled role's Circle Leads hold it"""
+        zoe = User.objects.create_user("zoe@example.com", full_name="Zoe")
+        Assignment.objects.create(role=self.cook, user=zoe)
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=self.eve
+        )
+        waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
+        self.client.force_login(self.ada)
+        response = self.client.get(
+            f"/meetings/tactical/new/?role={self.cook.pk}&role={waiter.pk}"
+        )
+        for user in [self.bob, zoe, self.eve]:
+            self.assertRegex(
+                response.content.decode(), rf'name="attendee"\s+value="{user.pk}"'
+            )
+        self.client.post(
+            "/meetings/tactical/new/",
+            {
+                "role": [self.cook.pk, waiter.pk],
+                "attendee": [zoe.pk, self.bob.pk + 1000],
+            },
+        )
+        meeting = Meeting.objects.get()
+        self.assertEqual(set(meeting.invited_roles.all()), {self.cook, waiter})
+        # The caller too, not who wasn't invited
+        self.assertEqual(set(meeting.attendees.all()), {zoe, self.ada})
+        # Without roles nothing
+        self.client.post("/meetings/tactical/new/", {"attendee": [zoe.pk]})
+        self.assertEqual(Meeting.objects.count(), 1)
+
     def test_ad_hoc(self):
         """Any partner calls one and invites roles of any circle"""
         self.client.force_login(self.eve)
-        response = self.client.get(f"/meetings/tactical/new/?role={self.cook.pk}")
-        # Who is invited with each role
-        self.assertContains(response, "Cook (Kitchen): Bob")
-        self.assertContains(response, "Sales (Example Ltd): Eve")
+        # The roles, filtered in the browser, with their holders
+        response = self.client.get("/meetings/tactical/new/")
+        self.assertContains(response, "data-filter-rows")
+        self.assertRegex(
+            response.content.decode(), rf'name="role"\s+value="{self.cook.pk}"'
+        )
+        # Then who is invited
+        response = self.client.get(
+            f"/meetings/tactical/new/?role={self.cook.pk}&role={self.sales.pk}"
+        )
+        self.assertRegex(
+            response.content.decode(), rf'name="attendee"\s+value="{self.bob.pk}"'
+        )
+        self.assertRegex(
+            response.content.decode(), rf'name="attendee"\s+value="{self.eve.pk}"'
+        )
         self.client.post(
             "/meetings/tactical/new/",
-            {"invited_roles": [self.cook.pk, self.sales.pk]},
+            {
+                "role": [self.cook.pk, self.sales.pk],
+                "attendee": [self.bob.pk, self.eve.pk],
+            },
         )
         meeting = Meeting.objects.get()
         self.assertEqual((meeting.circle, meeting.called_by), (None, self.eve))

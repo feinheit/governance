@@ -254,6 +254,12 @@ h3,
   max-width: 16em;
 }
 
+/* Rows filtered away (filter_rows.js), also those with d-flex */
+[data-filter-text][hidden],
+[data-filter-group][hidden] {
+  display: none !important;
+}
+
 /* Not grey on the grey page: unchecked boxes would disappear */
 .wb-filters :is(.form-select, .form-control) {
   background-color: var(--wb-field-bg);
