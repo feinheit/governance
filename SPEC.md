@@ -457,7 +457,9 @@ integrative election process (5.3.5) without the app, which records the
 result (person, term end) for Facilitator, Secretary, Circle Rep and
 roles elected by policy. Only circle members are candidates, Circle
 Leads aren't the Rep: an unfilled Circle Rep is nobody's (not held by the
-Circle Leads like other unfilled roles, not a role to propose from, nobody invited with it to ad hoc tactical meetings). Re-electing changes the term, electing somebody else
+Circle Leads like other unfilled roles, not a role to propose from, nobody invited with it to ad hoc tactical meetings). A circle may decide
+to go without one: electing nobody (the Circle Rep only, `Election.user`
+and `term_ends_on` empty) ends the Rep's assignment. Re-electing changes the term, electing somebody else
 ends the previous assignment (removed if it only started today), a Rep
 also holds the circle's role in the super-circle. Elected roles have one
 Role Lead: recording the same role again in the meeting (a correction, a

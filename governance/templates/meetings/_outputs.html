@@ -37,10 +37,11 @@
     {% for election in outputs.elections %}
       <li class="list-group-item">
         <span class="badge wb-tone-core">{% translate "Election" %}</span>
-        <a href="{{ election.role.get_absolute_url }}">{{ election.role }}</a>: {{ election.user }}
+        <a href="{{ election.role.get_absolute_url }}">{{ election.role }}</a>:
+        {% if election.user %}{{ election.user }}{% else %}{% translate "nobody, the role stays unfilled" %}{% endif %}
         <span
           class="text-body-secondary small"
-        >{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}{% if election.role.archived_on %},
+        >{% if election.user %}{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}{% endif %}{% if election.role.archived_on %}{% if election.user %},{% endif %}
             {% translate "the role doesn't exist anymore" %}{% endif %}</span>
       </li>
     {% endfor %}

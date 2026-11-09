@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 07:25+0100\n"
+"POT-Creation-Date: 2026-11-09 07:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -426,12 +426,24 @@ msgid "meetings"
 msgstr "Meetings"
 
 #: governance/meetings/elections.py
+msgid "Nobody (Circle Rep only)"
+msgstr "Niemand (nur Circle Rep)"
+
+#: governance/meetings/elections.py
 msgid "The day the term ends."
 msgstr "Der letzte Tag der Amtszeit."
 
 #: governance/meetings/elections.py
 msgid "The term ends in the future."
 msgstr "Die Amtszeit endet in der Zukunft."
+
+#: governance/meetings/elections.py
+msgid "Only the Circle Rep may stay unfilled."
+msgstr "Nur die Rolle Circle Rep darf unbesetzt bleiben."
+
+#: governance/meetings/elections.py
+msgid "The day the term ends is required."
+msgstr "Das Ende der Amtszeit ist erforderlich."
 
 #: governance/meetings/elections.py
 msgid "A Circle Lead can't be the Circle Rep."
@@ -441,6 +453,11 @@ msgstr "Wer Circle Lead ist, kann nicht Circle Rep sein."
 #, python-format
 msgid "%(user)s has been elected as %(role)s."
 msgstr "%(user)s wurde als %(role)s gewählt."
+
+#: governance/meetings/elections.py
+#, python-format
+msgid "%(role)s stays unfilled."
+msgstr "%(role)s bleibt unbesetzt."
 
 #: governance/meetings/models.py
 msgid "Check-in round"
@@ -2377,6 +2394,12 @@ msgstr "Angenommen"
 #: governance/templates/notifications/meeting_ended.txt
 msgid "Withdrawn"
 msgstr "Zurückgezogen"
+
+#: governance/templates/meetings/_outputs.html
+#: governance/templates/meetings/meeting_detail.html
+#: governance/templates/notifications/meeting_ended.txt
+msgid "nobody, the role stays unfilled"
+msgstr "niemand, die Rolle bleibt unbesetzt"
 
 #: governance/templates/meetings/_outputs.html
 #: governance/templates/notifications/meeting_ended.txt

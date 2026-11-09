@@ -48,8 +48,9 @@ def elected_roles(circles):
 
 @transaction.atomic
 def record_election(meeting, role, user, term_ends_on):
-    """The elected person holds the role until the term ends; announced when
-    the meeting ends (``announce_elections()``)"""
+    """The elected person holds the role until the term ends, nobody (the
+    Circle Rep only) ends its assignment; announced when the meeting ends
+    (``announce_elections()``)"""
     day = timezone.localdate()
     # Recorded again in the meeting (a correction, a second vote): the
     # latest result replaces the earlier one, the role has one Role Lead
@@ -57,10 +58,14 @@ def record_election(meeting, role, user, term_ends_on):
         undo_election(earlier, day)
         earlier.delete()
     election = Election(
-        meeting=meeting, role=role, user=user, term_ends_on=term_ends_on
+        meeting=meeting,
+        role=role,
+        user=user,
+        term_ends_on=term_ends_on,
+        started=user is not None,
     )
     for assignment in Assignment.objects.current().filter(role=role):
-        if assignment.user_id == user.pk:
+        if user and assignment.user_id == user.pk:
             election.started = False
             election.previous_term = assignment.elected_until
             assignment.elected_until = term_ends_on
@@ -182,8 +187,12 @@ class ElectionForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.circle = meeting.circle
         self.fields["role"].queryset = elected_roles([meeting.circle])
-        # Only the circle's members may be elected (constitution 5.1.1, 5.1.2)
+        # Only the circle's members may be elected (constitution 5.1.1, 5.1.2);
+        # the Circle Rep may stay unfilled
         self.fields["user"].queryset = members(meeting.circle)
+        self.fields["user"].required = False
+        self.fields["user"].empty_label = _("Nobody (Circle Rep only)")
+        self.fields["term_ends_on"].required = False
         self.fields["term_ends_on"].initial = timezone.localdate() + dt.timedelta(
             days=365
         )
@@ -191,13 +200,19 @@ class ElectionForm(ModelForm):
 
     def clean_term_ends_on(self):
         term_ends_on = self.cleaned_data["term_ends_on"]
-        if term_ends_on <= timezone.localdate():
+        if term_ends_on and term_ends_on <= timezone.localdate():
             raise forms.ValidationError(_("The term ends in the future."))
         return term_ends_on
 
     def clean(self):
         data = super().clean()
         role, user = data.get("role"), data.get("user")
+        if role and not user and role.core_role != REP:
+            self.add_error("user", _("Only the Circle Rep may stay unfilled."))
+        elif not user:
+            data["term_ends_on"] = None
+        elif not data.get("term_ends_on") and "term_ends_on" not in self.errors:
+            self.add_error("term_ends_on", _("The day the term ends is required."))
         if (
             role
             and user
@@ -225,7 +240,9 @@ def election_add(request, pk):
         messages.success(
             request,
             gettext("%(user)s has been elected as %(role)s.")
-            % {"user": election.user, "role": election.role},
+            % {"user": election.user, "role": election.role}
+            if election.user
+            else gettext("%(role)s stays unfilled.") % {"role": election.role},
         )
     else:
         for errors in form.errors.values():

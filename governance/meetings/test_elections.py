@@ -87,6 +87,48 @@ class ElectionsTest(TestCase):
             [("Election: Secretary", self.bob)],  # The Facilitator
         )
 
+    def test_nobody_as_circle_rep(self):
+        """The circle decides to go without a Circle Rep: the Rep's assignment
+        ends, nothing is due anymore; other elected roles need somebody"""
+        Assignment.objects.create(
+            role=self.rep,
+            user=self.bob,
+            starts_on=dt.date(2026, 1, 1),
+            elected_until=timezone.localdate() + dt.timedelta(days=10),
+        )
+        self.client.force_login(self.ada)
+        url = f"/meetings/{self.meeting.pk}/elections/"
+        self.client.post(url, {"role": self.secretary.pk, "user": ""})
+        self.assertFalse(Election.objects.exists())
+        self.client.post(url, {"role": self.rep.pk, "user": ""})
+        election = Election.objects.get()
+        self.assertEqual((election.user, election.term_ends_on), (None, None))
+        self.assertFalse(Assignment.objects.current().filter(role=self.rep).exists())
+        self.assertNotIn(self.rep, [role for role, _a in due_elections([self.kitchen])])
+        self.assertContains(
+            self.client.get(self.meeting.get_absolute_url()),
+            "nobody, the role stays unfilled",
+        )
+        # Corrected: Bob holds it again
+        self.client.post(
+            url,
+            {"role": self.rep.pk, "user": self.bob.pk, "term_ends_on": "2027-12-31"},
+        )
+        self.assertEqual(
+            Assignment.objects.current().get(role=self.rep).elected_until,
+            dt.date(2027, 12, 31),
+        )
+        # Nobody after all; the outputs say so, Bob hears he lost the role
+        self.client.post(url, {"role": self.rep.pk, "user": ""})
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/meetings/{self.meeting.pk}/end/")
+        outputs = next(m for m in mail.outbox if m.subject.startswith("Outputs"))
+        self.assertIn("Circle Rep: nobody, the role stays unfilled", outputs.body)
+        self.assertIn(
+            (["bob@example.com"], "Your roles: no longer Circle Rep (Kitchen)"),
+            [(m.to, m.subject) for m in mail.outbox],
+        )
+
     def test_record(self):
         self.client.force_login(self.ada)
         response = self.client.get(self.meeting.get_absolute_url())

@@ -202,11 +202,12 @@
             <ul class="list-group list-group-flush">
               {% for election in elections %}
                 <li class="list-group-item">
-                  <a href="{{ election.role.get_absolute_url }}">{{ election.role }}</a>: {{ election.user }}
-                  <div class="wb-row-meta">
-                    <span
-                    >{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
-                  </div>
+                  <a href="{{ election.role.get_absolute_url }}">{{ election.role }}</a>:
+                  {% if election.user %}{{ election.user }}
+                    <div class="wb-row-meta">
+                      <span
+                      >{% blocktranslate with date=election.term_ends_on|date:"SHORT_DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
+                    </div>{% else %}{% translate "nobody, the role stays unfilled" %}{% endif %}
                 </li>
               {% endfor %}
               {% if election_form %}

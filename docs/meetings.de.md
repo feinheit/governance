@@ -68,7 +68,9 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   Domain, steht ihr Text zwischen Markierungen bei den neuen: behalten
   oder löschen. Der Vorschlag geht dann vom aktuellen Stand aus.
 - **Wahlen**: wer Facilitator ist, führt die Wahl durch; wer Secretary ist, speichert mit "Wahl festhalten" Person und Ende der Amtszeit (Facilitator, Secretary, Circle
-  Rep und durch Policy gewählte Rollen). Wird dieselbe Rolle im Meeting
+  Rep und durch Policy gewählte Rollen). Circle Rep darf unbesetzt
+  bleiben: "Niemand (nur Circle Rep)" beendet die Zuweisung, ohne jemanden
+  zu wählen. Wird dieselbe Rolle im Meeting
   nochmals festgehalten, ersetzt das das frühere Ergebnis, als wäre es
   nie festgehalten worden. Gewählte und Abgelöste erfahren davon, wenn
   das Meeting endet. Anstehende Wahlen stehen auf der

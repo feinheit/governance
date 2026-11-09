@@ -292,13 +292,16 @@ class Election(models.Model):
         related_name="elections",
         verbose_name=_("role"),
     )
+    # Nobody: the circle goes without a Circle Rep, the Rep's assignment ends
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name="+",
         verbose_name=_("elected"),
     )
-    term_ends_on = models.DateField(_("term ends on"))
+    term_ends_on = models.DateField(_("term ends on"), null=True, blank=True)
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     # What recording it changed, so that a correction in the meeting undoes
     # it (``elections.undo_election()``): a new assignment or the Role Lead's
@@ -313,4 +316,4 @@ class Election(models.Model):
         verbose_name_plural = _("elections")
 
     def __str__(self):
-        return f"{self.role}: {self.user}"
+        return f"{self.role}: {self.user or '-'}"
