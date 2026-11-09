@@ -260,8 +260,9 @@ h3,
   display: none !important;
 }
 
-/* Not grey on the grey page: unchecked boxes would disappear */
-.wb-filters :is(.form-select, .form-control) {
+/* Not grey on the grey page (filters, the page's actions): unchecked
+   boxes would disappear */
+:is(.wb-filters, .wb-page-actions) :is(.form-select, .form-control) {
   background-color: var(--wb-field-bg);
 }
 
