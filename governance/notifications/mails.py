@@ -32,7 +32,8 @@ def recipients(circle):
 
 def send(users, subject, template, context):
     """One mail per user, in their language; nothing for people who left.
-    ``settings.MAIL_COPIES`` get a copy, unless they received it already."""
+    ``settings.MAIL_COPIES`` get a copy, unless they received it already.
+    ``subject`` is a callable, called in each recipient's language."""
     sent = []
     received = set()
     for user in users.filter(is_active=True).distinct():
@@ -95,53 +96,49 @@ def everybody(proposal):
     )
 
 
-def proposal_published(proposal):
+def to_everybody(proposal, subject, template, **context):
+    """A mail about the proposal to its circle and its proposer; ``subject``
+    is marked with ``gettext_noop()``, translated for each recipient"""
     return send(
         everybody(proposal),
-        lambda: (
-            _("Proposal in %(circle)s: %(proposal)s")
-            % {"circle": proposal.circle, "proposal": proposal}
-        ),
+        lambda: _(subject) % {"circle": proposal.circle, "proposal": proposal},
+        template,
+        proposal_context(proposal) | context,
+    )
+
+
+def proposal_published(proposal):
+    return to_everybody(
+        proposal,
+        gettext_noop("Proposal in %(circle)s: %(proposal)s"),
         "notifications/proposal_published.txt",
-        proposal_context(proposal),
     )
 
 
 def proposal_back_to_draft(proposal):
-    return send(
-        everybody(proposal),
-        lambda: (
-            _("Back to the draft in %(circle)s: %(proposal)s")
-            % {"circle": proposal.circle, "proposal": proposal}
-        ),
+    return to_everybody(
+        proposal,
+        gettext_noop("Back to the draft in %(circle)s: %(proposal)s"),
         "notifications/proposal_back_to_draft.txt",
-        proposal_context(proposal),
     )
 
 
 def proposal_to_meeting(proposal, problems):
     """It couldn't be adopted async (e.g. a conflict with a change made
     meanwhile): it waits for a meeting"""
-    return send(
-        everybody(proposal),
-        lambda: (
-            _("Waiting for a meeting in %(circle)s: %(proposal)s")
-            % {"circle": proposal.circle, "proposal": proposal}
-        ),
+    return to_everybody(
+        proposal,
+        gettext_noop("Waiting for a meeting in %(circle)s: %(proposal)s"),
         "notifications/proposal_to_meeting.txt",
-        proposal_context(proposal) | {"problems": problems},
+        problems=problems,
     )
 
 
 def proposal_retracted(proposal):
-    return send(
-        everybody(proposal),
-        lambda: (
-            _("Withdrawn in %(circle)s: %(proposal)s")
-            % {"circle": proposal.circle, "proposal": proposal}
-        ),
+    return to_everybody(
+        proposal,
+        gettext_noop("Withdrawn in %(circle)s: %(proposal)s"),
         "notifications/proposal_retracted.txt",
-        proposal_context(proposal),
     )
 
 
