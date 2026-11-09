@@ -205,10 +205,12 @@ def moved_between(proposals):
 
 def proposal_adopted(proposal, members_before=()):
     """``members_before``: the members when adopting began, e.g. the Role Leads
-    of roles the proposal removed or moved away"""
+    of roles the proposal moved away; also those losing roles with it (like
+    ``meeting_ended()``)"""
     return send(
         everybody(proposal)
         | User.objects.active().filter(pk__in=members_before)
+        | proposal.ended_role_leads.all()
         | User.objects.filter(moved_between([proposal])),
         lambda: (
             _("Adopted in %(circle)s: %(proposal)s")

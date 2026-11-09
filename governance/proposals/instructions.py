@@ -688,13 +688,12 @@ def adopt(proposal):
     proposal.roles.add(*applier.roles, *applier.deferred)
     proposal.reverting_circles.add(*applier.deferred)
     proposal.policies.add(*applier.policies)
-    # For the meeting's mail: assignments started today are deleted
+    # For the mails (assignments started today are deleted)
     proposal.ended_role_leads.add(*applier.ended_users)
     close_circles([*applier.removed, *applier.reverted], proposal)
     update_changes(since=timezone.localdate())
     if not (proposal.meeting and proposal.meeting.is_running):
         # The meeting mails its outputs together when it ends
-        before = [*before, *applier.ended_users]
         transaction.on_commit(partial(mails.proposal_adopted, proposal, before))
     return proposal
 
