@@ -10,7 +10,8 @@ imports take Markdown, bullets become to-dos and checked ones completed.
 Projects are grouped by person (going through updates person by person),
 those without a person last; the imports carry no assignees. The role
 (none for GlassFrog's individual actions), the status and the note are
-part of each to-do's text. Done projects only with ``--done``.
+part of each to-do's text. Done projects only with ``--done``, not those
+of people who left (all done, GlassFrog shows them as "Removed").
 
 GlassFrog's API has no actions and no archived projects; copy those by
 hand.
@@ -91,10 +92,18 @@ def main():
     circles = {circle["id"]: circle["name"] for circle in linked["circles"]}
     roles = {role["id"]: role["name"] for role in linked["roles"]}
     people = {person["id"]: person["name"] for person in linked["people"]}
+    # People who left: "Removed" with a redacted email
+    left = {
+        person["id"]
+        for person in linked["people"]
+        if (person["email"] or "").startswith("[redacted]")
+    }
 
     by_circle = defaultdict(list)
     for project in data["projects"]:
         if project["status"] == "Done" and not args.done:
+            continue
+        if project["links"]["person"] in left:
             continue
         by_circle[project["links"]["circle"]].append(project)
 
