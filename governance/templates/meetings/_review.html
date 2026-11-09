@@ -9,7 +9,11 @@
       </li>
       {% for item in group %}
         <li class="list-group-item">
-          {% if item.link %}<a href="{{ item.link }}" rel="noopener">{{ item }}</a>{% else %}{{ item }}{% endif %}
+          {% if item.link %}<a
+              href="{{ item.link }}"
+              target="_blank"
+              rel="noopener"
+            >{{ item }}</a>{% else %}{{ item }}{% endif %}
           <div class="wb-row-meta"><a href="{{ item.role.get_absolute_url }}">{{ item.role }}</a></div>
         </li>
       {% endfor %}

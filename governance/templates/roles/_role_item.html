@@ -1,7 +1,13 @@
 {% load governance i18n %}
 <li class="list-group-item wb-row">
   <div class="wb-row-main">
-    <div>{% if item.link %}<a href="{{ item.link }}">{{ item }}</a>{% else %}{{ item }}{% endif %}</div>
+    <div>
+      {% if item.link %}<a
+          href="{{ item.link }}"
+          target="_blank"
+          rel="noopener"
+        >{{ item }}</a>{% else %}{{ item }}{% endif %}
+    </div>
     <div class="wb-row-meta">
       <span>{{ label }}</span>{% if item.other_role %}<a
           href="{{ item.other_role.get_absolute_url }}"

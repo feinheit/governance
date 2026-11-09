@@ -51,7 +51,7 @@
           {{ item }}{% if item.owner %} <span class="fw-normal text-body-secondary">({{ item.owner }})</span>{% endif %}
         </div>
         {% if item.outcome %}<div class="wb-markdown">{{ item.outcome|markdown }}</div>{% endif %}
-        {% if item.link %}<a href="{{ item.link }}" rel="noopener">{{ item.link }}</a>{% endif %}
+        {% if item.link %}<a href="{{ item.link }}" target="_blank" rel="noopener">{{ item.link }}</a>{% endif %}
       </li>
     {% endfor %}
     {% if not outputs.proposals and not outputs.withdrawn and not outputs.elections and not outputs.outcomes %}
