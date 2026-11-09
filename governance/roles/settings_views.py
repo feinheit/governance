@@ -2,8 +2,7 @@
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.html import escape
-from django.utils.translation import gettext, ngettext
+from django.utils.translation import gettext
 
 from governance.forms import ModelForm
 from governance.roles.models import Role
@@ -30,21 +29,12 @@ class CircleSettingsForm(ModelForm):
         circle = self.instance.circle
         while circle is not None and circle.async_acceptance_days is None:
             circle = circle.circle
-        if circle is None:
-            empty = gettext(
-                "Empty: no time limit, async proposals are only adopted once"
-                " everybody consented."
-            )
-        else:
-            days = circle.async_acceptance_days
-            field.widget.attrs["placeholder"] = days
-            # Help texts are rendered unescaped
-            empty = ngettext(
-                "Empty: %(days)s day, set by %(circle)s.",
-                "Empty: %(days)s days, set by %(circle)s.",
-                days,
-            ) % {"days": days, "circle": escape(circle)}
-        field.help_text = f"{empty} {field.help_text}"
+        field.widget.attrs["placeholder"] = (
+            gettext("no time limit")
+            if circle is None
+            else gettext("%(days)s (set by %(circle)s)")
+            % {"days": circle.async_acceptance_days, "circle": circle}
+        )
 
 
 class RoleSettingsForm(ModelForm):

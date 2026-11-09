@@ -461,12 +461,11 @@ class ElectionsTest(TestCase):
         response = self.client.get(f"/roles/{self.kitchen.pk}/settings/")
         self.assertContains(response, "applies to all sub-circles")
         # Empty: what applies then
-        self.assertContains(response, "Empty: no time limit")
+        self.assertContains(response, 'placeholder="no time limit"')
         self.anchor.async_acceptance_days = 4
         self.anchor.save()
         response = self.client.get(f"/roles/{self.kitchen.pk}/settings/")
-        self.assertContains(response, "Empty: 4 days, set by Example Ltd.")
-        self.assertContains(response, 'placeholder="4"')
+        self.assertContains(response, 'placeholder="4 (set by Example Ltd)"')
         self.client.post(
             f"/roles/{self.kitchen.pk}/settings/", {"async_acceptance_days": "2"}
         )

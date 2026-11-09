@@ -41,7 +41,7 @@ Some things change without governance:
   without a deadline for async proposals of their own use the one of the
   circle above, so the policy setting it should say that it applies to
   all sub-circles (constitution 5.2.1). Without any, async proposals are
-  only adopted once everybody consented. The field says what applies
+  only adopted once everybody consented. The field shows what applies
   while it's empty.
 - The tool records all these changes.
 
