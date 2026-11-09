@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 07:09+0100\n"
+"POT-Creation-Date: 2026-11-09 07:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -680,6 +680,11 @@ msgstr "Tactical Meetings"
 #: governance/meetings/views.py
 msgid "Ad hoc Tactical Meetings"
 msgstr "Ad-hoc Tactical Meetings"
+
+#: governance/meetings/views.py
+#, python-format
+msgid "Election: %(role)s"
+msgstr "Wahl: %(role)s"
 
 #: governance/meetings/views.py
 msgid "You don't hold any of these roles."

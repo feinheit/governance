@@ -370,7 +370,7 @@ class CircleEndsItselfScenarioTest(TestCase):
         self.client.post(f"/roles/{bakery.pk}/meetings/new/")
         meeting = Meeting.objects.running().get()
         self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Bread"})
-        item = AgendaItem.objects.get(meeting=meeting)
+        item = AgendaItem.objects.get(meeting=meeting, label="Bread")
         self.client.force_login(bob)  # The secretary
         self.client.post(f"/agenda/{item.pk}/process/")
         self.client.post(f"/agenda/{item.pk}/proposal/")

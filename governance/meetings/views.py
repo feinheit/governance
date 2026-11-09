@@ -22,7 +22,7 @@ from governance.meetings.access import (
     can_take_over,
 )
 from governance.meetings.activity import end_inactive_meetings, end_meeting
-from governance.meetings.elections import ElectionForm
+from governance.meetings.elections import ElectionForm, due_elections
 from governance.meetings.models import (
     STEP_CHOICES,
     TACTICAL_STEP_CHOICES,
@@ -38,6 +38,7 @@ from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
 from governance.proposals.process import current_responses
 from governance.proposals.views import annotate_changes, drafting_context
+from governance.roles.constitution import FACILITATOR, SECRETARY
 from governance.roles.models import Assignment, ChecklistItem, Link, Metric, Role
 from governance.roles.permissions import (
     acting_secretaries,
@@ -45,6 +46,7 @@ from governance.roles.permissions import (
     can_start_meeting,
     members,
     role_leads,
+    stand_ins,
 )
 
 
@@ -306,6 +308,19 @@ def meeting_create(request, pk):
     if kind == Meeting.TACTICAL:
         # The circle's regular tactical meetings invite all its roles
         meeting.invited_roles.set(circle.roles.active())
+    else:
+        # Due elections on the agenda, like GlassFrog, owned by the Facilitator
+        # (or who stands in), who holds them; the election itself is recorded
+        # in the Elections card
+        roles = dict.fromkeys(role for role, _assignment in due_elections([circle]))
+        owner = stand_ins(circle, [FACILITATOR, SECRETARY]).order_by("pk").first()
+        for position, role in enumerate(roles, start=1):
+            AgendaItem.objects.create(
+                meeting=meeting,
+                position=position,
+                owner=owner,
+                label=gettext("Election: %(role)s") % {"role": role.name},
+            )
     return redirect(meeting)
 
 

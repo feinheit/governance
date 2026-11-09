@@ -75,6 +75,18 @@ class ElectionsTest(TestCase):
         )
         self.assertIn(self.rep, [role for role, _a in due_elections([self.kitchen])])
 
+    def test_on_the_agenda(self):
+        """Starting a governance meeting puts its due elections on the agenda"""
+        self.meeting.ended_at = timezone.now()
+        self.meeting.save()
+        self.client.force_login(self.ada)
+        self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
+        meeting = self.kitchen.meetings.running().get()
+        self.assertEqual(
+            [(item.label, item.owner) for item in meeting.agenda_items.all()],
+            [("Election: Secretary", self.bob)],  # The Facilitator
+        )
+
     def test_record(self):
         self.client.force_login(self.ada)
         response = self.client.get(self.meeting.get_absolute_url())

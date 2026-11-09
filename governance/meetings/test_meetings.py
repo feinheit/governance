@@ -276,6 +276,7 @@ class MeetingsTest(TestCase):
         self.client.force_login(self.bob)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
         meeting = Meeting.objects.get()
+        meeting.agenda_items.all().delete()  # The due elections
         items = [
             AgendaItem.objects.create(meeting=meeting, label=label, position=n)
             for n, label in enumerate(["Tea", "Cake", "Soup"], 1)
@@ -294,6 +295,7 @@ class MeetingsTest(TestCase):
         self.client.force_login(self.bob)
         self.client.post(f"/roles/{self.kitchen.pk}/meetings/new/")
         meeting = Meeting.objects.get()
+        meeting.agenda_items.all().delete()  # The due elections
         url = f"/meetings/{meeting.pk}/end/"
         # Nothing open: right away
         self.assertContains(
@@ -616,7 +618,7 @@ class MeetingsTest(TestCase):
         # Guests add agenda items too
         self.client.force_login(guest)
         self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Hello"})
-        self.assertEqual(meeting.agenda_items.get().label, "Hello")
+        self.assertEqual(meeting.agenda_items.get(owner=guest).label, "Hello")
         self.assertEqual(
             self.client.post(url, {"user": guest.pk, "action": "remove"}).status_code,
             403,

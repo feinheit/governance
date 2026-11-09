@@ -465,7 +465,10 @@ second vote) replaces the earlier result, undone first (`Election`
 keeps what it changed: the previous Role Lead keeps their assignment). Due elections (within 30 days, nobody elected except for the Circle
 Rep, which may stay unfilled, or held without a term, e.g. a role made elected by policy while held; terms end in the
 future) show on
-the circle page and the Facilitator's and Secretary's person pages;
+the circle page and the Facilitator's and Secretary's person pages, and
+on the agenda of a governance meeting when it starts (like GlassFrog: one
+plain item per role, "Election: Secretary", owned by the Facilitator or who
+stands in; the election is recorded in the Elections card);
 Facilitators (5.3.5; else Secretaries, else Circle Leads) get a mail
 on Mondays.
 
