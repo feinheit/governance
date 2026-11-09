@@ -834,8 +834,8 @@ Deliberately not modelled:
 - **Delegating the Circle Lead's authority** to another role or process
   by policy (1.4.5, e.g. how a role is assigned, 1.4.1) is allowed by
   the constitution, but not implemented: no current use case (decided
-  2026-11-09). Such a policy stays text; the Circle Leads still record
-  the assignments in the app.
+  2026-11-09). Such a policy stays text; the Circle Leads (or the
+  Secretary standing in) still record the assignments in the app.
 - **Linked roles** (1.3.4): no demand in our data, much complexity.
 - **Redirecting references** from outside the circle (1.4.4): an edge
   case, a proposal in the circle containing the reference does the same.
