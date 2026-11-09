@@ -106,45 +106,55 @@
           </div>
         {% endif %}
         <ul class="list-unstyled mb-2">
-          {% for change in changes %}
-            <li class="mb-2">
-              <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
-              {% if change.subject %}<span class="fw-semibold">{{ change.subject }}</span>{% endif %}
-              {% if change.action == "moved" %}<span
-                  class="text-body-secondary"
-                >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
-                  {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>
-              {% else %}
-                {% if change.old and change.new %}<div class="wb-markdown">
-                    {{ change.old|diff:change.new }}
-                  </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
-                      {{ change.old|markdown }}
-                    </div>{% endif %}
-                  {% if change.new %}<div class="wb-markdown">{{ change.new|markdown }}</div>{% endif %}{% endif %}
-              {% endif %}
-              {% for label, text in change.details %}<div class="small">
-                  <span class="text-body-secondary">{{ label }}:</span> {{ text|plain }}
-                </div>{% endfor %}
-              {% if can_amend and change.first_of_subject and change.key %}
-                <div class="d-flex gap-1 mt-1">
-                  {% if change.is_editable %}<a
-                      data-in-meeting
-                      class="btn btn-sm btn-quiet"
-                      href="{% if change.kind == 'roles' %}{% url 'proposal_role' proposal.pk change.key %}{% else %}{% url 'proposal_policy' proposal.pk change.key %}{% endif %}{{ next_query }}"
-                      hx-target="#amend"
-                      hx-select=".wb-form-page"
-                      hx-swap="innerHTML show:none"
-                      hx-push-url="false"
-                    >{% translate "Edit" %}</a>{% endif %}
-                  <form
-                    method="post"
-                    action="{% url 'proposal_subject_undo' proposal.pk change.kind change.key %}{{ next_query }}"
-                  >
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-quiet">{% translate "Undo" %}</button>
-                  </form>
+          {# Per role or policy, editing and discarding apply to all its changes #}
+          {% for group in change_groups %}
+            <li class="mb-3">
+              {% if group.subject_key %}
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                  <span class="text-body-secondary small">{{ group.kind_label }}</span>
+                  <span class="fw-semibold">{{ group.subject }}</span>
+                  {% if can_amend and group.key %}
+                    <div class="d-flex gap-1 ms-auto">
+                      {% if group.is_editable %}<a
+                          data-in-meeting
+                          class="btn btn-sm btn-quiet"
+                          href="{% if group.kind == 'roles' %}{% url 'proposal_role' proposal.pk group.key %}{% else %}{% url 'proposal_policy' proposal.pk group.key %}{% endif %}{{ next_query }}"
+                          hx-target="#amend"
+                          hx-select=".wb-form-page"
+                          hx-swap="innerHTML show:none"
+                          hx-push-url="false"
+                          title="{% translate 'Edit' %}"
+                        >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>{% endif %}
+                      <a
+                        class="btn btn-sm btn-destructive"
+                        title="{% translate 'Discard the changes' %}"
+                        href="{% url 'proposal_subject_undo' proposal.pk group.kind group.key %}{{ next_query }}"
+                        data-modal
+                      >{% icon "trash" %}<span class="visually-hidden">{% translate "Discard the changes" %}</span></a>
+                    </div>
+                  {% endif %}
                 </div>
               {% endif %}
+              {% for change in group.changes %}
+                <div class="mb-2">
+                  <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
+                  {% if change.action == "moved" %}<span
+                      class="text-body-secondary"
+                    >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
+                      {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>
+                  {% else %}
+                    {% if change.old and change.new %}<div class="wb-markdown">
+                        {{ change.old|diff:change.new }}
+                      </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary">
+                          {{ change.old|markdown }}
+                        </div>{% endif %}
+                      {% if change.new %}<div class="wb-markdown">{{ change.new|markdown }}</div>{% endif %}{% endif %}
+                  {% endif %}
+                  {% for label, text in change.details %}<div class="small">
+                      <span class="text-body-secondary">{{ label }}:</span> {{ text|plain }}
+                    </div>{% endfor %}
+                </div>
+              {% endfor %}
             </li>
           {% empty %}
             <li class="text-body-secondary">{% translate "No changes yet." %}</li>

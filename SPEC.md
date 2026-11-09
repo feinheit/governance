@@ -218,7 +218,11 @@ the circle, convert roles and circles. Moves go into a sub-circle or any
 sub-circle thereof and out of them into the circle, in one step (5.2;
 moving roles into a role makes it a circle only for the circle's own
 roles), not into a role's own inside; policies regulating a domain stay
-with it (decided 2026-11-07). Removing a circle moves the
+with it (decided 2026-11-07). A proposal's page and the meeting list
+its changes grouped by role and policy, with icon buttons editing the
+role or policy in the proposal and discarding all its changes, confirmed
+in a modal (decided 2026-11-09; the buttons under the first change only
+were unclear). Removing a circle moves the
 selected roles and policies to the super-circle and archives the rest
 (like GlassFrog). Circles and roles removed (also inside a removed
 circle) and circles turned back into roles close: their open proposals

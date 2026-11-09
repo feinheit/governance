@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -117,7 +119,6 @@ def annotate_changes(proposal):
     """The readable changes with what the draft's controls need"""
     changes = describe(proposal.instructions, proposal.names)
     urls = links(proposal, changes)
-    seen = set()
     removed = {
         i["path"].lstrip("/") for i in proposal.instructions if i["op"] == "remove"
     }
@@ -127,12 +128,34 @@ def annotate_changes(proposal):
             change.subject_key not in removed and change.action != "moved"
         )
         change.url = urls.get(change.subject_key)
-        # The draft's actions on the first change of each role or policy
-        change.first_of_subject = change.subject_key not in seen
-        seen.add(change.subject_key)
         if change.subject_key:
             change.kind, change.key = change.subject_key.split("/")
     return changes
+
+
+def group_changes(changes):
+    """The changes per role or policy, in the order of their first change:
+    editing and discarding apply to all changes of a role or policy"""
+    groups = {}
+    for index, change in enumerate(changes):
+        # Changes of nothing in particular stand alone
+        if (key := change.subject_key or index) not in groups:
+            groups[key] = SimpleNamespace(
+                changes=[],
+                subject=change.subject,
+                subject_key=change.subject_key,
+                kind=getattr(change, "kind", ""),
+                key=getattr(change, "key", ""),
+                kind_label=_("Role")
+                if change.subject_key.startswith("roles/")
+                else _("Policy"),
+                url=change.url,
+                is_editable=True,
+            )
+        group = groups[key]
+        group.changes.append(change)
+        group.is_editable = group.is_editable and change.is_editable
+    return list(groups.values())
 
 
 def drafting_context(proposal):
@@ -162,7 +185,12 @@ def proposal_detail(request, pk):
         ),
         pk=pk,
     )
-    context = {"proposal": proposal, "changes": annotate_changes(proposal)}
+    changes = annotate_changes(proposal)
+    context = {
+        "proposal": proposal,
+        "changes": changes,
+        "change_groups": group_changes(changes),
+    }
     meeting = proposal.meeting
     if proposal.status == Proposal.IN_MEETING and meeting and meeting.is_running:
         # The secretary amends it in the meeting, the others see it there

@@ -111,52 +111,61 @@
   <section class="card">
     <div class="card-header"><h2 class="h6 mb-0">{% translate "Changes" %}</h2></div>
     <ul class="list-group list-group-flush">
-      {% for change in changes %}
+      {# Per role or policy, editing and discarding apply to all its changes #}
+      {% for group in change_groups %}
         <li class="list-group-item">
-          <div>
-            <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
-            <span class="text-body-secondary small">
-              {% if change.action == "added" %}{% translate "added" %}{% elif change.action == "removed" %}{% translate "removed" %}{% elif change.action == "moved" %}{% translate "moved" %}{% elif change.action == "elected" %}{% translate "elected" %}{% else %}{% translate "changed" %}{% endif %}
-            </span>
-            {% if change.subject %}
-              {% if change.url %}<a class="fw-semibold" href="{{ change.url }}">{{ change.subject }}</a>{% else %}<span
+          {% if group.subject_key %}
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <span class="text-body-secondary small">{{ group.kind_label }}</span>
+              {% if group.url %}<a class="fw-semibold" href="{{ group.url }}">{{ group.subject }}</a>{% else %}<span
                   class="fw-semibold"
-                >{{ change.subject }}</span>{% endif %}
-            {% endif %}
-            {% if change.action == "moved" %}<span
-                class="small text-body-secondary"
-              >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
-                {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>{% endif %}
-          </div>
-          {% if editable and change.first_of_subject and change.key %}
-            <div class="d-flex gap-1 mt-1">
-              {% if change.is_editable %}
-                <a
-                  class="btn btn-sm btn-quiet"
-                  href="{% if change.kind == 'roles' %}{% url 'proposal_role' proposal.pk change.key %}{% else %}{% url 'proposal_policy' proposal.pk change.key %}{% endif %}"
-                >{% translate "Edit" %}</a>
+                >{{ group.subject }}</span>{% endif %}
+              {% if editable and group.key %}
+                <div class="d-flex gap-1 ms-auto">
+                  {% if group.is_editable %}<a
+                      class="btn btn-sm btn-quiet"
+                      title="{% translate 'Edit' %}"
+                      href="{% if group.kind == 'roles' %}{% url 'proposal_role' proposal.pk group.key %}{% else %}{% url 'proposal_policy' proposal.pk group.key %}{% endif %}"
+                    >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>{% endif %}
+                  <a
+                    class="btn btn-sm btn-destructive"
+                    title="{% translate 'Discard the changes' %}"
+                    href="{% url 'proposal_subject_undo' proposal.pk group.kind group.key %}"
+                    data-modal
+                  >{% icon "trash" %}<span class="visually-hidden">{% translate "Discard the changes" %}</span></a>
+                </div>
               {% endif %}
-              <form method="post" action="{% url 'proposal_subject_undo' proposal.pk change.kind change.key %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-quiet">{% translate "Undo" %}</button>
-              </form>
             </div>
           {% endif %}
-          {% if change.action != "moved" %}
-            {% if change.old and change.new %}<div class="wb-markdown mt-1">
-                {{ change.old|diff:change.new }}
-              </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary mt-1">
-                  {{ change.old|markdown }}
-                </div>{% endif %}
-              {% if change.new %}<div class="wb-markdown mt-1">{{ change.new|markdown }}</div>{% endif %}{% endif %}
-          {% endif %}
-          {% if change.details %}
-            <dl class="wb-fields mt-2">
-              {% for label, text in change.details %}<dt>{{ label }}</dt><dd class="wb-markdown">
-                  {{ text|markdown }}
-                </dd>{% endfor %}
-            </dl>
-          {% endif %}
+          {% for change in group.changes %}
+            <div {% if group.subject_key or not forloop.first %}class="mt-2"{% endif %}>
+              <div>
+                <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
+                <span class="text-body-secondary small">
+                  {% if change.action == "added" %}{% translate "added" %}{% elif change.action == "removed" %}{% translate "removed" %}{% elif change.action == "moved" %}{% translate "moved" %}{% elif change.action == "elected" %}{% translate "elected" %}{% else %}{% translate "changed" %}{% endif %}
+                </span>
+                {% if change.action == "moved" %}<span
+                    class="small text-body-secondary"
+                  >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
+                    {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>{% endif %}
+              </div>
+              {% if change.action != "moved" %}
+                {% if change.old and change.new %}<div class="wb-markdown mt-1">
+                    {{ change.old|diff:change.new }}
+                  </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary mt-1">
+                      {{ change.old|markdown }}
+                    </div>{% endif %}
+                  {% if change.new %}<div class="wb-markdown mt-1">{{ change.new|markdown }}</div>{% endif %}{% endif %}
+              {% endif %}
+              {% if change.details %}
+                <dl class="wb-fields mt-2">
+                  {% for label, text in change.details %}<dt>{{ label }}</dt><dd class="wb-markdown">
+                      {{ text|markdown }}
+                    </dd>{% endfor %}
+                </dl>
+              {% endif %}
+            </div>
+          {% endfor %}
         </li>
       {% empty %}
         <li class="list-group-item text-body-secondary">{% translate "No changes yet." %}</li>

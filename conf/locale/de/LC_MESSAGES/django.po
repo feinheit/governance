@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 08:14+0100\n"
+"POT-Creation-Date: 2026-11-09 08:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -894,13 +894,13 @@ msgstr "Text"
 msgid "unknown"
 msgstr "unbekannt"
 
-#: governance/proposals/describe.py
+#: governance/proposals/describe.py governance/proposals/views.py
 #: governance/templates/proposals/_move_into.html
 #: governance/templates/proposals/_move_out.html
 msgid "Role"
 msgstr "Rolle"
 
-#: governance/proposals/describe.py
+#: governance/proposals/describe.py governance/proposals/views.py
 #: governance/templates/proposals/_move_into.html
 #: governance/templates/proposals/_move_out.html
 #: governance/templates/roles/governance.txt
@@ -1099,6 +1099,22 @@ msgstr "Kreis entfernen"
 #, python-format
 msgid "The selected roles and policies move to %(circle)s. Everything else is removed with the circle, also its sub-circles, and their assignments end."
 msgstr "Die ausgewählten Rollen und Policies werden nach %(circle)s verschoben. Alles andere wird mit dem Kreis entfernt, auch seine Sub-Kreise, und ihre Zuweisungen enden."
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "Discard the changes to %(subject)s?"
+msgstr "Änderungen an %(subject)s verwerfen?"
+
+#: governance/proposals/drafting.py
+#, python-format
+msgid "The proposal loses its change: %(changes)s."
+msgid_plural "The proposal loses its %(count)s changes: %(changes)s."
+msgstr[0] "Der Vorschlag verliert seine Änderung: %(changes)s."
+msgstr[1] "Der Vorschlag verliert seine %(count)s Änderungen: %(changes)s."
+
+#: governance/proposals/drafting.py governance/templates/meetings/_current.html
+msgid "Discard"
+msgstr "Verwerfen"
 
 #: governance/proposals/instructions.py
 #, python-format
@@ -2309,6 +2325,18 @@ msgid "When a role or policy has been changed in the meantime, the secretary edi
 msgstr "Wurde eine Rolle oder Policy inzwischen geändert, bearbeitet, wer Secretary ist, sie im Vorschlag, wo das Formular den aktuellen Text zeigt, und speichert sie."
 
 #: governance/templates/meetings/_current.html
+#: governance/templates/proposals/proposal_detail.html
+#: governance/templates/roles/_role_item.html
+#: governance/templates/roles/role_detail.html
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: governance/templates/meetings/_current.html
+#: governance/templates/proposals/proposal_detail.html
+msgid "Discard the changes"
+msgstr "Änderungen verwerfen"
+
+#: governance/templates/meetings/_current.html
 #: governance/templates/notifications/_changes.txt
 #: governance/templates/proposals/proposal_detail.html
 msgid "from"
@@ -2322,18 +2350,6 @@ msgstr "nach"
 
 #: governance/templates/meetings/_current.html
 #: governance/templates/proposals/proposal_detail.html
-#: governance/templates/roles/_role_item.html
-#: governance/templates/roles/role_detail.html
-msgid "Edit"
-msgstr "Bearbeiten"
-
-#: governance/templates/meetings/_current.html
-#: governance/templates/proposals/proposal_detail.html
-msgid "Undo"
-msgstr "Rückgängig"
-
-#: governance/templates/meetings/_current.html
-#: governance/templates/proposals/proposal_detail.html
 msgid "No changes yet."
 msgstr "Noch keine Änderungen."
 
@@ -2344,10 +2360,6 @@ msgstr "Bedenken aus dem asynchronen Prozess"
 #: governance/templates/meetings/_current.html
 msgid "Adopt"
 msgstr "Annehmen"
-
-#: governance/templates/meetings/_current.html
-msgid "Discard"
-msgstr "Verwerfen"
 
 #: governance/templates/meetings/_current.html
 msgid "A tension without a proposal yet: the secretary captures the proposal, or the item is done."

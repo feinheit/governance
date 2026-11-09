@@ -348,13 +348,29 @@ class DraftingTest(TestCase):
             f"/proposals/{proposal.pk}/roles/{self.cook.pk}/",
             {
                 "name": "Chef",
-                f"accountabilities-{self.cooking.pk}": "Cooking",
+                f"accountabilities-{self.cooking.pk}": "Cooking meals",
                 f"accountabilities-{self.frying.pk}": "Frying",
             },
         )
-        self.client.post(f"/proposals/{proposal.pk}/roles/{self.cook.pk}/undo/")
+        # The role's changes in one group, edited and discarded together;
+        # discarding is confirmed first
+        undo = f"/proposals/{proposal.pk}/roles/{self.cook.pk}/undo/"
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(response, undo, count=1)
+        self.assertContains(
+            response, '<span class="visually-hidden">Edit</span>', count=1
+        )
+        response = self.client.get(undo)
+        self.assertContains(response, "Discard the changes to Cook?")
+        self.assertContains(
+            response, "The proposal loses its 2 changes: Name, Accountability."
+        )
+        proposal.refresh_from_db()
+        self.assertEqual(len(proposal.names), 1)
+        self.client.post(undo)
         proposal.refresh_from_db()
         self.assertEqual((proposal.instructions, proposal.names), ([], {}))
+        self.assertEqual(self.client.get(undo).status_code, 404)
 
         self.client.post(f"/proposals/{proposal.pk}/roles/{self.cook.pk}/remove/")
         self.client.post(f"/proposals/{proposal.pk}/policies/{self.tea.pk}/remove/")

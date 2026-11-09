@@ -37,7 +37,11 @@ from governance.proposals.drafting import can_edit
 from governance.proposals.instructions import consequences, problems
 from governance.proposals.models import Proposal, Response
 from governance.proposals.process import current_responses
-from governance.proposals.views import annotate_changes, drafting_context
+from governance.proposals.views import (
+    annotate_changes,
+    drafting_context,
+    group_changes,
+)
 from governance.roles.constitution import FACILITATOR, SECRETARY
 from governance.roles.models import Assignment, ChecklistItem, Link, Metric, Role
 from governance.roles.permissions import (
@@ -226,6 +230,7 @@ def current_context(request, meeting):
         changes = annotate_changes(proposal)
         context |= {
             "changes": changes,
+            "change_groups": group_changes(changes),
             # What it proposes now, while the secretary amends it
             "summary": summarize(changes),
             # Concerns of the members who requested the meeting

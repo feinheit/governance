@@ -13,14 +13,15 @@ from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.html import format_html
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _, ngettext
 from django.views.decorators.http import require_POST
 
 from governance.forms import Form, ModelForm, next_url
+from governance.proposals.describe import describe
 from governance.proposals.instructions import MARKERS, NEW_KEY, new_key, subject_of
 from governance.proposals.models import Proposal
 from governance.roles.constitution import CORE_ROLES
@@ -764,14 +765,38 @@ def role_convert(request, pk, key):
     return done(request, proposal)
 
 
-@require_POST
 def subject_undo(request, pk, kind, key):
-    """Drops the proposal's changes of a role or policy"""
+    """Drops the proposal's changes of a role or policy, confirmed first (in
+    a modal on its page and in the meeting)"""
     if kind not in {"roles", "policies"}:
         raise PermissionDenied
     proposal = editable_proposal(request, pk)
-    replace_subject(proposal, f"{kind}/{key}", [], managed_only=False)
-    proposal.names.pop(f"{kind}/{key}", None)
+    subject = f"{kind}/{key}"
+    if request.method != "POST":
+        changes = describe(instructions_of(proposal, subject), proposal.names)
+        if not changes:
+            raise Http404
+        return render(
+            request,
+            "generic/confirm.html",
+            {
+                "question": gettext("Discard the changes to %(subject)s?")
+                % {"subject": changes[0].subject},
+                "help": ngettext(
+                    "The proposal loses its change: %(changes)s.",
+                    "The proposal loses its %(count)s changes: %(changes)s.",
+                    len(changes),
+                )
+                % {
+                    "count": len(changes),
+                    "changes": ", ".join(str(change.label) for change in changes),
+                },
+                "submit_label": gettext("Discard"),
+                "cancel_url": cancel_url(request, proposal),
+            },
+        )
+    replace_subject(proposal, subject, [], managed_only=False)
+    proposal.names.pop(subject, None)
     proposal.save(update_fields=["instructions", "names"])
     return done(request, proposal)
 

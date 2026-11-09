@@ -18,7 +18,10 @@ unten) oder aus einem heraus in den Kreis (Secretary und Circle Leads
 des Sub-Kreises bekommen die Mail dazu; Policies, die eine Domain
 regeln, bleiben bei ihr), oder machst eine Rolle zum Kreis und zurück. Der Entwurf zeigt alles als Vergleich (in geänderten Texten die
 entfernten Wörter rot, die hinzugefügten grün), dazu,
-was das Annehmen bewirken würde oder weshalb es so nicht geht.
+was das Annehmen bewirken würde oder weshalb es so nicht geht. Die
+Änderungen sind nach Rolle und Policy gruppiert: der Stift neben dem Namen
+öffnet die Rolle oder Policy im Vorschlag mit allen ihren Änderungen, der
+Papierkorb verwirft sie alle (nach einer Rückfrage).
 
 Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; wer sie hat, schlägt das selbst vor. Policies kommen erst danach: Eine Rolle legt die
 Policies für ihre Domains auf ihrer Seite fest. Ein Kreis ohne eigene Rollen wird beim Annehmen

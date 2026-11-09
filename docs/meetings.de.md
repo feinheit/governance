@@ -60,7 +60,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 - **Dieselbe Rolle mehrmals**: hat ein früher angenommener Vorschlag eine
   Rolle oder Policy geändert, die auch der aktuelle ändert, zeigt das
   Meeting den Konflikt vor dem Annehmen. Wer Secretary ist, öffnet die Rolle
-  im Vorschlag ("Bearbeiten") und führt beide Fassungen zusammen: in
+  im Vorschlag (der Stift neben ihrem Namen) und führt beide Fassungen zusammen: in
   Textfeldern stehen beide zwischen Markierungen (`<<<<<<<`, `=======`,
   `>>>>>>>`), die vor dem Speichern weg müssen; unter Name und Titel
   steht der aktuelle Wert, ein Häkchen bestätigt das Zusammenführen.

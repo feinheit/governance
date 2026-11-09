@@ -66,7 +66,7 @@ circle.
 - **The same role several times**: if a proposal adopted earlier changed
   a role or policy the current one changes too, the meeting shows the
   conflict before adopting. The secretary opens the role in the proposal
-  ("Edit") and merges both versions: text fields contain both between
+  (the pencil next to its name) and merges both versions: text fields contain both between
   markers (`<<<<<<<`, `=======`, `>>>>>>>`), which have to go before
   saving; below the name and the title is the current value, a checkbox
   confirms the merge. If the proposal changes an accountability or domain

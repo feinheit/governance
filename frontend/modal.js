@@ -87,6 +87,12 @@ document.addEventListener("htmx:after:swap", (event) => {
   }
 })
 
+// Confirmed in the meeting: the meeting reloads its region (HX-Location,
+// proposals/drafting.py's done()), the dialog closes
+document.addEventListener("htmx:after:request", (event) => {
+  if (isModal(event) && event.detail.ctx.hx?.location) dialog.close()
+})
+
 // Errors (no permission, a server error) show the form's page
 document.addEventListener("htmx:after:request", (event) => {
   if (!isModal(event) || event.detail.ctx.response.status < 400) return
