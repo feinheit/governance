@@ -49,19 +49,30 @@ class ElectionsTest(TestCase):
     def test_due_and_reminders(self):
         self.assertEqual(
             [(role, a and a.user) for role, a in due_elections([self.kitchen])],
-            [(self.secretary, self.ada), (self.rep, None)],
+            [(self.secretary, self.ada)],
         )
         self.client.force_login(self.ada)
         response = self.client.get(f"/roles/{self.kitchen.pk}/")
         self.assertContains(response, "Elections due")
-        self.assertContains(response, "nobody elected")
+        self.assertContains(response, "term ends on")
         response = self.client.get(f"/people/{self.ada.pk}/")
         self.assertContains(response, "Elections due")
 
         call_command("fairy_tasks")
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ["bob@example.com"])  # Facilitator
-        self.assertIn("Circle Rep (Kitchen): nobody elected", mail.outbox[0].body)
+        self.assertIn("Secretary (Kitchen): Ada, term ends on", mail.outbox[0].body)
+
+    def test_unfilled_rep_not_due(self):
+        """The Circle Rep may stay unfilled, only its term ending is due"""
+        self.assertNotIn(self.rep, [role for role, _a in due_elections([self.kitchen])])
+        Assignment.objects.create(
+            role=self.rep,
+            user=self.bob,
+            starts_on=dt.date(2026, 1, 1),
+            elected_until=timezone.localdate() + dt.timedelta(days=10),
+        )
+        self.assertIn(self.rep, [role for role, _a in due_elections([self.kitchen])])
 
     def test_record(self):
         self.client.force_login(self.ada)

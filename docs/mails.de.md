@@ -38,7 +38,7 @@ das Veröffentlichen ihn gleich an: nur die Mail zum Annehmen.
 | Wann | Wer eine Mail erhält |
 |---|---|
 | Ein Meeting endet, mit Ergebnissen oder Notizen | Die Teilnehmenden, die Mitglieder des Kreises, "Alles"; bei angenommenen Vorschlägen auch wer Rollen hat, die sie geändert, entfernt oder weggeschoben haben, und die Secretaries und Circle Leads der Sub-Kreise, in die oder aus denen sie Rollen oder Policies verschieben |
-| Wahlen stehen an (montags) | Wer Facilitator ist (sonst Secretary, sonst die Circle Leads), in jedem Kreis mit Amtszeiten, die in 30 Tagen enden, unbesetzten gewählten Rollen oder Rollen ohne Amtszeit |
+| Wahlen stehen an (montags) | Wer Facilitator ist (sonst Secretary, sonst die Circle Leads), in jedem Kreis mit Amtszeiten, die in 30 Tagen enden, unbesetzten gewählten Rollen (nicht Circle Rep, die Rolle darf unbesetzt bleiben) oder Rollen ohne Amtszeit |
 
 Im Meeting angenommene Vorschläge und Wahlen kommen mit seinen
 Ergebnissen, wenn es endet ("Meeting beenden", oder drei Stunden nach

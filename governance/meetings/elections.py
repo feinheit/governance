@@ -152,8 +152,9 @@ def announce_elections(meeting):
 
 def due_elections(circles, *, day=None):
     """``(role, assignment)`` of elected roles whose term ends within 30 days
-    or which nobody holds (``assignment`` is None then); Role Leads without a
-    term (the role became elected while they held it) too"""
+    or which nobody holds (``assignment`` is None then), except the Circle
+    Rep, which may stay unfilled; Role Leads without a term (the role became
+    elected while they held it) too"""
     day = day or timezone.localdate()
     limit = day + dt.timedelta(days=REMINDER_DAYS)
     result = []
@@ -161,7 +162,7 @@ def due_elections(circles, *, day=None):
         assignments = list(
             Assignment.objects.current(on=day).filter(role=role).select_related("user")
         )
-        if not assignments:
+        if not assignments and role.core_role != REP:
             result.append((role, None))
         result.extend(
             (role, assignment)
