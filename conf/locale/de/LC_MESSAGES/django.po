@@ -1069,7 +1069,7 @@ msgstr "Neue Rolle in %(circle)s"
 
 #: governance/proposals/drafting.py
 msgid "Emptying an accountability or domain removes it."
-msgstr "Eine geleerte Accountability oder Domain wird entfernt."
+msgstr "Eine leere Accountability oder Domain wird entfernt."
 
 #: governance/proposals/drafting.py governance/roles/domain_policies.py
 #, python-format
