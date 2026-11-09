@@ -9,6 +9,8 @@ mailed to everybody affected: the members of the role's circle and its
 sub-circles, and everybody who wants to know everything.
 """
 
+from functools import partial
+
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
@@ -19,6 +21,7 @@ from django.utils.translation import gettext
 from governance.forms import ModelForm
 from governance.history.update import update_today
 from governance.locking import locking_structure
+from governance.notifications import mails
 from governance.proposals.models import Proposal
 from governance.roles.models import Assignment, Domain, Policy, Role
 from governance.roles.permissions import (
@@ -56,8 +59,6 @@ class DomainPolicyForm(ModelForm):
 
 def record_as_proposal(user, role, policy, instructions):
     """The change as an adopted proposal, mailed when committed"""
-    from governance.notifications.mails import domain_policy_changed
-
     now = timezone.now()
     proposal = Proposal.objects.create(
         circle=role.circle,
@@ -79,7 +80,7 @@ def record_as_proposal(user, role, policy, instructions):
     )
     proposal.roles.add(role)
     proposal.policies.add(policy)
-    transaction.on_commit(lambda: domain_policy_changed(proposal))
+    transaction.on_commit(partial(mails.domain_policy_changed, proposal))
     update_today()
     return proposal
 

@@ -8,6 +8,7 @@ meeting, like a conflict found when adopting it at the deadline.
 
 import datetime as dt
 import re
+from functools import partial
 
 from django.db import transaction
 from django.db.models import Exists, OuterRef, Q
@@ -83,7 +84,7 @@ def publish(proposal):
         # Nobody else to ask, e.g. a role's only Role Lead adding roles inside
         try_adopting(proposal)
         return proposal
-    transaction.on_commit(lambda: mails.proposal_published(proposal))
+    transaction.on_commit(partial(mails.proposal_published, proposal))
     return proposal
 
 
@@ -196,7 +197,7 @@ def respond(proposal, user, kind, text=""):
     response = Response.objects.create(
         proposal=proposal, user=user, kind=kind, text=text
     )
-    transaction.on_commit(lambda: mails.response_given(response))
+    transaction.on_commit(partial(mails.response_given, response))
     if kind in {Response.MEETING, Response.OBJECTION}:
         to_meeting(proposal)
     elif kind == Response.CONSENT and everybody_consented(proposal):
@@ -224,7 +225,9 @@ def try_adopting(proposal):
         # imported from GlassFrog, which the nightly import sets back
         problems = exc.problems
         if to_meeting(proposal) and not proposal.decided_in_glassfrog:
-            transaction.on_commit(lambda: mails.proposal_to_meeting(proposal, problems))
+            transaction.on_commit(
+                partial(mails.proposal_to_meeting, proposal, problems)
+            )
         return False
     return True
 
@@ -236,7 +239,7 @@ def back_to_draft(proposal):
     proposal.status = Proposal.DRAFT
     proposal.published_at = proposal.deadline = None
     proposal.save(update_fields=["status", "published_at", "deadline"])
-    transaction.on_commit(lambda: mails.proposal_back_to_draft(proposal))
+    transaction.on_commit(partial(mails.proposal_back_to_draft, proposal))
 
 
 def draft_again(proposal):
@@ -265,7 +268,7 @@ def retract(proposal):
     """The proposer withdraws a published proposal or one waiting for a
     meeting; everybody learns where it went, also those who consented"""
     withdraw(proposal)
-    transaction.on_commit(lambda: mails.proposal_retracted(proposal))
+    transaction.on_commit(partial(mails.proposal_retracted, proposal))
 
 
 def adopt_due_proposals(now=None):

@@ -3,6 +3,7 @@ lose, the circles' Secretaries about people joining and leaving; see section
 5 of SPEC.md"""
 
 from contextlib import contextmanager
+from functools import partial
 
 from django.db import transaction
 
@@ -62,10 +63,6 @@ def announce_changes(circles, before, after):
         if now_joined[circle] != joined[circle]
     ]
     if started or ended:
-        transaction.on_commit(lambda: mails.roles_changed(started, ended))
+        transaction.on_commit(partial(mails.roles_changed, started, ended))
     for circle, new, gone in changes:
-        transaction.on_commit(
-            lambda circle=circle, new=new, gone=gone: mails.members_changed(
-                circle, new, gone
-            )
-        )
+        transaction.on_commit(partial(mails.members_changed, circle, new, gone))

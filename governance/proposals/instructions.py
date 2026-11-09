@@ -13,6 +13,7 @@ constitution's rules raise ``ProposalError`` with all problems found.
 
 import re
 from contextlib import nullcontext
+from functools import partial
 
 from django.db import transaction
 from django.utils import timezone
@@ -20,7 +21,7 @@ from django.utils.translation import gettext as _
 
 from governance.history.update import update_changes
 from governance.locking import lock_structure
-from governance.notifications.mails import proposal_adopted, proposal_withdrawn
+from governance.notifications import mails
 from governance.notifications.role_leads import announce
 from governance.proposals.models import Proposal
 from governance.roles.assignments import (
@@ -694,7 +695,7 @@ def adopt(proposal):
     if not (proposal.meeting and proposal.meeting.is_running):
         # The meeting mails its outputs together when it ends
         before = [*before, *applier.ended_users]
-        transaction.on_commit(lambda: proposal_adopted(proposal, before))
+        transaction.on_commit(partial(mails.proposal_adopted, proposal, before))
     return proposal
 
 
@@ -716,9 +717,7 @@ def close_circles(circles, adopted):
     for proposal in proposals.select_related("circle", "proposer"):
         withdraw(proposal)
         # Their proposers learn why
-        transaction.on_commit(
-            lambda proposal=proposal: proposal_withdrawn(proposal, adopted)
-        )
+        transaction.on_commit(partial(mails.proposal_withdrawn, proposal, adopted))
     for meeting in Meeting.objects.filter(circle__in=circles).running():
         end_meeting(meeting)
 

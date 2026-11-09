@@ -7,6 +7,7 @@ those inactive for hours, starting a meeting in the circle too.
 """
 
 import datetime as dt
+from functools import partial
 
 from django.db import transaction
 from django.db.models import Q
@@ -14,7 +15,7 @@ from django.db.models.signals import m2m_changed, post_delete, post_save
 from django.utils import timezone
 
 from governance.meetings.models import AgendaItem, Election, Meeting
-from governance.notifications.mails import meeting_ended
+from governance.notifications import mails
 from governance.proposals.models import Proposal
 
 
@@ -62,7 +63,7 @@ def end_meeting(meeting, at=None):
     # Not the elections of core roles archived by turning back
     revert_after_meeting(meeting)
     announce_elections(meeting)
-    transaction.on_commit(lambda: meeting_ended(meeting))
+    transaction.on_commit(partial(mails.meeting_ended, meeting))
 
 
 def end_inactive_meetings(meetings=None):

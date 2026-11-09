@@ -1,5 +1,7 @@
 """Circle Leads assign people to roles directly, see section 3 of SPEC.md"""
 
+from functools import partial
+
 from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
@@ -13,6 +15,7 @@ from governance.accounts.models import User
 from governance.forms import ModelForm, next_url
 from governance.history.update import update_today
 from governance.locking import locking_structure
+from governance.notifications import mails
 from governance.notifications.role_leads import announce
 from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Assignment, Role
@@ -218,12 +221,10 @@ def assignment_update(request, pk):
     before = assignment.focus
     form = AssignmentForm(request.POST or None, instance=assignment, role=role)
     if form.is_valid():
-        from governance.notifications import mails
-
         assignment = form.save()
         update_today()  # The history shows changes of the focus
         if assignment.focus != before:
-            transaction.on_commit(lambda: mails.focus_changed(assignment, before))
+            transaction.on_commit(partial(mails.focus_changed, assignment, before))
         return redirect(back(request, role))
     return render(
         request,
