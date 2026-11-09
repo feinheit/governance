@@ -138,41 +138,62 @@
             </div>
           {% endif %}
           {% for change in group.changes %}
-            <div {% if group.subject_key or not forloop.first %}class="mt-2"{% endif %}>
-              <div>
-                <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
-                <span class="text-body-secondary small">
-                  {% if change.action == "added" %}{% translate "added" %}{% elif change.action == "removed" %}{% translate "removed" %}{% elif change.action == "moved" %}{% translate "moved" %}{% elif change.action == "elected" %}{% translate "elected" %}{% else %}{% translate "changed" %}{% endif %}
-                </span>
-                {% if change.action == "moved" %}<span
-                    class="small text-body-secondary"
-                  >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
-                    {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>{% endif %}
+            {% if change.kind == "policies" and change.field %}
+              {# A policy's title and text: the diff says it all #}
+              <div class="wb-markdown mt-2{% if change.field == 'title' %} fw-semibold{% endif %}">
+                {{ change.old|diff:change.new }}
               </div>
-              {% if change.action != "moved" %}
-                {% if change.old and change.new %}<div class="wb-markdown mt-1">
-                    {{ change.old|diff:change.new }}
-                  </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary mt-1">
-                      {{ change.old|markdown }}
-                    </div>{% endif %}
-                  {% if change.new %}<div class="wb-markdown mt-1">{{ change.new|markdown }}</div>{% endif %}{% endif %}
-              {% endif %}
-              {% if change.action == "added" %}
-                {# The fields of what's added, below its badge #}
-                {% for label, text in change.details %}
-                  <div class="mt-2">
-                    <div class="small text-body-secondary">{{ label }}</div>
-                    <div class="wb-markdown">{{ text|markdown }}</div>
-                  </div>
-                {% endfor %}
-              {% elif change.details %}
-                <dl class="wb-fields mt-2">
-                  {% for label, text in change.details %}<dt>{{ label }}</dt><dd class="wb-markdown">
+            {% else %}
+              <div {% if group.subject_key or not forloop.first %}class="mt-2"{% endif %}>
+                <div>
+                  <span class="badge {{ change.action|tone }}">{{ change.label }}</span>
+                  <span class="text-body-secondary small">
+                    {% if change.action == "added" %}{% translate "added" %}{% elif change.action == "removed" %}{% translate "removed" %}{% elif change.action == "moved" %}{% translate "moved" %}{% elif change.action == "elected" %}{% translate "elected" %}{% else %}{% translate "changed" %}{% endif %}
+                  </span>
+                  {% if change.action == "moved" %}<span
+                      class="small text-body-secondary"
+                    >{% if change.old %}{% translate "from" %} {{ change.old }}{% endif %}
+                      {% if change.new %}{% translate "into" %} {{ change.new }}{% endif %}</span>{% endif %}
+                </div>
+                {% if change.action != "moved" %}
+                  {% if change.old and change.new %}<div class="wb-markdown mt-1">
+                      {{ change.old|diff:change.new }}
+                    </div>{% else %}{% if change.old %}<div class="wb-markdown text-decoration-line-through text-body-secondary mt-1">
+                        {{ change.old|markdown }}
+                      </div>{% endif %}
+                    {% if change.new %}<div class="wb-markdown mt-1">
+                        {{ change.new|markdown }}
+                      </div>{% endif %}{% endif %}
+                {% endif %}
+                {% if change.kind == "policies" and change.action == "added" %}
+                  {# A new policy's title and text, the badge says it's added #}
+                  {% for label, text in change.details %}
+                    <div class="wb-markdown mt-1{% if forloop.first %} fw-semibold{% endif %}">{{ text|markdown }}</div>
+                  {% endfor %}
+                {% elif change.kind == "policies" and change.action == "removed" %}
+                  {# A removed policy's title and text, struck through #}
+                  {% for label, text in change.details %}
+                    <div class="wb-markdown text-decoration-line-through text-body-secondary mt-1{% if forloop.first %} fw-semibold{% endif %}">
                       {{ text|markdown }}
-                    </dd>{% endfor %}
-                </dl>
-              {% endif %}
-            </div>
+                    </div>
+                  {% endfor %}
+                {% elif change.action == "added" %}
+                  {# The fields of what's added, below its badge #}
+                  {% for label, text in change.details %}
+                    <div class="mt-2">
+                      <div class="small text-body-secondary">{{ label }}</div>
+                      <div class="wb-markdown">{{ text|markdown }}</div>
+                    </div>
+                  {% endfor %}
+                {% elif change.details %}
+                  <dl class="wb-fields mt-2">
+                    {% for label, text in change.details %}<dt>{{ label }}</dt><dd class="wb-markdown">
+                        {{ text|markdown }}
+                      </dd>{% endfor %}
+                  </dl>
+                {% endif %}
+              </div>
+            {% endif %}
           {% endfor %}
         </li>
       {% empty %}

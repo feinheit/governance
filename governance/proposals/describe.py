@@ -24,6 +24,7 @@ class Change:
     old: str = ""
     new: str = ""
     details: list = field(default_factory=list)  # (label, text) of additions
+    field: str = ""  # The changed field of a role or policy, e.g. "body"
 
 
 FIELD_LABELS = {
@@ -120,6 +121,7 @@ def describe(instructions, names):  # noqa: C901
                         key,
                         old=original or "",
                         new=value or "",
+                        field=match[3],
                     )
                 )
             continue

@@ -57,8 +57,8 @@ class ResponseForm(Form):
         return data
 
 
-def links(proposal, changes):
-    """URLs of the roles and policies a proposal's changes belong to"""
+def subjects(proposal, changes):
+    """The roles and policies a proposal's changes belong to, by key"""
     # Objects added by a draft have keys like n1 instead of IDs
     keys = {
         change.subject_key
@@ -72,11 +72,11 @@ def links(proposal, changes):
     # Proposals adopted in GlassFrog refer to GlassFrog IDs, open ones were
     # converted to the app's IDs like the app's own (import, to_app_ids())
     field = "glassfrog_id" if proposal.adopted_in_glassfrog else "pk"
-    urls = {}
-    for kind, model in [("roles", Role), ("policies", Policy)]:
-        for obj in model.objects.filter(**{f"{field}__in": ids[kind]}):
-            urls[f"{kind}/{getattr(obj, field)}"] = obj.get_absolute_url()
-    return urls
+    return {
+        f"{kind}/{getattr(obj, field)}": obj
+        for kind, model in [("roles", Role), ("policies", Policy)]
+        for obj in model.objects.filter(**{f"{field}__in": ids[kind]})
+    }
 
 
 class ProposalFilters(FilterForm):
@@ -118,7 +118,7 @@ def proposal_list(request):
 def annotate_changes(proposal):
     """The readable changes with what the draft's controls need"""
     changes = describe(proposal.instructions, proposal.names)
-    urls = links(proposal, changes)
+    objects = subjects(proposal, changes)
     removed = {
         i["path"].lstrip("/") for i in proposal.instructions if i["op"] == "remove"
     }
@@ -127,9 +127,13 @@ def annotate_changes(proposal):
         change.is_editable = (
             change.subject_key not in removed and change.action != "moved"
         )
-        change.url = urls.get(change.subject_key)
+        obj = objects.get(change.subject_key)
+        change.url = obj.get_absolute_url() if obj else None
         if change.subject_key:
             change.kind, change.key = change.subject_key.split("/")
+        if change.action == "removed" and isinstance(obj, Policy):
+            # What's removed, struck through like in a diff
+            change.details = [(_("Title"), obj.title), (_("Text"), obj.body)]
     return changes
 
 

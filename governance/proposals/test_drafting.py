@@ -402,7 +402,10 @@ class DraftingTest(TestCase):
         self.assertEqual(
             [i["op"] for i in proposal.instructions], ["test", "remove"] * 2
         )
-        self.assertContains(self.client.get(proposal.get_absolute_url()), "Tea")
+        # The removed policy's title and text struck through
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(response, "Tea")
+        self.assertContains(response, "<p>Always</p>")
         adopt(proposal)
         self.cook.refresh_from_db()
         self.tea.refresh_from_db()
@@ -421,6 +424,13 @@ class DraftingTest(TestCase):
             {"title": "Tea", "body": "Often"},
         )
         proposal.refresh_from_db()
+        # The new policy's title and text without labels, the changed ones
+        # as a diff without badges
+        response = self.client.get(proposal.get_absolute_url())
+        self.assertContains(response, "<p>Bread</p>")
+        self.assertNotContains(response, "Policy text")
+        self.assertContains(response, '<del class="wb-diff-del">Always</del>')
+        self.assertNotContains(response, '<span class="badge wb-tone-info">Text</span>')
         url = f"/proposals/{proposal.pk}/policies/{self.tea.pk}/"
         self.assertContains(self.client.get(url), "Often")
         self.assertNotContains(self.client.get(url), "Changed in the meantime")
