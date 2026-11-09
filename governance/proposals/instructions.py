@@ -24,7 +24,6 @@ from governance.notifications.mails import proposal_adopted, proposal_withdrawn
 from governance.proposals.models import Proposal
 from governance.roles.assignments import (
     announce,
-    end_assignment,
     new_reps_leading,
     reps_leading_their_circle,
     sync_circle_role_leads,
@@ -459,7 +458,7 @@ class Applier:
     def end_assignment(self, assignment):
         # Those losing roles hear about the proposal, also deeper inside
         self.ended_users.add(assignment.user_id)
-        end_assignment(assignment, self.day)
+        assignment.end(self.day)
 
     def make_circle(self, role):
         """Turns the role into a circle if needed, once"""

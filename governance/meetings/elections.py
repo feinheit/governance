@@ -20,7 +20,6 @@ from governance.meetings.models import Election, Meeting
 from governance.roles.assignments import (
     affected_circles,
     announce_changes,
-    end_assignment,
     holdings,
     sync_circle_role_leads,
 )
@@ -76,7 +75,7 @@ def record_election(meeting, role, user, term_ends_on):
                 "elected_until": assignment.elected_until
                 and assignment.elected_until.isoformat(),
             })
-            end_assignment(assignment, day)
+            assignment.end(day)
     if election.started:
         Assignment.objects.create(
             role=role, user=user, starts_on=day, elected_until=term_ends_on

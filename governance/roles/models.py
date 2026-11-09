@@ -362,6 +362,15 @@ class Assignment(models.Model):
     def __str__(self):
         return f"{self.user} – {self.role}"
 
+    def end(self, day):
+        """Ends the assignment, removes it if it only started today (a
+        mistake)"""
+        if self.starts_on == day:
+            self.delete()
+        else:
+            self.ends_on = day
+            self.save(update_fields=["ends_on"])
+
 
 # Like GlassFrog: the frequencies only group checklist items and metrics
 FREQUENCY_CHOICES = [

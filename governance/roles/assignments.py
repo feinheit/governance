@@ -106,18 +106,9 @@ def sync_circle_role_leads(circle, day):
         if assignment.user_id in wanted:
             wanted.discard(assignment.user_id)
         else:
-            end_assignment(assignment, day)
+            assignment.end(day)
     for user_id in wanted:
         Assignment.objects.create(role=circle, user_id=user_id, starts_on=day)
-
-
-def end_assignment(assignment, day):
-    """Ends the assignment, removes it if it only started today (a mistake)"""
-    if assignment.starts_on == day:
-        assignment.delete()
-    else:
-        assignment.ends_on = day
-        assignment.save(update_fields=["ends_on"])
 
 
 def end_assignments_of(user, day):
@@ -130,7 +121,7 @@ def end_assignments_of(user, day):
     before = reps_leading_their_circle()
     with announce(circles):
         for assignment in assignments:
-            end_assignment(assignment, day)
+            assignment.end(day)
             after_change(assignment.role, day)
         # Nobody to warn here
         end_reps(new_reps_leading(before), day)
@@ -159,7 +150,7 @@ def end_reps(reps, day):
     """The Circle Reps leading their circle now resign, the circle elects
     another one"""
     for rep in reps:
-        end_assignment(rep, day)
+        rep.end(day)
         after_change(rep.role, day)
 
 
@@ -320,9 +311,7 @@ def assignment_end(request, pk):
     reps = None
     if request.method == "POST":
         try:
-            change_assignments(
-                request, role, lambda day: end_assignment(assignment, day)
-            )
+            change_assignments(request, role, assignment.end)
         except EndingReps as exc:
             reps = exc.reps
         else:
