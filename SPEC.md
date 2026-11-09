@@ -838,8 +838,10 @@ Deliberately not modelled:
   initiative** (4.3): communication between people, in the chat or
   the task management tool.
 - **Election policies** (5.1.1, 5.1.2): policies widening the
-  candidates beyond the members or allowing several Circle Reps; the app
-  always elects among the members and one Rep.
+  candidates beyond the members, limiting them (e.g. no Circle Lead as
+  Facilitator) or allowing several Circle Reps; the app always elects
+  among the members and one Rep (confirmed 2026-11-09). Circle Leads may
+  be elected Facilitator or Secretary, only not Circle Rep (5.1.1).
 - **Special governance meetings** (5.4): a meeting requested for a
   stated intent, limited to certain changes; the request goes into the
   calendar and the notes, the app doesn't limit what it adopts.
