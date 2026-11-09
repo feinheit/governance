@@ -390,6 +390,36 @@ def elections_due(day=None):
     return sent
 
 
+def meeting_recipients(meeting, proposals):
+    """The attendees, the circle's members, and for adopted proposals the
+    Role Leads of the roles they changed or moved away, also when absent,
+    like adopting async (members before adopting)"""
+    from governance.proposals.models import Proposal
+    from governance.roles.models import Assignment
+
+    users = Q(pk__in=meeting.attendees.all())
+    if meeting.circle:
+        users |= Q(pk__in=recipients(meeting.circle))
+    if not proposals:
+        return User.objects.filter(users)
+    started = timezone.localdate(meeting.started_at)
+    users |= Q(
+        pk__in=Assignment.objects
+        .filter(role__changed_by_proposals__in=proposals)
+        # Those of archived roles are the proposals' ``ended_role_leads``
+        .filter(role__archived_on=None)
+        .filter(Q(ends_on=None) | Q(ends_on__gte=started))
+        .values("user")
+    ) | Q(
+        # Also roles archived with them, e.g. inside a removed circle,
+        # and assignments deleted because they started the same day
+        pk__in=Proposal.ended_role_leads.through.objects.filter(
+            proposal__in=proposals
+        ).values("user")
+    )
+    return User.objects.filter(users | moved_between(proposals))
+
+
 def meeting_ended(meeting):
     """The outputs of a meeting: adopted proposals and elections, or the
     outcomes of a tactical meeting's tensions"""
@@ -398,34 +428,9 @@ def meeting_ended(meeting):
     outputs = meeting_outputs(meeting)
     if not (any(outputs.values()) or meeting.minutes):
         return 0
-    users = Q(pk__in=meeting.attendees.all())
-    if meeting.circle:
-        users |= Q(pk__in=recipients(meeting.circle))
-    if outputs["proposals"]:
-        # The Role Leads of roles the adopted proposals changed or moved away,
-        # also when absent, like adopting async (members before adopting)
-        from governance.proposals.models import Proposal
-        from governance.roles.models import Assignment
-
-        proposals = [entry["proposal"] for entry in outputs["proposals"]]
-        started = timezone.localdate(meeting.started_at)
-        users |= Q(
-            pk__in=Assignment.objects
-            .filter(role__changed_by_proposals__in=proposals)
-            # Those of archived roles are the proposals' ``ended_role_leads``
-            .filter(role__archived_on=None)
-            .filter(Q(ends_on=None) | Q(ends_on__gte=started))
-            .values("user")
-        ) | Q(
-            # Also roles archived with them, e.g. inside a removed circle,
-            # and assignments deleted because they started the same day
-            pk__in=Proposal.ended_role_leads.through.objects.filter(
-                proposal__in=proposals
-            ).values("user")
-        )
-        users |= moved_between(proposals)
+    proposals = [entry["proposal"] for entry in outputs["proposals"]]
     return send(
-        User.objects.filter(users),
+        meeting_recipients(meeting, proposals),
         lambda: _("Outputs of the %(meeting)s") % {"meeting": meeting},
         "notifications/meeting_ended.txt",
         outputs
