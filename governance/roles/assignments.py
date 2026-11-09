@@ -27,16 +27,16 @@ def announce(circles):
     Secretaries about people joining and leaving. A circle's role in the
     super-circle follows its Circle Leads and Rep, it isn't announced."""
     circles = {circle for circle in circles if circle is not None}
-    before = holdings(circles)
+    before = role_leads_and_members(circles)
     # Nothing to announce when the block fails
     yield  # noqa: RUF075
-    announce_changes(circles, before, holdings(circles))
+    announce_changes(circles, before, role_leads_and_members(circles))
 
 
-def holdings(circles):
-    """``(roles, members)``: who holds which of the circles' roles, and the
-    circles' members"""
-    roles = set(
+def role_leads_and_members(circles):
+    """``(role_leads, members)``: the Role Leads of the circles' roles as
+    ``(user, role)``, and the circles' members"""
+    role_leads = set(
         Assignment.objects
         .current()
         .filter(role__circle__in=circles, role__is_circle=False)
@@ -53,15 +53,16 @@ def holdings(circles):
         )
         for circle in circles
     }
-    return roles, joined
+    return role_leads, joined
 
 
 def announce_changes(circles, before, after):
-    """Mails the differences of two ``holdings()``, after committing"""
+    """Mails the differences of two ``role_leads_and_members()``, after
+    committing"""
     from governance.notifications import mails
 
-    (held, joined), (now_held, now_joined) = before, after
-    started, ended = now_held - held, held - now_held
+    (role_leads, joined), (now_role_leads, now_joined) = before, after
+    started, ended = now_role_leads - role_leads, role_leads - now_role_leads
     changes = [
         (
             circle,

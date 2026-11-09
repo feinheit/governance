@@ -20,7 +20,7 @@ from governance.meetings.models import Election, Meeting
 from governance.roles.assignments import (
     affected_circles,
     announce_changes,
-    holdings,
+    role_leads_and_members,
     sync_circle_role_leads,
 )
 from governance.roles.constitution import FACILITATOR, REP, SECRETARY
@@ -142,11 +142,11 @@ def announce_elections(meeting):
         with transaction.atomic():
             for election in elections:
                 undo_election(election, day)
-            before = holdings(circles)
+            before = role_leads_and_members(circles)
             raise _Undone
     except _Undone:
         pass
-    announce_changes(circles, before, holdings(circles))
+    announce_changes(circles, before, role_leads_and_members(circles))
 
 
 def due_elections(circles, *, day=None):
