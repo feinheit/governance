@@ -598,15 +598,6 @@ a.wb-row-title:hover {
   border-radius: 0.2em;
 }
 
-/* The bullets of list items added or removed as a whole */
-li:has(> .wb-diff-del.wb-diff-line, > p > .wb-diff-del.wb-diff-line)::marker {
-  color: var(--wb-danger-ink);
-}
-
-li:has(> .wb-diff-ins.wb-diff-line, > p > .wb-diff-ins.wb-diff-line)::marker {
-  color: var(--wb-success-ink);
-}
-
 @media (max-width: 767.98px) {
   .wb-fields {
     grid-template-columns: minmax(0, 1fr);
