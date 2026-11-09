@@ -54,7 +54,7 @@ class DomainPolicyForm(ModelForm):
         self.fields["domain"].empty_label = None
 
 
-def record(user, role, policy, instructions):
+def record_as_proposal(user, role, policy, instructions):
     """The change as an adopted proposal, mailed when committed"""
     from governance.notifications.mails import domain_policy_changed
 
@@ -151,7 +151,7 @@ def domain_policy_edit(request, pk, policy_pk=None):
         else:
             instructions = changes(policy, old, new)
         if instructions:
-            record(request.user, role, policy, instructions)
+            record_as_proposal(request.user, role, policy, instructions)
         return redirect(role)
     return render(
         request,
@@ -199,7 +199,7 @@ def domain_policy_remove(request, pk, policy_pk):
         )
     policy.archived_on = timezone.localdate()
     policy.save(update_fields=["archived_on"])
-    record(
+    record_as_proposal(
         request.user, role, policy, [{"op": "remove", "path": f"/policies/{policy.pk}"}]
     )
     return redirect(role)
