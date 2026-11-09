@@ -1,4 +1,4 @@
-{% load i18n %}{% autoescape off %}{% blocktranslate with circle=circle %}The members of {{ circle }} changed.{% endblocktranslate %}
+{% load i18n %}{% autoescape off %}{% blocktranslate with circle=circle %}The members of {{ circle }} changed. You get this mail because as Secretary you invite the members to the circle's meetings.{% endblocktranslate %}
 {% if joined %}
 {% translate "Joined" %}:{% for user in joined %}
 * {{ user }}{% endfor %}

@@ -49,6 +49,8 @@ class AssignmentMailsTest(TestCase):
             self.client.post(
                 f"/roles/{self.cook.pk}/assignments/", {"user": self.eve.pk}
             )
+        to_secretary = next(m for m in mail.outbox if m.to == ["bob@example.com"])
+        self.assertIn("as Secretary you invite the members", to_secretary.body)
         self.assertEqual(
             self.outbox(),
             [

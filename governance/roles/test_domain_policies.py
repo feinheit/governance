@@ -87,6 +87,7 @@ class DomainPoliciesTest(TestCase):
             ],
         )
         self.assertIn("Developers on request", mail.outbox[0].body)
+        self.assertIn("applies in Web and its sub-circles", mail.outbox[0].body)
         self.assertContains(
             self.client.get(proposal.get_absolute_url()), "Developers on request"
         )

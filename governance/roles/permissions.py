@@ -84,6 +84,12 @@ def stand_ins(circle, core_roles, *, day=None):
     """The Role Leads of the first of the circle's core roles somebody holds,
     else its Circle Leads: who stands in for unfilled roles, in the order
     given (constitution 5.3.6)"""
+    return standing_in(circle, core_roles, day=day)[1]
+
+
+def standing_in(circle, core_roles, *, day=None):
+    """``(core_role, users)``: ``stand_ins()`` with the core role they hold,
+    ``LEAD`` for the Circle Leads"""
     from governance.accounts.models import User
 
     for core_role in core_roles:
@@ -94,8 +100,8 @@ def stand_ins(circle, core_roles, *, day=None):
             .values("user")
         )
         if users.exists():
-            return users
-    return circle_leads(circle)
+            return core_role, users
+    return LEAD, circle_leads(circle)
 
 
 def acting_secretaries(circle):

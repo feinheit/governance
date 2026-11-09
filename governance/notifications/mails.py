@@ -16,7 +16,7 @@ from governance.roles.permissions import (
     acting_secretaries,
     circle_leads,
     members,
-    stand_ins,
+    standing_in,
 )
 
 
@@ -372,20 +372,21 @@ def elections_due(day=None):
     from governance.meetings.elections import due_elections
     from governance.roles.models import Role
 
+    # Per user: ``(circle, the role they get it for, the due elections)``
     by_user = defaultdict(list)
     for circle in Role.objects.active().circles():
         if not (due := due_elections([circle], day=day)):
             continue
-        users = stand_ins(circle, [FACILITATOR, SECRETARY], day=day)
+        core_role, users = standing_in(circle, [FACILITATOR, SECRETARY], day=day)
         for user_id in users.values_list("pk", flat=True):
-            by_user[user_id].extend(due)
+            by_user[user_id].append((circle, core_role, due))
     sent = 0
     for user in User.objects.active().filter(pk__in=by_user):
         sent += send(
             User.objects.filter(pk=user.pk),
             lambda: _("Elections due"),
             "notifications/elections_due.txt",
-            {"due": by_user[user.pk], "base_url": settings.BASE_URL},
+            {"circles": by_user[user.pk], "base_url": settings.BASE_URL},
         )
     return sent
 

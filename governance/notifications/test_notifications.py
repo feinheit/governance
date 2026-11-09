@@ -181,6 +181,10 @@ class NotificationsTest(TestCase):
         to = sent(self.bob, Response.MEETING, "Too short")
         self.assertEqual(sorted(to), ["eve@example.com", "zoe@example.com"])
         self.assertIn("Too short", to["zoe@example.com"].body)
+        # Why the Secretary gets it, not the proposer
+        hint = "because you schedule the governance meetings of Kitchen"
+        self.assertIn(hint, to["zoe@example.com"].body)
+        self.assertNotIn(hint, to["eve@example.com"].body)
 
         # Without a Secretary the Facilitator stands in (constitution 5.3.6)
         Assignment.objects.filter(role=secretary).delete()

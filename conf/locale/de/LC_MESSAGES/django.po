@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-08 21:40+0100\n"
+"POT-Creation-Date: 2026-11-09 07:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2616,8 +2616,8 @@ msgstr "Meeting starten"
 
 #: governance/templates/notifications/domain_policy_changed.txt
 #, python-format
-msgid "%(role)s in %(circle)s changed a policy for its domains, without a governance process (constitution 1.3.2)."
-msgstr "%(role)s in %(circle)s hat eine Policy für ihre Domains geändert, ohne Governance-Prozess (Verfassung 1.3.2)."
+msgid "%(role)s in %(circle)s changed a policy for its domains. Roles do that without a governance process; you get this mail because the policy applies in %(circle)s and its sub-circles."
+msgstr "%(role)s in %(circle)s hat eine Policy für ihre Domains geändert. Rollen tun das ohne Governance-Prozess; du erhältst diese Mail, weil die Policy in %(circle)s und seinen Sub-Kreisen gilt."
 
 #: governance/templates/notifications/domain_policy_changed.txt
 #: governance/templates/notifications/proposal_adopted.txt
@@ -2627,8 +2627,19 @@ msgid "Changes"
 msgstr "Änderungen"
 
 #: governance/templates/notifications/elections_due.txt
-msgid "These elected roles need an election in a governance meeting soon:"
-msgstr "Diese gewählten Rollen brauchen bald eine Wahl in einem Governance Meeting:"
+#, python-format
+msgid "As Facilitator of %(circle)s, you hold these elections in one of the next governance meetings:"
+msgstr "Als Facilitator von %(circle)s führst du diese Wahlen in einem der nächsten Governance Meetings durch:"
+
+#: governance/templates/notifications/elections_due.txt
+#, python-format
+msgid "%(circle)s has no Facilitator, so as Secretary you hold these elections in one of the next governance meetings:"
+msgstr "In %(circle)s ist die Rolle Facilitator nicht besetzt, deshalb führst du als Secretary diese Wahlen in einem der nächsten Governance Meetings durch:"
+
+#: governance/templates/notifications/elections_due.txt
+#, python-format
+msgid "%(circle)s has neither Facilitator nor Secretary, so as Circle Lead you hold these elections in one of the next governance meetings:"
+msgstr "In %(circle)s sind die Rollen Facilitator und Secretary nicht besetzt, deshalb führst du als Circle Lead diese Wahlen in einem der nächsten Governance Meetings durch:"
 
 #: governance/templates/notifications/elections_due.txt
 #, python-format
@@ -2662,8 +2673,8 @@ msgstr "Das %(meeting)s vom %(date)s ist beendet."
 
 #: governance/templates/notifications/members_changed.txt
 #, python-format
-msgid "The members of %(circle)s changed."
-msgstr "Die Mitglieder von %(circle)s haben sich geändert."
+msgid "The members of %(circle)s changed. You get this mail because as Secretary you invite the members to the circle's meetings."
+msgstr "Die Mitglieder von %(circle)s haben sich geändert. Du erhältst diese Mail, weil du als Secretary die Mitglieder zu den Meetings des Kreises einlädst."
 
 #: governance/templates/notifications/members_changed.txt
 msgid "Joined"
@@ -2690,8 +2701,8 @@ msgstr "%(proposer)s schlägt eine Änderung in %(circle)s vor."
 
 #: governance/templates/notifications/proposal_published.txt
 #, python-format
-msgid "The proposal is adopted on %(date)s unless somebody requests a meeting to discuss it. Questions and requests:"
-msgstr "Der Vorschlag wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen. Fragen und Meetings:"
+msgid "The proposal is adopted on %(date)s unless somebody requests a meeting to discuss it. If you're fine with it, there's nothing to do. Questions and requests:"
+msgstr "Der Vorschlag wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen. Bist du einverstanden, musst du nichts tun. Fragen und Meetings:"
 
 #: governance/templates/notifications/proposal_retracted.txt
 #, python-format
@@ -2717,6 +2728,11 @@ msgstr "%(circle)s ist wieder eine Rolle, dein Vorschlag darin wurde zurückgezo
 #, python-format
 msgid "%(user)s wants to discuss the proposal in %(circle)s in a governance meeting. It's not adopted async anymore and waits for the next governance meeting."
 msgstr "%(user)s möchte den Vorschlag in %(circle)s in einem Governance Meeting besprechen. Er wird nicht mehr asynchron angenommen und wartet auf das nächste Governance Meeting."
+
+#: governance/templates/notifications/response_given.txt
+#, python-format
+msgid "You get this mail because you schedule the governance meetings of %(circle)s."
+msgstr "Du erhältst diese Mail, weil du die Governance Meetings von %(circle)s planst."
 
 #: governance/templates/notifications/response_given.txt
 #, python-format
@@ -3202,6 +3218,13 @@ msgstr "Als Admin"
 #: governance/templatetags/governance.py
 msgid "As Secretary, standing in for the Circle Leads"
 msgstr "Als Secretary, stellvertretend für die Circle Leads"
+
+#~ msgid "These elected roles need an election in a governance meeting soon:"
+#~ msgstr "Diese gewählten Rollen brauchen bald eine Wahl in einem Governance Meeting:"
+
+#, python-format
+#~ msgid "The members of %(circle)s changed."
+#~ msgstr "Die Mitglieder von %(circle)s haben sich geändert."
 
 #, python-format
 #~ msgid "As of %(date)s."

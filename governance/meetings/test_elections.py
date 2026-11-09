@@ -61,7 +61,8 @@ class ElectionsTest(TestCase):
         call_command("fairy_tasks")
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, ["bob@example.com"])  # Facilitator
-        self.assertIn("Secretary (Kitchen): Ada, term ends on", mail.outbox[0].body)
+        self.assertIn("As Facilitator of Kitchen, you hold", mail.outbox[0].body)
+        self.assertIn("* Secretary: Ada, term ends on", mail.outbox[0].body)
 
     def test_unfilled_rep_not_due(self):
         """The Circle Rep may stay unfilled, only its term ending is due"""
@@ -489,7 +490,7 @@ class ElectionsAndRestructuringTest(TestCase):
 
         elections_due()
         self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])
-        self.assertIn("Taster (Kitchen): nobody elected", mail.outbox[0].body)
+        self.assertIn("* Taster: nobody elected", mail.outbox[0].body)
 
 
 class ElectionsDueTest(TestCase):
@@ -506,12 +507,25 @@ class ElectionsDueTest(TestCase):
         facilitator = Assignment.objects.create(
             role=kitchen.roles.get(core_role="facilitator"), user=ada
         )
-        Assignment.objects.create(
+        secretary = Assignment.objects.create(
             role=kitchen.roles.get(core_role="secretary"), user=bob
         )
+        Assignment.objects.create(role=kitchen.roles.get(core_role="lead"), user=ada)
         elections_due()
         self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])
         facilitator.delete()
         mail.outbox = []
         elections_due()
         self.assertEqual([m.to for m in mail.outbox], [["bob@example.com"]])
+        self.assertIn(
+            "Kitchen has no Facilitator, so as Secretary you hold",
+            mail.outbox[0].body,
+        )
+        secretary.delete()
+        mail.outbox = []
+        elections_due()
+        self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])
+        self.assertIn(
+            "Kitchen has neither Facilitator nor Secretary, so as Circle Lead",
+            mail.outbox[0].body,
+        )

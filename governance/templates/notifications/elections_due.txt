@@ -1,5 +1,6 @@
-{% load i18n %}{% autoescape off %}{% translate "These elected roles need an election in a governance meeting soon:" %}
+{% load i18n %}{% autoescape off %}{% for circle, core_role, due in circles %}{% if not forloop.first %}
+{% endif %}{% if core_role == "facilitator" %}{% blocktranslate %}As Facilitator of {{ circle }}, you hold these elections in one of the next governance meetings:{% endblocktranslate %}{% elif core_role == "secretary" %}{% blocktranslate %}{{ circle }} has no Facilitator, so as Secretary you hold these elections in one of the next governance meetings:{% endblocktranslate %}{% else %}{% blocktranslate %}{{ circle }} has neither Facilitator nor Secretary, so as Circle Lead you hold these elections in one of the next governance meetings:{% endblocktranslate %}{% endif %}
 {% for role, assignment in due %}
-* {{ role }} ({{ role.circle }}): {% if assignment.elected_until %}{% blocktranslate with user=assignment.user date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}{{ user }}, term ends on {{ date }}{% endblocktranslate %}{% elif assignment %}{% blocktranslate with user=assignment.user %}{{ user }}, not elected yet{% endblocktranslate %}{% else %}{% translate "nobody elected" %}{% endif %}
+* {{ role }}: {% if assignment.elected_until %}{% blocktranslate with user=assignment.user date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}{{ user }}, term ends on {{ date }}{% endblocktranslate %}{% elif assignment %}{% blocktranslate with user=assignment.user %}{{ user }}, not elected yet{% endblocktranslate %}{% else %}{% translate "nobody elected" %}{% endif %}
   {{ base_url }}{{ role.get_absolute_url }}{% endfor %}
-{% endautoescape %}
+{% endfor %}{% endautoescape %}
