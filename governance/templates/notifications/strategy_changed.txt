@@ -1,0 +1,10 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with user=changed_by circle=circle %}{{ user }} changed the strategy of {{ circle }}. You get this mail because it applies in {{ circle }} and its sub-circles.{% endblocktranslate %}
+
+{% translate "Strategy" %}:
+{{ after|plain }}
+{% if before %}
+{% translate "Before" %}:
+{{ before|plain }}
+{% endif %}
+{{ url }}
+{% endautoescape %}

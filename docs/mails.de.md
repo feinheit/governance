@@ -29,6 +29,7 @@ das Veröffentlichen ihn gleich an: nur die Mail zum Annehmen.
 | Wann | Wer eine Mail erhält |
 |---|---|
 | Eine Policy einer Rolle für ihre Domains kommt dazu, ändert sich oder wird entfernt | Die Mitglieder des Kreises und seiner Sub-Kreise, "Alles", wer sie geändert hat |
+| Die Circle Leads ändern die Strategie des Kreises (bei jedem Speichern) | Dieselben |
 | Du erhältst eine Rolle oder gibst sie ab (Zuweisen, Entfernen, eine Wahl) | Du, alle deine Änderungen in einer Mail |
 | Jemand kommt in einen Kreis oder verlässt ihn (über Rollen) | Wer im Kreis Secretary ist |
 | Dein Fokus in einer Rolle ändert sich | Du |

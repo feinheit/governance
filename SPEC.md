@@ -519,7 +519,7 @@ problems; not imported ones, which the nightly import sets back), adopted ones w
 the proposer, and to the members before adopting, e.g. the Role Leads of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves
-roles or policies into or out of, `mails.moved_between()`), domain policy changes (section 3), and when a meeting ends
+roles or policies into or out of, `mails.moved_between()`), domain policy changes (section 3), strategy changes (to the members of the circle and its sub-circles, like domain policies; each save, merging quick edits is for later), and when a meeting ends
 its outputs (adopted proposals, elections, notes, tactical outcomes;
 also to the attendees and, like adopting async, the Role Leads of roles
 the adopted proposals changed, removed or moved away, also deeper inside:

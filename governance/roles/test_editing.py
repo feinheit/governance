@@ -36,6 +36,42 @@ class EditingTest(TestCase):
             self.client.get(f"/roles/{self.cook.pk}/strategy/").status_code, 403
         )  # Not a circle
 
+    def test_strategy_mail(self):
+        """A changed strategy goes to the members of the circle and of its
+        sub-circles, where it applies too"""
+        from django.core import mail
+
+        pastry = Role.objects.create(name="Pastry", is_circle=True, circle=self.kitchen)
+        zoe = User.objects.create_user("zoe@example.com", full_name="Zoe")
+        Assignment.objects.create(
+            role=Role.objects.create(name="Baker", circle=pastry), user=zoe
+        )
+        self.client.force_login(self.ada)
+        url = f"/roles/{self.kitchen.pk}/strategy/"
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(url, {"strategy": "Soup first"})
+        self.assertEqual(
+            sorted(m.to[0] for m in mail.outbox),
+            [
+                "ada@example.com",
+                "bob@example.com",
+                "eve@example.com",
+                "zoe@example.com",
+            ],
+        )
+        self.assertEqual(mail.outbox[0].subject, "Strategy of Kitchen changed")
+        self.assertIn("Soup first", mail.outbox[0].body)
+        # Unchanged: no mail
+        mail.outbox = []
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(url, {"strategy": "Soup first"})
+        self.assertEqual(mail.outbox, [])
+        # The previous one too
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(url, {"strategy": "Salad first"})
+        self.assertIn("Salad first", mail.outbox[0].body)
+        self.assertIn("Soup first", mail.outbox[0].body)
+
     def test_metrics(self):
         self.client.force_login(self.ada)
         url = f"/roles/{self.cook.pk}/metrics/new/"

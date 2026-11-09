@@ -29,6 +29,7 @@ adopts it right away: only the mail about adopting.
 | When | Who gets a mail |
 |---|---|
 | A role's policy for its domains is added, changed or removed | The members of the circle and of its sub-circles, "everything", who changed it |
+| The Circle Leads change the circle's strategy (each time it's saved) | The same |
 | You get or lose a role (assigning, removing, an election) | You, about all your changes at once |
 | People join or leave a circle (through roles they get or lose) | The circle's Secretary |
 | Your focus in a role changes | You |

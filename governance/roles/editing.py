@@ -1,13 +1,17 @@
 """Editing outside governance: the circle's strategy, metrics, checklist
 items and links, see the permissions in the decisions of SPEC.md"""
 
+from functools import partial
+
 from django import forms
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext
 
 from governance.forms import ModelForm
 from governance.history.update import update_today
+from governance.notifications import mails
 from governance.roles.models import ChecklistItem, Link, Metric, Role
 from governance.roles.permissions import ALLOWED, NOT_ALLOWED, can_lead
 
@@ -39,17 +43,27 @@ def strategy(request, pk):
     role = get_object_or_404(Role, pk=pk)
     if not (right := can_edit_strategy(request.user, role)):
         raise PermissionDenied
+    before = role.strategy
     form = StrategyForm(request.POST or None, instance=role)
     if form.is_valid():
-        form.save()
+        role = form.save()
         update_today()
+        if role.strategy != before:
+            transaction.on_commit(
+                partial(
+                    mails.strategy_changed, role, before, role.strategy, request.user
+                )
+            )
         return redirect(role)
     return render(
         request,
         "generic/object_form.html",
         {
             "title": gettext("Strategy of %(circle)s") % {"circle": role},
-            "help": gettext("The Circle Leads set the strategy outside governance."),
+            "help": gettext(
+                "The Circle Leads set the strategy outside governance. The"
+                " members of the circle and its sub-circles get a mail."
+            ),
             "form": form,
             "right": right,
             "cancel_url": role.get_absolute_url(),

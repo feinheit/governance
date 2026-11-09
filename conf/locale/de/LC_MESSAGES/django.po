@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 07:43+0100\n"
+"POT-Creation-Date: 2026-11-09 07:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -816,6 +816,11 @@ msgstr "Zurückgezogen: %(proposal)s"
 #, python-format
 msgid "Policy of %(role)s changed: %(policy)s"
 msgstr "Policy von %(role)s geändert: %(policy)s"
+
+#: governance/notifications/mails.py
+#, python-format
+msgid "Strategy of %(circle)s changed"
+msgstr "Strategie von %(circle)s geändert"
 
 #: governance/notifications/mails.py
 #, python-format
@@ -1651,8 +1656,8 @@ msgid "Strategy of %(circle)s"
 msgstr "Strategie von %(circle)s"
 
 #: governance/roles/editing.py
-msgid "The Circle Leads set the strategy outside governance."
-msgstr "Die Circle Leads legen die Strategie ausserhalb der Governance fest."
+msgid "The Circle Leads set the strategy outside governance. The members of the circle and its sub-circles get a mail."
+msgstr "Die Circle Leads legen die Strategie ausserhalb der Governance fest. Die Mitglieder des Kreises und seiner Sub-Kreise erhalten eine Mail."
 
 #: governance/roles/editing.py
 #, python-format
@@ -2155,6 +2160,7 @@ msgid "elected until %(elected_until)s"
 msgstr "gewählt bis %(elected_until)s"
 
 #: governance/templates/history/role_as_of.html
+#: governance/templates/notifications/strategy_changed.txt
 #: governance/templates/roles/governance.txt
 #: governance/templates/roles/role_detail.html
 msgid "Strategy"
@@ -2803,6 +2809,15 @@ msgstr "Du hast %(role)s in %(circle)s nicht mehr."
 #, python-format
 msgid "Focus: %(focus)s"
 msgstr "Fokus: %(focus)s"
+
+#: governance/templates/notifications/strategy_changed.txt
+#, python-format
+msgid "%(user)s changed the strategy of %(circle)s. You get this mail because it applies in %(circle)s and its sub-circles."
+msgstr "%(user)s hat die Strategie von %(circle)s geändert. Du erhältst diese Mail, weil sie in %(circle)s und seinen Sub-Kreisen gilt."
+
+#: governance/templates/notifications/strategy_changed.txt
+msgid "Before"
+msgstr "Vorher"
 
 #: governance/templates/proposals/_consequences.html
 #, python-format

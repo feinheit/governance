@@ -238,23 +238,45 @@ def proposal_withdrawn(proposal, adopted=None):
     )
 
 
-def domain_policy_changed(proposal):
-    """A role changed a policy for its domains: everybody affected, the
-    members of its circle and all sub-circles"""
-    circles = [proposal.circle, *proposal.circle.sub_circles()]
-    users = User.objects.filter(
+def circle_and_below(circle, user_id):
+    """Everybody affected by what applies in the circle and all its
+    sub-circles: their members, those who want to know everything, and
+    who changed it"""
+    circles = [circle, *circle.sub_circles()]
+    return User.objects.filter(
         Q(pk__in=User.objects.active().filter(notify_all=True))
-        | Q(pk=proposal.proposer_id)
+        | Q(pk=user_id)
         | Q(pk__in=[user.pk for circle in circles for user in members(circle)])
     )
+
+
+def domain_policy_changed(proposal):
+    """A role changed a policy for its domains"""
     return send(
-        users,
+        circle_and_below(proposal.circle, proposal.proposer_id),
         lambda: (
             _("Policy of %(role)s changed: %(policy)s")
             % {"role": proposal.role, "policy": next(iter(proposal.names.values()), "")}
         ),
         "notifications/domain_policy_changed.txt",
         proposal_context(proposal),
+    )
+
+
+def strategy_changed(circle, before, after, user):
+    """The Circle Leads changed the circle's strategy, which applies in its
+    sub-circles too"""
+    return send(
+        circle_and_below(circle, user.pk),
+        lambda: _("Strategy of %(circle)s changed") % {"circle": circle},
+        "notifications/strategy_changed.txt",
+        {
+            "circle": circle,
+            "before": before,
+            "after": after,
+            "changed_by": user,
+            "url": settings.BASE_URL + circle.get_absolute_url(),
+        },
     )
 
 
