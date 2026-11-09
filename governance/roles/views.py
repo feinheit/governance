@@ -6,12 +6,12 @@ from django.utils.translation import gettext
 
 from governance.accounts.models import User
 from governance.history.views import ASSIGNMENT_KINDS, timeline
-from governance.meetings.elections import due_elections
+from governance.meetings.elections import mark_due_elections
 from governance.meetings.models import Meeting
 from governance.meetings.teasers import with_teasers
 from governance.proposals.models import Proposal
 from governance.proposals.process import waiting_for
-from governance.roles.constitution import FACILITATOR, REP, SECRETARY
+from governance.roles.constitution import REP
 from governance.roles.context import affecting, with_policies
 from governance.roles.domain_policies import can_change_domain_policies
 from governance.roles.editing import can_edit_items, can_edit_strategy
@@ -200,7 +200,7 @@ def role_detail(request, pk):
         # Sub-circles are roles too, the badge tells them apart
         context["roles"] = [r for r in roles if not r.core_role]
         mark_reps(context["roles"])
-        context["due_elections"] = due_elections([role])
+        mark_due_elections(roles)
     if not role.core_role and not role.archived_on:
         # Circles, and roles whose Role Leads break them down in their inner
         # circle (1.3.1, governance meetings only)
@@ -324,14 +324,8 @@ def person_detail(request, pk):
         "past": past,
         "past_more": past_more,
     }
+    mark_due_elections(assignment.role for assignment in assignments)
     if user == request.user:
-        # Facilitators (who trigger them, 5.3.5) and Secretaries see the
-        # elections due in their circles
-        context["due_elections"] = due_elections([
-            assignment.role.circle
-            for assignment in assignments
-            if assignment.role.core_role in {FACILITATOR, SECRETARY}
-        ])
         context |= {
             # Ad-hoc tactical meetings have no circle page
             "meetings": Meeting.objects

@@ -73,8 +73,8 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   zu wählen. Wird dieselbe Rolle im Meeting
   nochmals festgehalten, ersetzt das das frühere Ergebnis, als wäre es
   nie festgehalten worden. Gewählte und Abgelöste erfahren davon, wenn
-  das Meeting endet. Anstehende Wahlen stehen auf der
-  Seite des Kreises, Facilitators erhalten montags eine Erinnerung.
+  das Meeting endet. Anstehende Wahlen sind in den
+  Rollen des Kreises mit "Wahl fällig" markiert, Facilitators erhalten montags eine Erinnerung.
   Beim Start eines Governance Meetings kommen sie auf die Agenda ("Wahl:
   Secretary"), eingebracht von Facilitator; die Wahl mit "Wahl
   festhalten" festhalten, dann den Agendapunkt mit "Erledigt" abschliessen.

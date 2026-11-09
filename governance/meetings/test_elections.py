@@ -52,11 +52,14 @@ class ElectionsTest(TestCase):
             [(self.secretary, self.ada)],
         )
         self.client.force_login(self.ada)
+        # A badge in the circle's core roles and on the Role Lead's page,
+        # not for the Facilitator, whose term is long
         response = self.client.get(f"/roles/{self.kitchen.pk}/")
-        self.assertContains(response, "Elections due")
-        self.assertContains(response, "term ends on")
+        self.assertContains(response, "election due", count=1)
         response = self.client.get(f"/people/{self.ada.pk}/")
-        self.assertContains(response, "Elections due")
+        self.assertContains(response, "election due", count=1)
+        response = self.client.get(f"/people/{self.bob.pk}/")
+        self.assertNotContains(response, "election due")
 
         call_command("fairy_tasks")
         self.assertEqual(len(mail.outbox), 1)
@@ -417,7 +420,7 @@ class ElectionsTest(TestCase):
         )
         self.client.force_login(self.ada)
         self.assertContains(
-            self.client.get(self.kitchen.get_absolute_url()), "not elected yet"
+            self.client.get(self.kitchen.get_absolute_url()), "election due"
         )
 
     def test_term_in_the_future(self):
@@ -542,9 +545,7 @@ class ElectionsAndRestructuringTest(TestCase):
             [(role, a) for role, a in due_elections(circles)], [(taster, None)]
         )
         self.client.force_login(ada)
-        self.assertContains(
-            self.client.get(kitchen.get_absolute_url()), "Elections due"
-        )
+        self.assertContains(self.client.get(kitchen.get_absolute_url()), "election due")
 
         elections_due()
         self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])

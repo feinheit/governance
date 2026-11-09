@@ -81,7 +81,7 @@ circle.
   role again in the meeting replaces the earlier result, as if it had
   never been recorded. Those elected and those replaced hear about it
   when the meeting ends. Due elections are
-  shown on the circle's page, facilitators get a reminder on Mondays.
+  marked "election due" in the circle's roles, facilitators get a reminder on Mondays.
   Starting a governance meeting puts them on its agenda ("Election:
   Secretary"), owned by the facilitator; record the election with
   "Record the election", then close the item with "Done".

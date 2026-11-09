@@ -35,6 +35,11 @@
                     {% include "roles/_assignment_note.html" %}
                   </div>
                 </div>
+                {% if assignment.role.election_due %}
+                  <div class="wb-row-aside">
+                    <span class="badge wb-tone-warning">{% translate "election due" %}</span>
+                  </div>
+                {% endif %}
               </li>
             {% endfor %}
           </ul>
@@ -44,7 +49,6 @@
       {% endfor %}
     </div>
     <div class="col-lg-5">
-      {% if due_elections %}{% include "meetings/_due_elections.html" with show_circle=True %}{% endif %}
       {% if meetings %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Your meetings" %}</h2></div>

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 07:58+0100\n"
+"POT-Creation-Date: 2026-11-09 08:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -857,7 +857,6 @@ msgid "Members of %(circle)s: %(changes)s"
 msgstr "Mitglieder von %(circle)s: %(changes)s"
 
 #: governance/notifications/mails.py
-#: governance/templates/meetings/_due_elections.html
 msgid "Elections due"
 msgstr "Fällige Wahlen"
 
@@ -2029,6 +2028,10 @@ msgstr "Governance"
 msgid "Sign in with Google"
 msgstr "Mit Google anmelden"
 
+#: governance/templates/base.html governance/templates/roles/people.html
+msgid "People"
+msgstr "Personen"
+
 #: governance/templates/base.html governance/templates/history/history.html
 #: governance/templates/history/role_as_of.html
 #: governance/templates/roles/policy_detail.html
@@ -2044,10 +2047,6 @@ msgstr "Deine Seite"
 #: governance/templates/meetings/tactical_call.html
 msgid "Call a tactical meeting"
 msgstr "Tactical Meeting einberufen"
-
-#: governance/templates/base.html governance/templates/roles/people.html
-msgid "People"
-msgstr "Personen"
 
 #: governance/templates/base.html
 #: governance/templates/roles/mail_addresses.html
@@ -2357,20 +2356,6 @@ msgstr "Eine Spannung noch ohne Vorschlag: wer Secretary ist, hält den Vorschla
 #: governance/templates/meetings/_current.html
 msgid "Capture a proposal"
 msgstr "Vorschlag festhalten"
-
-#: governance/templates/meetings/_due_elections.html
-#, python-format
-msgid "term ends on %(date)s"
-msgstr "Amtszeit endet am %(date)s"
-
-#: governance/templates/meetings/_due_elections.html
-msgid "not elected yet"
-msgstr "noch nicht gewählt"
-
-#: governance/templates/meetings/_due_elections.html
-#: governance/templates/notifications/elections_due.txt
-msgid "nobody elected"
-msgstr "niemand gewählt"
 
 #: governance/templates/meetings/_meeting_rows.html
 #: governance/templates/proposals/proposal_detail.html
@@ -2697,6 +2682,10 @@ msgstr "%(user)s, Amtszeit endet am %(date)s"
 #, python-format
 msgid "%(user)s, not elected yet"
 msgstr "%(user)s, noch nicht gewählt"
+
+#: governance/templates/notifications/elections_due.txt
+msgid "nobody elected"
+msgstr "niemand gewählt"
 
 #: governance/templates/notifications/focus_changed.txt
 #, python-format
@@ -3052,6 +3041,11 @@ msgstr "die Circle Leads (standardmässig)"
 #: governance/templates/roles/assignments.html
 msgid "Assign somebody"
 msgstr "Jemanden zuweisen"
+
+#: governance/templates/roles/_role_rows.html
+#: governance/templates/roles/person_detail.html
+msgid "election due"
+msgstr "Wahl fällig"
 
 #: governance/templates/roles/_tree_list.html
 msgid "your role"

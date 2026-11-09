@@ -175,6 +175,16 @@ def due_elections(circles, *, day=None):
     return result
 
 
+def mark_due_elections(roles):
+    """Sets ``election_due`` on the roles, for a badge next to their names
+    (lists of roles and the person page)"""
+    roles = list(roles)
+    circles = {role.circle for role in roles if role.circle}
+    due = {role.pk for role, _assignment in due_elections(circles)}
+    for role in roles:
+        role.election_due = role.pk in due
+
+
 class ElectionForm(ModelForm):
     class Meta:
         model = Election

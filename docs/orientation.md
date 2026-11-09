@@ -45,10 +45,12 @@ link with the mouse shows its shortcut.
 ## Circles, roles and people
 
 A **circle** shows its purpose, strategy, domains, accountabilities, its
-policies, its core roles and meetings, open proposals, due elections,
-checklists and metrics, links, the history and its roles with their
-Role Leads (who fills a role, constitution 1.1; a circle's Role Leads
-are the Circle Leads inside it, 1.4).
+policies, its core roles and meetings, open proposals, checklists and
+metrics, links, the history and its roles with their Role Leads (who
+fills a role, constitution 1.1; a circle's Role Leads are the Circle
+Leads inside it, 1.4). Elected roles whose term ends within 30 days or
+which nobody holds are marked "election due", here and on the person
+pages of who holds them.
 
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove

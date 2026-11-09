@@ -468,8 +468,11 @@ Role Lead: recording the same role again in the meeting (a correction, a
 second vote) replaces the earlier result, undone first (`Election`
 keeps what it changed: the previous Role Lead keeps their assignment). Due elections (within 30 days, nobody elected except for the Circle
 Rep, which may stay unfilled, or held without a term, e.g. a role made elected by policy while held; terms end in the
-future) show on
-the circle page and the Facilitator's and Secretary's person pages, and
+future) are marked with a badge "election due" in the circle's lists of
+roles (core roles and roles) and on the person pages of who holds them
+(decided 2026-11-09: no card of its own, the Facilitator's and
+Secretary's person pages listed elections they weren't concerned
+with), and are
 on the agenda of a governance meeting when it starts (like GlassFrog: one
 plain item per role, "Election: Secretary", owned by the Facilitator or who
 stands in; the election is recorded in the Elections card);
@@ -619,7 +622,7 @@ verify the mails; removed once they've proven themselves.
 - **Circle and role pages** are laid out for the desktop: on the left
   what the role is (purpose, domains, each with a button adding a policy
   for it, accountabilities, its own policies if it has any), on the right what is used most (Role Leads or core roles, a
-  circle's meetings, pending proposals, due elections), then checklists,
+  circle's meetings, pending proposals), then checklists,
   links and history; a circle's roles below both. What constrains it
   from outside is in the menu "…", in a modal ("Domains and policies
   affecting this role", `role_context`): per circle from the anchor circle down,
@@ -628,7 +631,7 @@ verify the mails; removed once they've proven themselves.
   the laptops). A running
   meeting has a button in the header. A role's governance meetings (for its inside, 1.3.1) are rare, its menu starts them and links its meetings (a circle's menu too, besides its Meetings card: easier to find), also the ad hoc tactical meetings it was invited to and a role's those of its circle, which invite all its roles (since it moved into the circle, if it did; `Meeting.objects.of_role()`; GlassFrog's tactical meetings have no invited roles; a circle's list has its own, not its super-circle's).
 - **Circle page**: purpose, strategy, domains, accountabilities, its
-  policies, core roles, meetings, pending proposals, due elections,
+  policies, core roles (due elections marked), meetings, pending proposals,
   metrics, checklists, links, history, roles with Role Leads and sub-circles.
 - **Role page**: purpose, domains (linking to their
   policies, which the link opens, `frontend/open_details.js`), accountabilities, its policies, Role Leads with focus and
@@ -655,8 +658,8 @@ verify the mails; removed once they've proven themselves.
   members (its menu links them). Names as they are, quoted when needed,
   not encoded for headers.
 - **Person page**: roles grouped by circle in depth-first order, earlier
-  roles; one's own also drafts, proposals waiting for a response, open
-  meetings, due elections and the settings.
+  roles (due elections marked); one's own also drafts, proposals waiting
+  for a response, open meetings and the settings.
 - **Settings** (`/accounts/settings/`, a modal from the menu with one's
   name and from one's page): name, short name, language (required:
   without one pages follow the browser but mails are German; preselected

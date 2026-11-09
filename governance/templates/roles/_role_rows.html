@@ -8,5 +8,8 @@
       </div>
       <div class="wb-row-meta"><span>{% include "roles/_role_leads.html" %}</span></div>
     </div>
+    {% if role.election_due %}
+      <div class="wb-row-aside"><span class="badge wb-tone-warning">{% translate "election due" %}</span></div>
+    {% endif %}
   </li>
 {% endfor %}
