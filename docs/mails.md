@@ -39,7 +39,7 @@ adopts it right away: only the mail about adopting.
 | When | Who gets a mail |
 |---|---|
 | A meeting ends, with outputs or notes | The attendees, the circle's members, "everything"; for adopted proposals also the Role Leads of roles they changed, removed or moved away, and the Secretaries and Circle Leads of sub-circles they move roles or policies into or out of |
-| Elections are due (Mondays) | The Facilitator (else the Secretary, else the Circle Leads) of each circle with terms ending within 30 days, unfilled elected roles (not the Circle Rep, which may stay unfilled) or roles held without a term |
+| Elections are due (Mondays) | The Facilitator (else the Secretary, else the Circle Leads) of each circle with terms ending within 14 days, unfilled elected roles (not the Circle Rep, which may stay unfilled) or roles held without a term |
 
 Proposals adopted and elections held in a meeting come with its outputs
 when it ends ("End the meeting", or three hours after the last

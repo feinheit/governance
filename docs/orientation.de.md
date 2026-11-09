@@ -50,7 +50,7 @@ Policies, seine Kernrollen und Meetings, offene Vorschläge, Checklisten
 und Metriken, Links, die Geschichte und seine Rollen mit ihren Role
 Leads (wer eine Rolle ausfüllt, Verfassung 1.1; die Role Leads eines
 Kreises sind die Circle Leads darin, 1.4). Gewählte Rollen, deren
-Amtszeit innert 30 Tagen endet oder die niemand hat, sind mit "Wahl
+Amtszeit innert 14 Tagen endet oder die niemand hat, sind mit "Wahl
 fällig" markiert, hier und auf der Seite der Person, die sie hat.
 
 Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,

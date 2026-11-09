@@ -28,7 +28,8 @@ from governance.roles.permissions import is_circle_lead, members
 
 
 ELECTED = [FACILITATOR, SECRETARY, REP]
-REMINDER_DAYS = 30
+# Short: acting a few days or weeks beyond the term is fine (2026-11-09)
+REMINDER_DAYS = 14
 
 
 def elected_roles(circles):
@@ -154,7 +155,7 @@ def announce_elections(meeting):
 
 
 def due_elections(circles, *, day=None):
-    """``(role, assignment)`` of elected roles whose term ends within 30 days
+    """``(role, assignment)`` of elected roles whose term ends within 14 days
     or which nobody holds (``assignment`` is None then), except the Circle
     Rep, which may stay unfilled; Role Leads without a term (the role became
     elected while they held it) too"""

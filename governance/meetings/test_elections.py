@@ -408,6 +408,17 @@ class ElectionsTest(TestCase):
             [eve],
         )
 
+    def test_due_two_weeks_ahead(self):
+        """Terms are due 14 days before they end, not earlier"""
+        self.facilitator.assignments.update(elected_until=dt.date(2026, 12, 22))
+        self.assertNotIn(
+            self.facilitator, [role for role, _a in due_elections([self.kitchen])]
+        )
+        self.facilitator.assignments.update(elected_until=dt.date(2026, 12, 21))
+        self.assertIn(
+            self.facilitator, [role for role, _a in due_elections([self.kitchen])]
+        )
+
     def test_held_without_a_term(self):
         """A role becoming elected while somebody holds it: its Role Lead has no
         term, the role is due for an election"""

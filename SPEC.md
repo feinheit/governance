@@ -466,7 +466,7 @@ ends the previous assignment (removed if it only started today), a Rep
 also holds the circle's role in the super-circle. Elected roles have one
 Role Lead: recording the same role again in the meeting (a correction, a
 second vote) replaces the earlier result, undone first (`Election`
-keeps what it changed: the previous Role Lead keeps their assignment). Due elections (within 30 days, nobody elected except for the Circle
+keeps what it changed: the previous Role Lead keeps their assignment). Due elections (within 14 days, decided 2026-11-09: acting a few days or weeks beyond the term is fine; nobody elected except for the Circle
 Rep, which may stay unfilled, or held without a term, e.g. a role made elected by policy while held; terms end in the
 future) are marked with a badge "election due" in the circle's lists of
 roles (core roles and roles) and on the person pages of who holds them
