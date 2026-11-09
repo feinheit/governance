@@ -521,7 +521,7 @@ sub-circles' Secretaries and Circle Leads like adopting async). A
 circle emptied by its super-circle while its own meeting ran turns back
 when that meeting ends: those losing its core roles get the mail about
 their roles then. Like GlassFrog, assignments, removals, elections
-and deactivations (`roles.assignments.announce()`; elections when the
+and deactivations (`notifications.role_leads.announce()`; elections when the
 meeting ends, the results after corrections only, not those of core
 roles archived by the circle turning back then (the outputs list them,
 "the role doesn't exist anymore", decided 2026-11-07):

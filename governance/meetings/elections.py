@@ -17,12 +17,11 @@ from governance.history.update import update_today
 from governance.locking import locking_structure
 from governance.meetings.access import can_run
 from governance.meetings.models import Election, Meeting
-from governance.roles.assignments import (
-    affected_circles,
+from governance.notifications.role_leads import (
     announce_changes,
     role_leads_and_members,
-    sync_circle_role_leads,
 )
+from governance.roles.assignments import affected_circles, sync_circle_role_leads
 from governance.roles.constitution import FACILITATOR, REP, SECRETARY
 from governance.roles.models import Assignment, Role
 from governance.roles.permissions import is_circle_lead, members

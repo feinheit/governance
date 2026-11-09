@@ -21,9 +21,9 @@ from django.utils.translation import gettext as _
 from governance.history.update import update_changes
 from governance.locking import lock_structure
 from governance.notifications.mails import proposal_adopted, proposal_withdrawn
+from governance.notifications.role_leads import announce
 from governance.proposals.models import Proposal
 from governance.roles.assignments import (
-    announce,
     new_reps_leading,
     reps_leading_their_circle,
     sync_circle_role_leads,
