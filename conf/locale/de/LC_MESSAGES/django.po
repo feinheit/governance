@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 08:24+0100\n"
+"POT-Creation-Date: 2026-11-09 08:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -940,12 +940,20 @@ msgid "until"
 msgstr "bis"
 
 #: governance/proposals/drafting.py
-msgid "New domains"
-msgstr "Neue Domains"
+msgid "New domain"
+msgstr "Neue Domain"
 
 #: governance/proposals/drafting.py
-msgid "New accountabilities"
-msgstr "Neue Accountabilities"
+msgid "New accountability"
+msgstr "Neue Accountability"
+
+#: governance/proposals/drafting.py
+msgid "Add another domain"
+msgstr "Weitere Domain"
+
+#: governance/proposals/drafting.py
+msgid "Add another accountability"
+msgstr "Weitere Accountability"
 
 #: governance/proposals/drafting.py
 msgid "The tension from the point of view of the role"
@@ -997,10 +1005,6 @@ msgid "I've merged it with the current value."
 msgstr "Ich habe es mit dem aktuellen Wert zusammengeführt."
 
 #: governance/proposals/drafting.py
-msgid "removed in the meantime"
-msgstr "inzwischen entfernt"
-
-#: governance/proposals/drafting.py
 msgid "Merge both versions and remove the conflict markers."
 msgstr "Führe beide Fassungen zusammen und entferne die Markierungen."
 
@@ -1009,8 +1013,8 @@ msgid "Empty to remove."
 msgstr "Leer lassen, um zu entfernen."
 
 #: governance/proposals/drafting.py
-msgid "One per line."
-msgstr "Eine pro Zeile."
+msgid "removed in the meantime"
+msgstr "inzwischen entfernt"
 
 #: governance/proposals/drafting.py
 #, python-format

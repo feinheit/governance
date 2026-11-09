@@ -200,7 +200,7 @@ function attach(textarea) {
 
 // Also textareas htmx inserts later, e.g. the forms amending a proposal in
 // a meeting
-const attachAll = (root) => {
+export const attachAll = (root) => {
   for (const textarea of root.querySelectorAll("textarea[data-mentions]")) {
     if (textarea.dataset.mentionsAttached) continue
     textarea.dataset.mentionsAttached = "true"

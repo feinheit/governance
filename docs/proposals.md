@@ -21,7 +21,8 @@ words in red, the added ones in green), together with what adopting it
 would cause or why it can't be adopted like this. The changes are
 grouped by role and policy: the pencil next to the name opens the role
 or policy in the proposal with all its changes, the trash can discards
-them all (after asking).
+them all (after asking). In a role's form each new accountability and
+domain has a field of its own, "Add another accountability" adds one.
 
 Adding roles inside a role makes it a circle; its Role Leads propose that
 themselves. Policies come only after that: a role sets the policies for

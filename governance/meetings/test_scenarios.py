@@ -91,7 +91,7 @@ class GovernanceMeetingScenarioTest(TestCase):
             {
                 "name": "Pastry",
                 "purpose": "Sweet things",
-                "new_accountabilities": "Icing cakes",
+                "new_accountabilities-0": "Icing cakes",
             },
         )
         self.adopt(item)
@@ -538,7 +538,7 @@ class RoleMeetingScenarioTest(TestCase):
         self.assertEqual(item.proposal.role, cook)
         self.client.post(
             f"/proposals/{item.proposal.pk}/roles/new/",
-            {"name": "Sous", "purpose": "", "new_accountabilities": "Chopping"},
+            {"name": "Sous", "purpose": "", "new_accountabilities-0": "Chopping"},
         )
         # A second one, drafted before the first makes the role a circle
         self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Dishes"})

@@ -134,8 +134,12 @@ class DraftingTest(TestCase):
             {
                 "name": "Baker",
                 "purpose": "Bread",
-                "new_accountabilities": "Baking\r\n\r\nSelling bread",
-                "new_domains": "The oven",
+                # One field per text, which may have several lines; an empty
+                # one and gaps don't matter
+                "new_accountabilities-0": "Baking",
+                "new_accountabilities-1": "",
+                "new_accountabilities-3": "Selling bread\r\nand rolls",
+                "new_domains-0": "The oven",
             },
         )
         self.assertRedirects(response, proposal.get_absolute_url())
@@ -152,6 +156,7 @@ class DraftingTest(TestCase):
                 "/roles/n1/accountabilities/n4/description",
             ],
         )
+        self.assertEqual(proposal.instructions[-1]["value"], "Selling bread\nand rolls")
         response = self.client.get(proposal.get_absolute_url())
         self.assertContains(response, "Baker")
         self.assertContains(response, "Selling bread")
@@ -162,7 +167,7 @@ class DraftingTest(TestCase):
         self.assertContains(response, "Selling bread")
         self.client.post(
             f"/proposals/{proposal.pk}/roles/n1/",
-            {"name": "Baker", "purpose": "", "new_accountabilities": "Baking"},
+            {"name": "Baker", "purpose": "", "new_accountabilities-0": "Baking"},
         )
         proposal.refresh_from_db()
         self.assertEqual(len(proposal.instructions), 3)
@@ -197,7 +202,7 @@ class DraftingTest(TestCase):
             {
                 "name": "Kitchen",
                 "purpose": "Food for all",
-                "new_accountabilities": "Feeding",
+                "new_accountabilities-0": "Feeding",
             },
         )
         proposal.refresh_from_db()
@@ -257,7 +262,7 @@ class DraftingTest(TestCase):
                 "purpose": "",
                 f"accountabilities-{self.cooking.pk}": "Cooking food",
                 f"accountabilities-{self.frying.pk}": "",
-                "new_accountabilities": "Tasting",
+                "new_accountabilities-0": "Tasting",
             },
         )
         proposal.refresh_from_db()
@@ -316,23 +321,26 @@ class DraftingTest(TestCase):
                 "name": "Chef",
                 f"accountabilities-{self.cooking.pk}": "Cooking meals",
                 f"accountabilities-{self.frying.pk}": "Frying",
-                "new_accountabilities": "Tasting",
+                "new_accountabilities-0": "Tasting",
             },
         )
         self.cooking.delete()  # E.g. by a proposal adopted in the meeting
 
         form = self.client.get(url).context["form"]
+        self.assertEqual(form["new_accountabilities-0"].initial, "Tasting")
         self.assertEqual(
-            form["new_accountabilities"].initial,
-            "Tasting\n<<<<<<< removed in the meantime\n=======\nCooking meals\n"
-            ">>>>>>> proposal",
+            form["new_accountabilities-1"].initial,
+            "<<<<<<< removed in the meantime\n=======\nCooking meals\n>>>>>>> proposal",
         )
-        self.assertIn("Changed in the meantime", form["new_accountabilities"].help_text)
+        self.assertIn(
+            "Changed in the meantime", form["new_accountabilities-1"].help_text
+        )
+        self.assertEqual(form["new_accountabilities-2"].initial, "")
         data = {field.name: field.initial for field in form}
         form = self.client.post(url, data).context["form"]
-        self.assertEqual(set(form.errors), {"new_accountabilities"})
+        self.assertEqual(set(form.errors), {"new_accountabilities-1"})
 
-        data["new_accountabilities"] = "Tasting\nCooking meals"  # Kept
+        data["new_accountabilities-1"] = "Cooking meals"  # Kept
         self.client.post(url, data)
         proposal.refresh_from_db()
         self.assertEqual(problems(proposal), [])

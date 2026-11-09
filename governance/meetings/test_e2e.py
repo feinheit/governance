@@ -136,6 +136,10 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("#meeting >> text=Baker", state="detached")
         add_role.click()
         page.fill("#amend input[name=name]", "Baker")
+        # One field per accountability, another one on request
+        page.fill("#amend [name=new_accountabilities-0]", "Baking")
+        page.locator("#amend [data-more-add]").last.click()
+        page.fill("#amend [name=new_accountabilities-1]", "Selling bread")
         page.locator("#amend button[type=submit]").click()
         page.wait_for_selector("#meeting >> text=Baker")
         self.assertSamePage()
@@ -143,7 +147,11 @@ class MeetingE2ETest(LiveServerTestCase):
         # Adopting changes the governance right away
         page.locator("form[action$='/adopt/'] button").click()
         page.wait_for_selector("#meeting .wb-amend-area", state="detached")
-        self.assertTrue(Role.objects.filter(circle=self.kitchen, name="Baker").exists())
+        baker = Role.objects.get(circle=self.kitchen, name="Baker")
+        self.assertEqual(
+            list(baker.accountabilities.values_list("text", flat=True)),
+            ["Baking", "Selling bread"],
+        )
         self.assertEqual(Proposal.objects.get().status, Proposal.ADOPTED)
         self.assertSamePage()
 

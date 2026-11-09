@@ -31,9 +31,24 @@ from governance.roles.permissions import proposer_roles
 
 # Domains before accountabilities, like on the role's page
 TEXT_KINDS = [
-    ("domains", _("Domain"), _("New domains")),
-    ("accountabilities", _("Accountability"), _("New accountabilities")),
+    ("domains", _("Domain"), _("New domain")),
+    ("accountabilities", _("Accountability"), _("New accountability")),
 ]
+# The button adding another field for a new one (frontend/more_fields.js)
+ADD_ANOTHER = {
+    "domains": _("Add another domain"),
+    "accountabilities": _("Add another accountability"),
+}
+
+
+def new_fields(data, kind):
+    """The names of the fields for new texts, ``new_domains-0`` etc., in
+    their order"""
+    pattern = re.compile(rf"new_{kind}-(\d+)")
+    return sorted(
+        (name for name in data if pattern.fullmatch(name)),
+        key=lambda name: int(name.rsplit("-", 1)[1]),
+    )
 
 
 # Instructions ################################################################
@@ -105,10 +120,6 @@ def normalize(instructions):
     return result
 
 
-def lines(text):
-    return [line.strip() for line in (text or "").splitlines() if line.strip()]
-
-
 def role_instructions(proposal, key, role, data):
     """Instructions turning the role (or a new one) into the form's data"""
     taken = list(proposal.instructions)
@@ -152,7 +163,7 @@ def role_instructions(proposal, key, role, data):
                         "value": text,
                     })
     for kind, _label, _new_label in TEXT_KINDS:
-        for text in lines(data[f"new_{kind}"]):
+        for text in filter(None, (data[name] for name in new_fields(data, kind))):
             add({
                 "op": "add",
                 "path": f"{base}/{kind}/{new_key(taken)}/description",
@@ -294,16 +305,6 @@ class MergeMixin:
             self.fields = dict(fields)
         self.add_note(field, note)
 
-    def orphaned(self, name, texts):
-        """The proposal changes texts removed in the meantime: they're
-        offered as new ones, kept or dropped by removing the markers"""
-        field = self.fields[name]
-        self.initial[name] = "\n".join([
-            *([field.initial] if field.initial else []),
-            *(conflict(gettext("removed in the meantime"), "", text) for text in texts),
-        ])
-        self.add_note(field, MERGE_NOTE)
-
     def add_note(self, field, note):
         # Help texts aren't escaped
         field.help_text = (
@@ -377,22 +378,19 @@ class RoleForm(MergeMixin, Form):
                 )
                 if changed_meanwhile(pending, paths, obj.text, text):
                     self.merge(f"{kind}-{obj.pk}", obj.text, text)
-            self.fields[f"new_{kind}"] = text_field(
-                new_label,
-                "\n".join(
-                    i.get("value") or ""
-                    for i in pending
-                    if i["op"] == "add"
-                    and i["path"].startswith(f"/roles/{key}/{kind}/n")
-                ),
-                rows=3,
-                help_text=_("One per line."),
-            )
-            # Changes of texts removed in the meantime (removing them again
+            # One field per new text and an empty one, more on request
+            # (frontend/more_fields.js)
+            texts = [
+                i.get("value") or ""
+                for i in pending
+                if i["op"] == "add" and i["path"].startswith(f"/roles/{key}/{kind}/n")
+            ]
+            # Changes of texts removed in the meantime are offered as new ones,
+            # kept or dropped by removing the markers (removing them again
             # needs nothing)
             known = {str(obj.pk) for obj in existing}
-            if orphans := [
-                i.get("value") or ""
+            orphans = [
+                conflict(gettext("removed in the meantime"), "", i.get("value") or "")
                 for i in pending
                 if i["op"] == "replace"
                 and (
@@ -401,8 +399,16 @@ class RoleForm(MergeMixin, Form):
                     )
                 )
                 and match[1] not in known
-            ]:
-                self.orphaned(f"new_{kind}", orphans)
+            ]
+            count = len(texts) + len(orphans) + 1
+            if self.is_bound and (posted := new_fields(self.data, kind)):
+                count = max(count, int(posted[-1].rsplit("-", 1)[1]) + 1)
+            for index, text in enumerate([*texts, *orphans, *[""] * count][:count]):
+                name = f"new_{kind}-{index}"
+                self.fields[name] = text_field(new_label, text)
+                if index >= len(texts) and text:
+                    self.add_note(self.fields[name], MERGE_NOTE)
+            self.fields[name].widget.attrs["data-more"] = ADD_ANOTHER[kind]
 
     def clean(self):
         data = super().clean()
