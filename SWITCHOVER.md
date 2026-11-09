@@ -55,8 +55,8 @@ nightly import mirrors.
    backup's format.
 6. **Projects and actions**: before the freeze, tell the circles that
    GlassFrog's projects and actions don't move to the app. Write the
-   projects as to-do lists (one Markdown file per circle, done ones only
-   with `--done`) and give each circle its file to import into its task
+   projects as to-do lists (one Markdown file per circle, by person,
+   done ones only with `--done`) and give each circle its file to import into its task
    management tool:
 
    ```

@@ -7,9 +7,10 @@
 directory. The app doesn't take over projects (see SPEC.md); the files are
 a copy to read and to import into a task management tool: most to-do list
 imports take Markdown, bullets become to-dos and checked ones completed.
-They carry no assignees, so the person, the status and the note are part
-of each to-do's text. Projects are grouped by role, those without a role
-(GlassFrog's individual actions) last. Done projects only with ``--done``.
+Projects are grouped by person (going through updates person by person),
+those without a person last; the imports carry no assignees. The role
+(none for GlassFrog's individual actions), the status and the note are
+part of each to-do's text. Done projects only with ``--done``.
 
 GlassFrog's API has no actions and no archived projects; copy those by
 hand.
@@ -34,11 +35,11 @@ def slug(text):
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-") or "circle"
 
 
-def todo(project, people):
+def todo(project, roles):
     parts = [one_line(project["description"]) or "(no description)"]
     details = []
-    if person := people.get(project["links"]["person"]):
-        details.append(person)
+    if (role := project["links"]["role"]) is not None:
+        details.append(roles.get(role, f"Role {role} (removed)"))
     if project["status"] not in {"Current", "Done"}:
         details.append(project["status"])
     if details:
@@ -52,24 +53,25 @@ def todo(project, people):
 
 
 def circle_markdown(circle, projects, roles, people):
-    by_role = defaultdict(list)
+    by_person = defaultdict(list)
     for project in projects:
-        by_role[project["links"]["role"]].append(project)
+        by_person[project["links"]["person"]].append(project)
     lines = [f"# {circle}", ""]
-    # By name, those without a role last
-    for role in sorted(
-        by_role, key=lambda role: (role is None, roles.get(role, "").lower())
+    # By name, those without a person last
+    for person in sorted(
+        by_person,
+        key=lambda person: (person is None, people.get(person, "").lower()),
     ):
         title = (
-            "Without a role"
-            if role is None
-            else roles.get(role, f"Role {role} (removed)")
+            "Without a person"
+            if person is None
+            else people.get(person, f"Person {person} (removed)")
         )
         lines += [f"## {title}", ""]
         lines += [
-            todo(project, people)
+            todo(project, roles)
             for project in sorted(
-                by_role[role],
+                by_person[person],
                 key=lambda p: (STATUSES.index(p["status"]), p["created_at"]),
             )
         ]
