@@ -316,9 +316,9 @@
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Links" %}</h2></div>
           <ul class="list-group list-group-flush">
             {% for link in links %}
-              <li class="list-group-item wb-row">
+              <li class="list-group-item wb-row wb-row-compact">
                 <div class="wb-row-main">
-                  <a class="wb-row-title" href="{{ link.url }}" rel="noopener">{{ link }}</a>
+                  <a class="wb-row-title" href="{{ link.url }}" target="_blank" rel="noopener">{{ link }}</a>
                   {% if link.description %}<div class="wb-row-meta"><span>{{ link.description }}</span></div>{% endif %}
                 </div>
                 {% if can_edit_links %}

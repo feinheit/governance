@@ -5,7 +5,7 @@
   <ul class="list-group list-group-flush">
     {% for link in progress_links %}
       <li class="list-group-item">
-        <a href="{{ link.url }}" rel="noopener">{{ link }}</a>
+        <a href="{{ link.url }}" target="_blank" rel="noopener">{{ link }}</a>
         <div class="wb-row-meta">
           <a href="{{ link.role.get_absolute_url }}">{{ link.role }}</a>
           {% if link.description %}<span>{{ link.description }}</span>{% endif %}
