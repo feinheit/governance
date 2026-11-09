@@ -339,3 +339,51 @@ class APITest(TestCase):
         self.assertEqual(response.status_code, 403)
         proposal.refresh_from_db()
         self.assertEqual(proposal.tension, "Soup")
+
+    def test_links(self):
+        """Anybody manages the links of active roles, not with a read only
+        token; the role's links come with it"""
+        response = self.api(
+            "post",
+            f"/api/roles/{self.kitchen.pk}/links/",
+            {"title": " Projects ", "url": "https://example.com/projects"},
+        )
+        self.assertEqual(response.status_code, 200)
+        link = response.json()
+        self.assertEqual(link["title"], "Projects")
+        self.assertEqual(link["description"], "")
+        self.api(
+            "post",
+            f"/api/roles/{self.kitchen.pk}/links/",
+            {"title": "Board", "url": "https://example.com/board"},
+        )
+        role = self.api("get", f"/api/roles/{self.kitchen.pk}/").json()
+        self.assertEqual(
+            [item["title"] for item in role["links"]], ["Projects", "Board"]
+        )
+
+        response = self.api(
+            "patch", f"/api/links/{link['id']}/", {"description": "To-dos"}
+        )
+        self.assertEqual(response.json()["description"], "To-dos")
+        self.assertEqual(response.json()["url"], "https://example.com/projects")
+        response = self.api("patch", f"/api/links/{link['id']}/", {"url": "nope"})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("url", response.json()["detail"])
+
+        response = self.api(
+            "delete", f"/api/links/{link['id']}/", secret=self.read_secret
+        )
+        self.assertEqual(response.status_code, 403)
+        response = self.api("delete", f"/api/links/{link['id']}/")
+        self.assertEqual(response.json()["title"], "Projects")
+        role = self.api("get", f"/api/roles/{self.kitchen.pk}/").json()
+        self.assertEqual([item["title"] for item in role["links"]], ["Board"])
+
+        Role.objects.filter(pk=self.cook.pk).update(archived_on=timezone.localdate())
+        response = self.api(
+            "post",
+            f"/api/roles/{self.cook.pk}/links/",
+            {"title": "Recipes", "url": "https://example.com/recipes"},
+        )
+        self.assertEqual(response.status_code, 403)

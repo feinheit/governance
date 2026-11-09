@@ -7,6 +7,7 @@ from gov import (  # noqa: F401 Register the commands
     constitution,
     domains,
     export,
+    links,
     policies,
     proposals,
     roles,

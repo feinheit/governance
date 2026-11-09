@@ -68,6 +68,13 @@ def show_role(id, *, as_json):
                 link(sub["id"], sub["url"]), link(sub["name"], sub["url"]), kind
             )
         console.print(table)
+    if role["links"]:
+        table = make_table("ID>", "Link", "Description", title="Links")
+        for item in role["links"]:
+            table.add_row(
+                str(item["id"]), link(item["title"], item["url"]), item["description"]
+            )
+        console.print(table)
 
 
 @cli.group()

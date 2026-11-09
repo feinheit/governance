@@ -110,10 +110,10 @@ Mails zu allem in allen Kreisen wählen. [Mails](mails.de.md) listet alle auf.
 Für Skripte und andere Tools: unter "API" (im Menü deines Namens) erstellst du ein Token (nur
 lesen oder lesen und schreiben, gültig bis 30 Tage nach der letzten
 Verwendung). Die API liest die
-Struktur und Vorschläge und legt Entwürfe an; ihre Dokumentation steht
+Struktur und Vorschläge, legt Entwürfe an und verwaltet die Links von Rollen und Kreisen; ihre Dokumentation steht
 unter `/api/docs`.
 
 Das Kommandozeilen-Tool `gov` nutzt die API und holt sich sein Token
 selbst (`gov login`, im Browser bestätigen). Es zeigt Kreise, Rollen und
-Vorschläge, sucht, und bereitet Entwürfe vor; wie du es installierst,
+Vorschläge, sucht, bereitet Entwürfe vor und verwaltet Links (`gov links`); wie du es installierst,
 steht auf der Seite "API".

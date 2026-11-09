@@ -108,9 +108,9 @@ lists them all.
 
 For scripts and other tools: under "API" (in the menu of your name) you create a token (read only,
 or read and write, valid until 30 days after its last use). The API reads the structure and
-proposals and creates drafts; its documentation is at `/api/docs`.
+proposals, creates drafts and manages the links of roles and circles; its documentation is at `/api/docs`.
 
 The command line tool `gov` uses the API and gets its token by itself
 (`gov login`, confirmed in the browser). It shows circles, roles and
-proposals, searches, and prepares drafts; how to install it is on the
+proposals, searches, prepares drafts and manages links (`gov links`); how to install it is on the
 "API" page.

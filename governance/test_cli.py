@@ -392,6 +392,28 @@ class CLITest(TestCase):
             result = self.gov("me")
         self.assertIn("gov 99.0.0 is available", result.output)
 
+    def test_links(self):
+        """Adding, changing, listing and removing a circle's links"""
+        result = self.gov(
+            "links", "add", self.kitchen.pk, "Projects", "https://example.com/p"
+        )
+        self.assertIn("Projects", result.output)
+        link = json.loads(self.gov("links", "list", self.kitchen.pk, "--json").output)[
+            0
+        ]
+        self.gov("links", "update", link["id"], "--description", "To-dos")
+        result = self.gov("links", "list", self.kitchen.pk)
+        self.assertIn("To-dos", result.output)
+        self.assertIn("https://example.com/p", result.output)
+        self.assertIn("Projects", self.gov("circles", "show", self.kitchen.pk).output)
+        result = self.gov("links", "update", link["id"], "--url", "nope")
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("400", result.output)
+        self.assertIn(
+            "Removed Projects", self.gov("links", "remove", link["id"]).output
+        )
+        self.assertIn("No links.", self.gov("links", "list", self.kitchen.pk).output)
+
     def test_policies(self):
         from governance.roles.models import Domain, Policy
 
