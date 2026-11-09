@@ -53,8 +53,21 @@ nightly import mirrors.
    repository instead of `scripts/fetch_glassfrog.py`. To consider then or
    afterwards: converting the GlassFrog export's commits into the
    backup's format.
-6. **Cancel GlassFrog** once the app's first adoptions went through.
-7. **Clean up the code** (one commit): remove "Until the switchover"
+6. **Projects and actions**: before the freeze, tell the circles that
+   GlassFrog's projects and actions don't move to the app. Write the
+   projects as to-do lists (one Markdown file per circle, done ones only
+   with `--done`) and give each circle its file to import into its task
+   management tool:
+
+   ```
+   cd /tmp && python3 -I ~/projects/sites/governance/scripts/export_glassfrog_projects.py ~/projects/glassfrog /tmp/projects
+   ```
+
+   GlassFrog's API has no actions and no archived projects: whoever
+   needs them copies them by hand before GlassFrog is cancelled. Delete
+   `/tmp/projects` afterwards, it has our data.
+7. **Cancel GlassFrog** once the app's first adoptions went through.
+8. **Clean up the code** (one commit): remove "Until the switchover"
    from `docs/README.md` and `docs/README.de.md`, the notes about
    GlassFrog being the source of truth and the nightly import in
    `AGENTS.md` and `SPEC.md`, the switchover item of `SPEC.md`'s backlog,

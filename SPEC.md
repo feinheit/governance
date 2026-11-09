@@ -490,7 +490,9 @@ items end with information, next actions and projects live in the task
 management tool (several of them are one link to a to-do list), and a
 governance tension is captured by its owner as a tension of their own
 (the app doesn't add tensions for others). GlassFrog's actions and
-projects aren't imported.
+projects aren't imported; `scripts/export_glassfrog_projects.py` writes
+the projects as Markdown to-do lists per circle for task management
+tools (the API has no actions and no archived projects).
 Open meetings are listed on the attendees' person pages.
 
 ## 5. Notifications
