@@ -157,7 +157,15 @@
                     </div>{% endif %}
                   {% if change.new %}<div class="wb-markdown mt-1">{{ change.new|markdown }}</div>{% endif %}{% endif %}
               {% endif %}
-              {% if change.details %}
+              {% if change.action == "added" %}
+                {# The fields of what's added, like changed ones #}
+                {% for label, text in change.details %}
+                  <div class="mt-2">
+                    <span class="badge {{ change.action|tone }}">{{ label }}</span>
+                    <div class="wb-markdown mt-1">{{ text|markdown }}</div>
+                  </div>
+                {% endfor %}
+              {% elif change.details %}
                 <dl class="wb-fields mt-2">
                   {% for label, text in change.details %}<dt>{{ label }}</dt><dd class="wb-markdown">
                       {{ text|markdown }}
