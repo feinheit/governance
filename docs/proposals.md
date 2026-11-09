@@ -37,7 +37,9 @@ meeting ends; so does a removed role with the proposals for inside it.
 
 The core roles (Circle Lead, Facilitator, Secretary, Circle Rep) stay as
 the constitution defines them: proposals don't add accountabilities or
-domains to them.
+domains to them. A policy may transfer authority of the Circle Leads to
+another role or process (e.g. how a role is assigned); the app doesn't
+enforce such policies, the Circle Leads still record the assignments.
 
 Drafts are private until you publish them or bring them to a meeting.
 

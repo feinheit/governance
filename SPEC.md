@@ -827,11 +827,15 @@ Deliberately not modelled:
 
 - **The Circle Lead** stays as defined (1.4.5): no accountabilities or
   domains added through governance (they would apply to every
-  sub-circle's Circle Lead), no delegation removing them. The
-  documentation has to say so. Neither do Facilitator, Secretary and
-  Circle Rep get any (1.3.3, 5.1.1 would allow it; decided 2026-11-07):
-  their Role Leads would set the policies of such domains, and our data has
-  none.
+  sub-circle's Circle Lead). The documentation has to say so. Neither
+  do Facilitator, Secretary and Circle Rep get any (1.3.5, 5.1.1 would
+  allow it; decided 2026-11-07): their Role Leads would set the policies
+  of such domains, and our data has none.
+- **Delegating the Circle Lead's authority** to another role or process
+  by policy (1.4.5, e.g. how a role is assigned, 1.4.1) is allowed by
+  the constitution, but not implemented: no current use case (decided
+  2026-11-09). Such a policy stays text; the Circle Leads still record
+  the assignments in the app.
 - **Linked roles** (1.3.4): no demand in our data, much complexity.
 - **Redirecting references** from outside the circle (1.4.4): an edge
   case, a proposal in the circle containing the reference does the same.
