@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 08:30+0100\n"
+"POT-Creation-Date: 2026-11-09 08:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1008,9 +1008,16 @@ msgstr "Ich habe es mit dem aktuellen Wert zusammengeführt."
 msgid "Merge both versions and remove the conflict markers."
 msgstr "Führe beide Fassungen zusammen und entferne die Markierungen."
 
-#: governance/proposals/drafting.py
-msgid "Empty to remove."
-msgstr "Leer lassen, um zu entfernen."
+#: governance/proposals/drafting.py governance/roles/domain_policies.py
+#: governance/templates/meetings/_agenda.html
+#: governance/templates/meetings/attendees.html
+#: governance/templates/proposals/_drafting.html
+#: governance/templates/roles/_role_leads_card.html
+#: governance/templates/roles/assignment_end.html
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/role_detail.html
+msgid "Remove"
+msgstr "Entfernen"
 
 #: governance/proposals/drafting.py
 msgid "removed in the meantime"
@@ -1657,17 +1664,6 @@ msgstr "Policy %(policy)s entfernen?"
 #, python-format
 msgid "Everybody in %(circle)s and its sub-circles is informed."
 msgstr "Alle in %(circle)s und seinen Sub-Kreisen werden informiert."
-
-#: governance/roles/domain_policies.py
-#: governance/templates/meetings/_agenda.html
-#: governance/templates/meetings/attendees.html
-#: governance/templates/proposals/_drafting.html
-#: governance/templates/roles/_role_leads_card.html
-#: governance/templates/roles/assignment_end.html
-#: governance/templates/roles/assignments.html
-#: governance/templates/roles/role_detail.html
-msgid "Remove"
-msgstr "Entfernen"
 
 #: governance/roles/editing.py
 #, python-format

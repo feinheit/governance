@@ -287,6 +287,19 @@ class DraftingTest(TestCase):
         response = self.client.get(url)
         self.assertContains(response, 'value="Chef"')
         self.assertContains(response, "Tasting")
+        # A removed text stays to read, with the checkbox removing it checked
+        form = response.context["form"]
+        self.assertEqual(form[f"accountabilities-{self.frying.pk}"].initial, "Frying")
+        self.assertTrue(form[f"accountabilities-{self.frying.pk}-remove"].initial)
+        data = {
+            field.name: field.initial for field in form if field.initial is not False
+        }
+        self.client.post(url, data)
+        proposal.refresh_from_db()
+        self.assertIn(
+            ("remove", f"/roles/{self.cook.pk}/accountabilities/{self.frying.pk}"),
+            [(i["op"], i["path"]) for i in proposal.instructions],
+        )
 
         # Somebody changed the role in the meantime
         Accountability.objects.filter(pk=self.cooking.pk).update(text="Cooking!")

@@ -623,6 +623,17 @@ a.wb-row-title:hover {
   margin-bottom: 0 !important;
 }
 
+/* A text with a checkbox removing it (accountabilities and domains in a
+   proposal): close to the text, struck through while checked */
+.mb-3:has(+ .form-check [data-removes]) {
+  margin-bottom: 0.25rem !important;
+}
+
+.mb-3:has(+ .form-check [data-removes]:checked) textarea {
+  text-decoration: line-through;
+  color: var(--bs-secondary-color);
+}
+
 .wb-form-actions {
   display: flex;
   flex-wrap: wrap;

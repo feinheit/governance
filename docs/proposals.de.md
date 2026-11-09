@@ -23,7 +23,8 @@ was das Annehmen bewirken würde oder weshalb es so nicht geht. Die
 öffnet die Rolle oder Policy im Vorschlag mit allen ihren Änderungen, der
 Papierkorb verwirft sie alle (nach einer Rückfrage). Im Formular einer
 Rolle hat jede neue Accountability und Domain ein eigenes Feld, "Weitere
-Accountability" fügt eines hinzu.
+Accountability" fügt eines hinzu; "Entfernen" unter einer bestehenden
+entfernt sie.
 
 Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; wer sie hat, schlägt das selbst vor. Policies kommen erst danach: Eine Rolle legt die
 Policies für ihre Domains auf ihrer Seite fest. Ein Kreis ohne eigene Rollen wird beim Annehmen

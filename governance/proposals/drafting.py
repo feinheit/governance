@@ -149,7 +149,7 @@ def role_instructions(proposal, key, role, data):
         for kind, _label, _new_label in TEXT_KINDS:
             for obj in getattr(role, kind).all():
                 text = data[f"{kind}-{obj.pk}"]
-                if not text:
+                if not text or data[f"{kind}-{obj.pk}-remove"]:
                     add({
                         "op": "remove",
                         "path": f"{base}/{kind}/{obj.pk}",
@@ -362,22 +362,27 @@ class RoleForm(MergeMixin, Form):
         for kind, label, new_label in TEXT_KINDS:
             existing = getattr(role, kind).all() if role is not None else []
             for obj in existing:
-                text = obj.text
-                for i in pending:
-                    if i["path"] in {
-                        f"/roles/{key}/{kind}/{obj.pk}",
-                        f"/roles/{key}/{kind}/{obj.pk}/description",
-                    }:
-                        text = "" if i["op"] == "remove" else i.get("value") or ""
+                text, removed = obj.text, False
                 paths = {
                     f"/roles/{key}/{kind}/{obj.pk}",
                     f"/roles/{key}/{kind}/{obj.pk}/description",
                 }
-                self.fields[f"{kind}-{obj.pk}"] = text_field(
-                    label, text, help_text=_("Empty to remove.")
+                for i in pending:
+                    if i["path"] in paths:
+                        removed = i["op"] == "remove"
+                        text = obj.text if removed else i.get("value") or ""
+                self.fields[f"{kind}-{obj.pk}"] = text_field(label, text)
+                # Removed with the checkbox (emptying the text does it too),
+                # the text stays to read (struck through, main.css)
+                self.fields[f"{kind}-{obj.pk}-remove"] = forms.BooleanField(
+                    label=_("Remove"),
+                    initial=removed,
+                    required=False,
+                    widget=forms.CheckboxInput(attrs={"data-removes": ""}),
                 )
-                if changed_meanwhile(pending, paths, obj.text, text):
-                    self.merge(f"{kind}-{obj.pk}", obj.text, text)
+                proposed = "" if removed else text
+                if changed_meanwhile(pending, paths, obj.text, proposed):
+                    self.merge(f"{kind}-{obj.pk}", obj.text, proposed)
             # One field per new text and an empty one, more on request
             # (frontend/more_fields.js)
             texts = [
