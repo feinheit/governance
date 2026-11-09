@@ -23,8 +23,14 @@ TOKEN = re.compile(
     r"|\w+|\s+|([^\w\s])\1*"
 )
 BLOCK = re.compile(r"\s*(?:[-*+]|\d+[.)]|#{1,6}|>)\s+")
-# Private use characters, Markdown leaves them alone
-MARKERS = {"del": ("", ""), "ins": ("", "")}
+# Private use characters, Markdown leaves them alone; ``-line`` for whole
+# lines, whose list bullets are colored too (main.css)
+MARKERS = {
+    "del": ("", ""),
+    "ins": ("", ""),
+    "del-line": ("", ""),
+    "ins-line": ("", ""),
+}
 
 
 def tokens(text):
@@ -45,7 +51,7 @@ def mark(text, tag):
 def mark_line(line, tag):
     """The whole line marked, after its block syntax"""
     prefix = match[0] if (match := BLOCK.match(line)) else ""
-    return prefix + mark(line[len(prefix) :], tag)
+    return prefix + mark(line[len(prefix) :], f"{tag}-line")
 
 
 def mark_text(text, tag):
@@ -76,8 +82,10 @@ def render(source):
     from governance.templatetags.governance import markdown
 
     html = str(markdown(source))
-    for tag, (start, end) in MARKERS.items():
-        html = html.replace(start, f'<{tag} class="wb-diff-{tag}">')
+    for key, (start, end) in MARKERS.items():
+        tag, _sep, line = key.partition("-")
+        classes = f"wb-diff-{tag} wb-diff-line" if line else f"wb-diff-{tag}"
+        html = html.replace(start, f'<{tag} class="{classes}">')
         html = html.replace(end, f"</{tag}>")
     return mark_safe(html)
 
