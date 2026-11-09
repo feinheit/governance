@@ -51,7 +51,10 @@ class CLITest(TestCase):
 
         self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
         self.kitchen = Role.objects.create(
-            name="Kitchen", is_circle=True, purpose="Food for everyone"
+            name="Kitchen",
+            is_circle=True,
+            purpose="Food for everyone",
+            async_acceptance_days=4,
         )
         self.kitchen.create_core_roles()
         self.cook = Role.objects.create(name="Cook", circle=self.kitchen)

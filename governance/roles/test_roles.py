@@ -39,7 +39,8 @@ class RolesTest(TestCase):
         self.assertEqual(role.display_purpose, "Food")
         self.assertEqual(str(role), "Cook")
 
-        self.assertEqual(role.effective_async_acceptance_days(), 4)
+        # No time limit unless a policy sets one (5.3)
+        self.assertIsNone(role.effective_async_acceptance_days())
         anchor.async_acceptance_days = 3
         anchor.save()
         self.assertEqual(

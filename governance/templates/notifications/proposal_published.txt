@@ -6,6 +6,6 @@
 {% translate "Changes" %}:
 {% include "notifications/_changes.txt" %}
 
-{% blocktranslate with date=proposal.adopted_on|date:"SHORT_DATE_FORMAT" %}The proposal is adopted on {{ date }} unless somebody requests a meeting to discuss it. If you're fine with it, there's nothing to do. Questions and requests:{% endblocktranslate %}
+{% if proposal.adopted_on %}{% blocktranslate with date=proposal.adopted_on|date:"SHORT_DATE_FORMAT" %}The proposal is adopted on {{ date }} unless somebody requests a meeting to discuss it. If you're fine with it, there's nothing to do. Questions and requests:{% endblocktranslate %}{% else %}{% blocktranslate %}The proposal is only adopted once everybody consented. Consents, questions and requests for a meeting:{% endblocktranslate %}{% endif %}
 {{ url }}
 {% endautoescape %}

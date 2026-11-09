@@ -40,7 +40,7 @@ Drafts are private until you publish them or bring them to a meeting.
 
 "Publish (async)" sends the proposal by mail to the circle's members (as
 long as you still hold the role the tension comes from).
-Until the deadline the circle sets, they respond:
+Until the deadline the circle sets (if a policy sets one), they respond:
 
 - **no objection**, without a text (it's only counted)
 - **question or comment**: you get a mail and answer it; your answer
@@ -50,7 +50,8 @@ Until the deadline the circle sets, they respond:
   get a mail.
 
 When everybody else has no objection, the proposal is adopted right away,
-otherwise in the night after the deadline ("to be adopted on"). If it
+otherwise in the night after the deadline ("to be adopted on"); without
+a deadline only when everybody consented. If it
 can't be adopted then (e.g. a role it changes was changed meanwhile), it
 waits for the next governance meeting, and the circle's members get a
 mail saying why. Somebody leaving the circle doesn't make it pass

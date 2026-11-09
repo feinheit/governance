@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 07:29+0100\n"
+"POT-Creation-Date: 2026-11-09 07:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1428,6 +1428,10 @@ msgid "The proposal has been published. It is adopted on %(date)s unless somebod
 msgstr "Der Vorschlag ist veröffentlicht. Er wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen."
 
 #: governance/proposals/views.py
+msgid "The proposal has been published. It is only adopted once everybody consented."
+msgstr "Der Vorschlag ist veröffentlicht. Er wird erst angenommen, wenn alle zugestimmt haben."
+
+#: governance/proposals/views.py
 msgid "The proposal is a draft again. Publish it again when it's ready, the circle starts over then."
 msgstr "Der Vorschlag ist wieder ein Entwurf. Veröffentliche ihn erneut, wenn er bereit ist; der Kreis beginnt dann von vorne."
 
@@ -1702,8 +1706,8 @@ msgid "acceptance period of async proposals"
 msgstr "Frist für asynchrone Vorschläge"
 
 #: governance/roles/models.py
-msgid "In calendar days. Inherited from the super-circle if empty."
-msgstr "In Kalendertagen. Leer: vom Super-Kreis übernommen."
+msgid "In calendar days. Inherited from the super-circle if empty; without any, async proposals are only adopted once everybody consented."
+msgstr "In Kalendertagen. Leer: vom Super-Kreis übernommen; ohne Frist werden asynchrone Vorschläge erst angenommen, wenn alle zugestimmt haben."
 
 #: governance/roles/models.py governance/templates/roles/role_detail.html
 msgid "elected by policy"
@@ -2731,6 +2735,10 @@ msgstr "%(proposer)s schlägt eine Änderung in %(circle)s vor."
 #, python-format
 msgid "The proposal is adopted on %(date)s unless somebody requests a meeting to discuss it. If you're fine with it, there's nothing to do. Questions and requests:"
 msgstr "Der Vorschlag wird am %(date)s angenommen, wenn niemand verlangt, ihn in einem Meeting zu besprechen. Bist du einverstanden, musst du nichts tun. Fragen und Meetings:"
+
+#: governance/templates/notifications/proposal_published.txt
+msgid "The proposal is only adopted once everybody consented. Consents, questions and requests for a meeting:"
+msgstr "Der Vorschlag wird erst angenommen, wenn alle zugestimmt haben. Zustimmung, Fragen und Meetings:"
 
 #: governance/templates/notifications/proposal_retracted.txt
 #, python-format

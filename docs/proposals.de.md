@@ -41,8 +41,8 @@ bringst.
 
 "Veröffentlichen (asynchron)" schickt den Vorschlag per Mail an die
 Mitglieder des Kreises (solange du die Rolle noch hast, aus der die
-Spannung kommt). Bis zur Frist, die der Kreis festlegt, antworten
-sie:
+Spannung kommt). Bis zur Frist, die der Kreis festlegt (wenn eine
+Policy eine festlegt), antworten sie:
 
 - **kein Einwand**, ohne Text (wird nur gezählt)
 - **Frage oder Kommentar**: du erhältst eine Mail und beantwortest sie;
@@ -51,7 +51,8 @@ sie:
   wartet dann auf das nächste Governance Meeting; du und wer im Kreis Secretary ist, erhaltet eine Mail.
 
 Sind alle anderen ohne Einwand, ist der Vorschlag sofort angenommen,
-sonst in der Nacht nach der Frist ("wird angenommen am"). Geht das dann
+sonst in der Nacht nach der Frist ("wird angenommen am"); ohne Frist
+erst, wenn alle zugestimmt haben. Geht das dann
 nicht (z.B. weil eine Rolle, die er ändert, inzwischen geändert wurde),
 wartet er auf das nächste Governance Meeting, und die Mitglieder des
 Kreises erhalten eine Mail mit dem Grund. Verlässt jemand den Kreis,

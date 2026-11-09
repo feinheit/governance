@@ -76,9 +76,9 @@ def publish(proposal):
     now = timezone.now()
     proposal.status = Proposal.PUBLISHED
     proposal.published_at = now
-    proposal.deadline = now + dt.timedelta(
-        days=proposal.circle.effective_async_acceptance_days()
-    )
+    # Without a period set by policy only when everybody consented (5.3)
+    days = proposal.circle.effective_async_acceptance_days()
+    proposal.deadline = None if days is None else now + dt.timedelta(days=days)
     proposal.save()  # Also sets the roles and policies it changes
     if everybody_consented(proposal):
         # Nobody else to ask, e.g. a role's only Role Lead adding roles inside

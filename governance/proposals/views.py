@@ -216,7 +216,12 @@ def proposal_publish(request, pk):
                 "The proposal has been published. It is adopted on %(date)s unless"
                 " somebody requests a meeting to discuss it."
             )
-            % {"date": date_format(proposal.adopted_on, "SHORT_DATE_FORMAT")},
+            % {"date": date_format(proposal.adopted_on, "SHORT_DATE_FORMAT")}
+            if proposal.adopted_on
+            else gettext(
+                "The proposal has been published. It is only adopted once"
+                " everybody consented."
+            ),
         )
     return redirect(proposal)
 

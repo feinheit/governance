@@ -16,11 +16,6 @@ from governance.roles.constitution import (
 )
 
 
-# The acceptance period of async proposals unless the anchor circle (or a
-# circle in between) sets one; the import sets it on the anchor circle
-ASYNC_ACCEPTANCE_DAYS = 4
-
-
 class RoleQuerySet(models.QuerySet):
     def active(self):
         return self.filter(archived_on__isnull=True)
@@ -81,7 +76,10 @@ class Role(models.Model):
         _("acceptance period of async proposals"),
         null=True,
         blank=True,
-        help_text=_("In calendar days. Inherited from the super-circle if empty."),
+        help_text=_(
+            "In calendar days. Inherited from the super-circle if empty; without"
+            " any, async proposals are only adopted once everybody consented."
+        ),
     )
 
     is_elected_by_policy = models.BooleanField(
@@ -189,13 +187,16 @@ class Role(models.Model):
             circles.extend(parents)
         return circles
 
-    def effective_async_acceptance_days(self, default=ASYNC_ACCEPTANCE_DAYS):
+    def effective_async_acceptance_days(self):
+        """The circle's acceptance period of async proposals, else the
+        nearest super-circle's; ``None`` without any: the constitution has no
+        time limit unless a policy sets one (5.3)"""
         circle = self.governing_circle
         while circle is not None:
             if circle.async_acceptance_days is not None:
                 return circle.async_acceptance_days
             circle = circle.circle
-        return default
+        return None
 
     def create_core_roles(self):
         """Creates the missing core roles of a circle"""

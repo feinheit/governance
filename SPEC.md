@@ -113,7 +113,9 @@ accountability texts are known where proposals or `roles.json` have them.
   names, texts may mention them), `is_elected_by_policy`,
   `async_acceptance_days` (inherited by sub-circles; the anchor's policy
   says 4 days, one circle uses 1; GlassFrog has no setting for it, the
-  import sets the default, 4, on the anchor circle unless set here), `glassfrog_id`/`glassfrog_circle_id`.
+  import sets our anchor's 4 days on the anchor circle unless set here;
+  without any, the constitution's default: no time limit, async proposals
+  without a deadline are adopted once everybody consented, 5.3), `glassfrog_id`/`glassfrog_circle_id`.
   The policies stay the explanation of these settings, the Secretary sets
   them on the "Settings" pages.
 - **`Accountability`**, **`Domain`**: `role`, `text`, `position`.

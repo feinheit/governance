@@ -16,7 +16,9 @@ class ProcessingTest(TestCase):
         self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
         self.bob = User.objects.create_user("bob@example.com", full_name="Bob")
         self.eve = User.objects.create_user("eve@example.com", full_name="Eve")
-        self.kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        self.kitchen = Role.objects.create(
+            name="Kitchen", is_circle=True, async_acceptance_days=4
+        )
         self.kitchen.create_core_roles()
         self.cook = Role.objects.create(name="Cook", circle=self.kitchen)
         Assignment.objects.create(

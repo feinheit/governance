@@ -228,6 +228,24 @@ class ProcessTest(TestCase):
             )
             call_command("fairy_tasks")
 
+    def test_without_a_deadline(self):
+        """Without a period set by policy (the circle's or a super-circle's),
+        a proposal is only adopted once everybody consented (5.3)"""
+        from django.core import mail
+
+        self.kitchen.async_acceptance_days = None
+        self.kitchen.save()
+        with self.captureOnCommitCallbacks(execute=True):
+            proposal = publish(self.proposal())
+        self.assertEqual((proposal.deadline, proposal.adopted_on), (None, None))
+        self.assertIn("only adopted once everybody consented", mail.outbox[0].body)
+        self.assertNotIn("nothing to do", mail.outbox[0].body)
+        with time_machine.travel(NOW + dt.timedelta(days=365), tick=False):
+            self.assertEqual(adopt_due_proposals(), [])
+            respond(proposal, self.bob, Response.CONSENT)
+            proposal.refresh_from_db()
+            self.assertEqual(proposal.status, Proposal.ADOPTED)
+
     def test_cannot_publish(self):
         tension = Proposal.objects.create(
             circle=self.kitchen,
