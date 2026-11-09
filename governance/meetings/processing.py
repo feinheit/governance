@@ -64,15 +64,6 @@ def item_step(request, pk):
     return redirect(item.meeting)
 
 
-def complete(item):
-    item.is_completed = True
-    item.save(update_fields=["is_completed"])
-    meeting = item.meeting
-    if meeting.current_item_id == item.pk:
-        meeting.current_item = None
-        meeting.save(update_fields=["current_item"])
-
-
 @require_POST
 def item_reopen(request, pk):
     """A completed item becomes the current one again, e.g. to correct its
@@ -90,7 +81,7 @@ def item_reopen(request, pk):
 @require_POST
 def item_complete(request, pk):
     item = running_item(request, pk)
-    complete(item)
+    item.complete()
     return redirect(item.meeting)
 
 
@@ -130,7 +121,7 @@ def item_adopt(request, pk):
             check_role(proposal)
             proposal.meeting = item.meeting
             adopt(proposal)
-            complete(item)
+            item.complete()
     except ProposalError as exc:
         for problem in exc.problems:
             messages.error(request, problem)
@@ -149,7 +140,7 @@ def item_discard(request, pk):
         raise PermissionDenied
     with transaction.atomic():
         withdraw(proposal)
-        complete(item)
+        item.complete()
     messages.success(request, gettext("The proposal has been withdrawn."))
     return redirect(item.meeting)
 
@@ -172,5 +163,5 @@ def item_outcome(request, pk):
         return redirect(item.meeting)
     item.link = link[:1000]
     item.save(update_fields=["outcome", "link"])
-    complete(item)
+    item.complete()
     return redirect(item.meeting)

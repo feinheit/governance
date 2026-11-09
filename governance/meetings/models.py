@@ -261,6 +261,17 @@ class AgendaItem(models.Model):
     def __str__(self):
         return self.label or str(self.proposal or "")
 
+    def complete(self):
+        """Processed; no longer the meeting's current item"""
+        self.is_completed = True
+        self.save(update_fields=["is_completed"])
+        meeting = self.meeting
+        if meeting.current_item_id == self.pk:
+            meeting.current_item = None
+            meeting.save(update_fields=["current_item"])
+
+    complete.alters_data = True
+
 
 class Election(models.Model):
     """The result of an election in a governance meeting
