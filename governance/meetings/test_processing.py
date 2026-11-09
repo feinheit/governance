@@ -8,7 +8,7 @@ from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
 from governance.proposals.process import adopt_due_proposals
-from governance.roles.models import Accountability, Assignment, Role
+from governance.roles.models import Accountability, Assignment, Policy, Role
 
 
 class ProcessingTest(TestCase):
@@ -271,6 +271,31 @@ class ProcessingTest(TestCase):
         self.client.force_login(self.ada)
         response = self.client.get(published.get_absolute_url())
         self.assertContains(response, self.cook.get_absolute_url())
+
+    def test_policies_shown(self):
+        """Policies show their title and text, without badges per field"""
+        tea = Policy.objects.create(role=self.kitchen, title="Tea", body="Always")
+        self.proposal.instructions = [
+            {"op": "add", "path": "/policies/n1"},
+            {"op": "add", "path": "/policies/n1/title", "value": "Bread"},
+            {"op": "add", "path": "/policies/n1/body", "value": "Daily"},
+            {"op": "test", "path": f"/policies/{tea.pk}"},
+            {
+                "op": "replace",
+                "path": f"/policies/{tea.pk}/body",
+                "original_value": "Always",
+                "value": "Always hot",
+            },
+        ]
+        self.proposal.names = {"policies/n1": "Bread", f"policies/{tea.pk}": "Tea"}
+        self.proposal.save()
+        self.client.force_login(self.bob)
+        self.client.post(f"/agenda/{self.item.pk}/process/")
+        response = self.client.get(self.meeting.get_absolute_url())
+        self.assertContains(response, "<p>Daily</p>")
+        self.assertNotContains(response, "Text:")
+        self.assertContains(response, '<ins class="wb-diff-ins"> hot</ins>')
+        self.assertNotContains(response, '<span class="badge wb-tone-info">Text</span>')
 
     def test_amended_in_the_meeting(self):
         """While the meeting runs, the secretary amends the proposal there,
