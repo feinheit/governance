@@ -1,7 +1,16 @@
+import datetime as dt
+
 from django.test import TestCase
 
 from governance.accounts.models import User
-from governance.roles.models import Assignment, ChecklistItem, Metric, Role
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    ChecklistItem,
+    Domain,
+    Metric,
+    Role,
+)
 
 
 class EditingTest(TestCase):
@@ -153,3 +162,54 @@ class EditingTest(TestCase):
         self.assertContains(response, "Projects and to-dos")
         self.client.post(f"/items/links/{link.pk}/delete/")
         self.assertFalse(Link.objects.exists())
+
+    def test_texts_order(self):
+        """Anybody orders a role's accountabilities and domains, by dragging
+        (their IDs) or with the arrows; it isn't governance, archived roles
+        keep theirs"""
+        cooking, frying, tasting = (
+            Accountability.objects.create(role=self.cook, text=text, position=i)
+            for i, text in enumerate(["Cooking", "Frying", "Tasting"])
+        )
+        order = f"/roles/{self.cook.pk}/accountabilities/order/"
+
+        def texts():
+            return list(self.cook.accountabilities.values_list("text", flat=True))
+
+        self.client.force_login(self.eve)  # Holds no role in the kitchen
+        response = self.client.get(self.cook.get_absolute_url())
+        self.assertContains(response, order)
+        # Missing and unknown ones: the others keep their order after them
+        response = self.client.post(order, {"ids": [tasting.pk, 999, cooking.pk]})
+        self.assertRedirects(response, self.cook.get_absolute_url())
+        self.assertEqual(texts(), ["Tasting", "Cooking", "Frying"])
+
+        move = f"/roles/{self.cook.pk}/accountabilities/{frying.pk}/move/"
+        self.client.post(move, {"direction": "up"})
+        self.assertEqual(texts(), ["Tasting", "Frying", "Cooking"])
+        self.client.post(
+            move.replace(str(frying.pk), str(tasting.pk)), {"direction": "up"}
+        )
+        self.assertEqual(texts(), ["Tasting", "Frying", "Cooking"])
+        self.assertEqual(self.client.get(order).status_code, 405)
+
+        oven, pots = (
+            Domain.objects.create(role=self.cook, text=text, position=i)
+            for i, text in enumerate(["Oven", "Pots"])
+        )
+        domains = f"/roles/{self.cook.pk}/domains/order/"
+        self.assertContains(self.client.get(self.cook.get_absolute_url()), domains)
+        self.client.post(domains, {"ids": [pots.pk, oven.pk]})
+        self.assertEqual(
+            list(self.cook.domains.values_list("text", flat=True)), ["Pots", "Oven"]
+        )
+        self.assertEqual(
+            self.client.post(f"/roles/{self.cook.pk}/policies/order/").status_code,
+            404,
+        )
+
+        Role.objects.filter(pk=self.cook.pk).update(archived_on=dt.date(2026, 1, 1))
+        self.assertEqual(
+            self.client.post(order, {"ids": [cooking.pk]}).status_code, 404
+        )
+        self.assertEqual(texts(), ["Tasting", "Frying", "Cooking"])

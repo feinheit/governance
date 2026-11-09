@@ -118,7 +118,11 @@ accountability texts are known where proposals or `roles.json` have them.
   without a deadline are adopted once everybody consented, 5.3), `glassfrog_id`/`glassfrog_circle_id`.
   The policies stay the explanation of these settings, the Secretary sets
   them on the "Settings" pages.
-- **`Accountability`**, **`Domain`**: `role`, `text`, `position`.
+- **`Accountability`**, **`Domain`**: `role`, `text`, `position`. Their
+  order isn't governance: anybody drags them into an order on the role's
+  page (arrows without JavaScript, `roles/editing.py`), without a proposal
+  or a mail; the audit log keeps it, the history doesn't count it as a
+  change (decided 2026-11-09).
 - **`Policy`**: `role` (the circle, or a role for its domains), `title`,
   `body`, optional `domain`, `archived_on`.
 - **`Assignment`**: `role`, `user`, `focus`, `elected_until`, `starts_on`,

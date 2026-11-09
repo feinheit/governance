@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 08:35+0100\n"
+"POT-Creation-Date: 2026-11-09 08:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2225,6 +2225,7 @@ msgstr[0] "Teilnehmende (%(count)s)"
 msgstr[1] "Teilnehmende (%(count)s)"
 
 #: governance/templates/meetings/_agenda.html
+#: governance/templates/roles/_drag_handle.html
 msgid "Drag to reorder"
 msgstr "Ziehen zum Umsortieren"
 
@@ -2233,10 +2234,12 @@ msgid "Process"
 msgstr "Behandeln"
 
 #: governance/templates/meetings/_agenda.html
+#: governance/templates/roles/_move_arrows.html
 msgid "Move up"
 msgstr "Nach oben"
 
 #: governance/templates/meetings/_agenda.html
+#: governance/templates/roles/_move_arrows.html
 msgid "Move down"
 msgstr "Nach unten"
 

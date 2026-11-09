@@ -54,7 +54,9 @@ pages of who holds them.
 
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove
-here), checklists, metrics and links. A domain with policies links to
+here), checklists, metrics and links. Anybody drags the domains and
+accountabilities into another order by their handles, which isn't a
+change of governance. A domain with policies links to
 them ("2 policies"), which opens them; the policies card is there only
 when the role has policies of its own. "Domains and policies affecting
 this role" in the menu "…" shows what applies to it from outside: the

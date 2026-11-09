@@ -38,6 +38,13 @@ urlpatterns = [
         name="role_settings",
     ),
     path("roles/<int:pk>/strategy/", editing.strategy, name="role_strategy"),
+    # Accountabilities and domains
+    path("roles/<int:pk>/<str:kind>/order/", editing.texts_order, name="texts_order"),
+    path(
+        "roles/<int:pk>/<str:kind>/<int:text_pk>/move/",
+        editing.text_move,
+        name="text_move",
+    ),
     # Explicit kinds: roles/<pk>/proposals/new/ and others exist too
     *[
         path(

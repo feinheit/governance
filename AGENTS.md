@@ -152,7 +152,8 @@ the keyboard shortcuts (`shortcuts.js`, `data-shortcut` on links and fields,
 listed in `docs/orientation.md`), the icons (npm's `bootstrap-icons`, only
 those in use in `styles/icons.css`, `{% icon "pencil" %}`, icon-only
 buttons with a title and a visually hidden label; `test_icons.py`), the
-agenda's drag handles (`agenda.js`, SortableJS, a chunk of its own),
+drag handles of the agenda and of accountabilities (`sortable.js`,
+SortableJS, a chunk of its own),
 textareas growing with their text (`autogrow.js`), parts of forms
 shown for some choices only (`shown_for.js`, `data-shown-for`), menus of what
 isn't needed often (`details.wb-menu` with Bootstrap's `.dropdown-menu`,

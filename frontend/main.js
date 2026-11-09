@@ -24,6 +24,13 @@ import "htmx.org"
 import "./modal.js"
 
 // The script is deferred, the page is parsed already
+
+// Lists reordered by dragging (the agenda, accountabilities): SortableJS, a
+// chunk of its own; the meeting's agenda may become sortable later
+if (document.querySelector("[data-sortable], #meeting")) {
+  import(/* webpackChunkName: "sortable" */ "./sortable.js")
+}
+
 const circleBrowser = document.querySelector("#circle-browser")
 if (circleBrowser) {
   import(/* webpackChunkName: "circles" */ "./circles/index.js").then(

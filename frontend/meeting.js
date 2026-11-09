@@ -36,11 +36,6 @@ window.meetingIsIdle = () => {
   return !busy
 }
 
-// Dragging the agenda's items (the secretary): SortableJS, a chunk of its own
-if (document.getElementById("meeting")) {
-  import(/* webpackChunkName: "agenda" */ "./agenda.js")
-}
-
 // Forms with data-autosave (the outcome, the notes) save themselves a
 // moment after typing and when leaving a field; the server only saves
 // (X-Autosave), the others see it with their next update
@@ -138,7 +133,7 @@ document.addEventListener("htmx:after:settle", () => {
 document.addEventListener("click", (event) => {
   if (
     event.target.closest("#agenda li.wb-current") &&
-    !event.target.closest("a, button, input, [data-agenda-handle]")
+    !event.target.closest("a, button, input, [data-sortable-handle]")
   ) {
     scrollToCurrent(true)
   }

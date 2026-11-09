@@ -18,7 +18,14 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
-from governance.roles.models import Assignment, ChecklistItem, Domain, Policy, Role
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    ChecklistItem,
+    Domain,
+    Policy,
+    Role,
+)
 
 
 try:
@@ -193,7 +200,7 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertFalse(page.locator("#agenda .wb-no-js").first.is_visible())
         soup = page.locator("#agenda [data-agenda-item]", has_text="Soup")
         tea = page.locator("#agenda [data-agenda-item]", has_text="Tea")
-        soup.locator("[data-agenda-handle]").drag_to(
+        soup.locator("[data-sortable-handle]").drag_to(
             tea, target_position={"x": 20, "y": 5}
         )
         # The list changes right away in the browser, the server saves it
@@ -211,6 +218,28 @@ class MeetingE2ETest(LiveServerTestCase):
         page.wait_for_selector("#agenda .wb-current >> text=Cake")
         self.meeting.refresh_from_db()
         self.assertEqual(self.meeting.current_item.label, "Cake")
+        self.assertEqual(self.errors, [])
+
+    def test_accountabilities_dragged(self):
+        """Anybody drags a role's accountabilities into an order, the page
+        stays as it is"""
+        for position, text in enumerate(["Cooking", "Frying", "Tasting"]):
+            Accountability.objects.create(role=self.cook, text=text, position=position)
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        page.evaluate("window.marker = 1")
+        self.assertFalse(page.locator(".wb-no-js").first.is_visible())
+        rows = page.locator("[data-sortable='#accountabilities-order'] li")
+        rows.filter(has_text="Tasting").locator("[data-sortable-handle]").drag_to(
+            rows.filter(has_text="Cooking"), target_position={"x": 20, "y": 5}
+        )
+        for _attempt in range(50):
+            order = list(self.cook.accountabilities.values_list("text", flat=True))
+            if order[0] == "Tasting":
+                break
+            page.wait_for_timeout(100)
+        self.assertEqual(order, ["Tasting", "Cooking", "Frying"])
+        self.assertSamePage()
         self.assertEqual(self.errors, [])
 
     def test_outcome_autosaved(self):
@@ -739,7 +768,7 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertLess(top("nav[aria-label=Steps]"), top("#current"))
         self.assertLess(top("#current"), top("#agenda"))
         row = page.locator("#agenda li", has_text="Knives")
-        handle = row.locator("[data-agenda-handle]").bounding_box()
+        handle = row.locator("[data-sortable-handle]").bounding_box()
         remove = row.locator("form[action$='/remove/'] button").bounding_box()
         self.assertLess(row.bounding_box()["height"], 50)
         self.assertLess(abs(handle["y"] - remove["y"]), 10)

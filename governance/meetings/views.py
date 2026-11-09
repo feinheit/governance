@@ -684,7 +684,7 @@ def agenda_remove(request, pk):
 @require_POST
 def agenda_order(request, pk):
     """The secretary drags the agenda's items into an order (the agenda's
-    drag handles, frontend/agenda.js): their IDs in the new order, missing
+    drag handles, frontend/sortable.js): their IDs in the new order, missing
     ones keep their order after them"""
     meeting = runnable_meeting(request, pk)
     items = {item.pk: item for item in meeting.agenda_items.all()}

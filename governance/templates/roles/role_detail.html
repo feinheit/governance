@@ -129,14 +129,22 @@
       {% if domains or role.core.domains %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Domains" %}</h2></div>
-          <ul class="list-group list-group-flush">
+          {# Anybody drags them into an order (frontend/sortable.js), without JavaScript the arrows #}
+          <ul
+            class="list-group list-group-flush"
+            {% if can_reorder_domains %}data-sortable="#domains-order"{% endif %}
+          >
             {% for text in role.core.domains %}
               <li class="list-group-item">
                 {{ text }} <span class="badge wb-tone-core">{% translate "constitution" %}</span>
               </li>
             {% endfor %}
             {% for domain in domains %}
-              <li class="list-group-item wb-row">
+              <li
+                class="list-group-item wb-row align-items-center"
+                {% if can_reorder_domains %}data-sortable-item="{{ domain.pk }}"{% endif %}
+              >
+                {% if can_reorder_domains %}{% include "roles/_drag_handle.html" %}{% endif %}
                 <div class="wb-row-main wb-markdown">{{ domain.text|markdown }}</div>
                 {% if domain.role_policies or can_change_domain_policies %}
                   <div class="d-flex gap-2 align-items-center flex-shrink-0">
@@ -153,15 +161,23 @@
                       >{% icon "plus-lg" %} {% translate "Policy" %}</a>{% endif %}
                   </div>
                 {% endif %}
+                {% if can_reorder_domains %}
+                  {% include "roles/_move_arrows.html" with kind="domains" text=domain %}
+                {% endif %}
               </li>
             {% endfor %}
           </ul>
+          {% if can_reorder_domains %}{% include "roles/_order_form.html" with kind="domains" %}{% endif %}
         </section>
       {% endif %}
 
       <section class="card mb-4">
         <div class="card-header"><h2 class="h6 mb-0">{% translate "Accountabilities" %}</h2></div>
-        <ul class="list-group list-group-flush">
+        {# Anybody drags them into an order (frontend/sortable.js), without JavaScript the arrows #}
+        <ul
+          class="list-group list-group-flush"
+          {% if can_reorder_accountabilities %}data-sortable="#accountabilities-order"{% endif %}
+        >
           {% if role.core_role == "lead" %}
             {# No accountabilities of its own (constitution 1.4) #}
             <li class="list-group-item text-body-secondary">
@@ -175,13 +191,24 @@
             </li>
           {% endfor %}
           {% for accountability in accountabilities %}
-            <li class="list-group-item wb-markdown">{{ accountability.text|markdown }}</li>
+            {% if can_reorder_accountabilities %}
+              <li class="list-group-item wb-row" data-sortable-item="{{ accountability.pk }}">
+                {% include "roles/_drag_handle.html" %}
+                <div class="wb-row-main wb-markdown">{{ accountability.text|markdown }}</div>
+                {% include "roles/_move_arrows.html" with kind="accountabilities" text=accountability %}
+              </li>
+            {% else %}
+              <li class="list-group-item wb-markdown">{{ accountability.text|markdown }}</li>
+            {% endif %}
           {% empty %}
             {% if not role.core.accountabilities and role.core_role != "lead" %}<li class="list-group-item text-body-secondary">
                 {% translate "None" %}
               </li>{% endif %}
           {% endfor %}
         </ul>
+        {% if can_reorder_accountabilities %}
+          {% include "roles/_order_form.html" with kind="accountabilities" %}
+        {% endif %}
       </section>
 
       {# Its own policies; those affecting it from outside are in the menu (role_context) #}

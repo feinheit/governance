@@ -489,7 +489,7 @@ html:not(.js) .wb-show-more,
   inset: 0;
 }
 
-/* The agenda's drag handles (frontend/agenda.js), without JavaScript the
+/* Drag handles (frontend/sortable.js), without JavaScript the
    arrows (.wb-no-js) */
 .wb-drag-handle {
   position: relative;

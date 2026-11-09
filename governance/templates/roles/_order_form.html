@@ -1,0 +1,4 @@
+{# The new order of the role's accountabilities or domains, posted in the background (frontend/sortable.js) #}
+<form method="post" action="{% url 'texts_order' role.pk kind %}" hidden id="{{ kind }}-order" data-sortable-quiet>
+  {% csrf_token %}
+</form>

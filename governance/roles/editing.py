@@ -1,13 +1,15 @@
 """Editing outside governance: the circle's strategy, metrics, checklist
-items and links, see the permissions in the decisions of SPEC.md"""
+items and links, the order of accountabilities and domains, see the permissions in the decisions of SPEC.md"""
 
 from functools import partial
 
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext
+from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
 from governance.history.update import update_today
@@ -152,3 +154,56 @@ def item_delete(request, kind, pk):
             "cancel_url": item.role.get_absolute_url(),
         },
     )
+
+
+# Their order isn't governance: anybody changes it, the history doesn't
+# count it as a change (decided 2026-11-09)
+ORDERED_TEXTS = {"accountabilities", "domains"}
+
+
+def reorderable_texts(pk, kind):
+    """The role and its accountabilities or domains"""
+    if kind not in ORDERED_TEXTS:
+        raise Http404
+    role = get_object_or_404(Role.objects.active(), pk=pk)
+    return role, list(getattr(role, kind).all())
+
+
+def save_order(texts):
+    for position, text in enumerate(texts):
+        if text.position != position:
+            text.position = position
+            text.save(update_fields=["position"])
+
+
+@require_POST
+@transaction.atomic
+def texts_order(request, pk, kind):
+    """The accountabilities or domains dragged into an order
+    (frontend/sortable.js): their IDs in the new order, missing ones keep
+    theirs after them"""
+    role, texts = reorderable_texts(pk, kind)
+    by_pk = {text.pk: text for text in texts}
+    ids = [
+        int(value)
+        for value in request.POST.getlist("ids")
+        if value.isdigit() and int(value) in by_pk
+    ]
+    order = [*dict.fromkeys(ids), *(pk for pk in by_pk if pk not in ids)]
+    save_order([by_pk[pk] for pk in order])
+    return redirect(role)
+
+
+@require_POST
+@transaction.atomic
+def text_move(request, pk, kind, text_pk):
+    """Moves an accountability or domain up or down, without JavaScript"""
+    role, texts = reorderable_texts(pk, kind)
+    index = next((i for i, text in enumerate(texts) if text.pk == text_pk), None)
+    if index is None:
+        raise Http404
+    other = index + (-1 if request.POST.get("direction") == "up" else 1)
+    if 0 <= other < len(texts):
+        texts[index], texts[other] = texts[other], texts[index]
+        save_order(texts)
+    return redirect(role)

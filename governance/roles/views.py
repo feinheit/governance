@@ -167,7 +167,11 @@ def role_detail(request, pk):
         "can_propose": not role.archived_on
         and not role.core_role
         and proposer_roles(request.user, role).exists(),
-        "accountabilities": role.accountabilities.all(),
+        "accountabilities": (accountabilities := list(role.accountabilities.all())),
+        # Anybody orders them, it isn't governance (roles/editing.py)
+        "can_reorder_accountabilities": not role.archived_on
+        and len(accountabilities) > 1,
+        "can_reorder_domains": not role.archived_on and len(domains) > 1,
         "domains": domains,
         "policies": policies,
         # A role's policies for its domains, without governance (1.3.2)
