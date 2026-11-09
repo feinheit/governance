@@ -39,7 +39,7 @@ Einiges ändert sich ohne Governance:
   des übergeordneten Kreises, deshalb sollte die Policy, die sie
   festlegt, sagen, dass sie für alle Sub-Kreise gilt (Verfassung 5.2.1).
   Ohne Frist werden asynchrone Vorschläge erst angenommen, wenn alle
-  zugestimmt haben.
+  zugestimmt haben. Das Feld zeigt, was gilt, solange es leer ist.
 - Das Tool hält alle diese Änderungen fest.
 
 Neue Personen erfassen und Personen deaktivieren, die gehen, machen die

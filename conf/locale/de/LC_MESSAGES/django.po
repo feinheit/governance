@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 07:38+0100\n"
+"POT-Creation-Date: 2026-11-09 07:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1850,6 +1850,17 @@ msgstr "Links"
 #: governance/roles/settings_views.py
 msgid "In calendar days. Sub-circles without a deadline of their own use this one, so the policy setting it should say that it applies to all sub-circles (constitution 5.2.1)."
 msgstr "In Kalendertagen. Sub-Kreise ohne eigene Frist verwenden diese, deshalb sollte die Policy, die sie festlegt, sagen, dass sie für alle Sub-Kreise gilt (Verfassung 5.2.1)."
+
+#: governance/roles/settings_views.py
+msgid "Empty: no time limit, async proposals are only adopted once everybody consented."
+msgstr "Leer: keine Frist, asynchrone Vorschläge werden erst angenommen, wenn alle zugestimmt haben."
+
+#: governance/roles/settings_views.py
+#, python-format
+msgid "Empty: %(days)s day, set by %(circle)s."
+msgid_plural "Empty: %(days)s days, set by %(circle)s."
+msgstr[0] "Leer: %(days)s Tag, festgelegt von %(circle)s."
+msgstr[1] "Leer: %(days)s Tage, festgelegt von %(circle)s."
 
 #: governance/roles/settings_views.py
 #, python-format

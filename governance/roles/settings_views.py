@@ -2,7 +2,8 @@
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.translation import gettext
+from django.utils.html import escape
+from django.utils.translation import gettext, ngettext
 
 from governance.forms import ModelForm
 from governance.roles.models import Role
@@ -19,11 +20,31 @@ class CircleSettingsForm(ModelForm):
         # A decision, see section 10 of SPEC.md: the constitution applies a
         # policy changing a default process only in its circle unless it
         # says otherwise (5.2.1)
-        self.fields["async_acceptance_days"].help_text = gettext(
+        field = self.fields["async_acceptance_days"]
+        field.help_text = gettext(
             "In calendar days. Sub-circles without a deadline of their own use"
             " this one, so the policy setting it should say that it applies to"
             " all sub-circles (constitution 5.2.1)."
         )
+        # What applies when empty: the nearest super-circle's, else none
+        circle = self.instance.circle
+        while circle is not None and circle.async_acceptance_days is None:
+            circle = circle.circle
+        if circle is None:
+            empty = gettext(
+                "Empty: no time limit, async proposals are only adopted once"
+                " everybody consented."
+            )
+        else:
+            days = circle.async_acceptance_days
+            field.widget.attrs["placeholder"] = days
+            # Help texts are rendered unescaped
+            empty = ngettext(
+                "Empty: %(days)s day, set by %(circle)s.",
+                "Empty: %(days)s days, set by %(circle)s.",
+                days,
+            ) % {"days": days, "circle": escape(circle)}
+        field.help_text = f"{empty} {field.help_text}"
 
 
 class RoleSettingsForm(ModelForm):
