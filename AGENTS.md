@@ -104,7 +104,9 @@ fl cm   # compilemessages
 `fl mm` only reads `.html`, `.txt` and `.py` files, so templates of other
 formats end with `.txt` (e.g. the Markdown export `roles/governance.txt`).
 Edit `conf/locale/de/LC_MESSAGES/django.po` manually. Remove the `#, fuzzy`
-flag before any new entry or it won't be used. The Holacracy terms stay
+flag before any new entry or it won't be used. Remove obsolete
+entries (`#~`): `msgattrib --no-wrap --no-obsolete -o FILE FILE` after
+`fl mm`. The Holacracy terms stay
 English like in the handbook and in GlassFrog (Purpose, Accountabilities,
 Domains, Policies, Tactical and Governance Meeting, Role Lead for who
 fills a role, next to Circle Lead), as do the core roles'
@@ -330,6 +332,8 @@ the apps' initial migrations).
   ending a session: unpushed work is lost work when switching computers.
 - One self-contained change per commit, with tests and docs (`SPEC.md`,
   this file) in the same commit.
+- Cleanups along the way (obsolete translations, dead code, stale
+  comments) are always fine, in commits of their own.
 - Stage files explicitly (`git add path …`), never `git add -A` or `.`:
   parallel sessions may share the checkout.
 - No attribution trailers in commit messages (no `Co-Authored-By:`, no
