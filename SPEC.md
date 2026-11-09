@@ -641,8 +641,9 @@ verify the mails; removed once they've proven themselves.
 - **Start page** (`/`, <kbd>Alt-H</kbd>): the own person page, with what
   waits for the person; the anchor circle is `/organization/` (the
   navigation's "Organization", <kbd>Alt-O</kbd>).
-- **Navigation**: Organization, Circles, Proposals, History and the
-  search; the user's name opens a menu with their page, calling a tactical
+- **Navigation**: Organization, Circles, People (from the `lg`
+  breakpoint on, small screens have it in the menu only), Proposals,
+  History and the search; the user's name opens a menu with their page, calling a tactical
   meeting (not tied to a circle or role), People, Mail addresses, Help,
   API and signing out. The menus "…" of circles and roles list the
   meetings first.

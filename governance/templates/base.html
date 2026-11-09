@@ -49,6 +49,14 @@
                 href="{{ circles_url }}"
               >{% translate "Circles" %}</a>
             </li>
+            {# Also in the user's menu, which small screens rely on #}
+            {% url 'people' as people_url %}
+            <li class="nav-item d-none d-lg-block">
+              <a
+                class="nav-link{% if request.path == people_url %} active{% endif %}"
+                href="{{ people_url }}"
+              >{% translate "People" %}</a>
+            </li>
             {% url 'proposals' as proposals_url %}
             <li class="nav-item">
               <a

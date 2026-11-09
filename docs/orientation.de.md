@@ -14,7 +14,8 @@ anderer.
 - **Dein Name** (oben rechts) öffnet ein Menü: deine Seite, "Tactical
   Meeting einberufen",
   **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API und
-  Abmelden.
+  Abmelden. Auf breiten Bildschirmen stehen **Personen** auch in der
+  Navigation.
 - **Vorschläge**: alle Vorschläge, gefiltert nach Status, Kreis (mit
   seinen Sub-Kreisen) und der Rolle, die sie ändern.
 - **Geschichte**: was sich wann geändert hat; für einen Kreis mit seinen
