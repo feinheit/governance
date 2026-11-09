@@ -585,6 +585,11 @@ def role_edit(request, pk, key=None):
             "title": gettext("Change %(role)s") % {"role": role}
             if role
             else gettext("New role in %(circle)s") % {"circle": proposal.circle},
+            # Besides "Remove" (the explicit way)
+            "help": gettext("Emptying an accountability or domain removes it.")
+            if role is not None
+            and (role.accountabilities.exists() or role.domains.exists())
+            else "",
             "form": form,
             "cancel_url": cancel_url(request, proposal),
         },

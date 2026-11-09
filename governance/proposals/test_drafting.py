@@ -287,6 +287,9 @@ class DraftingTest(TestCase):
         response = self.client.get(url)
         self.assertContains(response, 'value="Chef"')
         self.assertContains(response, "Tasting")
+        self.assertContains(
+            response, "Emptying an accountability or domain removes it."
+        )
         # A removed text stays to read, with the checkbox removing it checked
         form = response.context["form"]
         self.assertEqual(form[f"accountabilities-{self.frying.pk}"].initial, "Frying")
