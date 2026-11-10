@@ -35,7 +35,8 @@ PAGES = {
     | {"constitution": "constitution/Holacracy-Verfassung.md"},
 }
 # The constitution's texts are HolacracyOne's, copied unchanged (NOTICE):
-# where from and when, under the title
+# where from and when, under the title (fetched again and compared, still
+# the same: the date of the latest comparison)
 SOURCES = {
     "en": {
         "url": "https://github.com/holacracyone/Holacracy-Constitution/tree/v5.0",
@@ -46,7 +47,7 @@ SOURCES = {
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0/deed.de",
     },
 }
-COPIED_ON = dt.date(2026, 11, 5)
+COPIED_ON = dt.date(2026, 11, 10)
 # The docs come from the repository, not from users: HTML like <kbd> is fine
 _markdown = MarkdownIt("commonmark", {"html": True}).enable("table")
 _link = re.compile(r'href="([^":#]+\.md)(#[^"]*)?"')
