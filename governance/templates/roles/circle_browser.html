@@ -9,7 +9,7 @@
     <div id="circle-browser-path" class="flex-grow-1"></div>
   </div>
   {% if tree %}
-    <div id="circle-browser" class="mb-4"></div>
+    <div id="circle-browser" class="mb-4" data-fit="circles"></div>
     {{ tree|json_script:"circle-tree" }}
     {{ labels|json_script:"circle-labels" }}
     <details class="card wb-details" open id="circle-list">

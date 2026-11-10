@@ -1073,10 +1073,16 @@ a.wb-row-title:hover {
   font-weight: 600;
 }
 
-/* The whole width, limited height: the circle centers, the legend and
+/* The whole width, as high as the window allows below the browser's top
+(--wb-fit-circles, measured by meeting.js's fitFlow()) with room for the
+   list's header ("As a list") below: the circle centers, the legend and
    one's roles use the space beside it on wide screens */
+.cb {
+  container-type: inline-size;
+}
+
 .cb-canvas {
-  --cb-height: min(72vh, 48rem);
+  --cb-height: max(20rem, 100vh - var(--wb-fit-circles, 14rem) - 4.5rem);
   position: relative;
 }
 
@@ -1108,13 +1114,18 @@ a.wb-row-title:hover {
     width: var(--cb-width);
     margin-inline: calc((100% - var(--cb-width)) / 2);
   }
-
-  .cb-canvas {
-    --cb-height: min(80vh, var(--cb-width) - 36rem);
-  }
 }
 
 @media (min-width: 992px) {
+  /* Narrow enough for the legend and one's roles beside it (the browser's
+     width, 100cqw) */
+  .cb-canvas {
+    --cb-height: max(
+      20rem,
+      min(100vh - var(--wb-fit-circles, 14rem) - 4.5rem, 100cqw - 30rem)
+    );
+  }
+
   .cb-side {
     position: absolute;
     top: 0;

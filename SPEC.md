@@ -673,7 +673,10 @@ verify the mails; removed once they've proven themselves.
   elected/core and unfilled roles with a legend, validated for light and
   dark mode. The path and "My roles" beside the page's title, the legend
   beside the circle from 992px on (screens are rather wide than tall),
-  no explanation above it. The page also lists the tree, which works
+  no explanation above it. The circle is as high as the window allows
+  below its top (measured like the meeting's columns, `fitFlow()`) with
+  the list's header still visible, and narrow enough for the legend
+  beside it. The page also lists the tree, which works
   without JavaScript.
 - **Search**: roles, accountabilities, domains and policies, all terms
   matching, ignoring case and accents, in the texts as the pages show

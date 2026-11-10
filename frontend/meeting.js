@@ -94,9 +94,10 @@ function scrollToCurrent(force = false) {
 // On wide screens the running meeting's columns (.wb-fit) fill the window
 // below their top down to its lower edge and scroll on their own (they
 // have padding of their own): the page doesn't scroll. Their tops are CSS
-// variables on <html>, which the meeting's updates don't replace.
+// variables on <html>, which the meeting's updates don't replace. The
+// circle browser (data-fit="circles") fits its height the same way.
 function fitFlow() {
-  for (const column of document.querySelectorAll(".wb-fit")) {
+  for (const column of document.querySelectorAll("[data-fit]")) {
     const top = column.getBoundingClientRect().top + window.scrollY
     document.documentElement.style.setProperty(
       `--wb-fit-${column.dataset.fit}`,
