@@ -11,19 +11,27 @@
       </ol>
     </nav>
   {% endif %}
-  <div class="wb-page-header">
+  {# The constitution may be in the other language (?language=), its source line too #}
+  <div class="wb-page-header" {% if language %}lang="{{ language }}"{% endif %}>
     <div class="min-w-0">
       <h1 class="wb-title">{{ title }}</h1>
       {% if source %}
         {# The constitution: HolacracyOne's text, copied unchanged (NOTICE) #}
         <div class="wb-meta">
-          <span
-          >{% blocktranslate with date=source.date|date:"DATE_FORMAT" url=source.url license_url=source.license_url %}The Holacracy Constitution 5.0 by HolacracyOne, unchanged, in the version of {{ date }} from <a href="{{ url }}">the original</a>, licensed under <a href="{{ license_url }}">CC BY-SA 4.0</a>.{% endblocktranslate %}</span>
+          {% language language %}
+            <span
+            >{% blocktranslate with date=source.date|date:"DATE_FORMAT" url=source.url license_url=source.license_url %}The Holacracy Constitution 5.0 by HolacracyOne, unchanged, in the version of {{ date }} from <a href="{{ url }}">the original</a>, licensed under <a href="{{ license_url }}">CC BY-SA 4.0</a>.{% endblocktranslate %}</span>
+          {% endlanguage %}
+          <a
+            href="?language={{ other.language }}"
+            lang="{{ other.language }}"
+            hreflang="{{ other.language }}"
+          >{{ other.label }}</a>
         </div>
       {% endif %}
     </div>
   </div>
-  <article class="card">
+  <article class="card" {% if language %}lang="{{ language }}"{% endif %}>
     <div class="card-body wb-markdown wb-help">{{ html }}</div>
   </article>
 {% endblock content %}

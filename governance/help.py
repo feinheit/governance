@@ -42,11 +42,14 @@ SOURCES = {
         "url": "https://github.com/holacracyone/Holacracy-Constitution/tree/v5.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
         "date": dt.date(2021, 5, 20),
+        # Switching to it, in its language
+        "label": "In English",
     },
     "de": {
         "url": "https://github.com/holacracyone/Holacracy-Constitution-5.0-GERMAN",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0/deed.de",
         "date": dt.date(2026, 3, 25),
+        "label": "Auf Deutsch",
     },
 }
 # The docs come from the repository, not from users: HTML like <kbd> is fine
@@ -80,14 +83,17 @@ def render_page(page, language="de"):
 
 def help_page(request, page=""):
     language = "de" if get_language() == "de" else "en"
-    title, html = render_page(page, language)
-    return render(
-        request,
-        "help.html",
-        {
-            "title": title,
-            "html": html,
-            "start": url("") if page else None,
-            "source": SOURCES[language] if page == "constitution" else None,
-        },
-    )
+    context = {"start": url("") if page else None}
+    if page == "constitution":
+        # The constitution in the other language on request, the rest of
+        # the page stays in the user's
+        if (requested := request.GET.get("language")) in SOURCES:
+            language = requested
+        other = "en" if language == "de" else "de"
+        context |= {
+            "language": language,
+            "source": SOURCES[language],
+            "other": SOURCES[other] | {"language": other},
+        }
+    context["title"], context["html"] = render_page(page, language)
+    return render(request, "help.html", context)

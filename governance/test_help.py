@@ -35,6 +35,16 @@ class HelpTest(TestCase):
             'href="https://github.com/holacracyone/Holacracy-Constitution-5.0-GERMAN"',
         )
         self.assertNotContains(self.client.get("/help/proposals/"), "unverändert")
+        # The English original on request, only the constitution's text
+        self.assertContains(response, 'href="?language=en"')
+        response = self.client.get("/help/constitution/?language=en")
+        self.assertContains(response, "Holacracy Constitution")
+        self.assertContains(response, "unchanged, in the version of 20 May 2021")
+        self.assertContains(response, ">Hilfe</a>")  # The rest stays German
+        self.assertContains(response, 'href="?language=de"')
+        self.assertContains(
+            self.client.get("/help/proposals/?language=en"), "Vorschläge"
+        )
         self.assertEqual(self.client.get("/help/missing/").status_code, 404)
 
     def test_html(self):

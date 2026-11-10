@@ -5,7 +5,8 @@ accountabilities, domains and policies, who holds which role, and how
 that has changed since 2018. Changes go through proposals, async or in a
 governance meeting, as the
 [Holacracy Constitution 5.0](constitution/Holacracy-Constitution.md)
-provides. This help explains the tool, not Holacracy.
+provides ("Auf Deutsch" shows its German translation). This help explains
+the tool, not Holacracy.
 
 - [Finding your way](orientation.md): circles, roles, people, search,
   history, mails
