@@ -12,7 +12,16 @@
     </nav>
   {% endif %}
   <div class="wb-page-header">
-    <h1>{{ title }}</h1>
+    <div class="min-w-0">
+      <h1 class="wb-title">{{ title }}</h1>
+      {% if source %}
+        {# The constitution: HolacracyOne's text, copied unchanged (NOTICE) #}
+        <div class="wb-meta">
+          <span
+          >{% blocktranslate with date=source.date|date:"DATE_FORMAT" url=source.url license_url=source.license_url %}The Holacracy Constitution 5.0 by HolacracyOne, unchanged, copied on {{ date }} from <a href="{{ url }}">the original</a>, licensed under <a href="{{ license_url }}">CC BY-SA 4.0</a>.{% endblocktranslate %}</span>
+        </div>
+      {% endif %}
+    </div>
   </div>
   <article class="card">
     <div class="card-body wb-markdown wb-help">{{ html }}</div>

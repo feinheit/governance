@@ -6,6 +6,7 @@ language. The Markdown files link each other relatively
 pages instead.
 """
 
+import datetime as dt
 import posixpath
 import re
 
@@ -33,6 +34,19 @@ PAGES = {
     "de": {page: f"{name}.de.md" for page, name in _NAMES.items()}
     | {"constitution": "constitution/Holacracy-Verfassung.md"},
 }
+# The constitution's texts are HolacracyOne's, copied unchanged (NOTICE):
+# where from and when, under the title
+SOURCES = {
+    "en": {
+        "url": "https://github.com/holacracyone/Holacracy-Constitution/tree/v5.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    },
+    "de": {
+        "url": "https://github.com/holacracyone/Holacracy-Constitution-5.0-GERMAN",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0/deed.de",
+    },
+}
+COPIED_ON = dt.date(2026, 11, 5)
 # The docs come from the repository, not from users: HTML like <kbd> is fine
 _markdown = MarkdownIt("commonmark", {"html": True}).enable("table")
 _link = re.compile(r'href="([^":#]+\.md)(#[^"]*)?"')
@@ -63,9 +77,17 @@ def render_page(page, language="de"):
 
 
 def help_page(request, page=""):
-    title, html = render_page(page, get_language())
+    language = "de" if get_language() == "de" else "en"
+    title, html = render_page(page, language)
     return render(
         request,
         "help.html",
-        {"title": title, "html": html, "start": url("") if page else None},
+        {
+            "title": title,
+            "html": html,
+            "start": url("") if page else None,
+            "source": SOURCES[language] | {"date": COPIED_ON}
+            if page == "constitution"
+            else None,
+        },
     )

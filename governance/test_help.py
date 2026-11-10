@@ -14,7 +14,7 @@ class HelpTest(TestCase):
 
     def test_pages(self):
         response = self.client.get("/help/")
-        self.assertContains(response, "<h1>Hilfe</h1>", html=True)
+        self.assertContains(response, '<h1 class="wb-title">Hilfe</h1>', html=True)
         self.assertContains(response, 'href="/help/proposals/"')
         self.assertContains(response, 'href="/help/"')  # In the navigation
         for page in PAGES["de"]:
@@ -26,9 +26,15 @@ class HelpTest(TestCase):
                 self.assertEqual(
                     re.findall(r'href="[^"]*\.md', response.content.decode()), []
                 )
+        # HolacracyOne's text, unchanged: from where and when
+        response = self.client.get("/help/constitution/")
+        self.assertContains(response, "Holacracy Verfassung")
+        self.assertContains(response, "unverändert, am 5. November 2026")
         self.assertContains(
-            self.client.get("/help/constitution/"), "Holacracy Verfassung"
+            response,
+            'href="https://github.com/holacracyone/Holacracy-Constitution-5.0-GERMAN"',
         )
+        self.assertNotContains(self.client.get("/help/proposals/"), "unverändert")
         self.assertEqual(self.client.get("/help/missing/").status_code, 404)
 
     def test_html(self):
@@ -42,7 +48,7 @@ class HelpTest(TestCase):
             User.objects.create_user("bob@example.com", language="en")
         )
         response = self.client.get("/help/")
-        self.assertContains(response, "<h1>Help</h1>", html=True)
+        self.assertContains(response, '<h1 class="wb-title">Help</h1>', html=True)
         self.assertContains(response, 'href="/help/proposals/"')
         self.assertContains(response, 'href="/help/constitution/"')
         for page in PAGES["en"]:
@@ -55,6 +61,10 @@ class HelpTest(TestCase):
                 )
                 # No German page left untranslated
                 self.assertNotContains(response, " und ")
+        response = self.client.get("/help/constitution/")
+        self.assertContains(response, "Holacracy Constitution")
+        self.assertContains(response, "unchanged, copied on 5 November 2026")
         self.assertContains(
-            self.client.get("/help/constitution/"), "Holacracy Constitution"
+            response,
+            'href="https://github.com/holacracyone/Holacracy-Constitution/tree/v5.0"',
         )
