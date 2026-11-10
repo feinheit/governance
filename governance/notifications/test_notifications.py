@@ -107,6 +107,21 @@ class NotificationsTest(TestCase):
             ["ada@example.com", "bob@example.com", "eve@example.com"],
         )
 
+    def test_mention_in_the_subject(self):
+        """The subject names mentioned roles like the body, by their current
+        name, without the mention syntax"""
+        proposal = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.eve,
+            role=self.waiter(self.eve),
+            tension=f"@[Cooks](role:{self.cook.pk}) need a new name",
+            created_at=timezone.now(),
+            instructions=[{"op": "test", "path": f"/roles/{self.cook.pk}"}],
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            publish(proposal)
+        self.assertIn("Kitchen: @Cook need a new name", mail.outbox[0].subject)
+
     def test_changes_in_the_recipients_language(self):
         """The changes are described in each recipient's language, not in
         the language of whoever caused the mail"""

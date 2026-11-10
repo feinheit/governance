@@ -182,7 +182,9 @@ class Proposal(models.Model):
             if changes := describe(self.instructions, self.names):
                 return Truncator(summarize(changes)).chars(100)
             return str(_("(no tension)"))
-        return Truncator(first_line).chars(100)
+        from governance.roles.mentions import plain_mentions
+
+        return Truncator(plain_mentions(first_line)).chars(100)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

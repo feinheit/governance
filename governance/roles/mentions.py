@@ -13,6 +13,18 @@ from django.urls import reverse
 MENTION = re.compile(r"@\[([^\]]*)\]\(role:(\d+)\)")
 
 
+def plain_mentions(text):
+    """The mentions as "@" and the roles' current names, e.g. for titles and
+    the subjects of mails"""
+    from governance.roles.models import Role
+
+    ids = {int(match[2]) for match in MENTION.finditer(text)}
+    if not ids:
+        return text
+    names = dict(Role.objects.filter(pk__in=ids).values_list("pk", "name"))
+    return MENTION.sub(lambda match: f"@{names.get(int(match[2]), match[1])}", text)
+
+
 def render_mentions(text):
     """Markdown links with the roles' current names"""
     from governance.roles.models import Role
