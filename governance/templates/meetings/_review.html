@@ -4,8 +4,9 @@
   <div class="card-header"><h2 class="h6 mb-0">{{ title }}</h2></div>
   <ul class="list-group list-group-flush">
     {% for frequency, group in items|by_frequency %}
-      <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
+      <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading wb-frequency-heading">
         {{ frequency|capfirst }}
+        <span class="fw-normal">{{ group|length }}</span>
       </li>
       {% for item in group %}
         <li class="list-group-item">

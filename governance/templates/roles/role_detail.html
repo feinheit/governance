@@ -286,8 +286,9 @@
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Checklists and metrics" %}</h2></div>
           <ul class="list-group list-group-flush">
             {% for frequency, items in role_items %}
-              <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
+              <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading wb-frequency-heading">
                 {{ frequency|capfirst }}
+                <span class="fw-normal">{{ items|length }}</span>
               </li>
               {% for item in items %}
                 {% include "roles/_role_item.html" with kind=item.kind label=item.kind_label can_edit=item.editable %}
