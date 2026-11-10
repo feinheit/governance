@@ -499,7 +499,11 @@ class MeetingE2ETest(LiveServerTestCase):
             role=self.kitchen.roles.get(core_role="lead"), user=self.ada
         )
         held = []
-        self.page.route("**/api/roles/", held.append)
+
+        def hold(route):  # Playwright doesn't take held.append itself
+            held.append(route)
+
+        self.page.route("**/api/roles/", hold)
         self.page.goto(f"{self.live_server_url}/roles/{self.kitchen.pk}/strategy/")
         textarea = self.page.locator("textarea[data-mentions]")
         textarea.fill("")
