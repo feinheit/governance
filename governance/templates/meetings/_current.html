@@ -46,7 +46,7 @@
         </form>
       {% elif current.outcome or current.link %}
         {# What the secretary has written so far #}
-        {% if current.outcome %}<div>{{ current.outcome|linebreaksbr }}</div>{% endif %}
+        {% if current.outcome %}<div class="wb-markdown">{{ current.outcome|markdown }}</div>{% endif %}
         {% if current.link %}<a
             class="small"
             href="{{ current.link }}"

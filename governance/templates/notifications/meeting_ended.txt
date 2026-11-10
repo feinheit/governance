@@ -6,7 +6,7 @@
 {% translate "Withdrawn" %}: {{ proposal }}
 {% endfor %}{% for item in outcomes %}
 * {{ item }}{% if item.owner %} ({{ item.owner }}){% endif %}{% if item.outcome %}
-  {{ item.outcome }}{% endif %}{% if item.link %}
+  {{ item.outcome|plain_mentions }}{% endif %}{% if item.link %}
   {{ item.link }}{% endif %}{% endfor %}{% if outcomes %}
 {% endif %}{% if elections %}
 {% translate "Elections" %}:{% for election in elections %}

@@ -501,7 +501,9 @@ closing. An item may record an outcome and a link, both optional, saved
 while the secretary types (`data-autosave`, `X-Autosave`, the others
 see it with their next update; "Save and done" completes the item): many
 items end with information, next actions and projects live in the task
-management tool (several of them are one link to a to-do list), and a
+management tool (several of them are one link to a to-do list; the
+outcome mentions the role taking them on, `@`, rendered like other texts
+with mentions, the mail with the roles' names), and a
 governance tension is captured by its owner as a tension of their own
 (the app doesn't add tensions for others). GlassFrog's actions and
 projects weren't imported; the circles got the projects as Markdown to-do

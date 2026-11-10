@@ -137,6 +137,46 @@ class TacticalTest(TestCase):
         self.assertContains(response, "Bob buys new knives")
         self.assertContains(response, 'href="https://tasks.example.com/todos/3"')
 
+    def test_outcome_mentions(self):
+        """Outcomes mention the roles taking on next actions and projects:
+        links to them with their current names, the role's name in the mail"""
+        mention = f"@[Old name](role:{self.cook.pk}) buys knives"
+        link = f'<a href="{self.cook.get_absolute_url()}">@Cook</a> buys knives'
+        earlier = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now() - dt.timedelta(days=7),
+            ended_at=timezone.now() - dt.timedelta(days=7),
+        )
+        AgendaItem.objects.create(meeting=earlier, label="Earlier", outcome=mention)
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            step="progress",
+            secretary=self.ada,
+        )
+        url = meeting.get_absolute_url()
+        self.client.force_login(self.bob)
+        self.assertContains(self.client.get(url), link)  # Progress updates
+
+        AgendaItem.objects.create(
+            meeting=meeting, label="Done", outcome=mention, is_completed=True
+        )
+        meeting.current_item = AgendaItem.objects.create(
+            meeting=meeting, label="Now", outcome=mention
+        )
+        meeting.step = "tensions"
+        meeting.save()
+        response = self.client.get(url)
+        self.assertContains(response, link, count=2)  # Results, current item
+        self.assertNotContains(response, "Old name")
+
+        self.client.force_login(self.ada)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/meetings/{meeting.pk}/end/")
+        self.assertIn("@Cook buys knives", mail.outbox[0].body)
+
     def test_earlier_outcomes(self):
         """Progress updates show the last three tactical meetings' outcomes,
         "Show earlier meetings" ten, then ten more; the page's updates keep

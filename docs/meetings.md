@@ -118,7 +118,9 @@ one there shows its result, "Reopen" goes back to it to correct it:
   discussion.
 - **Next actions and projects** stay in the task management tool, the
   tool doesn't track them. Several of them, e.g. one for everybody
-  holding a role, are one link to the to-do list containing them.
+  holding a role, are one link to the to-do list containing them. The
+  outcome names the role taking it on with `@` (see
+  [finding your way](orientation.md)), e.g. "@Sales sends the offer".
 - **A governance tension** goes into a governance meeting: its owner
   writes it down in a tension ("New proposal" on the circle's page, see [proposals](proposals.md))
   or brings it to the next governance meeting's agenda. The tool can't

@@ -30,7 +30,7 @@
         {% for item in group.list %}
           <li class="list-group-item">
             <div class="wb-row-title">{{ item }}</div>
-            {% if item.outcome %}<div class="small">{{ item.outcome|linebreaksbr }}</div>{% endif %}
+            {% if item.outcome %}<div class="small wb-markdown">{{ item.outcome|markdown }}</div>{% endif %}
             {% if item.link %}<a
                 class="small"
                 href="{{ item.link }}"

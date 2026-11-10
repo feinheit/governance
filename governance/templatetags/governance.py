@@ -33,6 +33,15 @@ def plain(text):
     return " ".join(strip_tags(markdown(text)).split())
 
 
+@register.filter(name="plain_mentions")
+def plain_mentions_filter(text):
+    """The mentions as "@" and the roles' current names, keeping the lines,
+    e.g. for plain text mails"""
+    from governance.roles.mentions import plain_mentions
+
+    return plain_mentions(str(text or ""))
+
+
 @register.filter(name="by_frequency")
 def by_frequency_filter(items):
     """Checklist items or metrics grouped by their frequency"""

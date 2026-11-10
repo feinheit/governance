@@ -113,7 +113,9 @@ Agenda streicht sie durch; ein Klick darauf zeigt das Ergebnis, "Wieder
   oder einer kurzen Diskussion.
 - **Nächste Aktionen und Projekte** bleiben im Aufgaben-Tool, das Tool
   verfolgt sie nicht. Mehrere davon, z.B. eine für alle, die eine Rolle
-  innehaben, sind ein Link auf die To-do-Liste, die sie enthält.
+  innehaben, sind ein Link auf die To-do-Liste, die sie enthält. Das
+  Ergebnis nennt die Rolle, die sie übernimmt, mit `@` (siehe
+  [Sich zurechtfinden](orientation.de.md)), z.B. "@Sales schickt die Offerte".
 - **Eine Governance-Spannung** gehört in ein Governance Meeting: wer sie
   hat, notiert sie als Spannung ("Neuer Vorschlag" auf der Seite des Kreises, siehe [Vorschläge](proposals.de.md))
   oder bringt sie in die Agenda des nächsten Governance Meetings. Das
