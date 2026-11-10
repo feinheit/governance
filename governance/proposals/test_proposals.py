@@ -353,6 +353,13 @@ class ProposalFiltersTest(TestCase):
             return {t for t in ["Hot stove", "Cold oven"] if t in text}
 
         self.assertEqual(tensions(""), {"Hot stove", "Cold oven"})
+        # Mentioned roles by their name, without the mention syntax
+        Proposal.objects.filter(tension="Hot stove").update(
+            tension=f"Hot stove of @[Cooks](role:{cook.pk})"
+        )
+        response = self.client.get("/proposals/")
+        self.assertContains(response, "Hot stove of @Cook")
+        self.assertNotContains(response, "](role:")
         self.assertEqual(tensions(f"circle={kitchen.pk}"), {"Hot stove"})
         self.assertEqual(
             tensions(f"circle={kitchen.pk}&sub_circles=on"), {"Hot stove", "Cold oven"}
