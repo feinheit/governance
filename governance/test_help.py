@@ -29,7 +29,7 @@ class HelpTest(TestCase):
         # HolacracyOne's text, unchanged: from where and when
         response = self.client.get("/help/constitution/")
         self.assertContains(response, "Holacracy Verfassung")
-        self.assertContains(response, "unverändert, am 10. November 2026")
+        self.assertContains(response, "unverändert, in der Fassung vom 25. März 2026")
         self.assertContains(
             response,
             'href="https://github.com/holacracyone/Holacracy-Constitution-5.0-GERMAN"',
@@ -63,7 +63,7 @@ class HelpTest(TestCase):
                 self.assertNotContains(response, " und ")
         response = self.client.get("/help/constitution/")
         self.assertContains(response, "Holacracy Constitution")
-        self.assertContains(response, "unchanged, copied on 10 November 2026")
+        self.assertContains(response, "unchanged, in the version of 20 May 2021")
         self.assertContains(
             response,
             'href="https://github.com/holacracyone/Holacracy-Constitution/tree/v5.0"',

@@ -35,19 +35,20 @@ PAGES = {
     | {"constitution": "constitution/Holacracy-Verfassung.md"},
 }
 # The constitution's texts are HolacracyOne's, copied unchanged (NOTICE):
-# where from and when, under the title (fetched again and compared, still
-# the same: the date of the latest comparison)
+# where from and the version, the day of the document's latest change
+# upstream (compared again on 2026-11-10), under the title
 SOURCES = {
     "en": {
         "url": "https://github.com/holacracyone/Holacracy-Constitution/tree/v5.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "date": dt.date(2021, 5, 20),
     },
     "de": {
         "url": "https://github.com/holacracyone/Holacracy-Constitution-5.0-GERMAN",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0/deed.de",
+        "date": dt.date(2026, 3, 25),
     },
 }
-COPIED_ON = dt.date(2026, 11, 10)
 # The docs come from the repository, not from users: HTML like <kbd> is fine
 _markdown = MarkdownIt("commonmark", {"html": True}).enable("table")
 _link = re.compile(r'href="([^":#]+\.md)(#[^"]*)?"')
@@ -87,8 +88,6 @@ def help_page(request, page=""):
             "title": title,
             "html": html,
             "start": url("") if page else None,
-            "source": SOURCES[language] | {"date": COPIED_ON}
-            if page == "constitution"
-            else None,
+            "source": SOURCES[language] if page == "constitution" else None,
         },
     )
