@@ -493,6 +493,26 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertIn(f"with @[Cook](role:{self.cook.pk}) ", textarea.input_value())
         self.assertEqual(self.errors, [])
 
+    def test_mentions_slow_roles(self):
+        """The roles arriving after the "@" is gone again open nothing"""
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=self.ada
+        )
+        held = []
+        self.page.route("**/api/roles/", held.append)
+        self.page.goto(f"{self.live_server_url}/roles/{self.kitchen.pk}/strategy/")
+        textarea = self.page.locator("textarea[data-mentions]")
+        textarea.fill("")
+        textarea.press_sequentially("@C")
+        textarea.press("Backspace")
+        textarea.press("Backspace")
+        self.page.wait_for_timeout(100)
+        for route in held:
+            route.continue_()
+        self.page.wait_for_timeout(300)
+        self.assertTrue(self.page.locator(".wb-mentions").is_hidden())
+        self.assertEqual(self.errors, [])
+
     def test_modals(self):
         """Forms open in a modal (modal.js), Escape keeps changed ones open
         until pressed again, saving loads the page"""

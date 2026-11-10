@@ -7,12 +7,14 @@
 const MAX_RESULTS = 8
 let roles = null
 
-async function loadRoles() {
-  if (!roles) {
-    const response = await fetch("/api/roles/", { credentials: "same-origin" })
-    roles = response.ok ? await response.json() : []
-    for (const role of roles) role.search = fold(role.name)
-  }
+// Fetched once, the keystrokes before it arrives share the request
+function loadRoles() {
+  roles ??= fetch("/api/roles/", { credentials: "same-origin" })
+    .then((response) => (response.ok ? response.json() : []))
+    .then((list) => {
+      for (const role of list) role.search = fold(role.name)
+      return list
+    })
   return roles
 }
 
@@ -174,7 +176,11 @@ function attach(textarea) {
       close()
       return
     }
-    results = matches(await loadRoles(), current.query)
+    const typed = current
+    const available = await loadRoles()
+    // Typed on in the meantime, or the "@" is gone
+    if (current !== typed) return
+    results = matches(available, typed.query)
     active = 0
     render()
   })
