@@ -368,15 +368,14 @@ class MeetingsTest(TestCase):
         meeting.refresh_from_db()
         self.assertGreater(meeting.active_at, timezone.now() - dt.timedelta(minutes=1))
 
-        call_command("fairy_tasks")
+        call_command("hourly_tasks")
         meeting.refresh_from_db()
         self.assertTrue(meeting.is_running)
 
-        # Inactive for hours: it ended with its last activity (hourly, and
-        # in fairy_tasks)
+        # Inactive for hours: it ended with its last activity (hourly)
         last = timezone.now() - dt.timedelta(hours=4)
         Meeting.objects.update(active_at=last)
-        call_command("end_inactive_meetings")
+        call_command("hourly_tasks")
         meeting.refresh_from_db()
         self.assertEqual(meeting.ended_at, last)
 

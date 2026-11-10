@@ -367,7 +367,7 @@ class CLITest(TestCase):
             time_machine.travel(proposal.deadline + dt.timedelta(minutes=1)),
             self.captureOnCommitCallbacks(execute=True),
         ):
-            call_command("fairy_tasks")
+            call_command("hourly_tasks")
         proposal.refresh_from_db()
         self.assertEqual(proposal.status, Proposal.ADOPTED)
         self.assertIn("eve@example.com", [m.to[0] for m in mail.outbox])

@@ -58,7 +58,7 @@ Until the deadline the circle sets (if a policy sets one), they respond:
   get a mail.
 
 When everybody else has no objection, the proposal is adopted right away,
-otherwise in the night after the deadline ("to be adopted on"); without
+otherwise within an hour after the deadline ("to be adopted on"); without
 a deadline only when everybody consented. If it
 can't be adopted then (e.g. a role it changes was changed meanwhile), it
 waits for the next governance meeting, and the circle's members get a

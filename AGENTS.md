@@ -182,8 +182,10 @@ each mail), `BASE_URL`, `GOOGLE_CLIENT_ID`,
 `GOOGLE_CLIENT_SECRET`, `SENTRY_DSN` and `SENTRY_ENVIRONMENT`. Only
 existing, active users sign in; admins add new people in the Django admin.
 The cron jobs are in argocd's `governance/values.yaml`: `fairy_tasks` at
-03:30 UTC, and hourly `end_inactive_meetings` (meetings end and send their
-outputs a few hours after their last activity, not only at night).
+03:30 UTC (the history's changes, pruning API tokens, the reminders), and
+`hourly_tasks` at a quarter past each hour (adopting async proposals at
+their deadline, `Proposal.adopted_on` knows the minute; meetings end and
+send their outputs a few hours after their last activity).
 Without SMTP set `EMAIL_URL=console:`, error mails failing hide the real
 error. Pods read the secret when they start: restart them after changing
 it.
@@ -231,7 +233,7 @@ commits the app's JSON backup daily to a git repository instead.
   it (`update_changes()`), proposals say why. Tests reading the audit log
   delete its rows first: other tests (end-to-end) commit theirs and the
   audit table isn't flushed. Daily jobs go into `./manage.py fairy_tasks`
-  like in Workbench; it updates the history's changes of yesterday and
+  like in Workbench (hourly ones into `hourly_tasks`); it updates the history's changes of yesterday and
   today. Circles in the organization's order: `Role.objects.depth_first()`.
 - Badges are tinted in tones (`wb-tone-*` in `main.css`, light and dark):
   states and kinds through the `tone` filter (`badge {{ x.status|tone }}`),

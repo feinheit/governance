@@ -31,7 +31,7 @@ A separate project built from Workbench's code and conventions by copying,
 not depending on it: Django, PostgreSQL, a reduced `User` (email, name,
 short name, active, `notify_all`), Google sign-in (django-authlib) for
 existing, active users, the audit log trigger, Workbench's page layout
-(light and dark mode), django-ninja, the daily `fairy_tasks`, German
+(light and dark mode), django-ninja, the daily `fairy_tasks` and `hourly_tasks`, German
 first. htmx 4 on the meeting page and for the modals, a Preact island for
 the circle browser,
 all styles and scripts in one bundle (rspack, only the parts of Bootstrap
@@ -265,8 +265,10 @@ beforehand and shows the text field only for questions and requests,
 the concern, which moves it to the next governance meeting. No async
 objections, like GlassFrog: objections are tested in meetings, so async is
 for uncontroversial changes. The proposer only answers questions. Adopted
-when everybody else consented, or by the daily task at the deadline;
-pages and mails show the day, not a time (`adopted_on`). Due proposals are
+when everybody else consented, or by the hourly task (`hourly_tasks`)
+after the deadline; pages and mails show the day, not a time
+(`adopted_on`: the deadline's day, unless it's after the day's last run;
+hourly since 2026-11-10, before nightly). Due proposals are
 adopted in order of publication, conflicting ones go to the meeting.
 Adoptions run one after the other (`locking.lock_structure()`, an
 advisory lock until the transaction ends), so that two at once check
@@ -379,7 +381,7 @@ Nobody has to remember to end a meeting: changes to it, its agenda,
 attendees, elections and the proposals processed in it set
 `active_at` (`meetings/activity.py`, signals), and meetings inactive for
 three hours end with their last activity (with the outputs mail as
-usual): hourly (`end_inactive_meetings`), in `fairy_tasks` and when
+usual): hourly (`hourly_tasks`) and when
 somebody starts a meeting in the circle.
 A line above every page shows the running meetings one attends (not in
 the meeting itself, not the inactive ones; `{% running_meetings %}`).

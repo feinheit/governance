@@ -313,14 +313,15 @@ class ProposalTitleTest(TestCase):
 
 class AdoptedOnTest(TestCase):
     def test_adopted_on(self):
-        """The nightly task runs at 03:30 UTC"""
+        """The hourly task runs at a quarter past: the deadline's day, unless
+        the last run of the day is earlier (Zurich, UTC+1 in December)"""
         proposal = Proposal(deadline=None)
         self.assertIsNone(proposal.adopted_on)
         for deadline, day in [
-            (dt.datetime(2026, 12, 3, 14, tzinfo=dt.UTC), dt.date(2026, 12, 4)),
+            (dt.datetime(2026, 12, 3, 14, tzinfo=dt.UTC), dt.date(2026, 12, 3)),
             (dt.datetime(2026, 12, 3, 2, tzinfo=dt.UTC), dt.date(2026, 12, 3)),
-            (dt.datetime(2026, 12, 3, 3, 30, tzinfo=dt.UTC), dt.date(2026, 12, 3)),
-            (dt.datetime(2026, 12, 3, 23, 30, tzinfo=dt.UTC), dt.date(2026, 12, 4)),
+            (dt.datetime(2026, 12, 3, 22, 15, tzinfo=dt.UTC), dt.date(2026, 12, 3)),
+            (dt.datetime(2026, 12, 3, 22, 16, tzinfo=dt.UTC), dt.date(2026, 12, 4)),
         ]:
             proposal.deadline = deadline
             self.assertEqual(proposal.adopted_on, day, deadline)

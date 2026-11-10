@@ -299,7 +299,7 @@ class AsyncAndMeetingScenarioTest(TestCase):
         # The deadline passes: the async proposal conflicts, it waits for a
         # meeting instead of being adopted
         with time_machine.travel(start + dt.timedelta(days=5), tick=False):
-            call_command("fairy_tasks")
+            call_command("hourly_tasks")
             async_proposal.refresh_from_db()
             self.assertEqual(
                 (async_proposal.status, async_proposal.meeting),

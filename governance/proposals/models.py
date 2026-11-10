@@ -8,9 +8,9 @@ from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
 
 
-# When the daily task (``fairy_tasks``) adopts due proposals, see the cron
-# jobs in argocd's governance/values.yaml
-NIGHTLY_RUN = dt.time(3, 30)
+# The minute of the hour when ``hourly_tasks`` adopts due proposals, see the
+# cron jobs in argocd's governance/values.yaml
+HOURLY_RUN_MINUTE = 15
 
 
 class ProposalQuerySet(models.QuerySet):
@@ -204,14 +204,14 @@ class Proposal(models.Model):
 
     @property
     def adopted_on(self):
-        """The day the nightly task adopts the published proposal, if nobody
-        objects or requests a meeting before"""
+        """The day the hourly task adopts the published proposal, if nobody
+        objects or requests a meeting before: the deadline's day, unless its
+        last run is earlier"""
         if self.deadline is None:
             return None
-        deadline = self.deadline.astimezone(dt.UTC)
-        run = dt.datetime.combine(deadline.date(), NIGHTLY_RUN, tzinfo=dt.UTC)
-        if deadline > run:
-            run += dt.timedelta(days=1)
+        run = self.deadline.replace(minute=HOURLY_RUN_MINUTE, second=0, microsecond=0)
+        if self.deadline > run:
+            run += dt.timedelta(hours=1)
         return timezone.localdate(run)
 
     @property

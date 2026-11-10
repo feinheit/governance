@@ -640,7 +640,7 @@ def replace_keys(proposal, created):
 def adopt(proposal):
     """Applies the proposal and marks it as adopted"""
     # Locked, with its status in the database: two requests (or a click and
-    # the nightly task) may adopt the same proposal loaded before. The
+    # the hourly task) may adopt the same proposal loaded before. The
     # proposal first, then the structure, like requests changing the
     # proposal before adopting it (the last consent)
     proposal.status = (

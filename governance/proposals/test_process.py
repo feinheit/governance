@@ -50,7 +50,7 @@ class ProcessTest(TestCase):
         )
 
     def test_adopted_twice_at_once(self):
-        """Two requests (or a click and the nightly task) adopting the same
+        """Two requests (or a click and the hourly task) adopting the same
         proposal: the second one changes nothing"""
         from governance.proposals.instructions import adopt
         from governance.proposals.process import try_adopting
@@ -226,7 +226,7 @@ class ProcessTest(TestCase):
             self.assertEqual(
                 {m.to[0] for m in messages}, {"ada@example.com", "bob@example.com"}
             )
-            call_command("fairy_tasks")
+            call_command("hourly_tasks")
 
     def test_without_a_deadline(self):
         """Without a period set by policy (the circle's or a super-circle's),

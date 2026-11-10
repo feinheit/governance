@@ -92,7 +92,7 @@ class ProposalOut(Schema):
     created_at: str
     published_at: str | None
     deadline: str | None
-    # The day the nightly task adopts it, like the pages show it
+    # The day the hourly task adopts it, like the pages show it
     adopted_on: str | None
     decided_at: str | None
     url: str

@@ -2,7 +2,7 @@
 
 Changes to the meeting, its attendees, agenda and elections
 and to the proposals processed in it are activity; following it on the
-screen isn't. Nobody has to remember to end a meeting: fairy_tasks ends
+screen isn't. Nobody has to remember to end a meeting: hourly_tasks ends
 those inactive for hours, starting a meeting in the circle too.
 """
 

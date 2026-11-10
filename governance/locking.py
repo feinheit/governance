@@ -11,7 +11,7 @@ STRUCTURE_LOCK = 20261107
 
 def lock_structure():
     """One change of the structure after the other, until the transaction
-    ends: two proposals adopted at once (a meeting and the nightly task,
+    ends: two proposals adopted at once (a meeting and the hourly task,
     two requests) check against each other's changes, e.g. one moving a role
     into a circle whose last role the other removes. Adopting is rare,
     waiting a moment doesn't matter."""

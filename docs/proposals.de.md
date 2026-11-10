@@ -60,7 +60,7 @@ Policy eine festlegt), antworten sie:
   wartet dann auf das nächste Governance Meeting; du und wer im Kreis Secretary ist, erhaltet eine Mail.
 
 Sind alle anderen ohne Einwand, ist der Vorschlag sofort angenommen,
-sonst in der Nacht nach der Frist ("wird angenommen am"); ohne Frist
+sonst innert einer Stunde nach der Frist ("wird angenommen am"); ohne Frist
 erst, wenn alle zugestimmt haben. Geht das dann
 nicht (z.B. weil eine Rolle, die er ändert, inzwischen geändert wurde),
 wartet er auf das nächste Governance Meeting, und die Mitglieder des
