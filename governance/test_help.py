@@ -14,7 +14,7 @@ class HelpTest(TestCase):
 
     def test_pages(self):
         response = self.client.get("/help/")
-        self.assertContains(response, '<h1 class="wb-title">Hilfe</h1>', html=True)
+        self.assertContains(response, '<h1 class="wb-title mb-0">Hilfe</h1>', html=True)
         self.assertContains(response, 'href="/help/proposals/"')
         self.assertContains(response, 'href="/help/"')  # In the navigation
         for page in PAGES["de"]:
@@ -59,7 +59,7 @@ class HelpTest(TestCase):
             User.objects.create_user("bob@example.com", language="en")
         )
         response = self.client.get("/help/")
-        self.assertContains(response, '<h1 class="wb-title">Help</h1>', html=True)
+        self.assertContains(response, '<h1 class="wb-title mb-0">Help</h1>', html=True)
         self.assertContains(response, 'href="/help/proposals/"')
         self.assertContains(response, 'href="/help/constitution/"')
         for page in PAGES["en"]:
