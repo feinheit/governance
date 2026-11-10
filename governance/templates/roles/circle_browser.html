@@ -3,13 +3,10 @@
 {% block title %}{% translate "Circles" %} – {{ block.super }}{% endblock %}
 
 {% block content %}
-  <div class="wb-page-header">
-    <div>
-      <h1>{% translate "Circles" %}</h1>
-      <div class="wb-meta">
-        <span>{% translate "Click a circle to zoom in, the background to zoom out, a role to open it." %}</span>
-      </div>
-    </div>
+  {# The circle browser puts its path and "My roles" beside the title (frontend/circles) #}
+  <div class="wb-page-header align-items-center">
+    <h1 class="mb-0">{% translate "Circles" %}</h1>
+    <div id="circle-browser-path" class="flex-grow-1"></div>
   </div>
   {% if tree %}
     <div id="circle-browser" class="mb-4"></div>

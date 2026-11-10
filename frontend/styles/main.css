@@ -1064,6 +1064,11 @@ a.wb-row-title:hover {
   margin-bottom: 0.5rem;
 }
 
+/* Beside the page's title (circle_browser.html) */
+#circle-browser-path .cb-path {
+  margin-bottom: 0;
+}
+
 .cb-path [aria-current] {
   font-weight: 600;
 }
@@ -1087,7 +1092,7 @@ a.wb-row-title:hover {
 }
 
 /* Narrow screens: the circle is as wide as the screen, keep it square */
-@media (max-width: 1199.98px) {
+@media (max-width: 991.98px) {
   .cb-canvas > svg {
     height: auto;
     aspect-ratio: 1;
@@ -1109,7 +1114,7 @@ a.wb-row-title:hover {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
   .cb-side {
     position: absolute;
     top: 0;

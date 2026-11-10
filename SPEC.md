@@ -671,8 +671,10 @@ verify the mails; removed once they've proven themselves.
 - **Circle browser** (`/circles/`, `frontend/circles`, circle packing):
   zoom by clicking, `?circle=ID`, "My roles", colors for assigned,
   elected/core and unfilled roles with a legend, validated for light and
-  dark mode. The page also lists the tree, which works without
-  JavaScript.
+  dark mode. The path and "My roles" beside the page's title, the legend
+  beside the circle from 992px on (screens are rather wide than tall),
+  no explanation above it. The page also lists the tree, which works
+  without JavaScript.
 - **Search**: roles, accountabilities, domains and policies, all terms
   matching, ignoring case and accents, in the texts as the pages show
   them (mentions with the current names, the core roles' constitutional

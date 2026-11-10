@@ -6,6 +6,7 @@
 // page lists the same tree without JavaScript.
 import { hierarchy, pack } from "d3-hierarchy"
 import { render } from "preact"
+import { createPortal } from "preact/compat"
 import { useEffect, useMemo, useRef, useState } from "preact/hooks"
 
 const SIZE = 1000
@@ -83,7 +84,7 @@ function Legend() {
   )
 }
 
-function CircleBrowser({ data }) {
+function CircleBrowser({ data, pathSlot }) {
   const root = useMemo(
     () =>
       pack()
@@ -162,35 +163,40 @@ function CircleBrowser({ data }) {
   const nodes = root.descendants().filter((node) => node.r * k >= 1)
   const labelled = new Set(focus.children || [focus])
 
+  const path = (
+    <nav className="cb-path" aria-label={label("Path")}>
+      {focus
+        .ancestors()
+        .reverse()
+        .map((node) => (
+          <button
+            key={node.data.id}
+            type="button"
+            className="btn btn-sm btn-quiet"
+            onClick={() => setFocus(node)}
+            aria-current={node === focus ? "true" : undefined}
+          >
+            {node.data.name}
+          </button>
+        ))}
+      <a className="btn btn-sm btn-primary" href={focus.data.url}>
+        {label("Open the circle's page")}
+      </a>
+      <button
+        type="button"
+        className={`btn btn-sm ms-auto ${onlyMine ? "btn-primary" : "btn-quiet"}`}
+        aria-pressed={onlyMine ? "true" : "false"}
+        onClick={() => setOnlyMine(!onlyMine)}
+      >
+        {label("My roles")}
+      </button>
+    </nav>
+  )
+
   return (
     <div className="cb">
-      <nav className="cb-path" aria-label={label("Path")}>
-        {focus
-          .ancestors()
-          .reverse()
-          .map((node) => (
-            <button
-              key={node.data.id}
-              type="button"
-              className="btn btn-sm btn-quiet"
-              onClick={() => setFocus(node)}
-              aria-current={node === focus ? "true" : undefined}
-            >
-              {node.data.name}
-            </button>
-          ))}
-        <a className="btn btn-sm btn-primary" href={focus.data.url}>
-          {label("Open the circle's page")}
-        </a>
-        <button
-          type="button"
-          className={`btn btn-sm ms-auto ${onlyMine ? "btn-primary" : "btn-quiet"}`}
-          aria-pressed={onlyMine ? "true" : "false"}
-          onClick={() => setOnlyMine(!onlyMine)}
-        >
-          {label("My roles")}
-        </button>
-      </nav>
+      {/* The path and "My roles" beside the page's title, if it has a slot */}
+      {pathSlot ? createPortal(path, pathSlot) : path}
       <div className="cb-canvas">
         <div className="cb-side cb-side-start">
           <Legend />
@@ -395,5 +401,11 @@ export function mount(element) {
   )
   // The list stays as the accessible view, closed when the circles show
   document.querySelector("#circle-list")?.removeAttribute("open")
-  render(<CircleBrowser data={JSON.parse(data.textContent)} />, element)
+  render(
+    <CircleBrowser
+      data={JSON.parse(data.textContent)}
+      pathSlot={document.querySelector("#circle-browser-path")}
+    />,
+    element,
+  )
 }

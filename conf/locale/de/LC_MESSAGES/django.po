@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 07:27+0100\n"
+"POT-Creation-Date: 2026-11-10 07:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2110,13 +2110,13 @@ msgid "Save"
 msgstr "Speichern"
 
 #: governance/templates/help.html
+msgid "Language of the constitution"
+msgstr "Sprache der Verfassung"
+
+#: governance/templates/help.html
 #, python-format
 msgid "The Holacracy Constitution 5.0 by HolacracyOne, unchanged, in the version of %(date)s from <a href=\"%(url)s\">the original</a>, licensed under <a href=\"%(license_url)s\">CC BY-SA 4.0</a>."
 msgstr "Die offizielle deutsche Übersetzung der Holacracy-Verfassung 5.0 von HolacracyOne, unverändert, in der Fassung vom %(date)s aus <a href=\"%(url)s\">dem Original</a>, lizenziert unter <a href=\"%(license_url)s\">CC BY-SA 4.0</a>."
-
-#: governance/templates/help.html
-msgid "Language of the constitution"
-msgstr "Sprache der Verfassung"
 
 #: governance/templates/history/_entry.html
 #: governance/templates/meetings/meeting_detail.html
@@ -3115,10 +3115,6 @@ msgstr "Zuweisen und sie beenden"
 #: governance/templates/roles/assignments.html
 msgid "Assign"
 msgstr "Zuweisen"
-
-#: governance/templates/roles/circle_browser.html
-msgid "Click a circle to zoom in, the background to zoom out, a role to open it."
-msgstr "Ein Kreis vergrössert, der Hintergrund verkleinert, eine Rolle öffnet ihre Seite."
 
 #: governance/templates/roles/circle_browser.html
 msgid "As a list"
