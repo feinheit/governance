@@ -37,6 +37,7 @@ class HelpTest(TestCase):
         self.assertNotContains(self.client.get("/help/proposals/"), "unverändert")
         # The English original on request, only the constitution's text
         self.assertContains(response, 'href="?language=en"')
+        self.assertContains(response, 'aria-current="page"')
         response = self.client.get("/help/constitution/?language=en")
         self.assertContains(response, "Holacracy Constitution")
         self.assertContains(response, "unchanged, in the version of 20 May 2021")

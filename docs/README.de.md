@@ -5,7 +5,7 @@ Purpose, Accountabilities, Domains und Policies, wer welche Rolle hat, und
 wie sich das seit 2018 verändert hat. Änderungen laufen über Vorschläge,
 asynchron oder im Governance Meeting, wie es die
 [Holacracy-Verfassung 5.0](constitution/Holacracy-Verfassung.md)
-vorsieht ("In English" zeigt das englische Original). Diese Hilfe erklärt
+vorsieht ("English" neben dem Titel zeigt das englische Original). Diese Hilfe erklärt
 das Tool, nicht Holacracy.
 
 - [Sich zurechtfinden](orientation.de.md): Kreise, Rollen, Personen, Suche,

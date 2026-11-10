@@ -12,8 +12,8 @@
     </nav>
   {% endif %}
   {# The constitution may be in the other language (?language=), its source line too #}
-  <div class="wb-page-header" {% if language %}lang="{{ language }}"{% endif %}>
-    <div class="min-w-0">
+  <div class="wb-page-header">
+    <div class="min-w-0" {% if language %}lang="{{ language }}"{% endif %}>
       <h1 class="wb-title">{{ title }}</h1>
       {% if source %}
         {# The constitution: HolacracyOne's text, copied unchanged (NOTICE) #}
@@ -22,14 +22,23 @@
             <span
             >{% blocktranslate with date=source.date|date:"DATE_FORMAT" url=source.url license_url=source.license_url %}The Holacracy Constitution 5.0 by HolacracyOne, unchanged, in the version of {{ date }} from <a href="{{ url }}">the original</a>, licensed under <a href="{{ license_url }}">CC BY-SA 4.0</a>.{% endblocktranslate %}</span>
           {% endlanguage %}
-          <a
-            href="?language={{ other.language }}"
-            lang="{{ other.language }}"
-            hreflang="{{ other.language }}"
-          >{{ other.label }}</a>
         </div>
       {% endif %}
     </div>
+    {% if language %}
+      {# Only the constitution's text, each language named in itself #}
+      <nav class="btn-group" aria-label="{% translate 'Language of the constitution' %}">
+        {% for code, name in languages %}
+          <a
+            class="btn btn-sm btn-quiet{% if code == language %} active{% endif %}"
+            href="?language={{ code }}"
+            lang="{{ code }}"
+            hreflang="{{ code }}"
+            {% if code == language %}aria-current="page"{% endif %}
+          >{{ name }}</a>
+        {% endfor %}
+      </nav>
+    {% endif %}
   </div>
   <article class="card" {% if language %}lang="{{ language }}"{% endif %}>
     <div class="card-body wb-markdown wb-help">{{ html }}</div>

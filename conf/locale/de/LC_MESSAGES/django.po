@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 07:22+0100\n"
+"POT-Creation-Date: 2026-11-10 07:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2113,6 +2113,10 @@ msgstr "Speichern"
 #, python-format
 msgid "The Holacracy Constitution 5.0 by HolacracyOne, unchanged, in the version of %(date)s from <a href=\"%(url)s\">the original</a>, licensed under <a href=\"%(license_url)s\">CC BY-SA 4.0</a>."
 msgstr "Die offizielle deutsche Übersetzung der Holacracy-Verfassung 5.0 von HolacracyOne, unverändert, in der Fassung vom %(date)s aus <a href=\"%(url)s\">dem Original</a>, lizenziert unter <a href=\"%(license_url)s\">CC BY-SA 4.0</a>."
+
+#: governance/templates/help.html
+msgid "Language of the constitution"
+msgstr "Sprache der Verfassung"
 
 #: governance/templates/history/_entry.html
 #: governance/templates/meetings/meeting_detail.html
