@@ -274,6 +274,9 @@ commits the app's JSON backup daily to a git repository instead.
 - Model methods changing data without required arguments get
   `alters_data = True`: templates must not call them (overridden
   `save()` and `delete()` keep Django's, its `AltersData` copies it).
+- Whether an instance is new (a form adding or editing, `save()`):
+  `instance._state.adding`, not its `pk` (set before saving with
+  defaults or by hand).
 - Use `speckenv` to load `.env` files in standalone Python scripts.
 - Pre-commit hooks (via `prek`, not `pre-commit`) run on commit, ruff
   included, and auto-fix formatting. If a commit fails due to formatting,
