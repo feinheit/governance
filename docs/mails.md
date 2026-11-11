@@ -34,7 +34,7 @@ adopts it right away: only the mail about adopting.
 | People join or leave a circle (through roles they get or lose) | The circle's Secretary |
 | Your focus in a role changes | You |
 
-These mails name who changed the roles, unless it was you.
+These mails and those about policies for domains name who changed them, unless it was you.
 
 ## Meetings
 

@@ -88,6 +88,10 @@ class DomainPoliciesTest(TestCase):
         )
         self.assertIn("Developers on request", mail.outbox[0].body)
         self.assertIn("applies in Web and its sub-circles", mail.outbox[0].body)
+        # Names who changed it, except to them
+        bodies = {m.to[0]: m.body for m in mail.outbox}
+        self.assertIn("Changed by Ada.", bodies["bob@example.com"])
+        self.assertNotIn("Changed by", bodies["ada@example.com"])
         self.assertContains(
             self.client.get(proposal.get_absolute_url()), "Developers on request"
         )

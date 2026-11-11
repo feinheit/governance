@@ -1,4 +1,5 @@
-{% load governance i18n %}{% autoescape off %}{% blocktranslate with role=proposal.role circle=proposal.circle %}{{ role }} in {{ circle }} changed a policy for its domains. Roles do that without a governance process; you get this mail because the policy applies in {{ circle }} and its sub-circles.{% endblocktranslate %}
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with role=proposal.role circle=proposal.circle %}{{ role }} in {{ circle }} changed a policy for its domains. Roles do that without a governance process; you get this mail because the policy applies in {{ circle }} and its sub-circles.{% endblocktranslate %}{% if proposal.proposer and proposal.proposer != user %}
+{% blocktranslate with user=proposal.proposer %}Changed by {{ user }}.{% endblocktranslate %}{% endif %}
 
 {% translate "Changes" %}:
 {% include "notifications/_changes.txt" %}

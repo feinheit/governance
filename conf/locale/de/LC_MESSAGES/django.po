@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 08:08+0100\n"
+"POT-Creation-Date: 2026-11-11 08:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2677,6 +2677,13 @@ msgid "%(role)s in %(circle)s changed a policy for its domains. Roles do that wi
 msgstr "%(role)s in %(circle)s hat eine Policy für ihre Domains geändert. Rollen tun das ohne Governance-Prozess; du erhältst diese Mail, weil die Policy in %(circle)s und seinen Sub-Kreisen gilt."
 
 #: governance/templates/notifications/domain_policy_changed.txt
+#: governance/templates/notifications/focus_changed.txt
+#: governance/templates/notifications/members_changed.txt
+#, python-format
+msgid "Changed by %(user)s."
+msgstr "Geändert von %(user)s."
+
+#: governance/templates/notifications/domain_policy_changed.txt
 #: governance/templates/notifications/proposal_adopted.txt
 #: governance/templates/notifications/proposal_published.txt
 #: governance/templates/proposals/proposal_detail.html
@@ -2726,12 +2733,6 @@ msgstr "Du hast %(role)s (%(circle)s) jetzt ohne Fokus."
 #, python-format
 msgid "Before: %(before)s"
 msgstr "Vorher: %(before)s"
-
-#: governance/templates/notifications/focus_changed.txt
-#: governance/templates/notifications/members_changed.txt
-#, python-format
-msgid "Changed by %(user)s."
-msgstr "Geändert von %(user)s."
 
 #: governance/templates/notifications/meeting_ended.txt
 #, python-format
