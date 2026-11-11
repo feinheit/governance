@@ -50,6 +50,16 @@ class CircleMembersTest(TestCase):
                 "Dishwasher",
             ],
         )
+        # A line below the last core role
+        self.assertEqual(
+            [
+                role.name
+                for role, _cells in response.context["rows"]
+                if getattr(role, "last_core", False)
+            ],
+            ["Circle Rep"],
+        )
+        self.assertContains(response, 'class="wb-matrix-last-core"', count=1)
 
         def marks(cells):
             return [

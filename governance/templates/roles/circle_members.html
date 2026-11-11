@@ -43,7 +43,7 @@
         </thead>
         <tbody>
           {% for row_role, cells in rows %}
-            <tr>
+            <tr {% if row_role.last_core %}class="wb-matrix-last-core"{% endif %}>
               <th scope="row">
                 <a href="{{ row_role.get_absolute_url }}">{{ row_role }}</a>
                 {% if row_role.is_circle %}<span class="badge wb-tone-circle">{% translate "Circle" %}</span>{% endif %}

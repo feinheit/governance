@@ -1569,6 +1569,9 @@ body:has(.wb-modal[open]) {
 .wb-matrix .wb-matrix-first-other {
   border-left: 2px solid var(--bs-border-color);
 }
+.wb-matrix .wb-matrix-last-core > * {
+  border-bottom: 2px solid var(--bs-border-color);
+}
 .wb-matrix-other a {
   color: var(--bs-secondary-color);
 }

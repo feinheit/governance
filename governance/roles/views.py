@@ -266,7 +266,11 @@ def circle_members(request, pk):
         .prefetch_related(current_assignments())
         .order_by("position", "name")
     )
-    roles = [r for r in roles if r.core_role] + [r for r in roles if not r.core_role]
+    core = [r for r in roles if r.core_role]
+    roles = core + [r for r in roles if not r.core_role]
+    # The line between the core roles and the circle's own ones
+    if core and len(core) < len(roles):
+        core[-1].last_core = True
     people = list(members(circle))
     others = list(User.objects.active().exclude(pk__in=[p.pk for p in people]))
     rows = []
