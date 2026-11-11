@@ -3137,8 +3137,8 @@ msgid "Members"
 msgstr "Mitglieder"
 
 #: governance/templates/roles/circle_members.html
-msgid "Not in this circle"
-msgstr "Nicht in diesem Kreis"
+msgid "Others"
+msgstr "Andere"
 
 #: governance/templates/roles/mail_addresses.html
 msgid "To copy into a mail. Unfilled Facilitator and Secretary roles count the person standing in: the Secretary or Facilitator, else the Circle Leads."

@@ -1519,7 +1519,7 @@ body:has(.wb-modal[open]) {
    the last group, which may be wider than its columns */
 .wb-matrix .wb-matrix-rest {
   width: 100%;
-  min-width: 12rem;
+  min-width: 5rem;
 }
 .wb-matrix th,
 .wb-matrix td {
@@ -1556,7 +1556,7 @@ body:has(.wb-modal[open]) {
 .wb-matrix td {
   text-align: center;
 }
-/* "Members" and "Not in this circle" above the names, as wide as they
+/* "Members" and "Others" above the names, as wide as they
    need without widening the columns */
 .wb-matrix-group {
   font-size: 0.875rem;
