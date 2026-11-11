@@ -1515,10 +1515,12 @@ body:has(.wb-modal[open]) {
   border-collapse: separate;
   border-spacing: 0;
 }
-/* The rest of the width after the last person; room for the label above
-   the last group when it has too few columns for it */
+/* The rest of the width after the last person, nothing when the table
+   scrolls; room for the label above the last group when it has too few
+   columns for it */
 .wb-matrix .wb-matrix-rest {
   width: 100%;
+  padding: 0;
 }
 .wb-matrix-label-room .wb-matrix-rest {
   min-width: 5rem;
