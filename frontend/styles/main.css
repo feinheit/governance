@@ -1567,7 +1567,7 @@ body:has(.wb-modal[open]) {
   white-space: nowrap;
 }
 .wb-matrix .wb-matrix-first-other {
-  border-left: 2px solid var(--bs-border-color);
+  border-left: 1px solid var(--bs-secondary-color);
 }
 .wb-matrix .wb-matrix-last-core > * {
   border-bottom-color: var(--bs-secondary-color);
