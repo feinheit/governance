@@ -692,10 +692,12 @@ verify the mails; removed once they've proven themselves.
   the list's header still visible, and narrow enough for the legend
   beside it. The page also lists the tree, which works
   without JavaScript.
-- **Search**: roles, accountabilities, domains and policies, all terms
-  matching, ignoring case and accents, in the texts as the pages show
-  them (mentions with the current names, the core roles' constitutional
-  texts); snippets as plain text.
+- **Search**: active people first (name, short name and mail address;
+  with the circles whose roles they hold), then
+  roles, accountabilities, domains and policies, all terms matching,
+  ignoring case and accents, in the texts as the pages show them
+  (mentions with the current names, the core roles' constitutional
+  texts); snippets as plain text. The API and `gov search` too.
 - **Export**: the whole current governance as Markdown (circles, roles,
   their texts, policies, metrics, checklist items and links), `/export/governance.md`
   (the people only with `?people=1`, `--with-people`: personal data

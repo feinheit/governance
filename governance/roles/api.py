@@ -108,7 +108,24 @@ class FoundTextOut(Schema):
     url: str
 
 
+class PersonFoundOut(Schema):
+    id: int
+    name: str
+    url: str
+    # Whose roles the person holds
+    circles: list[RoleSummaryOut]
+
+    @staticmethod
+    def resolve_name(obj):
+        return str(obj)
+
+    @staticmethod
+    def resolve_url(obj):
+        return absolute(obj)
+
+
 class SearchOut(Schema):
+    people: list[PersonFoundOut]
     roles: list[RoleSummaryOut]
     accountabilities: list[FoundTextOut]
     domains: list[FoundTextOut]
@@ -261,6 +278,7 @@ def link_delete(request, pk: int):
 def search(request, q: str):
     """All terms have to match, ignoring case and accents"""
     results = search_results(q) or {
+        "people": [],
         "roles": [],
         "accountabilities": [],
         "domains": [],

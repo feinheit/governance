@@ -10,7 +10,24 @@
     </h1>
   </div>
   {% if empty %}<p class="text-body-secondary">{% translate "Nothing found." %}</p>{% endif %}
-  {% with roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies %}
+  {% with people=results.people roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies %}
+    {% if people %}
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "People" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% for person in people %}
+            <li class="list-group-item wb-row-link">
+              <a class="wb-row-title" href="{{ person.get_absolute_url }}">{{ person }}</a>
+              {% if person.circles %}
+                <div class="wb-row-meta">
+                  {% for circle in person.circles %}<span>{{ circle }}</span>{% endfor %}
+                </div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
     {% if roles %}
       <section class="card mb-4">
         <div class="card-header"><h2 class="h6 mb-0">{% translate "Roles" %}</h2></div>

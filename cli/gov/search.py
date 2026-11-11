@@ -9,8 +9,8 @@ from gov.core import cli, console, echo_json, link, make_table, request
 @click.argument("terms", nargs=-1, required=True)
 @click.option("--json", "as_json", is_flag=True)
 def search(terms, as_json):
-    """Roles, accountabilities, domains and policies containing all TERMS
-    (ignoring case and accents)"""
+    """People, roles, accountabilities, domains and policies containing all
+    TERMS (ignoring case and accents)"""
     data = request("GET", "search/", params={"q": " ".join(terms)})
     if as_json:
         echo_json(data)
@@ -18,6 +18,15 @@ def search(terms, as_json):
     if not any(data.values()):
         console.print("Nothing found.")
         return
+    if data.get("people"):
+        table = make_table("ID>", "Name", "Circles", title="People")
+        for person in data["people"]:
+            table.add_row(
+                link(person["id"], person["url"]),
+                link(person["name"], person["url"]),
+                ", ".join(circle["name"] for circle in person["circles"]),
+            )
+        console.print(table)
     if data["roles"]:
         table = make_table("ID>", "Role", title="Roles")
         for role in data["roles"]:

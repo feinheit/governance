@@ -1,8 +1,9 @@
-"""Searching the current governance
+"""Searching the current governance and the people
 
 All terms have to match (case-insensitive, ignoring accents) the texts as
 the pages show them: mentions with the roles' current names, the core
-roles with the constitution's texts. The data is small enough for
+roles with the constitution's texts, the active people's names, short
+names and mail addresses. The data is small enough for
 searching in Python, no full text index needed.
 """
 
@@ -11,8 +12,9 @@ from types import SimpleNamespace
 
 from django.shortcuts import render
 
+from governance.accounts.models import User
 from governance.roles.mentions import MENTION
-from governance.roles.models import Accountability, Domain, Policy, Role
+from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
 
 
 LIMIT = 50
@@ -28,7 +30,8 @@ def _fold(text):
 
 
 def search_results(query):
-    """Matching roles, accountabilities, domains and policies (50 each)"""
+    """Matching people (with their ``circles``), roles, accountabilities,
+    domains and policies (50 each)"""
     terms = [_fold(term) for term in query.split()]
     if not terms:
         return {}
@@ -68,6 +71,12 @@ def search_results(query):
         return constitutional + own
 
     return {
+        "people": with_circles(
+            matching(
+                User.objects.active(),
+                lambda user: [user.full_name, user.short_name, user.email],
+            )
+        ),
         "roles": matching(
             roles, lambda role: [role.name, role.display_purpose, role.strategy]
         ),
@@ -80,6 +89,27 @@ def search_results(query):
             lambda policy: [policy.title, policy.body],
         ),
     }
+
+
+def with_circles(people):
+    """The circles whose roles the people hold, in the organization's order"""
+    order = {
+        circle.pk: index for index, circle in enumerate(Role.objects.depth_first())
+    }
+    circles = {person.pk: {} for person in people}
+    for assignment in (
+        Assignment.objects
+        .current()
+        .filter(user__in=people, role__archived_on=None, role__circle__isnull=False)
+        .select_related("role__circle")
+    ):
+        circle = assignment.role.circle
+        circles[assignment.user_id][circle.pk] = circle
+    for person in people:
+        person.circles = sorted(
+            circles[person.pk].values(), key=lambda c: order.get(c.pk, len(order))
+        )
+    return people
 
 
 def search(request):

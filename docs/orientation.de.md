@@ -22,8 +22,9 @@ anderer.
   Rollen ("Mit Sub-Kreisen" auch, was darin ist) oder für eine Rolle, auf
   Wunsch mit den Zuweisungen und mit Links, Metriken und Checklisten. Die
   Seiten der Kreise und Rollen verlinken ihre.
-- **Suchen** findet Rollen, Accountabilities, Domains und Policies, die
-  alle eingegebenen Wörter enthalten.
+- **Suchen** findet Personen (nach Name, Kurzname und Mailadresse, mit ihren Kreisen),
+  Rollen, Accountabilities, Domains und Policies, die alle eingegebenen
+  Wörter enthalten.
 
 **Mailadressen** listet die Adressen aller mit einer Rolle, aller Circle
 Leads, Facilitators, Secretaries und Circle Reps (bei unbesetzten Rollen

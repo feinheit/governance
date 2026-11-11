@@ -3,7 +3,7 @@ import datetime as dt
 from django.test import TestCase
 
 from governance.accounts.models import User
-from governance.roles.models import Accountability, Domain, Policy, Role
+from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
 
 
 class SearchTest(TestCase):
@@ -62,3 +62,43 @@ class SearchTest(TestCase):
         secretary = kitchen.roles.get(core_role="secretary")
         response = self.client.get("/search/", {"q": "governance records"})
         self.assertContains(response, secretary.get_absolute_url())
+
+    def test_people(self):
+        """Active people by name, short name and mail address, first, with
+        their circles"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        zoe = User.objects.create_user(
+            "zoe@example.com", full_name="Zoë Cook", short_name="Zo"
+        )
+        Assignment.objects.create(role=cook, user=zoe)
+        User.objects.create_user(
+            "old@example.com", full_name="Old Cook", is_active=False
+        )
+
+        response = self.client.get("/search/", {"q": "zoe COOK"})
+        self.assertEqual(response.context["results"]["people"], [zoe])
+        self.assertContains(response, '<h2 class="h6 mb-0">People</h2>', html=True)
+        self.assertContains(response, zoe.get_absolute_url())
+        self.assertContains(response, "Kitchen")  # Her circle
+        self.assertNotContains(response, "Nothing found")
+        self.assertEqual(
+            self.client.get("/search/", {"q": "zo"}).context["results"]["people"],
+            [zoe],
+        )
+        # Also by mail address
+        self.assertEqual(
+            self.client.get("/search/", {"q": "zoe@example"}).context["results"][
+                "people"
+            ],
+            [zoe],
+        )
+        # People first, inactive ones not at all
+        response = self.client.get("/search/", {"q": "cook"})
+        self.assertEqual(response.context["results"]["people"], [zoe])
+        content = response.content.decode()
+        self.assertLess(
+            content.index(zoe.get_absolute_url()),
+            content.index(cook.get_absolute_url()),
+        )

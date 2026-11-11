@@ -114,6 +114,12 @@ class CLITest(TestCase):
         self.assertIn("All governance records", result.output)
 
         self.assertIn("Cooking soup", self.gov("search", "SOUP").output)
+        # People with their circles
+        result = self.gov("search", "ada")
+        self.assertIn("People", result.output)
+        self.assertIn("Kitchen", result.output)
+        result = self.gov("search", "ada", "--json")
+        self.assertIn('"people"', result.output)
         self.assertIn("Nothing found.", self.gov("search", "nothing").output)
 
     def test_proposals(self):
