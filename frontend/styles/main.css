@@ -1526,6 +1526,7 @@ body:has(.wb-modal[open]) {
 .wb-matrix tbody th {
   position: sticky;
   left: 0;
+  z-index: 1;
   background: var(--bs-card-bg);
   font-weight: normal;
   text-align: start;
@@ -1553,4 +1554,34 @@ body:has(.wb-modal[open]) {
 }
 .wb-matrix-stands-in {
   background: transparent;
+}
+
+/* The cell's tools (assign, edit focus, remove) in a bubble above it, on
+   hover and focus (tapping a cell focuses it); overlapping the cell, so
+   that the pointer reaches them without leaving it */
+.wb-matrix-editable {
+  position: relative;
+  cursor: pointer;
+}
+.wb-matrix-editable:focus-visible {
+  outline: 2px solid var(--wb-circle-ink);
+  outline-offset: -2px;
+}
+.wb-matrix-tools {
+  display: none;
+  position: absolute;
+  bottom: calc(100% - 0.4rem);
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-body-bg);
+  box-shadow: var(--bs-box-shadow-sm);
+}
+.wb-matrix-editable:hover > .wb-matrix-tools,
+.wb-matrix-editable:focus-within > .wb-matrix-tools {
+  display: flex;
 }

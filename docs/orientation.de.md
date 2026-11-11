@@ -55,7 +55,9 @@ fällig" markiert, hier und auf der Seite der Person, die sie hat.
 "Mitglieder" im Menü "…" zeigt, wer welche Rollen des Kreises ausfüllt,
 eine Spalte pro Mitglied (ein leerer Kreis, wo die Circle Leads eine
 Rolle haben, die niemand hat), und darunter alle, die nicht Mitglied
-sind.
+sind. Die Circle Leads weisen direkt in der Tabelle zu, ändern den Fokus
+und entfernen: Mit der Maus über einer Zelle oder beim Antippen
+erscheinen die Knöpfe.
 
 Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,
 wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und

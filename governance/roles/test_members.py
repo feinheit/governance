@@ -50,12 +50,22 @@ class CircleMembersTest(TestCase):
                 "Dishwasher",
             ],
         )
-        self.assertEqual(rows["Cook"][0], None)
-        self.assertEqual(rows["Cook"][1]["assignment"].focus, "Soup")
+
+        def marks(cells):
+            return [
+                cell["assignment"].focus
+                if cell["assignment"]
+                else "stands in"
+                if cell["stands_in"]
+                else None
+                for cell in cells
+            ]
+
+        self.assertEqual(marks(rows["Cook"]), [None, "Soup"])
         # Nobody holds the Dishwasher: the Circle Lead does (1.4.2), nobody
         # an unfilled Circle Rep
-        self.assertEqual(rows["Dishwasher"], [{"stands_in": True}, None])
-        self.assertEqual(rows["Circle Rep"], [None, None])
+        self.assertEqual(marks(rows["Dishwasher"]), ["stands in", None])
+        self.assertEqual(marks(rows["Circle Rep"]), [None, None])
         self.assertContains(response, "Soup")
         # Active people who aren't members, also those without roles
         self.assertEqual(list(response.context["others"]), [self.ada, self.zoe])
@@ -64,3 +74,40 @@ class CircleMembersTest(TestCase):
         # Only circles
         response = self.client.get(f"/roles/{self.cook.pk}/members/")
         self.assertEqual(response.status_code, 404)
+
+    def test_tools(self):
+        url = f"/roles/{self.kitchen.pk}/members/"
+        cook = Assignment.objects.get(role=self.cook)
+        tools = [
+            f"/assignments/{cook.pk}/?next={url}",  # Edit focus
+            f"/assignments/{cook.pk}/end/?next={url}",
+            # Bob holds the unfilled Dishwasher as Circle Lead
+            f"/roles/{self.dishwasher.pk}/assignments/?user={self.bob.pk}&amp;next={url}",
+            f"/roles/{self.cook.pk}/assignments/?user={self.bob.pk}&amp;next={url}",
+        ]
+        self.client.force_login(self.zoe)
+        response = self.client.get(url)
+        for tool in tools:
+            self.assertNotContains(response, tool)
+
+        self.client.force_login(self.bob)  # The Circle Lead
+        response = self.client.get(url)
+        for tool in tools:
+            self.assertContains(response, tool)
+        # Elected roles aren't assigned here
+        facilitator = self.kitchen.roles.get(core_role="facilitator")
+        self.assertNotContains(response, f"/roles/{facilitator.pk}/assignments/")
+
+        # The form preselects the person
+        response = self.client.get(
+            f"/roles/{self.cook.pk}/assignments/?user={self.bob.pk}&next={url}"
+        )
+        self.assertEqual(response.context["form"]["user"].value(), str(self.bob.pk))
+        response = self.client.post(
+            f"/roles/{self.cook.pk}/assignments/?user={self.bob.pk}&next={url}",
+            {"user": self.bob.pk},
+        )
+        self.assertRedirects(response, url)
+        self.assertTrue(
+            Assignment.objects.filter(role=self.cook, user=self.bob).exists()
+        )

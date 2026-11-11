@@ -256,8 +256,8 @@ def role_context(request, pk):
 
 def circle_members(request, pk):
     """Who fills which of the circle's roles (its members, the core roles
-    first), and the active people who aren't members; the circle's menu
-    links it"""
+    first), with tools to assign, edit the focus and remove where allowed,
+    and the active people who aren't members; the circle's menu links it"""
     circle = get_object_or_404(Role.objects.active().circles(), pk=pk)
     roles = list(
         circle.roles
@@ -269,6 +269,9 @@ def circle_members(request, pk):
     people = list(members(circle))
     rows = []
     for role in roles:
+        # The cells' tools, the rights also make them amber (button_class)
+        role.can_assign = can_assign(request.user, role)
+        role.can_end = can_end_assignment(request.user, role)
         assignments = {a.user_id: a for a in role.current_assignments}
         # Nobody holds it: the Circle Leads do (1.4.2), see role_leads()
         stand_ins = (
@@ -277,11 +280,11 @@ def circle_members(request, pk):
         rows.append((
             role,
             [
-                {"assignment": assignments[person.pk]}
-                if person.pk in assignments
-                else {"stands_in": True}
-                if person.pk in stand_ins
-                else None
+                {
+                    "person": person,
+                    "assignment": assignments.get(person.pk),
+                    "stands_in": person.pk in stand_ins,
+                }
                 for person in people
             ],
         ))

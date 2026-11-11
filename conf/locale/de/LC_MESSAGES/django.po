@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 07:17+0100\n"
+"POT-Creation-Date: 2026-11-11 07:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1018,6 +1018,7 @@ msgstr "Führe beide Fassungen zusammen und entferne die Markierungen."
 #: governance/templates/roles/_role_leads_card.html
 #: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
+#: governance/templates/roles/circle_members.html
 #: governance/templates/roles/role_detail.html
 msgid "Remove"
 msgstr "Entfernen"
@@ -1760,7 +1761,8 @@ msgstr "Niemand"
 msgid "Held by the super-circle's Circle Leads"
 msgstr "Von den Circle Leads des übergeordneten Kreises besetzt"
 
-#: governance/roles/models.py governance/templates/roles/circle_members.html
+#: governance/roles/models.py governance/templates/roles/_matrix_mark.html
+#: governance/templates/roles/circle_members.html
 msgid "Held by the Circle Leads"
 msgstr "Von den Circle Leads besetzt"
 
@@ -3046,8 +3048,14 @@ msgstr "Metriken"
 msgid "Checklist items"
 msgstr "Checklistenpunkte"
 
+#: governance/templates/roles/_matrix_mark.html
+#: governance/templates/roles/circle_members.html
+msgid "Holds the role"
+msgstr "Hat die Rolle"
+
 #: governance/templates/roles/_role_leads_card.html
 #: governance/templates/roles/assignments.html
+#: governance/templates/roles/circle_members.html
 msgid "Edit focus"
 msgstr "Fokus bearbeiten"
 
@@ -3110,6 +3118,7 @@ msgid "Assign and end them"
 msgstr "Zuweisen und sie beenden"
 
 #: governance/templates/roles/assignments.html
+#: governance/templates/roles/circle_members.html
 msgid "Assign"
 msgstr "Zuweisen"
 
@@ -3125,10 +3134,6 @@ msgstr "Noch keine Kreise."
 #: governance/templates/roles/role_detail.html
 msgid "Members"
 msgstr "Mitglieder"
-
-#: governance/templates/roles/circle_members.html
-msgid "Holds the role"
-msgstr "Hat die Rolle"
 
 #: governance/templates/roles/circle_members.html
 msgid "Nobody is a member of this circle yet."

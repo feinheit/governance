@@ -1,0 +1,9 @@
+{% load i18n %}
+{% if cell.assignment %}
+  <span class="wb-matrix-mark" title="{{ cell.assignment.focus|default:_('Holds the role') }}"></span>
+  <span class="visually-hidden">{% translate "Holds the role" %}{% if cell.assignment.focus %}:
+      {{ cell.assignment.focus }}{% endif %}</span>
+{% elif cell.stands_in %}
+  <span class="wb-matrix-mark wb-matrix-stands-in" title="{% translate 'Held by the Circle Leads' %}"></span>
+  <span class="visually-hidden">{% translate "Held by the Circle Leads" %}</span>
+{% endif %}

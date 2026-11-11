@@ -160,7 +160,10 @@ def assignments(request, pk):
     role = assignable_role(request, pk, check=can_end_assignment)
     form = None
     if can_assign(request.user, role):
-        form = AssignmentForm(request.POST or None, role=role)
+        # ?user= preselects the person (the circle's members)
+        form = AssignmentForm(
+            request.POST or None, role=role, initial={"user": request.GET.get("user")}
+        )
     elif request.method == "POST":
         raise PermissionDenied
     reps = None
