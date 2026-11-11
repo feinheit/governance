@@ -298,7 +298,8 @@ rule.
 - **Policies of a domain's role** (1.3.2, `roles/domain_policies.py`):
   the role's Role Leads (the Circle Leads while unfilled) add, change and
   remove its policies on the role page, each with one of its domains.
-  Every change is recorded as an adopted proposal, mailed to the
+  Every change is recorded as an adopted proposal (the history says
+  "Changed directly", `Proposal.is_direct`), mailed to the
   members of the role's circle and all its sub-circles, `notify_all`
   users and the person making the change. They move with their role,
   and are archived with it, with its circle or with their domain (the

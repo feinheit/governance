@@ -1,7 +1,10 @@
 {% load governance i18n %}
 {# A change or an adopted proposal in the history (_timeline.html, the history card of the role's or the policy's page): ``kind``, ``obj``, ``show_role``, ``in_policy`` (not linking to itself) #}
 {% if kind == "proposal" %}
-  <span class="badge wb-tone-primary">{% translate "Proposal" %}</span>
+  {# A role's policies for its domains went through no proposal (1.3.2) #}
+  {% if obj.is_direct %}<span class="badge wb-tone-neutral">{% translate "Changed directly" %}</span>{% else %}<span
+      class="badge wb-tone-primary"
+    >{% translate "Proposal" %}</span>{% endif %}
   <a class="fw-semibold" href="{{ obj.get_absolute_url }}">{{ obj|default:_("(no tension)") }}</a>
   <span class="small text-body-secondary">{% if show_role %}{{ obj.circle }} ·
     {% endif %}{{ obj.proposer|default:"" }}</span>

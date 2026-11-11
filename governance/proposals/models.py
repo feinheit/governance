@@ -215,6 +215,19 @@ class Proposal(models.Model):
         return timezone.localdate(run)
 
     @property
+    def is_direct(self):
+        """A role's policies for its domains, changed outside the process
+        (``roles/domain_policies.py``): adopted without being published or
+        brought into a meeting, not in GlassFrog"""
+        return (
+            self.status == self.ADOPTED
+            and self.published_at is None
+            and self.meeting_id is None
+            and self.glassfrog_id is None
+            and not self.adopted_in_glassfrog
+        )
+
+    @property
     def is_tension(self):
         return self.status == self.DRAFT and not self.instructions
 

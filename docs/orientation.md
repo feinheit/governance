@@ -86,7 +86,8 @@ Running meetings you attend are shown at the top of every page.
 
 Every role and circle has a history: the proposals that changed it, with
 the tension and a comparison, and what changed without a proposal (e.g.
-in GlassFrog). The role's page shows the latest of it and its former
+in GlassFrog; a role's policies for its domains as "Changed directly",
+and by whom). The role's page shows the latest of it and its former
 names. "Show as of" shows the structure on an
 earlier day, back to 2018.
 

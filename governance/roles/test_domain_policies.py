@@ -237,3 +237,16 @@ class DomainPoliciesTest(TestCase):
         governance(self.web, {"op": "remove", "path": f"/roles/{self.hosting.pk}"})
         restore.refresh_from_db()
         self.assertIsNotNone(restore.archived_on)
+
+    def test_history_says_changed_directly(self):
+        """No proposal went through the process, the history says so"""
+        self.client.force_login(self.ada)
+        self.client.post(
+            self.url,
+            {"title": "Servers", "body": "On request", "domain": self.servers.pk},
+        )
+        proposal = Proposal.objects.get()
+        self.assertTrue(proposal.is_direct)
+        response = self.client.get(f"/history/?role={self.admin.pk}")
+        self.assertContains(response, "Changed directly")
+        self.assertNotContains(response, ">Proposal</span>")

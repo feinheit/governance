@@ -87,7 +87,8 @@ Laufende Meetings, an denen du teilnimmst, stehen oben auf jeder Seite.
 
 Jede Rolle und jeder Kreis hat eine Geschichte: die Vorschläge, die sie
 geändert haben, mit Spannung und Vergleich, und was sich ohne Vorschlag
-geändert hat (z.B. in GlassFrog). Die Seite der Rolle zeigt das Neueste
+geändert hat (z.B. in GlassFrog; die Policies einer Rolle für ihre
+Domains als "Direkt geändert" und von wem). Die Seite der Rolle zeigt das Neueste
 davon und ihre früheren Namen. "Stand anzeigen" zeigt die
 Struktur an einem früheren Tag, zurück bis 2018.
 

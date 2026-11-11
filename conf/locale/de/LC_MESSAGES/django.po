@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 16:12+0100\n"
+"POT-Creation-Date: 2026-11-11 22:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2120,6 +2120,10 @@ msgid "The Holacracy Constitution 5.0 by HolacracyOne, unchanged, in the version
 msgstr "Die offizielle deutsche Übersetzung der Holacracy-Verfassung 5.0 von HolacracyOne, unverändert, in der Fassung vom %(date)s aus <a href=\"%(url)s\">dem Original</a>, lizenziert unter <a href=\"%(license_url)s\">CC BY-SA 4.0</a>."
 
 #: governance/templates/history/_entry.html
+msgid "Changed directly"
+msgstr "Direkt geändert"
+
+#: governance/templates/history/_entry.html
 #: governance/templates/meetings/meeting_detail.html
 msgid "Proposal"
 msgstr "Vorschlag"
@@ -2443,6 +2447,7 @@ msgstr "Keine angenommenen Vorschläge, keine Wahlen, keine Ergebnisse."
 #: governance/templates/meetings/_progress.html
 #: governance/templates/roles/_governance_lists.txt
 #: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
 msgid "Links"
 msgstr "Links"
 
