@@ -43,7 +43,7 @@ PENDING = [Proposal.PUBLISHED, Proposal.IN_MEETING]
 def current_assignments():
     return Prefetch(
         "assignments",
-        queryset=Assignment.objects.current().select_related("user"),
+        queryset=Assignment.objects.current().for_display().select_related("user"),
         to_attr="current_assignments",
     )
 

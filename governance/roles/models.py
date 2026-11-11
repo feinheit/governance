@@ -3,6 +3,7 @@ from collections import defaultdict
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from django.db.models.functions import Lower
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -304,6 +305,15 @@ class AssignmentQuerySet(models.QuerySet):
         return self.filter(
             Q(starts_on__isnull=True) | Q(starts_on__lte=day),
             Q(ends_on__isnull=True) | Q(ends_on__gt=day),
+        )
+
+    def for_display(self):
+        """Role Leads without a focus first, then by name"""
+        return self.order_by(
+            models.Case(models.When(focus="", then=0), default=1),
+            Lower("user__full_name"),
+            "user__email",
+            "focus",
         )
 
     def of_core_role(self, core_role, circle):

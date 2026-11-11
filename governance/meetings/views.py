@@ -343,7 +343,10 @@ def callable_roles():
         .prefetch_related(
             Prefetch(
                 "assignments",
-                queryset=Assignment.objects.current().select_related("user"),
+                queryset=Assignment.objects
+                .current()
+                .for_display()
+                .select_related("user"),
                 to_attr="current_assignments",
             )
         )

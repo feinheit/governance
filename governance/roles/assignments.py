@@ -195,7 +195,10 @@ def render_assignments(request, role, form, *, reps=None):
         {
             "role": role,
             "ancestors": role.ancestors(),
-            "assignments": role.assignments.current().select_related("user"),
+            "assignments": role.assignments
+            .current()
+            .for_display()
+            .select_related("user"),
             "form": form,
             "can_assign": form is not None,
             "reps": reps,

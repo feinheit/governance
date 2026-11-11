@@ -24,7 +24,9 @@ def governance_markdown(*, with_people=False):
     circles = Role.objects.depth_first()
     role_leads = {}
     if with_people:
-        for assignment in Assignment.objects.current().select_related("user"):
+        for assignment in (
+            Assignment.objects.current().for_display().select_related("user")
+        ):
             role_leads.setdefault(assignment.role_id, []).append(assignment)
     for circle in circles:
         circle.heading = "#" * min(circle.depth + 2, 5)

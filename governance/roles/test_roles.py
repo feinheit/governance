@@ -75,6 +75,28 @@ class RolesTest(TestCase):
         self.assertEqual(list(current(on=dt.date(2025, 12, 31))), [])
         self.assertEqual(str(assignment), "ada@example.com – Cook")
 
+    def test_role_leads_order(self):
+        # Without a focus first, then by name, not by when they started
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        role = Role.objects.create(name="Cook", circle=circle)
+        leads = [
+            ("Cleopatra", ""),
+            ("Beatrix", "Soups"),
+            ("Dagobert", ""),
+            ("Alois", "Pies"),
+        ]
+        for name, focus in leads:
+            Assignment.objects.create(
+                role=role,
+                user=User.objects.create_user(f"{name}@example.com", full_name=name),
+                focus=focus,
+            )
+        self.client.force_login(User.objects.create_user("x@example.com"))
+        page = self.client.get(circle.get_absolute_url()).content.decode()
+        names = ["Cleopatra", "Dagobert", "Alois", "Beatrix"]
+        positions = [page.index(name) for name in names]
+        self.assertEqual(positions, sorted(positions))
+
     def test_constitutional_texts(self):
         texts = constitutional_texts()
         self.assertIn("All governance records of the Circle", texts)
