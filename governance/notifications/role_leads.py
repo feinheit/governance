@@ -13,16 +13,17 @@ from governance.roles.permissions import members
 
 
 @contextmanager
-def announce(circles):
+def announce(circles, by=None):
     """Mails about the assignments changing inside the block (like
     GlassFrog): the people about the roles they get and lose, the circles'
-    Secretaries about people joining and leaving. A circle's role in the
-    super-circle follows its Circle Leads and Rep, it isn't announced."""
+    Secretaries about people joining and leaving, naming ``by`` who changed
+    them. A circle's role in the super-circle follows its Circle Leads and
+    Rep, it isn't announced."""
     circles = {circle for circle in circles if circle is not None}
     before = role_leads_and_members(circles)
     # Nothing to announce when the block fails
     yield  # noqa: RUF075
-    announce_changes(circles, before, role_leads_and_members(circles))
+    announce_changes(circles, before, role_leads_and_members(circles), by)
 
 
 def role_leads_and_members(circles):
@@ -48,7 +49,7 @@ def role_leads_and_members(circles):
     return role_leads, joined
 
 
-def announce_changes(circles, before, after):
+def announce_changes(circles, before, after, by=None):
     """Mails the differences of two ``role_leads_and_members()``, after
     committing"""
     (role_leads, joined), (now_role_leads, now_joined) = before, after
@@ -63,6 +64,6 @@ def announce_changes(circles, before, after):
         if now_joined[circle] != joined[circle]
     ]
     if started or ended:
-        transaction.on_commit(partial(mails.roles_changed, started, ended))
+        transaction.on_commit(partial(mails.roles_changed, started, ended, by))
     for circle, new, gone in changes:
-        transaction.on_commit(partial(mails.members_changed, circle, new, gone))
+        transaction.on_commit(partial(mails.members_changed, circle, new, gone, by))

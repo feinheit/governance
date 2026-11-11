@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 07:34+0100\n"
+"POT-Creation-Date: 2026-11-11 08:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2727,6 +2727,12 @@ msgstr "Du hast %(role)s (%(circle)s) jetzt ohne Fokus."
 msgid "Before: %(before)s"
 msgstr "Vorher: %(before)s"
 
+#: governance/templates/notifications/focus_changed.txt
+#: governance/templates/notifications/members_changed.txt
+#, python-format
+msgid "Changed by %(user)s."
+msgstr "Geändert von %(user)s."
+
 #: governance/templates/notifications/meeting_ended.txt
 #, python-format
 msgid "The %(meeting)s of %(date)s has ended."
@@ -2811,8 +2817,18 @@ msgstr "%(user)s antwortet zum Vorschlag in %(circle)s, zu dem du gefragt oder k
 
 #: governance/templates/notifications/roles_changed.txt
 #, python-format
+msgid "%(user)s assigned you the role %(role)s in %(circle)s."
+msgstr "%(user)s hat dir die Rolle %(role)s in %(circle)s zugewiesen."
+
+#: governance/templates/notifications/roles_changed.txt
+#, python-format
 msgid "You now hold %(role)s in %(circle)s."
 msgstr "Du hast jetzt die Rolle %(role)s in %(circle)s."
+
+#: governance/templates/notifications/roles_changed.txt
+#, python-format
+msgid "%(user)s removed you from the role %(role)s in %(circle)s."
+msgstr "%(user)s hat dich aus der Rolle %(role)s in %(circle)s entfernt."
 
 #: governance/templates/notifications/roles_changed.txt
 #, python-format

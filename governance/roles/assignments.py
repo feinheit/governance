@@ -107,7 +107,7 @@ def change_assignments(request, role, change):
     makes lead their circle (5.1.1) end with it once ``end_reps`` confirms
     it; until then ``EndingReps`` rolls the change back."""
     before = reps_leading_their_circle()
-    with transaction.atomic(), announce(affected_circles(role)):
+    with transaction.atomic(), announce(affected_circles(role), request.user):
         day = timezone.localdate()
         result = change(day)
         after_change(role, day)
@@ -216,7 +216,9 @@ def assignment_update(request, pk):
         assignment = form.save()
         update_today()  # The history shows changes of the focus
         if assignment.focus != before:
-            transaction.on_commit(partial(mails.focus_changed, assignment, before))
+            transaction.on_commit(
+                partial(mails.focus_changed, assignment, before, request.user)
+            )
         return redirect(back(request, role))
     return render(
         request,

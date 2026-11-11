@@ -51,6 +51,9 @@ class AssignmentMailsTest(TestCase):
             )
         to_secretary = next(m for m in mail.outbox if m.to == ["bob@example.com"])
         self.assertIn("as Secretary you invite the members", to_secretary.body)
+        self.assertIn("Changed by Ada.", to_secretary.body)
+        to_eve = next(m for m in mail.outbox if m.to == ["eve@example.com"])
+        self.assertIn("Ada assigned you the role Cook in Kitchen.", to_eve.body)
         self.assertEqual(
             self.outbox(),
             [
@@ -71,6 +74,8 @@ class AssignmentMailsTest(TestCase):
             assignment = Assignment.objects.get(role=role, user=self.eve)
             with self.captureOnCommitCallbacks(execute=True):
                 self.client.post(f"/assignments/{assignment.pk}/end/")
+        to_eve = next(m for m in mail.outbox if m.to == ["eve@example.com"])
+        self.assertIn("Ada removed you from the role Cook in Kitchen.", to_eve.body)
         self.assertEqual(
             self.outbox(),
             [
@@ -97,6 +102,7 @@ class AssignmentMailsTest(TestCase):
             (["eve@example.com"], "Your focus in Cook (Kitchen): Salad"),
         )
         self.assertIn("Before: Soup", message.body)
+        self.assertIn("Changed by Ada.", message.body)
         self.assertIn(f"/roles/{self.cook.pk}/", message.body)
         mail.outbox = []
         # Saved unchanged: nothing
@@ -122,7 +128,19 @@ class AssignmentMailsTest(TestCase):
                 {"user": self.eve.pk, "focus": "Soup"},
             )
         [message] = [m for m in mail.outbox if m.to == ["eve@example.com"]]
-        self.assertIn("You now hold Cook in Kitchen.\nFocus: Soup\n", message.body)
+        self.assertIn(
+            "Ada assigned you the role Cook in Kitchen.\nFocus: Soup\n", message.body
+        )
+
+    def test_own_roles(self):
+        """Changing one's own roles names nobody"""
+        self.client.force_login(self.ada)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/roles/{self.cook.pk}/assignments/", {"user": self.ada.pk}
+            )
+        [message] = [m for m in mail.outbox if m.to == ["ada@example.com"]]
+        self.assertIn("You now hold Cook in Kitchen.", message.body)
 
     def test_sub_circles_following_the_circle_leads(self):
         """A sub-circle nobody leads follows the Circle Leads of the circle

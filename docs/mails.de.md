@@ -34,6 +34,8 @@ das Veröffentlichen ihn gleich an: nur die Mail zum Annehmen.
 | Jemand kommt in einen Kreis oder verlässt ihn (über Rollen) | Wer im Kreis Secretary ist |
 | Dein Fokus in einer Rolle ändert sich | Du |
 
+Diese Mails nennen, wer die Rollen geändert hat, ausser du selbst.
+
 ## Meetings
 
 | Wann | Wer eine Mail erhält |

@@ -1,5 +1,6 @@
 {% load i18n %}{% autoescape off %}{% if assignment.focus %}{% blocktranslate with role=role circle=role.circle focus=assignment.focus %}Your focus in {{ role }} ({{ circle }}) is now: {{ focus }}{% endblocktranslate %}{% else %}{% blocktranslate with role=role circle=role.circle %}You hold {{ role }} ({{ circle }}) without a focus now.{% endblocktranslate %}{% endif %}
 {% if before %}{% blocktranslate %}Before: {{ before }}{% endblocktranslate %}
+{% endif %}{% if by %}{% blocktranslate with user=by %}Changed by {{ user }}.{% endblocktranslate %}
 {% endif %}
 {{ url }}
 {% endautoescape %}

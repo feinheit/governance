@@ -280,9 +280,9 @@ def strategy_changed(circle, before, after, user):
     )
 
 
-def roles_changed(started, ended):
+def roles_changed(started, ended, by=None):
     """``started`` and ``ended`` are sets of ``(user_id, role_id)``; the
-    roles started with their focus"""
+    roles started with their focus. ``by`` changed them (named to others)"""
     from governance.roles.models import Assignment, Role
 
     roles = Role.objects.select_related("circle").in_bulk({
@@ -321,13 +321,17 @@ def roles_changed(started, ended):
                 }
             ),
             "notifications/roles_changed.txt",
-            {"changes": changes, "base_url": settings.BASE_URL},
+            {
+                "changes": changes,
+                "base_url": settings.BASE_URL,
+                "by": by if by and by.pk != user_id else None,
+            },
         )
     return sent
 
 
-def focus_changed(assignment, before):
-    """To the Role Lead, whose focus changed from ``before``"""
+def focus_changed(assignment, before, by=None):
+    """To the Role Lead, whose focus ``by`` changed from ``before``"""
     role = assignment.role
     return send(
         User.objects.filter(pk=assignment.user_id),
@@ -343,13 +347,15 @@ def focus_changed(assignment, before):
             "assignment": assignment,
             "role": role,
             "before": before,
+            "by": by if by and by.pk != assignment.user_id else None,
             "url": settings.BASE_URL + role.get_absolute_url(),
         },
     )
 
 
-def members_changed(circle, joined, left):
-    """To the circle's Secretaries, like GlassFrog"""
+def members_changed(circle, joined, left, by=None):
+    """To the circle's Secretaries, like GlassFrog, naming ``by`` who
+    changed the roles"""
     from governance.roles.models import Assignment
 
     joined = list(User.objects.filter(pk__in=joined).order_by("full_name", "email"))
@@ -381,6 +387,7 @@ def members_changed(circle, joined, left):
             "circle": circle,
             "joined": joined,
             "left": left,
+            "by": by,
             "url": settings.BASE_URL + circle.get_absolute_url(),
         },
     )

@@ -5,6 +5,8 @@
 {% endif %}{% if left %}
 {% translate "Left" %}:{% for user in left %}
 * {{ user }}{% endfor %}
+{% endif %}{% if by %}
+{% blocktranslate with user=by %}Changed by {{ user }}.{% endblocktranslate %}
 {% endif %}
 {{ url }}
 {% endautoescape %}

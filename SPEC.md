@@ -544,7 +544,7 @@ roles archived by the circle turning back then (the outputs list them,
 they get (with their focus) and lose (not the circle's role in the super-circle, which
 follows the core roles), and the circle's Secretaries who joined and
 left the circle; changing a Role Lead's focus tells the Role Lead
-(`mails.focus_changed()`, nobody else, decided 2026-11-07); changes by adopted proposals are in their mails. Responses to proposals
+(`mails.focus_changed()`, nobody else, decided 2026-11-07). Assigning, removing and changing the focus name who did it ("Ada assigned you the role Cook in Kitchen.", "Changed by Ada."), not to themselves; elections and deactivations name nobody (decided 2026-11-11). Changes by adopted proposals are in their mails. Responses to proposals
 (`mails.response_given()`): questions and comments go to the proposer,
 the proposer's answers to everybody who asked or commented (also in an
 earlier round, unless they left the circle), requests for
