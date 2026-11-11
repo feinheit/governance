@@ -2812,12 +2812,12 @@ msgstr "%(user)s antwortet zum Vorschlag in %(circle)s, zu dem du gefragt oder k
 #: governance/templates/notifications/roles_changed.txt
 #, python-format
 msgid "You now hold %(role)s in %(circle)s."
-msgstr "Du hast jetzt %(role)s in %(circle)s."
+msgstr "Du hast jetzt die Rolle %(role)s in %(circle)s."
 
 #: governance/templates/notifications/roles_changed.txt
 #, python-format
 msgid "You don't hold %(role)s in %(circle)s anymore."
-msgstr "Du hast %(role)s in %(circle)s nicht mehr."
+msgstr "Du hast die Rolle %(role)s in %(circle)s nicht mehr."
 
 #: governance/templates/notifications/roles_changed.txt
 #, python-format
