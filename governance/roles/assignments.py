@@ -132,7 +132,7 @@ class AssignmentForm(ModelForm):
     def __init__(self, *args, role, **kwargs):
         super().__init__(*args, **kwargs)
         self.instance.role = role
-        if self.instance.pk:
+        if not self.instance._state.adding:
             # Only the focus changes, the title names the person
             del self.fields["user"]
         else:
