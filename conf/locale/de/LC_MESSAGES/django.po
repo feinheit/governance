@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 08:12+0100\n"
+"POT-Creation-Date: 2026-11-11 16:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -838,8 +838,9 @@ msgid "Your focus in %(role)s: %(focus)s"
 msgstr "Dein Fokus in %(role)s: %(focus)s"
 
 #: governance/notifications/mails.py
-msgid "none anymore"
-msgstr "keiner mehr"
+#, python-format
+msgid "Your focus in %(role)s was removed"
+msgstr "Dein Fokus in %(role)s wurde entfernt"
 
 #: governance/notifications/mails.py
 #, python-format
@@ -2726,8 +2727,8 @@ msgstr "Dein Fokus in %(role)s (%(circle)s) ist jetzt: %(focus)s"
 
 #: governance/templates/notifications/focus_changed.txt
 #, python-format
-msgid "You hold %(role)s (%(circle)s) without a focus now."
-msgstr "Du hast %(role)s (%(circle)s) jetzt ohne Fokus."
+msgid "Your focus in %(role)s (%(circle)s) was removed."
+msgstr "Dein Fokus in %(role)s (%(circle)s) wurde entfernt."
 
 #: governance/templates/notifications/focus_changed.txt
 #, python-format

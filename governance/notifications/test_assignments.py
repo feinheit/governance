@@ -116,7 +116,7 @@ class AssignmentMailsTest(TestCase):
             self.client.post(f"/assignments/{assignment.pk}/", {"user": self.eve.pk})
         self.assertEqual(
             self.outbox(),
-            [("eve@example.com", "Your focus in Cook (Kitchen): none anymore")],
+            [("eve@example.com", "Your focus in Cook (Kitchen) was removed")],
         )
 
     def test_focus_when_assigned(self):

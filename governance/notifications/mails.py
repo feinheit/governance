@@ -337,10 +337,10 @@ def focus_changed(assignment, before, by=None):
         User.objects.filter(pk=assignment.user_id),
         lambda: (
             _("Your focus in %(role)s: %(focus)s")
-            % {
-                "role": f"{role} ({role.circle})",
-                "focus": assignment.focus or _("none anymore"),
-            }
+            % {"role": f"{role} ({role.circle})", "focus": assignment.focus}
+            if assignment.focus
+            else _("Your focus in %(role)s was removed")
+            % {"role": f"{role} ({role.circle})"}
         ),
         "notifications/focus_changed.txt",
         {
