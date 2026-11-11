@@ -1605,6 +1605,11 @@ body:has(.wb-modal[open]) {
   position: relative;
   cursor: pointer;
 }
+/* Cells without tools (elected roles, those the user may not assign)
+   say so, the missing bubble isn't a glitch */
+.wb-matrix tbody td:not(.wb-matrix-editable, .wb-matrix-rest) {
+  cursor: not-allowed;
+}
 .wb-matrix-editable:focus-visible {
   outline: 2px solid var(--wb-circle-ink);
   outline-offset: -2px;
