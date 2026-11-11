@@ -14,7 +14,8 @@
 
   <section class="card mb-4">
     <div class="wb-matrix-scroll" data-fit="matrix">
-      <table class="wb-matrix">
+      {# Room after the last column for the label above the last group when it has few columns #}
+      <table class="wb-matrix {% if others and others|length < 3 or not others and people|length < 3 %}wb-matrix-label-room{% endif %}">
         <thead>
           <tr>
             <th></th>

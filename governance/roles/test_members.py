@@ -60,6 +60,10 @@ class CircleMembersTest(TestCase):
             ["Circle Rep"],
         )
         self.assertContains(response, 'class="wb-matrix-last-core"', count=1)
+        # Two others: room after the last column for the label above them
+        self.assertContains(response, "wb-matrix-label-room")
+        User.objects.create_user("max@example.com", full_name="Max")
+        self.assertNotContains(self.client.get(url), "wb-matrix-label-room")
 
         def marks(cells):
             return [
