@@ -22,8 +22,9 @@ active person. Everybody signed in sees everything except others' drafts.
   the assignments and with links, metrics and checklists. The pages of
   circles and roles link theirs.
 - **Search** finds people (by name, short name and mail address, with their circles),
-  roles, accountabilities, domains and policies containing all the words
-  entered.
+  roles, accountabilities, domains, policies and links (by title and
+  description) containing all the words entered. A link's description
+  may list keywords, e.g. for a section of the handbook.
 
 **Mail addresses** lists the addresses of everybody holding a role, of
 all Circle Leads, Facilitators, Secretaries and Circle Reps (for

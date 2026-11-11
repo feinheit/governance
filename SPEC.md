@@ -694,7 +694,10 @@ verify the mails; removed once they've proven themselves.
   without JavaScript.
 - **Search**: active people first (name, short name and mail address;
   with the circles whose roles they hold), then
-  roles, accountabilities, domains and policies, all terms matching,
+  roles, accountabilities, domains, policies and links (title and
+  description, which may hold keywords: rules for people as employees
+  live in the handbook, not in policies, and are found through links of
+  the roles keeping them), all terms matching,
   ignoring case and accents, in the texts as the pages show them
   (mentions with the current names, the core roles' constitutional
   texts); snippets as plain text. The API and `gov search` too.

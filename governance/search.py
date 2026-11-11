@@ -3,7 +3,9 @@
 All terms have to match (case-insensitive, ignoring accents) the texts as
 the pages show them: mentions with the roles' current names, the core
 roles with the constitution's texts, the active people's names, short
-names and mail addresses. The data is small enough for
+names and mail addresses, the links of active roles by their titles and
+descriptions (which may hold keywords: the handbook's sections are found
+this way). The data is small enough for
 searching in Python, no full text index needed.
 """
 
@@ -14,7 +16,14 @@ from django.shortcuts import render
 
 from governance.accounts.models import User
 from governance.roles.mentions import MENTION
-from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    Domain,
+    Link,
+    Policy,
+    Role,
+)
 
 
 LIMIT = 50
@@ -31,7 +40,7 @@ def _fold(text):
 
 def search_results(query):
     """Matching people (with their ``circles``), roles, accountabilities,
-    domains and policies (50 each)"""
+    domains, policies and links (50 each)"""
     terms = [_fold(term) for term in query.split()]
     if not terms:
         return {}
@@ -87,6 +96,13 @@ def search_results(query):
         "policies": matching(
             Policy.objects.active().select_related("role").order_by("pk"),
             lambda policy: [policy.title, policy.body],
+        ),
+        "links": matching(
+            Link.objects
+            .filter(role__archived_on=None)
+            .select_related("role__circle")
+            .order_by("pk"),
+            lambda link: [link.title, link.description],
         ),
     }
 

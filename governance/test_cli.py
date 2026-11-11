@@ -13,7 +13,14 @@ from django.utils.translation import deactivate_all
 from governance import cli_version
 from governance.accounts.models import APIToken, User
 from governance.proposals.models import Proposal
-from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    Domain,
+    Link,
+    Policy,
+    Role,
+)
 
 
 class Response:
@@ -121,6 +128,19 @@ class CLITest(TestCase):
         result = self.gov("search", "ada", "--json")
         self.assertIn('"people"', result.output)
         self.assertIn("Nothing found.", self.gov("search", "nothing").output)
+        # Links by their keywords
+        Link.objects.create(
+            role=self.cook,
+            title="Recipes",
+            url="https://example.com/recipes/",
+            description="Soup, stew",
+        )
+        result = self.gov("search", "stew")
+        self.assertIn("Links", result.output)
+        self.assertIn("Recipes", result.output)
+        self.assertIn("Cook", result.output)
+        result = self.gov("search", "stew", "--json")
+        self.assertIn('"https://example.com/recipes/"', result.output)
 
     def test_proposals(self):
         """Drafts with instructions, their problems, publishing"""

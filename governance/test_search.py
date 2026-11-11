@@ -3,7 +3,14 @@ import datetime as dt
 from django.test import TestCase
 
 from governance.accounts.models import User
-from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    Domain,
+    Link,
+    Policy,
+    Role,
+)
 
 
 class SearchTest(TestCase):
@@ -42,6 +49,33 @@ class SearchTest(TestCase):
             self.client.get("/search/", {"q": "nothing"}), "Nothing found"
         )
         self.assertNotContains(self.client.get("/search/"), "Nothing found")
+
+    def test_links(self):
+        """By title and description (keywords), leading to the page and to
+        the role keeping it; not those of archived roles"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=circle)
+        Link.objects.create(
+            role=cook,
+            title="Cooking and eating",
+            url="https://handbook.example.com/cooking/",
+            description="Kitchen duty, hours, groceries",
+        )
+        old = Role.objects.create(
+            name="Old cook", circle=circle, archived_on=dt.date(2026, 1, 1)
+        )
+        Link.objects.create(
+            role=old, title="Old recipes", url="https://example.com/recipes/"
+        )
+
+        response = self.client.get("/search/", {"q": "hours kitchen"})
+        self.assertContains(response, '<h2 class="h6 mb-0">Links</h2>', html=True)
+        self.assertContains(response, 'href="https://handbook.example.com/cooking/"')
+        self.assertContains(response, "Kitchen duty, hours, groceries")
+        self.assertContains(response, cook.get_absolute_url())
+        response = self.client.get("/search/", {"q": "recipes"})
+        self.assertContains(response, "Nothing found")
 
     def test_what_the_pages_show(self):
         """Mentions with the current names, not their markup; the core

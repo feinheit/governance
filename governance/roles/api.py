@@ -124,12 +124,25 @@ class PersonFoundOut(Schema):
         return absolute(obj)
 
 
+class FoundLinkOut(Schema):
+    """A link, with the role keeping it"""
+
+    id: int
+    title: str
+    url: str
+    description: str
+    role_id: int
+    role: str
+    role_url: str
+
+
 class SearchOut(Schema):
     people: list[PersonFoundOut]
     roles: list[RoleSummaryOut]
     accountabilities: list[FoundTextOut]
     domains: list[FoundTextOut]
     policies: list[PolicyOut]
+    links: list[FoundLinkOut]
 
 
 @router.get("circles/", response=list[CircleOut])
@@ -283,6 +296,7 @@ def search(request, q: str):
         "accountabilities": [],
         "domains": [],
         "policies": [],
+        "links": [],
     }
 
     def found(item):
@@ -298,6 +312,18 @@ def search(request, q: str):
         **results,
         "accountabilities": [found(a) for a in results["accountabilities"]],
         "domains": [found(d) for d in results["domains"]],
+        "links": [
+            {
+                "id": link.pk,
+                "title": link.title,
+                "url": link.url,
+                "description": link.description,
+                "role_id": link.role_id,
+                "role": link.role.name,
+                "role_url": absolute(link.role),
+            }
+            for link in results["links"]
+        ],
     }
 
 

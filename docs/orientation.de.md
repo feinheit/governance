@@ -23,8 +23,10 @@ anderer.
   Wunsch mit den Zuweisungen und mit Links, Metriken und Checklisten. Die
   Seiten der Kreise und Rollen verlinken ihre.
 - **Suchen** findet Personen (nach Name, Kurzname und Mailadresse, mit ihren Kreisen),
-  Rollen, Accountabilities, Domains und Policies, die alle eingegebenen
-  Wörter enthalten.
+  Rollen, Accountabilities, Domains, Policies und Links (nach Titel und
+  Beschreibung), die alle eingegebenen Wörter enthalten. Die
+  Beschreibung eines Links kann Stichwörter aufzählen, z.B. für einen
+  Abschnitt des Handbuchs.
 
 **Mailadressen** listet die Adressen aller mit einer Rolle, aller Circle
 Leads, Facilitators, Secretaries und Circle Reps (bei unbesetzten Rollen
