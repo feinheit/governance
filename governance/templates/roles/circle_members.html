@@ -26,6 +26,7 @@
                   {% translate "Not in this circle" %} <span class="text-body-secondary">{{ others|length }}</span>
                 </div>
               </th>{% endif %}
+            <th class="wb-matrix-rest"></th>
           </tr>
           <tr>
             <th scope="col"><span class="visually-hidden">{% translate "Role" %}</span></th>
@@ -37,6 +38,7 @@
                 <a href="{{ person.get_absolute_url }}">{{ person }}</a>
               </th>
             {% endfor %}
+            <th class="wb-matrix-rest"></th>
           </tr>
         </thead>
         <tbody>
@@ -81,6 +83,7 @@
                   </td>
                 {% endif %}
               {% endfor %}
+              <td class="wb-matrix-rest"></td>
             </tr>
           {% endfor %}
         </tbody>

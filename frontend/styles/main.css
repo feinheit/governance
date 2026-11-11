@@ -1511,8 +1511,15 @@ body:has(.wb-modal[open]) {
   max-height: max(20rem, calc(100dvh - var(--wb-fit-matrix, 0px) - 4.5rem));
 }
 .wb-matrix {
+  width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+}
+/* The rest of the width after the last person, room for the label above
+   the last group, which may be wider than its columns */
+.wb-matrix .wb-matrix-rest {
+  width: 100%;
+  min-width: 12rem;
 }
 .wb-matrix th,
 .wb-matrix td {
@@ -1568,8 +1575,8 @@ body:has(.wb-modal[open]) {
 /* Every other person's column striped, the name above it too (over the
    sticky names' background); the row under the pointer darkened over the
    stripes */
-.wb-matrix thead tr:last-child > :nth-child(even),
-.wb-matrix tbody tr > :nth-child(even) {
+.wb-matrix thead tr:last-child > :nth-child(even of :not(.wb-matrix-rest)),
+.wb-matrix tbody tr > :nth-child(even of :not(.wb-matrix-rest)) {
   background-image: linear-gradient(
     rgba(var(--bs-emphasis-color-rgb), 0.04),
     rgba(var(--bs-emphasis-color-rgb), 0.04)
