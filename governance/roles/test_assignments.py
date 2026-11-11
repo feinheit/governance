@@ -89,6 +89,10 @@ class AssignmentsTest(TestCase):
         with self.assertRaises(IntegrityError), transaction.atomic():
             Assignment.objects.create(role=self.cook, user=self.eve, focus="Salad")
 
+        # Only the focus changes, the title names the person
+        response = self.client.get(f"/assignments/{assignment.pk}/")
+        self.assertEqual(list(response.context["form"].fields), ["focus"])
+        self.assertContains(response, "Edit the focus of Eve in Cook")
         response = self.client.post(
             f"/assignments/{assignment.pk}/", {"user": self.ada.pk, "focus": "Salad"}
         )

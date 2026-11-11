@@ -133,8 +133,8 @@ class AssignmentForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.role = role
         if self.instance.pk:
-            self.fields["user"].disabled = True
-            self.fields["user"].queryset = User.objects.filter(pk=self.instance.user_id)
+            # Only the focus changes, the title names the person
+            del self.fields["user"]
         else:
             # Once per person, the focus lists everything (Assignment's
             # constraint): those holding the role already aren't offered
