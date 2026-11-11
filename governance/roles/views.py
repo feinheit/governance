@@ -255,9 +255,10 @@ def role_context(request, pk):
 
 
 def circle_members(request, pk):
-    """Who fills which of the circle's roles (its members, the core roles
-    first), with tools to assign, edit the focus and remove where allowed,
-    and the active people who aren't members; the circle's menu links it"""
+    """Who fills which of the circle's roles (the core roles first): its
+    members, then the active people who aren't members as columns on the
+    right, with tools to assign, edit the focus and remove where allowed;
+    the circle's menu links it"""
     circle = get_object_or_404(Role.objects.active().circles(), pk=pk)
     roles = list(
         circle.roles
@@ -267,6 +268,7 @@ def circle_members(request, pk):
     )
     roles = [r for r in roles if r.core_role] + [r for r in roles if not r.core_role]
     people = list(members(circle))
+    others = list(User.objects.active().exclude(pk__in=[p.pk for p in people]))
     rows = []
     for role in roles:
         # The cells' tools, the rights also make them amber (button_class)
@@ -284,8 +286,10 @@ def circle_members(request, pk):
                     "person": person,
                     "assignment": assignments.get(person.pk),
                     "stands_in": person.pk in stand_ins,
+                    # The line between members and the others
+                    "first_other": others and person == others[0],
                 }
-                for person in people
+                for person in [*people, *others]
             ],
         ))
     return render(
@@ -297,7 +301,7 @@ def circle_members(request, pk):
             "ancestors": [*circle.ancestors(), circle],
             "people": people,
             "rows": rows,
-            "others": User.objects.active().exclude(pk__in=[p.pk for p in people]),
+            "others": others,
         },
     )
 

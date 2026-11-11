@@ -1501,33 +1501,47 @@ body:has(.wb-modal[open]) {
 }
 
 /* Who fills which of a circle's roles (roles/circle_members.html): the
-   names upright above their columns, the roles stay visible when
-   scrolling sideways */
+   names upright above their columns, the members' first, then the
+   others' in gray after a line. The table fills the window below its
+   top (meeting.js's fitFlow(), with the legend below it) and scrolls on
+   its own, the names and the roles stay visible (sticky; the borders
+   separate, collapsed ones would scroll away) */
 .wb-matrix-scroll {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: max(20rem, calc(100dvh - var(--wb-fit-matrix, 0px) - 4.5rem));
 }
 .wb-matrix {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 .wb-matrix th,
 .wb-matrix td {
   padding: 0.35rem 0.6rem;
   border-bottom: 1px solid var(--bs-border-color);
 }
+.wb-matrix thead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
 .wb-matrix thead th {
   vertical-align: bottom;
   font-weight: normal;
+  background-color: var(--bs-card-bg);
 }
 .wb-matrix thead th a {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
 }
+.wb-matrix thead th:first-child,
 .wb-matrix tbody th {
   position: sticky;
   left: 0;
   z-index: 1;
-  background: var(--bs-card-bg);
+  background-color: var(--bs-card-bg);
+}
+.wb-matrix tbody th {
   font-weight: normal;
   text-align: start;
   white-space: nowrap;
@@ -1535,10 +1549,31 @@ body:has(.wb-modal[open]) {
 .wb-matrix td {
   text-align: center;
 }
-/* Every other person's column striped, the name above it too; the row
-   under the pointer darkened over the stripes */
-.wb-matrix tr > :nth-child(even) {
-  background: rgba(var(--bs-emphasis-color-rgb), 0.04);
+/* "Members" and "Not in this circle" above the names, as wide as they
+   need without widening the columns */
+.wb-matrix-group {
+  font-size: 0.875rem;
+  text-align: start;
+}
+.wb-matrix-group > div {
+  width: 0;
+  white-space: nowrap;
+}
+.wb-matrix .wb-matrix-first-other {
+  border-left: 2px solid var(--bs-border-color);
+}
+.wb-matrix-other a {
+  color: var(--bs-secondary-color);
+}
+/* Every other person's column striped, the name above it too (over the
+   sticky names' background); the row under the pointer darkened over the
+   stripes */
+.wb-matrix thead tr:last-child > :nth-child(even),
+.wb-matrix tbody tr > :nth-child(even) {
+  background-image: linear-gradient(
+    rgba(var(--bs-emphasis-color-rgb), 0.04),
+    rgba(var(--bs-emphasis-color-rgb), 0.04)
+  );
 }
 .wb-matrix tbody tr:hover > * {
   box-shadow: inset 0 0 0 100vmax rgba(var(--bs-emphasis-color-rgb), 0.06);
@@ -1572,7 +1607,8 @@ body:has(.wb-modal[open]) {
   position: absolute;
   bottom: calc(100% - 0.4rem);
   left: 50%;
-  z-index: 2;
+  /* Above the sticky names too (for the first row) */
+  z-index: 4;
   transform: translateX(-50%);
   gap: 0.25rem;
   padding: 0.25rem;

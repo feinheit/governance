@@ -53,9 +53,10 @@ which nobody holds are marked "election due", here and on the person
 pages of who holds them.
 "Members" in the menu "…" shows who fills which of the circle's roles,
 a column per member (a hollow dot where the Circle Leads hold a role
-nobody holds), and below it everybody who isn't a member. The Circle
-Leads assign, edit the focus and remove right in the table: hovering
-over or tapping a cell shows the buttons.
+nobody holds), then, on the right in gray, everybody who isn't a member.
+The Circle Leads assign, also people outside the circle, edit the focus
+and remove right in the table: hovering over or tapping a cell shows the
+buttons.
 
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove

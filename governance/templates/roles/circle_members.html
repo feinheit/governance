@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load governance i18n %}
 {% comment %}
-  Who fills which of the circle's roles, and who isn't a member
-  (views.circle_members); the circle's menu links it
+  Who fills which of the circle's roles, its members first, then who
+  isn't a member (views.circle_members); the circle's menu links it
 {% endcomment %}
 {% block title %}{% translate "Members" %} – {{ role }} – {{ block.super }}{% endblock %}
 
@@ -13,90 +13,82 @@
   </div>
 
   <section class="card mb-4">
-    <div class="card-header">
-      <h2 class="h6 mb-0">{% translate "Members" %} <span class="text-body-secondary">{{ people|length }}</span></h2>
-    </div>
-    {% if people %}
-      <div class="wb-matrix-scroll">
-        <table class="wb-matrix">
-          <thead>
+    <div class="wb-matrix-scroll" data-fit="matrix">
+      <table class="wb-matrix">
+        <thead>
+          <tr>
+            <th></th>
+            {% if people %}<th class="wb-matrix-group" colspan="{{ people|length }}">
+                <div>{% translate "Members" %} <span class="text-body-secondary">{{ people|length }}</span></div>
+              </th>{% endif %}
+            {% if others %}<th class="wb-matrix-group wb-matrix-first-other" colspan="{{ others|length }}">
+                <div>
+                  {% translate "Not in this circle" %} <span class="text-body-secondary">{{ others|length }}</span>
+                </div>
+              </th>{% endif %}
+          </tr>
+          <tr>
+            <th scope="col"><span class="visually-hidden">{% translate "Role" %}</span></th>
+            {% for person in people %}
+              <th scope="col"><a href="{{ person.get_absolute_url }}">{{ person }}</a></th>
+            {% endfor %}
+            {% for person in others %}
+              <th scope="col" class="wb-matrix-other {% if forloop.first %}wb-matrix-first-other{% endif %}">
+                <a href="{{ person.get_absolute_url }}">{{ person }}</a>
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row_role, cells in rows %}
             <tr>
-              <th scope="col"><span class="visually-hidden">{% translate "Role" %}</span></th>
-              {% for person in people %}
-                <th scope="col"><a href="{{ person.get_absolute_url }}">{{ person }}</a></th>
+              <th scope="row">
+                <a href="{{ row_role.get_absolute_url }}">{{ row_role }}</a>
+                {% if row_role.is_circle %}<span class="badge wb-tone-circle">{% translate "Circle" %}</span>{% endif %}
+              </th>
+              {% for cell in cells %}
+                {% if cell.assignment and row_role.can_assign or cell.assignment and row_role.can_end or not cell.assignment and row_role.can_assign %}
+                  <td class="wb-matrix-editable {% if cell.first_other %}wb-matrix-first-other{% endif %}" tabindex="0">
+                    {% include "roles/_matrix_mark.html" %}
+                    <span class="wb-matrix-tools">
+                      {% if cell.assignment %}
+                        {% if row_role.can_assign %}<a
+                            {% button_class row_role.can_assign title=_("Edit focus") %}
+                            href="{% url 'assignment_update' cell.assignment.pk %}?next={{ request.path|urlencode }}"
+                            data-modal
+                          >{% icon "pencil" %}<span
+                              class="visually-hidden"
+                            >{% translate "Edit focus" %}</span></a>{% endif %}
+                        {% if row_role.can_end %}<a
+                            {% button_class row_role.can_end "btn-destructive" title=_("Remove") %}
+                            href="{% url 'assignment_end' cell.assignment.pk %}?next={{ request.path|urlencode }}"
+                            data-modal
+                          >{% icon "trash" %}<span
+                              class="visually-hidden"
+                            >{% translate "Remove" %}</span></a>{% endif %}
+                      {% else %}
+                        <a
+                          {% button_class row_role.can_assign title=_("Assign") %}
+                          href="{% url 'role_assignments' row_role.pk %}?user={{ cell.person.pk }}&amp;next={{ request.path|urlencode }}"
+                          data-modal
+                        >{% icon "plus-lg" %}<span class="visually-hidden">{% translate "Assign" %}</span></a>
+                      {% endif %}
+                    </span>
+                  </td>
+                {% else %}
+                  <td {% if cell.first_other %}class="wb-matrix-first-other"{% endif %}>
+                    {% include "roles/_matrix_mark.html" %}
+                  </td>
+                {% endif %}
               {% endfor %}
             </tr>
-          </thead>
-          <tbody>
-            {% for row_role, cells in rows %}
-              <tr>
-                <th scope="row">
-                  <a href="{{ row_role.get_absolute_url }}">{{ row_role }}</a>
-                  {% if row_role.is_circle %}<span
-                      class="badge wb-tone-circle"
-                    >{% translate "Circle" %}</span>{% endif %}
-                </th>
-                {% for cell in cells %}
-                  {% if cell.assignment and row_role.can_assign or cell.assignment and row_role.can_end or not cell.assignment and row_role.can_assign %}
-                    <td class="wb-matrix-editable" tabindex="0">
-                      {% include "roles/_matrix_mark.html" %}
-                      <span class="wb-matrix-tools">
-                        {% if cell.assignment %}
-                          {% if row_role.can_assign %}<a
-                              {% button_class row_role.can_assign title=_("Edit focus") %}
-                              href="{% url 'assignment_update' cell.assignment.pk %}?next={{ request.path|urlencode }}"
-                              data-modal
-                            >{% icon "pencil" %}<span
-                                class="visually-hidden"
-                              >{% translate "Edit focus" %}</span></a>{% endif %}
-                          {% if row_role.can_end %}<a
-                              {% button_class row_role.can_end "btn-destructive" title=_("Remove") %}
-                              href="{% url 'assignment_end' cell.assignment.pk %}?next={{ request.path|urlencode }}"
-                              data-modal
-                            >{% icon "trash" %}<span
-                                class="visually-hidden"
-                              >{% translate "Remove" %}</span></a>{% endif %}
-                        {% else %}
-                          <a
-                            {% button_class row_role.can_assign title=_("Assign") %}
-                            href="{% url 'role_assignments' row_role.pk %}?user={{ cell.person.pk }}&amp;next={{ request.path|urlencode }}"
-                            data-modal
-                          >{% icon "plus-lg" %}<span class="visually-hidden">{% translate "Assign" %}</span></a>
-                        {% endif %}
-                      </span>
-                    </td>
-                  {% else %}
-                    <td>{% include "roles/_matrix_mark.html" %}</td>
-                  {% endif %}
-                {% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer small text-body-secondary d-flex flex-wrap gap-3">
-        <span><span class="wb-matrix-mark"></span> {% translate "Holds the role" %}</span>
-        <span><span class="wb-matrix-mark wb-matrix-stands-in"></span> {% translate "Held by the Circle Leads" %}</span>
-      </div>
-    {% else %}
-      <div class="card-body text-body-secondary">{% translate "Nobody is a member of this circle yet." %}</div>
-    {% endif %}
-  </section>
-
-  <section class="card mb-4">
-    <div class="card-header">
-      <h2 class="h6 mb-0">
-        {% translate "Not in this circle" %} <span class="text-body-secondary">{{ others|length }}</span>
-      </h2>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <ul class="list-group list-group-flush">
-      {% for user in others %}
-        <li class="list-group-item wb-row-link">
-          <a class="wb-row-title" href="{{ user.get_absolute_url }}">{{ user }}</a>
-        </li>
-      {% empty %}
-        <li class="list-group-item text-body-secondary">{% translate "Everybody is a member of this circle." %}</li>
-      {% endfor %}
-    </ul>
+    <div class="card-footer small text-body-secondary d-flex flex-wrap gap-3">
+      <span><span class="wb-matrix-mark"></span> {% translate "Holds the role" %}</span>
+      <span><span class="wb-matrix-mark wb-matrix-stands-in"></span> {% translate "Held by the Circle Leads" %}</span>
+    </div>
   </section>
 {% endblock content %}

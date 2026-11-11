@@ -61,13 +61,14 @@ class CircleMembersTest(TestCase):
                 for cell in cells
             ]
 
-        self.assertEqual(marks(rows["Cook"]), [None, "Soup"])
+        # Bob and Eve, then the active people who aren't members (also
+        # those without roles) as columns on the right
+        self.assertEqual(marks(rows["Cook"]), [None, "Soup", None, None])
         # Nobody holds the Dishwasher: the Circle Lead does (1.4.2), nobody
         # an unfilled Circle Rep
-        self.assertEqual(marks(rows["Dishwasher"]), ["stands in", None])
-        self.assertEqual(marks(rows["Circle Rep"]), [None, None])
+        self.assertEqual(marks(rows["Dishwasher"]), ["stands in", None, None, None])
+        self.assertEqual(marks(rows["Circle Rep"]), [None, None, None, None])
         self.assertContains(response, "Soup")
-        # Active people who aren't members, also those without roles
         self.assertEqual(list(response.context["others"]), [self.ada, self.zoe])
         self.assertContains(response, self.zoe.get_absolute_url())
 
@@ -84,6 +85,8 @@ class CircleMembersTest(TestCase):
             # Bob holds the unfilled Dishwasher as Circle Lead
             f"/roles/{self.dishwasher.pk}/assignments/?user={self.bob.pk}&amp;next={url}",
             f"/roles/{self.cook.pk}/assignments/?user={self.bob.pk}&amp;next={url}",
+            # Also people who aren't members yet
+            f"/roles/{self.cook.pk}/assignments/?user={self.zoe.pk}&amp;next={url}",
         ]
         self.client.force_login(self.zoe)
         response = self.client.get(url)

@@ -665,11 +665,14 @@ verify the mails; removed once they've proven themselves.
   "…"): a matrix of its roles (core roles first) and its members
   (`permissions.members()`, the columns), filled where somebody holds the
   role, hollow where the Circle Leads hold an unfilled one
-  (`role_leads()`), and the active people who aren't members (also those
-  without roles). Hovering over or focusing a cell shows its tools in a
+  (`role_leads()`), then the active people who aren't members (also
+  those without roles) as columns on the right, to assign them directly.
+  It fills the window below its top (`fitFlow()`) with the names and the
+  roles sticky. Hovering over or focusing a cell shows its tools in a
   bubble (CSS only) where allowed: assign the person (`?user=` preselects
-  them), edit the focus, remove; in modals, back to the matrix. A matrix of the whole organization breaks down beyond a
-  few dozen people (decided 2026-11-11).
+  them), edit the focus, remove; in modals, back to the matrix. A matrix
+  of the whole organization breaks down beyond a few dozen people
+  (decided 2026-11-11).
 - **Person page**: roles grouped by circle in depth-first order, earlier
   roles (due elections marked); one's own also drafts, proposals waiting
   for a response, open meetings and the settings.
