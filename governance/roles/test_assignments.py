@@ -73,9 +73,17 @@ class AssignmentsTest(TestCase):
             self.assertNotContains(response, "since 01.12.2026")
 
         # The same person again, also with another focus: one assignment
-        # per person, the focus lists everything
+        # per person, the focus lists everything, so the form doesn't offer
+        # those holding the role already
+        choices = self.client.get(url).context["form"].fields["user"].queryset
+        self.assertNotIn(self.eve, choices)
+        self.assertIn(self.ada, choices)
         response = self.client.post(url, {"user": self.eve.pk, "focus": "Salad"})
-        self.assertContains(response, "Eve already holds this role.")
+        self.assertFormError(
+            response.context["form"],
+            "user",
+            "Select a valid choice. That choice is not one of the available choices.",
+        )
         from django.db import IntegrityError, transaction
 
         with self.assertRaises(IntegrityError), transaction.atomic():

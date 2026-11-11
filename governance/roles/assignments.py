@@ -2,7 +2,6 @@
 
 from functools import partial
 
-from django import forms
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
@@ -133,28 +132,18 @@ class AssignmentForm(ModelForm):
     def __init__(self, *args, role, **kwargs):
         super().__init__(*args, **kwargs)
         self.instance.role = role
-        self.fields["user"].queryset = User.objects.active()
+        if self.instance.pk:
+            self.fields["user"].disabled = True
+            self.fields["user"].queryset = User.objects.filter(pk=self.instance.user_id)
+        else:
+            # Once per person, the focus lists everything (Assignment's
+            # constraint): those holding the role already aren't offered
+            self.fields["user"].queryset = User.objects.active().exclude(
+                assignments__in=role.assignments.current()
+            )
         self.fields["focus"].help_text = _(
             "Optional, e.g. a customer or a topic the person takes care of."
         )
-        if self.instance.pk:
-            self.fields["user"].disabled = True
-
-    def clean(self):
-        data = super().clean()
-        user = data.get("user")
-        if user and (
-            Assignment.objects
-            .current()
-            .filter(role=self.instance.role, user=user)
-            .exclude(pk=self.instance.pk)
-            .exists()
-        ):
-            # Once, the focus lists everything (Assignment's constraint)
-            raise forms.ValidationError(
-                _("%(user)s already holds this role.") % {"user": user}
-            )
-        return data
 
 
 def assignable_role(request, pk, check=can_assign):
