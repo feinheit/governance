@@ -340,8 +340,8 @@ h3,
   gap: 0.25rem 1rem;
 }
 
-/* Rows with small buttons only (the Role Leads): beside them on phones too,
-   one line centered with them */
+/* Rows with small buttons or handles only (the Role Leads, accountabilities
+   and domains): beside them on phones too, centered with them */
 .wb-row.wb-row-compact {
   flex-direction: row;
   align-items: center;

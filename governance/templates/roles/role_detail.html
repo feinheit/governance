@@ -145,7 +145,7 @@
             {% endfor %}
             {% for domain in domains %}
               <li
-                class="list-group-item wb-row align-items-center"
+                class="list-group-item wb-row wb-row-compact"
                 {% if can_reorder_domains %}data-sortable-item="{{ domain.pk }}"{% endif %}
               >
                 {% if can_reorder_domains %}{% include "roles/_drag_handle.html" %}{% endif %}
@@ -196,7 +196,7 @@
           {% endfor %}
           {% for accountability in accountabilities %}
             {% if can_reorder_accountabilities %}
-              <li class="list-group-item wb-row" data-sortable-item="{{ accountability.pk }}">
+              <li class="list-group-item wb-row wb-row-compact" data-sortable-item="{{ accountability.pk }}">
                 {% include "roles/_drag_handle.html" %}
                 <div class="wb-row-main wb-markdown">{{ accountability.text|markdown }}</div>
                 {% include "roles/_move_arrows.html" with kind="accountabilities" text=accountability %}
