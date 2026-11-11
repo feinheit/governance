@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 06:31+0100\n"
+"POT-Creation-Date: 2026-11-11 07:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -898,6 +898,7 @@ msgstr "unbekannt"
 #: governance/proposals/describe.py governance/proposals/views.py
 #: governance/templates/proposals/_move_into.html
 #: governance/templates/proposals/_move_out.html
+#: governance/templates/roles/circle_members.html
 msgid "Role"
 msgstr "Rolle"
 
@@ -912,6 +913,7 @@ msgstr "Policy"
 #: governance/proposals/describe.py governance/proposals/views.py
 #: governance/templates/history/role_as_of.html
 #: governance/templates/roles/_role_rows.html
+#: governance/templates/roles/circle_members.html
 #: governance/templates/roles/person_detail.html
 #: governance/templates/roles/role_context.html
 #: governance/templates/roles/role_detail.html
@@ -1758,7 +1760,7 @@ msgstr "Niemand"
 msgid "Held by the super-circle's Circle Leads"
 msgstr "Von den Circle Leads des übergeordneten Kreises besetzt"
 
-#: governance/roles/models.py
+#: governance/roles/models.py governance/templates/roles/circle_members.html
 msgid "Held by the Circle Leads"
 msgstr "Von den Circle Leads besetzt"
 
@@ -3118,6 +3120,27 @@ msgstr "Als Liste"
 #: governance/templates/roles/circle_browser.html
 msgid "No circles yet."
 msgstr "Noch keine Kreise."
+
+#: governance/templates/roles/circle_members.html
+#: governance/templates/roles/role_detail.html
+msgid "Members"
+msgstr "Mitglieder"
+
+#: governance/templates/roles/circle_members.html
+msgid "Holds the role"
+msgstr "Hat die Rolle"
+
+#: governance/templates/roles/circle_members.html
+msgid "Nobody is a member of this circle yet."
+msgstr "Der Kreis hat noch keine Mitglieder."
+
+#: governance/templates/roles/circle_members.html
+msgid "Not in this circle"
+msgstr "Nicht in diesem Kreis"
+
+#: governance/templates/roles/circle_members.html
+msgid "Everybody is a member of this circle."
+msgstr "Alle sind Mitglieder dieses Kreises."
 
 #: governance/templates/roles/mail_addresses.html
 msgid "To copy into a mail. Unfilled Facilitator and Secretary roles count the person standing in: the Secretary or Facilitator, else the Circle Leads."

@@ -51,6 +51,9 @@ fills a role, constitution 1.1; a circle's Role Leads are the Circle
 Leads inside it, 1.4). Elected roles whose term ends within 14 days or
 which nobody holds are marked "election due", here and on the person
 pages of who holds them.
+"Members" in the menu "…" shows who fills which of the circle's roles,
+a column per member (a hollow dot where the Circle Leads hold a role
+nobody holds), and below it everybody who isn't a member.
 
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove

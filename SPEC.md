@@ -661,6 +661,13 @@ verify the mails; removed once they've proven themselves.
   elections and `acting_secretaries()`), Circle Reps, and each circle's
   members (its menu links them). Names as they are, quoted when needed,
   not encoded for headers.
+- **Members of a circle** (`/roles/<pk>/members/`, the circle's menu
+  "…"): a matrix of its roles (core roles first) and its members
+  (`permissions.members()`, the columns), filled where somebody holds the
+  role, hollow where the Circle Leads hold an unfilled one
+  (`role_leads()`), and the active people who aren't members (also those
+  without roles). A matrix of the whole organization breaks down beyond a
+  few dozen people (decided 2026-11-11).
 - **Person page**: roles grouped by circle in depth-first order, earlier
   roles (due elections marked); one's own also drafts, proposals waiting
   for a response, open meetings and the settings.

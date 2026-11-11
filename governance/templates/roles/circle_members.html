@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load governance i18n %}
+{% comment %}
+  Who fills which of the circle's roles, and who isn't a member
+  (views.circle_members); the circle's menu links it
+{% endcomment %}
+{% block title %}{% translate "Members" %} – {{ role }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  {% include "roles/_breadcrumbs.html" %}
+  <div class="wb-page-header">
+    <h1>{% translate "Members" %}</h1>
+  </div>
+
+  <section class="card mb-4">
+    <div class="card-header">
+      <h2 class="h6 mb-0">{% translate "Members" %} <span class="text-body-secondary">{{ people|length }}</span></h2>
+    </div>
+    {% if people %}
+      <div class="wb-matrix-scroll">
+        <table class="wb-matrix">
+          <thead>
+            <tr>
+              <th scope="col"><span class="visually-hidden">{% translate "Role" %}</span></th>
+              {% for person in people %}
+                <th scope="col"><a href="{{ person.get_absolute_url }}">{{ person }}</a></th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row_role, cells in rows %}
+              <tr>
+                <th scope="row">
+                  <a href="{{ row_role.get_absolute_url }}">{{ row_role }}</a>
+                  {% if row_role.is_circle %}<span
+                      class="badge wb-tone-circle"
+                    >{% translate "Circle" %}</span>{% endif %}
+                </th>
+                {% for cell in cells %}
+                  <td>
+                    {% if cell.assignment %}
+                      <span
+                        class="wb-matrix-mark"
+                        title="{{ cell.assignment.focus|default:_('Holds the role') }}"
+                      ></span>
+                      <span class="visually-hidden">{% translate "Holds the role" %}{% if cell.assignment.focus %}:
+                          {{ cell.assignment.focus }}{% endif %}</span>
+                    {% elif cell.stands_in %}
+                      <span
+                        class="wb-matrix-mark wb-matrix-stands-in"
+                        title="{% translate 'Held by the Circle Leads' %}"
+                      ></span>
+                      <span class="visually-hidden">{% translate "Held by the Circle Leads" %}</span>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer small text-body-secondary d-flex flex-wrap gap-3">
+        <span><span class="wb-matrix-mark"></span> {% translate "Holds the role" %}</span>
+        <span><span class="wb-matrix-mark wb-matrix-stands-in"></span> {% translate "Held by the Circle Leads" %}</span>
+      </div>
+    {% else %}
+      <div class="card-body text-body-secondary">{% translate "Nobody is a member of this circle yet." %}</div>
+    {% endif %}
+  </section>
+
+  <section class="card mb-4">
+    <div class="card-header">
+      <h2 class="h6 mb-0">
+        {% translate "Not in this circle" %} <span class="text-body-secondary">{{ others|length }}</span>
+      </h2>
+    </div>
+    <ul class="list-group list-group-flush">
+      {% for user in others %}
+        <li class="list-group-item wb-row-link">
+          <a class="wb-row-title" href="{{ user.get_absolute_url }}">{{ user }}</a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-body-secondary">{% translate "Everybody is a member of this circle." %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endblock content %}

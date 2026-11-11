@@ -97,6 +97,10 @@
               <hr class="dropdown-divider">
               <a
                 class="dropdown-item"
+                href="{% url 'circle_members' role.pk %}"
+              >{% translate "Members" %}</a>
+              <a
+                class="dropdown-item"
                 href="{% url 'mail_addresses' %}#circle-{{ role.pk }}"
               >{% translate "Mail addresses of the members" %}</a>
             {% endif %}

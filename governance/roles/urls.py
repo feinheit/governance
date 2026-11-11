@@ -17,6 +17,7 @@ urlpatterns = [
     path("organization/", views.organization, name="organization"),
     path("roles/<int:pk>/", views.role_detail, name="role"),
     path("roles/<int:pk>/context/", views.role_context, name="role_context"),
+    path("roles/<int:pk>/members/", views.circle_members, name="circle_members"),
     path(
         "roles/<int:pk>/assignments/",
         assignments.assignments,

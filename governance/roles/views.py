@@ -31,7 +31,9 @@ from governance.roles.permissions import (
     can_end_assignment,
     can_start_meeting,
     circle_leads,
+    members,
     proposer_roles,
+    role_leads,
 )
 
 
@@ -248,6 +250,51 @@ def role_context(request, pk):
             if role.is_circle
             else gettext("Domains and policies affecting this role"),
             "circles": affecting(role),
+        },
+    )
+
+
+def circle_members(request, pk):
+    """Who fills which of the circle's roles (its members, the core roles
+    first), and the active people who aren't members; the circle's menu
+    links it"""
+    circle = get_object_or_404(Role.objects.active().circles(), pk=pk)
+    roles = list(
+        circle.roles
+        .active()
+        .prefetch_related(current_assignments())
+        .order_by("position", "name")
+    )
+    roles = [r for r in roles if r.core_role] + [r for r in roles if not r.core_role]
+    people = list(members(circle))
+    rows = []
+    for role in roles:
+        assignments = {a.user_id: a for a in role.current_assignments}
+        # Nobody holds it: the Circle Leads do (1.4.2), see role_leads()
+        stand_ins = (
+            set() if assignments else set(role_leads(role).values_list("pk", flat=True))
+        )
+        rows.append((
+            role,
+            [
+                {"assignment": assignments[person.pk]}
+                if person.pk in assignments
+                else {"stands_in": True}
+                if person.pk in stand_ins
+                else None
+                for person in people
+            ],
+        ))
+    return render(
+        request,
+        "roles/circle_members.html",
+        {
+            "role": circle,
+            # The circle above the title, the page is about it
+            "ancestors": [*circle.ancestors(), circle],
+            "people": people,
+            "rows": rows,
+            "others": User.objects.active().exclude(pk__in=[p.pk for p in people]),
         },
     )
 

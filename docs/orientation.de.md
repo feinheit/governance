@@ -52,6 +52,10 @@ Leads (wer eine Rolle ausfüllt, Verfassung 1.1; die Role Leads eines
 Kreises sind die Circle Leads darin, 1.4). Gewählte Rollen, deren
 Amtszeit innert 14 Tagen endet oder die niemand hat, sind mit "Wahl
 fällig" markiert, hier und auf der Seite der Person, die sie hat.
+"Mitglieder" im Menü "…" zeigt, wer welche Rollen des Kreises ausfüllt,
+eine Spalte pro Mitglied (ein leerer Kreis, wo die Circle Leads eine
+Rolle haben, die niemand hat), und darunter alle, die nicht Mitglied
+sind.
 
 Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,
 wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und
