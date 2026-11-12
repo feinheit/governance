@@ -82,6 +82,30 @@ MODELS = {
 FIELDS = {Link: ["title", "url", "description"], Note: ["title", "body"]}
 
 
+def references(role):
+    """The role's links and notes, one list in their order"""
+    return sorted(
+        [*role.links.all(), *role.notes.all()],
+        key=lambda item: (item.position, item._meta.model_name, item.pk),
+    )
+
+
+def next_position(role, model):
+    """After the others: links and notes share their positions"""
+    if model in {Link, Note}:
+        items = references(role)
+    else:
+        items = model.objects.filter(role=role)
+    return max((item.position + 1 for item in items), default=0)
+
+
+def order_key(item):
+    """Links and notes are ``link-3`` and ``note-5``, texts their IDs"""
+    if isinstance(item, (Link, Note)):
+        return f"{item._meta.model_name}-{item.pk}"
+    return str(item.pk)
+
+
 class ItemForm(ModelForm):
     class Meta:
         fields = ["description", "frequency", "link"]
@@ -104,10 +128,7 @@ def item_edit(request, kind, pk=None, role_pk=None):
         role = item.role
     else:
         role = get_object_or_404(Role, pk=role_pk)
-        item = model(
-            role=role,
-            position=model.objects.filter(role=role).count(),
-        )
+        item = model(role=role, position=next_position(role, model))
     if not (right := can_edit_items(request.user, role, model)):
         raise PermissionDenied
     form = item_form(model)(request.POST or None, instance=item)
@@ -164,15 +185,18 @@ def item_delete(request, kind, pk):
 
 
 # Their order isn't governance: anybody changes it, the history doesn't
-# count it as a change (decided 2026-11-09)
-ORDERED_TEXTS = {"accountabilities", "domains"}
+# count it as a change (decided 2026-11-09); links and notes are one list
+ORDERED_TEXTS = {"accountabilities", "domains", "references"}
 
 
 def reorderable_texts(pk, kind):
-    """The role and its accountabilities or domains"""
+    """The role and its accountabilities, domains or references (links and
+    notes)"""
     if kind not in ORDERED_TEXTS:
         raise Http404
     role = get_object_or_404(Role.objects.active(), pk=pk)
+    if kind == "references":
+        return role, references(role)
     return role, list(getattr(role, kind).all())
 
 
@@ -186,27 +210,24 @@ def save_order(texts):
 @require_POST
 @transaction.atomic
 def texts_order(request, pk, kind):
-    """The accountabilities or domains dragged into an order
-    (frontend/sortable.js): their IDs in the new order, missing ones keep
-    theirs after them"""
+    """The accountabilities, domains or references dragged into an order
+    (frontend/sortable.js): their keys (``order_key()``) in the new order,
+    missing ones keep theirs after them"""
     role, texts = reorderable_texts(pk, kind)
-    by_pk = {text.pk: text for text in texts}
-    ids = [
-        int(value)
-        for value in request.POST.getlist("ids")
-        if value.isdigit() and int(value) in by_pk
-    ]
-    order = [*dict.fromkeys(ids), *(pk for pk in by_pk if pk not in ids)]
-    save_order([by_pk[pk] for pk in order])
+    by_key = {order_key(text): text for text in texts}
+    keys = [key for key in request.POST.getlist("ids") if key in by_key]
+    order = [*dict.fromkeys(keys), *(key for key in by_key if key not in keys)]
+    save_order([by_key[key] for key in order])
     return redirect(role)
 
 
 @require_POST
 @transaction.atomic
-def text_move(request, pk, kind, text_pk):
-    """Moves an accountability or domain up or down, without JavaScript"""
+def text_move(request, pk, kind, key):
+    """Moves an accountability, domain or reference up or down, without
+    JavaScript"""
     role, texts = reorderable_texts(pk, kind)
-    index = next((i for i, text in enumerate(texts) if text.pk == text_pk), None)
+    index = next((i for i, text in enumerate(texts) if order_key(text) == key), None)
     if index is None:
         raise Http404
     other = index + (-1 if request.POST.get("direction") == "up" else 1)

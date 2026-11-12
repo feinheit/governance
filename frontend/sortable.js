@@ -1,6 +1,7 @@
 // Lists reordered by dragging their items' handles (SortableJS, a chunk of
 // its own): the agenda (meetings/_agenda.html, the secretary) and a role's
-// accountabilities (roles/role_detail.html, everyone). The list's
+// accountabilities, domains, links and notes (roles/role_detail.html,
+// everyone). The list's
 // data-sortable names the hidden form posting the new order (ids), which
 // htmx sends in the meeting; with data-sortable-quiet it's sent in the
 // background, the page stays as it is. SortableJS is set up when a handle

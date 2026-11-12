@@ -12,8 +12,9 @@ Einiges ändert sich ohne Governance:
 | Einstellungen (Frist für asynchrone Vorschläge, durch Policy gewählte Rollen) | Secretary |
 
 - Notizen halten fest, was bei der Arbeit einer Rolle hilft, z.B. eine
-  Checkliste oder wie etwas bestellt wird, in Markdown; "Notizen" auf der
-  Rollenseite, ein Klick klappt sie auf. Wie Links stehen sie auf Wunsch
+  Checkliste oder wie etwas bestellt wird, in Markdown; "Links und
+  Notizen" auf der Rollenseite, in beliebiger Reihenfolge, ein Klick
+  klappt eine Notiz auf. Wie Links stehen sie auf Wunsch
   in der Geschichte, Mails gibt es dazu keine.
 - Ein Kreis kann mehrere Circle Leads haben, alle dürfen all das. Die
   Circle Leads eines Sub-Kreises weisen die Circle Leads des

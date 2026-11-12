@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 08:16+0100\n"
+"POT-Creation-Date: 2026-11-12 08:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -721,7 +721,6 @@ msgstr "Du hast keine dieser Rollen."
 
 #: governance/meetings/views.py governance/templates/meetings/_notes.html
 #: governance/templates/notifications/meeting_ended.txt
-#: governance/templates/roles/role_detail.html
 #: governance/templates/search/search.html
 msgid "Notes"
 msgstr "Notizen"
@@ -2477,7 +2476,6 @@ msgstr "Keine angenommenen Vorschläge, keine Wahlen, keine Ergebnisse."
 
 #: governance/templates/meetings/_progress.html
 #: governance/templates/roles/_governance_lists.txt
-#: governance/templates/roles/role_detail.html
 #: governance/templates/search/search.html
 msgid "Links"
 msgstr "Links"
@@ -3320,16 +3318,16 @@ msgid "Add a metric"
 msgstr "Metrik hinzufügen"
 
 #: governance/templates/roles/role_detail.html
-msgid "E.g. where the projects and actions are managed."
-msgstr "Z.B. wo die Projekte und Aktionen verwaltet werden."
+msgid "Links and notes"
+msgstr "Links und Notizen"
+
+#: governance/templates/roles/role_detail.html
+msgid "E.g. where the projects and actions are managed, a checklist or how something is ordered."
+msgstr "Z.B. wo die Projekte und Aktionen verwaltet werden, eine Checkliste oder wie etwas bestellt wird."
 
 #: governance/templates/roles/role_detail.html
 msgid "Add a link"
 msgstr "Link hinzufügen"
-
-#: governance/templates/roles/role_detail.html
-msgid "E.g. a checklist or how something is ordered."
-msgstr "Z.B. eine Checkliste oder wie etwas bestellt wird."
 
 #: governance/templates/roles/role_detail.html
 msgid "Add a note"

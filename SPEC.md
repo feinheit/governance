@@ -144,7 +144,9 @@ accountability texts are known where proposals or `roles.json` have them.
   switchover: the v3 export had none); like links, anybody edits them,
   the audit log keeps them, the history shows them on request, no mails
   (decided 2026-11-12). A core role's notes stay with it (a Circle
-  Lead's), they aren't moved to the circle.
+  Lead's), they aren't moved to the circle. Links and notes are one
+  card on the role's page, one list anybody orders (they share their
+  `position`, new ones last: `editing.references()`).
 - **Users**: everybody named in GlassFrog's data, matched by email,
   people who left as inactive users. Afterwards admins add people, and
   deactivate those who leave in the Django admin, which ends their
@@ -648,8 +650,8 @@ verify the mails; removed once they've proven themselves.
   policies, which the link opens, `frontend/open_details.js`), accountabilities, its policies, Role Leads with focus and
   terms (next to the name; lists of current assignments don't say since
   when, the focus is often younger: `roles/_assignment_note.html`), pending proposals
-  (also for its inside), metrics, checklists, links, notes (folded,
-  `#note-ID` unfolds one), history (its former
+  (also for its inside), metrics, checklists, links and notes (one card,
+  notes folded, `#note-ID` unfolds one), history (its former
   names, the latest proposals and changes without the assignments and
   the counts of texts not recorded, `recent_history()`: GlassFrog
   renamed many roles without a proposal).

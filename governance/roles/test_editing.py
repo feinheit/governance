@@ -250,3 +250,38 @@ class EditingTest(TestCase):
             self.client.post(order, {"ids": [cooking.pk]}).status_code, 404
         )
         self.assertEqual(texts(), ["Tasting", "Frying", "Cooking"])
+
+    def test_links_and_notes_order(self):
+        """Links and notes are one list in one card, anybody orders them;
+        new ones come last"""
+        from governance.roles.models import Link, Note
+
+        self.client.force_login(self.eve)
+        url = f"/roles/{self.cook.pk}/"
+        self.client.post(
+            f"{url}links/new/",
+            {"title": "Board", "url": "https://example.com/", "description": ""},
+        )
+        self.client.post(f"{url}notes/new/", {"title": "Pots", "body": ""})
+        self.client.post(
+            f"{url}links/new/",
+            {"title": "Recipes", "url": "https://example.com/r", "description": ""},
+        )
+        board, recipes = Link.objects.order_by("pk")
+        pots = Note.objects.get()
+
+        def titles():
+            response = self.client.get(url)
+            content = response.content.decode()
+            return sorted(["Board", "Pots", "Recipes"], key=content.index)
+
+        response = self.client.get(url)
+        self.assertContains(response, "Links and notes")
+        self.assertEqual(titles(), ["Board", "Pots", "Recipes"])
+        order = f"{url}references/order/"
+        self.assertContains(response, order)
+        self.assertContains(response, f'data-sortable-item="note-{pots.pk}"')
+        self.client.post(order, {"ids": [f"link-{recipes.pk}", f"link-{board.pk}"]})
+        self.assertEqual(titles(), ["Recipes", "Board", "Pots"])
+        self.client.post(f"{url}references/note-{pots.pk}/move/", {"direction": "up"})
+        self.assertEqual(titles(), ["Recipes", "Pots", "Board"])

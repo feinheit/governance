@@ -1,6 +1,6 @@
 {% load governance i18n %}
-{# Moving an accountability or domain (text) of the role without JavaScript; with it, its handle drags it (frontend/sortable.js) #}
-<form method="post" action="{% url 'text_move' role.pk kind text.pk %}" class="wb-no-js flex-shrink-0">
+{# Moving an accountability, domain, link or note of the role (its key, roles/editing.order_key()) without JavaScript; with it, its handle drags it (frontend/sortable.js) #}
+<form method="post" action="{% url 'text_move' role.pk kind key %}" class="wb-no-js flex-shrink-0">
   {% csrf_token %}
   <button type="submit" name="direction" value="up" class="btn btn-sm btn-quiet" title="{% translate 'Move up' %}">
     {% icon "arrow-up" %}<span class="visually-hidden">{% translate 'Move up' %}</span>

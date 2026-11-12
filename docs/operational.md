@@ -12,8 +12,8 @@ Some things change without governance:
 | Settings (deadline for async proposals, roles elected by policy) | Secretary |
 
 - Notes keep what helps doing a role's work, e.g. a checklist or how
-  something is ordered, in Markdown; "Notes" on the role's page, a
-  click unfolds them. Like links, they're in the history on request,
+  something is ordered, in Markdown; "Links and notes" on the role's
+  page, in any order, a click unfolds a note. Like links, they're in the history on request,
   nobody gets a mail about them.
 - A circle may have several Circle Leads, each of them may do all of
   this. The Circle Leads of a sub-circle are assigned by the Circle Leads

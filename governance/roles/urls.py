@@ -42,7 +42,7 @@ urlpatterns = [
     # Accountabilities and domains
     path("roles/<int:pk>/<str:kind>/order/", editing.texts_order, name="texts_order"),
     path(
-        "roles/<int:pk>/<str:kind>/<int:text_pk>/move/",
+        "roles/<int:pk>/<str:kind>/<str:key>/move/",
         editing.text_move,
         name="text_move",
     ),

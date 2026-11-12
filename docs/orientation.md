@@ -63,8 +63,8 @@ buttons.
 
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove
-here), checklists, metrics, links and notes. Anybody drags the domains and
-accountabilities into another order by their handles, which isn't a
+here), checklists, metrics, links and notes. Anybody drags the domains,
+accountabilities, links and notes into another order by their handles, which isn't a
 change of governance. A domain with policies links to
 them ("2 policies"), which opens them; the policies card is there only
 when the role has policies of its own. "Domains and policies affecting

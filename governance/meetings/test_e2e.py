@@ -242,6 +242,31 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertSamePage()
         self.assertEqual(self.errors, [])
 
+    def test_links_and_notes_dragged(self):
+        """Links and notes are one list, a note dragged above a link"""
+        from governance.roles.editing import references
+        from governance.roles.models import Link, Note
+
+        Link.objects.create(
+            role=self.cook, title="Recipes", url="https://example.com/", position=0
+        )
+        Note.objects.create(role=self.cook, title="Pots", body="Big", position=1)
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.cook.get_absolute_url()}")
+        page.evaluate("window.marker = 1")
+        rows = page.locator("[data-sortable='#references-order'] > li")
+        rows.filter(has_text="Pots").locator("[data-sortable-handle]").drag_to(
+            rows.filter(has_text="Recipes"), target_position={"x": 20, "y": 5}
+        )
+        for _attempt in range(50):
+            order = [str(item) for item in references(self.cook)]
+            if order[0] == "Pots":
+                break
+            page.wait_for_timeout(100)
+        self.assertEqual(order, ["Pots", "Recipes"])
+        self.assertSamePage()
+        self.assertEqual(self.errors, [])
+
     def test_outcome_autosaved(self):
         """The secretary's outcome saves itself a moment after typing, the
         item stays open"""

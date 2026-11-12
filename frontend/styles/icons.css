@@ -43,6 +43,10 @@
 .bi-arrow-up::before {
   content: "\f148";
 }
+
+.bi-box-arrow-up-right::before {
+  content: "\f1c5";
+}
 .bi-check-circle::before {
   content: "\f26b";
 }

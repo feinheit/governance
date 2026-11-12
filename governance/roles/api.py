@@ -9,7 +9,7 @@ from ninja import Router, Schema
 from ninja.errors import HttpError
 
 from governance.roles.context import affecting
-from governance.roles.editing import can_edit_items
+from governance.roles.editing import can_edit_items, next_position
 from governance.roles.export import governance_markdown
 from governance.roles.models import Assignment, Domain, Link, Policy, Role
 from governance.search import search_results
@@ -274,9 +274,7 @@ def save_link(link, data):
 def link_create(request, pk: int, data: LinkIn):
     """A link of the role or circle, after its others"""
     role = get_object_or_404(Role, pk=pk)
-    link = editable_link(
-        request, Link(role=role, position=Link.objects.filter(role=role).count())
-    )
+    link = editable_link(request, Link(role=role, position=next_position(role, Link)))
     return save_link(link, data.dict())
 
 

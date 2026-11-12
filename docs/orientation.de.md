@@ -64,8 +64,8 @@ Maus über einer Zelle oder beim Antippen erscheinen die Knöpfe.
 
 Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,
 wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und
-entfernen), Checklisten, Metriken, Links und Notizen. Alle können die Domains und
-Accountabilities an ihren Griffen in eine andere Reihenfolge ziehen, das
+entfernen), Checklisten, Metriken, Links und Notizen. Alle können die Domains,
+Accountabilities, Links und Notizen an ihren Griffen in eine andere Reihenfolge ziehen, das
 ist keine Änderung der Governance. Eine Domain mit Policies
 verlinkt sie ("2 Policies") und klappt sie auf; die Karte Policies
 erscheint nur, wenn die Rolle eigene hat. "Domains und Policies, die

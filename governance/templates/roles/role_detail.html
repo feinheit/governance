@@ -166,7 +166,7 @@
                   </div>
                 {% endif %}
                 {% if can_reorder_domains %}
-                  {% include "roles/_move_arrows.html" with kind="domains" text=domain %}
+                  {% include "roles/_move_arrows.html" with kind="domains" key=domain.pk %}
                 {% endif %}
               </li>
             {% endfor %}
@@ -199,7 +199,7 @@
               <li class="list-group-item wb-row wb-row-compact" data-sortable-item="{{ accountability.pk }}">
                 {% include "roles/_drag_handle.html" %}
                 <div class="wb-row-main wb-markdown">{{ accountability.text|markdown }}</div>
-                {% include "roles/_move_arrows.html" with kind="accountabilities" text=accountability %}
+                {% include "roles/_move_arrows.html" with kind="accountabilities" key=accountability.pk %}
               </li>
             {% else %}
               <li class="list-group-item wb-markdown">{{ accountability.text|markdown }}</li>
@@ -316,89 +316,76 @@
         </section>
       {% endif %}
 
-      {% if links or can_edit_links %}
+      {% if references or can_edit_references %}
         <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Links" %}</h2></div>
-          <ul class="list-group list-group-flush">
-            {% for link in links %}
-              <li class="list-group-item wb-row wb-row-compact">
-                <div class="wb-row-main">
-                  <a class="wb-row-title" href="{{ link.url }}" target="_blank" rel="noopener">{{ link }}</a>
-                  {% if link.description %}<div class="wb-row-meta"><span>{{ link.description }}</span></div>{% endif %}
-                </div>
-                {% if can_edit_links %}
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Links and notes" %}</h2></div>
+          {# One list, anybody drags it into an order (frontend/sortable.js), without JavaScript the arrows #}
+          <ul
+            class="list-group list-group-flush"
+            {% if can_edit_references and references|length > 1 %}data-sortable="#references-order"{% endif %}
+          >
+            {% for kind, key, item in references %}
+              <li
+                class="list-group-item wb-row wb-row-compact"
+                {% if can_edit_references and references|length > 1 %}data-sortable-item="{{ key }}"{% endif %}
+              >
+                {% if can_edit_references and references|length > 1 %}{% include "roles/_drag_handle.html" %}{% endif %}
+                {% if kind == "link" %}
+                  <div class="wb-row-main">
+                    <a class="wb-row-title" href="{{ item.url }}" target="_blank" rel="noopener">{{ item }}
+                      <span class="small text-body-secondary ms-1">{% icon "box-arrow-up-right" %}</span></a>
+                    {% if item.description %}<div class="wb-row-meta">
+                        <span>{{ item.description }}</span>
+                      </div>{% endif %}
+                  </div>
+                {% else %}
+                  <details class="wb-row-main wb-details" id="note-{{ item.pk }}">
+                    <summary><span class="wb-row-title d-inline">{{ item }}</span></summary>
+                    {% if item.body %}<div class="wb-markdown wb-description mt-2">
+                        {{ item.body|markdown }}
+                      </div>{% endif %}
+                  </details>
+                {% endif %}
+                {% if can_edit_references %}
                   <div class="d-flex gap-1 flex-shrink-0">
                     <a
                       class="btn btn-sm btn-quiet"
-                      href="{% url 'role_item' 'links' link.pk %}"
+                      href="{% url 'role_item' kind|add:'s' item.pk %}"
                       data-modal
                       title="{% translate "Edit" %}"
                     >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>
                     <a
-                      {% button_class can_edit_links "btn-destructive" title=_("Delete") %}
-                      href="{% url 'role_item_delete' 'links' link.pk %}"
+                      {% button_class can_edit_references "btn-destructive" title=_("Delete") %}
+                      href="{% url 'role_item_delete' kind|add:'s' item.pk %}"
                       data-modal
                     >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>
                   </div>
+                  {% if references|length > 1 %}{% include "roles/_move_arrows.html" with kind="references" %}{% endif %}
                 {% endif %}
               </li>
             {% empty %}
               <li class="list-group-item text-body-secondary">
-                {% translate "E.g. where the projects and actions are managed." %}
+                {% translate "E.g. where the projects and actions are managed, a checklist or how something is ordered." %}
               </li>
             {% endfor %}
-            {% if can_edit_links %}
-              <li class="list-group-item">
+            {% if can_edit_references %}
+              <li class="list-group-item d-flex flex-wrap gap-1">
                 <a
                   class="btn btn-sm btn-quiet"
                   href="{% url 'role_links_add' role.pk %}"
                   data-modal
                 >{% icon "plus-lg" %} {% translate "Add a link" %}</a>
-              </li>
-            {% endif %}
-          </ul>
-        </section>
-      {% endif %}
-
-      {% if notes or can_edit_notes %}
-        <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Notes" %}</h2></div>
-          <div class="list-group list-group-flush">
-            {% for note in notes %}
-              <details class="list-group-item wb-details" id="note-{{ note.pk }}">
-                <summary><span class="wb-row-title d-inline">{{ note }}</span></summary>
-                {% if note.body %}<div class="wb-markdown wb-description mt-2">{{ note.body|markdown }}</div>{% endif %}
-                {% if can_edit_notes %}
-                  <div class="d-flex gap-1 mt-2">
-                    <a
-                      class="btn btn-sm btn-quiet"
-                      href="{% url 'role_item' 'notes' note.pk %}"
-                      data-modal
-                      title="{% translate "Edit" %}"
-                    >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>
-                    <a
-                      {% button_class can_edit_notes "btn-destructive" title=_("Delete") %}
-                      href="{% url 'role_item_delete' 'notes' note.pk %}"
-                      data-modal
-                    >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>
-                  </div>
-                {% endif %}
-              </details>
-            {% empty %}
-              <div class="list-group-item text-body-secondary">
-                {% translate "E.g. a checklist or how something is ordered." %}
-              </div>
-            {% endfor %}
-            {% if can_edit_notes %}
-              <div class="list-group-item">
                 <a
                   class="btn btn-sm btn-quiet"
                   href="{% url 'role_notes_add' role.pk %}"
                   data-modal
                 >{% icon "plus-lg" %} {% translate "Add a note" %}</a>
-              </div>
+              </li>
             {% endif %}
-          </div>
+          </ul>
+          {% if can_edit_references and references|length > 1 %}
+            {% include "roles/_order_form.html" with kind="references" %}
+          {% endif %}
         </section>
       {% endif %}
 

@@ -14,13 +14,17 @@ from governance.proposals.process import waiting_for
 from governance.roles.constitution import REP
 from governance.roles.context import affecting, with_policies
 from governance.roles.domain_policies import can_change_domain_policies
-from governance.roles.editing import can_edit_items, can_edit_strategy
+from governance.roles.editing import (
+    can_edit_items,
+    can_edit_strategy,
+    order_key,
+    references,
+)
 from governance.roles.models import (
     Assignment,
     ChecklistItem,
     Link,
     Metric,
-    Note,
     Policy,
     Role,
     by_frequency,
@@ -163,10 +167,11 @@ def role_detail(request, pk):
         "can_edit_strategy": can_edit_strategy(request.user, role),
         "can_edit_metrics": can_edit_items(request.user, role, Metric),
         "can_edit_checklist": can_edit_items(request.user, role, ChecklistItem),
-        "can_edit_links": can_edit_items(request.user, role, Link),
-        "links": role.links.all(),
-        "can_edit_notes": can_edit_items(request.user, role, Note),
-        "notes": role.notes.all(),
+        # Links and notes in one card, anybody orders them (roles/editing.py)
+        "can_edit_references": can_edit_items(request.user, role, Link),
+        "references": [
+            (item._meta.model_name, order_key(item), item) for item in references(role)
+        ],
         # From a role of theirs in the circle, in a role its Role Leads (adding
         # roles inside), like proposal_create(); admins too only then
         "can_propose": not role.archived_on
