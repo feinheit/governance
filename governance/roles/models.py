@@ -475,10 +475,6 @@ class Note(models.Model):
     title = models.CharField(_("title"), max_length=200)
     body = models.TextField(_("body"), blank=True)
     position = models.PositiveIntegerField(_("position"), default=0)
-    # GlassFrog's notes have TypeIDs (rnot_…) from its API v5
-    glassfrog_id = models.CharField(
-        _("GlassFrog ID"), max_length=40, null=True, blank=True, unique=True
-    )
 
     class Meta:
         ordering = ["position", "pk"]

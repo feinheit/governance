@@ -139,9 +139,9 @@ accountability texts are known where proposals or `roles.json` have them.
   GlassFrog's "global" items, shown everywhere, aren't supported; items
   without circle and role belong to the anchor.
 - **`Link`**: `role`, `title`, `url`, `description`; anybody edits them.
-- **`Note`**: `role`, `title`, `body` (Markdown), `glassfrog_id`
-  (GlassFrog's notes, `rnot_…` from its API v5, imported after the
-  switchover: the v3 export had none); like links, anybody edits them,
+- **`Note`**: `role`, `title`, `body` (Markdown); GlassFrog's notes
+  (its API v5, the v3 export had none) were added after the switchover
+  with `gov notes`. Like links, anybody edits them,
   the audit log keeps them, the history shows them on request, no mails
   (decided 2026-11-12). A core role's notes stay with it (a Circle
   Lead's), they aren't moved to the circle. Links and notes are one

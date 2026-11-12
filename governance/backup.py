@@ -130,9 +130,7 @@ def roles(user):
         ),
         notes=by(
             "role",
-            rows(
-                Note.objects.all(), "role", "title", "body", "position", "glassfrog_id"
-            ),
+            rows(Note.objects.all(), "role", "title", "body", "position"),
         ),
         history=history("role", role__isnull=False, policy__isnull=True),
         proposals=by("circle", proposals(user)),
