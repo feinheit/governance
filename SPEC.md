@@ -607,8 +607,9 @@ verify the mails; removed once they've proven themselves.
   assignments (`update.focus_changes()`, per day the first and the last,
   not on the day of assigning).
 - **Links, notes, metrics and checklist items** are changes too (`link-added`
-  etc., `diff_items()`), operational: the history shows them on request,
-  the role's page not.
+  etc., `diff_items()`), operational: the history shows them on request
+  (right away, `update_today()` on the pages and in the API), the role's
+  page not.
 - **Filters** like Workbench's (`governance/filters.py`,
   `generic/_filters.html`, `frontend/filters.js`: GET forms submitting when
   changed). The history is one page (`/history/`, `?role=`): a circle

@@ -599,6 +599,39 @@ class OperationalItemsTest(TestCase):
         # Not on the role's page
         self.assertNotContains(self.client.get(circle.get_absolute_url()), "Link added")
 
+    def test_right_away(self):
+        """Adding, changing and deleting links and notes on the page or
+        through the API is in the history right away, not only at night"""
+        from django.utils import timezone
+
+        from governance.accounts.models import APIToken, User
+        from governance.history.audit import structure_from_database
+
+        ada = User.objects.create_user("ada@example.com")
+        self.client.force_login(ada)
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        day = timezone.localdate() - dt.timedelta(days=1)
+        history((day, structure_from_database(day)))
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/roles/{circle.pk}/notes/new/", {"title": "Pots", "body": ""}
+            )
+        self.assertEqual(
+            list(Change.objects.values_list("kind", flat=True)), ["note-added"]
+        )
+        _token, secret = APIToken.create_for(user=ada, title="Test", access="write")
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/api/roles/{circle.pk}/links/",
+                {"title": "Board", "url": "https://example.com/"},
+                content_type="application/json",
+                headers={"authorization": f"Bearer {secret}"},
+            )
+        self.assertEqual(
+            sorted(Change.objects.values_list("kind", flat=True)),
+            ["link-added", "note-added"],
+        )
+
     def test_notes(self):
         """Notes are changes like links: their title and body"""
         from django.utils import timezone

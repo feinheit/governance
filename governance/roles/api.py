@@ -10,6 +10,7 @@ from django.utils import timezone
 from ninja import Router, Schema
 from ninja.errors import HttpError
 
+from governance.history.update import update_today
 from governance.roles.context import affecting
 from governance.roles.editing import can_edit_items, next_position
 from governance.roles.export import governance_markdown
@@ -286,6 +287,7 @@ def save_item(item, data):
             400, " ".join(f"{f}: {' '.join(e)}" for f, e in exc.message_dict.items())
         ) from exc
     item.save()
+    update_today()  # The history shows them on request
     return item
 
 
@@ -314,6 +316,7 @@ def link_delete(request, pk: int):
     link = existing(request, Link, pk)
     out = {field: getattr(link, field) for field in LinkOut.model_fields}
     link.delete()
+    update_today()
     return out
 
 
@@ -347,6 +350,7 @@ def note_delete(request, pk: int):
     # Deleting clears the instance's ID, not the copy's
     out = copy.copy(note)
     note.delete()
+    update_today()
     return out
 
 

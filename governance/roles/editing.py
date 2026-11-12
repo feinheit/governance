@@ -134,6 +134,7 @@ def item_edit(request, kind, pk=None, role_pk=None):
     form = item_form(model)(request.POST or None, instance=item)
     if form.is_valid():
         form.save()
+        update_today()  # The history shows them on request
         return redirect(role)
     return render(
         request,
@@ -164,6 +165,7 @@ def item_delete(request, kind, pk):
         raise PermissionDenied
     if request.method == "POST":
         item.delete()
+        update_today()
         return redirect(item.role)
     return render(
         request,
