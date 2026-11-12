@@ -1410,6 +1410,7 @@ a.wb-row-title:hover {
   box-shadow: 0 4px 12px rgba(16, 24, 40, 0.12);
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: a different property than the highlighted :target */
 .wb-mentions .list-group-item {
   cursor: pointer;
   padding-block: 0.375rem;
@@ -1540,6 +1541,9 @@ body:has(.wb-modal[open]) {
   font-weight: normal;
   background-color: var(--bs-card-bg);
 }
+.wb-matrix-other a {
+  color: var(--bs-secondary-color);
+}
 .wb-matrix thead th a {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -1576,14 +1580,11 @@ body:has(.wb-modal[open]) {
 .wb-matrix .wb-matrix-last-core > * {
   border-bottom-color: var(--bs-secondary-color);
 }
-.wb-matrix-other a {
-  color: var(--bs-secondary-color);
-}
 /* Every other person's column striped, the name above it too (over the
    sticky names' background); the row under the pointer darkened over the
    stripes */
-.wb-matrix thead tr:last-child > :nth-child(even of :not(.wb-matrix-rest)),
-.wb-matrix tbody tr > :nth-child(even of :not(.wb-matrix-rest)) {
+.wb-matrix tbody tr > :nth-child(even of :not(.wb-matrix-rest)),
+.wb-matrix thead tr:last-child > :nth-child(even of :not(.wb-matrix-rest)) {
   background-image: linear-gradient(
     rgba(var(--bs-emphasis-color-rgb), 0.04),
     rgba(var(--bs-emphasis-color-rgb), 0.04)
