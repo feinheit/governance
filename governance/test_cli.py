@@ -426,6 +426,30 @@ class CLITest(TestCase):
             result = self.gov("me")
         self.assertIn("gov 99.0.0 is available", result.output)
 
+    def test_notes(self):
+        """Adding (the text from stdin), changing, listing and removing a
+        circle's notes"""
+        result = self.gov(
+            "notes", "add", self.kitchen.pk, "Pots", "--file", "-", input="- *Big*\n"
+        )
+        self.assertIn("Pots", result.output)
+        self.assertIn("Big", result.output)
+        note = json.loads(self.gov("notes", "list", self.kitchen.pk, "--json").output)[
+            0
+        ]
+        self.assertEqual(note["body"], "- *Big*")
+        self.gov("notes", "update", note["id"], "--body", "Small ones too")
+        result = self.gov("notes", "list", self.kitchen.pk)
+        self.assertIn("Small ones too", result.output)
+        self.assertIn("Pots", self.gov("circles", "show", self.kitchen.pk).output)
+        result = self.gov("notes", "update", note["id"])
+        self.assertIn("Nothing to change", result.output)
+        result = self.gov("notes", "update", note["id"], "--title", "")
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("400", result.output)
+        self.assertIn("Removed Pots", self.gov("notes", "remove", note["id"]).output)
+        self.assertIn("No notes.", self.gov("notes", "list", self.kitchen.pk).output)
+
     def test_links(self):
         """Adding, changing, listing and removing a circle's links"""
         result = self.gov(

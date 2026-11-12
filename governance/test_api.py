@@ -387,3 +387,51 @@ class APITest(TestCase):
             {"title": "Recipes", "url": "https://example.com/recipes"},
         )
         self.assertEqual(response.status_code, 403)
+
+    def test_notes(self):
+        """Anybody manages the notes of active roles, after the links; they
+        come with the role, opening on its page"""
+        self.api(
+            "post",
+            f"/api/roles/{self.kitchen.pk}/links/",
+            {"title": "Board", "url": "https://example.com/board"},
+        )
+        response = self.api(
+            "post", f"/api/roles/{self.kitchen.pk}/notes/", {"title": " Pots "}
+        )
+        self.assertEqual(response.status_code, 200)
+        note = response.json()
+        self.assertEqual((note["title"], note["body"]), ("Pots", ""))
+        self.assertTrue(
+            note["url"].endswith(f"/roles/{self.kitchen.pk}/#note-{note['id']}")
+        )
+        response = self.api(
+            "patch", f"/api/notes/{note['id']}/", {"body": "- Big\n- Small"}
+        )
+        self.assertEqual(response.json()["body"], "- Big\n- Small")
+        self.assertEqual(response.json()["title"], "Pots")
+        response = self.api("patch", f"/api/notes/{note['id']}/", {"title": ""})
+        self.assertEqual(response.status_code, 400)
+        role = self.api("get", f"/api/roles/{self.kitchen.pk}/").json()
+        self.assertEqual([item["title"] for item in role["notes"]], ["Pots"])
+        from governance.roles.editing import references
+
+        self.assertEqual(
+            [str(item) for item in references(self.kitchen)], ["Board", "Pots"]
+        )
+
+        response = self.api(
+            "delete", f"/api/notes/{note['id']}/", secret=self.read_secret
+        )
+        self.assertEqual(response.status_code, 403)
+        response = self.api("delete", f"/api/notes/{note['id']}/")
+        self.assertEqual(response.json()["title"], "Pots")
+        self.assertEqual(
+            self.api("get", f"/api/roles/{self.kitchen.pk}/").json()["notes"], []
+        )
+
+        Role.objects.filter(pk=self.cook.pk).update(archived_on=timezone.localdate())
+        response = self.api(
+            "post", f"/api/roles/{self.cook.pk}/notes/", {"title": "Pots"}
+        )
+        self.assertEqual(response.status_code, 403)

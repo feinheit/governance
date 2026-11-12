@@ -30,7 +30,7 @@ def write(path, content):
 )
 def backup(directory, with_people):
     """Everything you see: the roles (archived ones too) with their texts,
-    policies, Role Leads, metrics, checklist items, links, history and
+    policies, Role Leads, metrics, checklist items, links, notes, history and
     proposals and meetings, the ad hoc meetings (and the people). Printed,
     or written into DIRECTORY: roles/<ID>.json per role (by ID: renaming a
     role changes one line, git log shows its whole life), meetings.json,

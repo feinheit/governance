@@ -1,5 +1,7 @@
 """Reading circles and roles, see section 8 of SPEC.md"""
 
+import copy
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch, Q
@@ -11,7 +13,7 @@ from ninja.errors import HttpError
 from governance.roles.context import affecting
 from governance.roles.editing import can_edit_items, next_position
 from governance.roles.export import governance_markdown
-from governance.roles.models import Assignment, Domain, Link, Policy, Role
+from governance.roles.models import Assignment, Domain, Link, Note, Policy, Role
 from governance.search import search_results
 
 
@@ -78,6 +80,20 @@ class LinkOut(Schema):
     description: str
 
 
+class NoteOut(Schema):
+    id: int
+    role_id: int
+    title: str
+    # Markdown
+    body: str
+    # Opens it on the role's page
+    url: str
+
+    @staticmethod
+    def resolve_url(obj):
+        return f"{absolute(obj.role)}#note-{obj.pk}"
+
+
 class RoleOut(Schema):
     id: int
     name: str
@@ -95,6 +111,8 @@ class RoleOut(Schema):
     roles: list[RoleSummaryOut]
     # To external tools, e.g. where the projects are managed
     links: list[LinkOut]
+    # What helps doing the role's work, in Markdown
+    notes: list[NoteOut]
     url: str
 
 
@@ -234,6 +252,7 @@ def role(request, pk: int):
         if role.is_circle
         else [],
         "links": list(role.links.all()),
+        "notes": list(role.notes.select_related("role")),
         "url": absolute(role),
     }
 
@@ -250,50 +269,84 @@ class LinkPatch(Schema):
     description: str | None = None
 
 
-def editable_link(request, link):
-    """Anybody edits the links of active roles, like on the pages"""
-    if not can_edit_items(request.user, link.role, Link):
+def editable(request, item):
+    """Anybody edits the links and notes of active roles, like on the pages"""
+    if not can_edit_items(request.user, item.role, type(item)):
         raise HttpError(403, "The role is archived.")
-    return link
+    return item
 
 
-def save_link(link, data):
+def save_item(item, data):
     for field, value in data.items():
-        setattr(link, field, value.strip())
+        setattr(item, field, value.strip())
     try:
-        link.full_clean()
+        item.full_clean()
     except ValidationError as exc:
         raise HttpError(
             400, " ".join(f"{f}: {' '.join(e)}" for f, e in exc.message_dict.items())
         ) from exc
-    link.save()
-    return link
+    item.save()
+    return item
+
+
+def existing(request, model, pk):
+    return editable(
+        request, get_object_or_404(model.objects.select_related("role"), pk=pk)
+    )
 
 
 @router.post("roles/{int:pk}/links/", response=LinkOut)
 def link_create(request, pk: int, data: LinkIn):
-    """A link of the role or circle, after its others"""
+    """A link of the role or circle, after its links and notes"""
     role = get_object_or_404(Role, pk=pk)
-    link = editable_link(request, Link(role=role, position=next_position(role, Link)))
-    return save_link(link, data.dict())
+    link = editable(request, Link(role=role, position=next_position(role, Link)))
+    return save_item(link, data.dict())
 
 
 @router.patch("links/{int:pk}/", response=LinkOut)
 def link_update(request, pk: int, data: LinkPatch):
-    link = editable_link(
-        request, get_object_or_404(Link.objects.select_related("role"), pk=pk)
-    )
-    return save_link(link, data.dict(exclude_none=True))
+    return save_item(existing(request, Link, pk), data.dict(exclude_none=True))
 
 
 @router.delete("links/{int:pk}/", response=LinkOut)
 def link_delete(request, pk: int):
     """Returns the deleted link"""
-    link = editable_link(
-        request, get_object_or_404(Link.objects.select_related("role"), pk=pk)
-    )
+    link = existing(request, Link, pk)
     out = {field: getattr(link, field) for field in LinkOut.model_fields}
     link.delete()
+    return out
+
+
+class NoteIn(Schema):
+    title: str
+    body: str = ""
+
+
+class NotePatch(Schema):
+    title: str | None = None
+    body: str | None = None
+
+
+@router.post("roles/{int:pk}/notes/", response=NoteOut)
+def note_create(request, pk: int, data: NoteIn):
+    """A note of the role or circle, after its links and notes"""
+    role = get_object_or_404(Role, pk=pk)
+    note = editable(request, Note(role=role, position=next_position(role, Note)))
+    return save_item(note, data.dict())
+
+
+@router.patch("notes/{int:pk}/", response=NoteOut)
+def note_update(request, pk: int, data: NotePatch):
+    return save_item(existing(request, Note, pk), data.dict(exclude_none=True))
+
+
+@router.delete("notes/{int:pk}/", response=NoteOut)
+def note_delete(request, pk: int):
+    """Returns the deleted note"""
+    note = existing(request, Note, pk)
+    # Deleting clears the instance's ID, not the copy's
+    out = copy.copy(note)
+    note.delete()
     return out
 
 

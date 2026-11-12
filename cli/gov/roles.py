@@ -68,12 +68,23 @@ def show_role(id, *, as_json):
                 link(sub["id"], sub["url"]), link(sub["name"], sub["url"]), kind
             )
         console.print(table)
+    _print_references(role)
+
+
+def _print_references(role):
+    """The role's links and notes"""
     if role["links"]:
         table = make_table("ID>", "Link", "Description", title="Links")
         for item in role["links"]:
             table.add_row(
                 str(item["id"]), link(item["title"], item["url"]), item["description"]
             )
+        console.print(table)
+    # .get(): older servers don't send them
+    if role.get("notes"):
+        table = make_table("ID>", "Note", title="Notes")
+        for note in role["notes"]:
+            table.add_row(str(note["id"]), link(note["title"], note["url"]))
         console.print(table)
 
 

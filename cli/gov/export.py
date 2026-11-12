@@ -20,7 +20,7 @@ from gov.core import cli, request
 )
 def export(with_people, output):
     """The whole current governance as Markdown: circles, roles, their texts,
-    policies, metrics, checklist items and links (and who holds the roles,
+    policies, metrics, checklist items, links and notes (and who holds the roles,
     if asked for)"""
     data = request("GET", "export/", params={"people": "true"} if with_people else {})
     output.write(data["markdown"])
