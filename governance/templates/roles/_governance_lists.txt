@@ -20,4 +20,8 @@
 
 {% for link in role.links.all %}- [{{ link.title }}]({{ link.url }}){% if link.description %}: {{ link.description }}{% endif %}
 {% endfor %}
-{% endif %}{% endautoescape %}
+{% endif %}{% for note in role.notes.all %}*{% translate "Note" %}: {{ note.title }}*
+
+{% if note.body %}{{ note.body }}
+
+{% endif %}{% endfor %}{% endautoescape %}

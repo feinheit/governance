@@ -136,6 +136,17 @@ class FoundLinkOut(Schema):
     role_url: str
 
 
+class FoundNoteOut(Schema):
+    """A note, with the role keeping it; the URL opens it on the role's page"""
+
+    id: int
+    title: str
+    body: str
+    role_id: int
+    role: str
+    url: str
+
+
 class SearchOut(Schema):
     people: list[PersonFoundOut]
     roles: list[RoleSummaryOut]
@@ -143,6 +154,7 @@ class SearchOut(Schema):
     domains: list[FoundTextOut]
     policies: list[PolicyOut]
     links: list[FoundLinkOut]
+    notes: list[FoundNoteOut]
 
 
 @router.get("circles/", response=list[CircleOut])
@@ -297,6 +309,7 @@ def search(request, q: str):
         "domains": [],
         "policies": [],
         "links": [],
+        "notes": [],
     }
 
     def found(item):
@@ -323,6 +336,17 @@ def search(request, q: str):
                 "role_url": absolute(link.role),
             }
             for link in results["links"]
+        ],
+        "notes": [
+            {
+                "id": note.pk,
+                "title": note.title,
+                "body": note.body,
+                "role_id": note.role_id,
+                "role": note.role.name,
+                "url": f"{absolute(note.role)}#note-{note.pk}",
+            }
+            for note in results["notes"]
         ],
     }
 

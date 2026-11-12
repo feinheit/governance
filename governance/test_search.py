@@ -8,6 +8,7 @@ from governance.roles.models import (
     Assignment,
     Domain,
     Link,
+    Note,
     Policy,
     Role,
 )
@@ -76,6 +77,28 @@ class SearchTest(TestCase):
         self.assertContains(response, cook.get_absolute_url())
         response = self.client.get("/search/", {"q": "recipes"})
         self.assertContains(response, "Nothing found")
+
+    def test_notes(self):
+        """By title and body, opened on the role's page; not those of
+        archived roles"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=circle)
+        note = Note.objects.create(
+            role=cook, title="Ordering", body="Call the **grocer** on Mondays"
+        )
+        old = Role.objects.create(
+            name="Old cook", circle=circle, archived_on=dt.date(2026, 1, 1)
+        )
+        Note.objects.create(role=old, title="Old grocer", body="")
+
+        response = self.client.get("/search/", {"q": "grocer monday"})
+        self.assertContains(response, '<h2 class="h6 mb-0">Notes</h2>', html=True)
+        self.assertContains(
+            response, f'href="{cook.get_absolute_url()}#note-{note.pk}"'
+        )
+        self.assertContains(response, "Call the grocer on Mondays")
+        self.assertNotContains(response, "Old grocer")
 
     def test_what_the_pages_show(self):
         """Mentions with the current names, not their markup; the core

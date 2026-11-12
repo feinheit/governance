@@ -10,7 +10,7 @@
     </h1>
   </div>
   {% if empty %}<p class="text-body-secondary">{% translate "Nothing found." %}</p>{% endif %}
-  {% with people=results.people roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies links=results.links %}
+  {% with people=results.people roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies links=results.links notes=results.notes %}
     {% if people %}
       <section class="card mb-4">
         <div class="card-header"><h2 class="h6 mb-0">{% translate "People" %}</h2></div>
@@ -102,6 +102,22 @@
               <div class="wb-row-meta">
                 <a href="{{ link.role.get_absolute_url }}">{{ link.role }}</a>{% if link.description %}<span
                   >{{ link.description }}</span>{% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+    {% if notes %}
+      <section class="card mb-4">
+        <div class="card-header"><h2 class="h6 mb-0">{% translate "Notes" %}</h2></div>
+        <ul class="list-group list-group-flush">
+          {% for note in notes %}
+            <li class="list-group-item wb-row-link">
+              <a class="wb-row-title" href="{{ note.role.get_absolute_url }}#note-{{ note.pk }}">{{ note }}</a>
+              <div class="wb-row-meta">
+                <span>{{ note.role }}</span>{% if note.body %}<span
+                  >{{ note.body|plain|truncatechars:160 }}</span>{% endif %}
               </div>
             </li>
           {% endfor %}

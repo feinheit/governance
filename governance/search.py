@@ -5,7 +5,7 @@ the pages show them: mentions with the roles' current names, the core
 roles with the constitution's texts, the active people's names, short
 names and mail addresses, the links of active roles by their titles and
 descriptions (which may hold keywords: the handbook's sections are found
-this way). The data is small enough for
+this way), their notes by titles and bodies. The data is small enough for
 searching in Python, no full text index needed.
 """
 
@@ -21,6 +21,7 @@ from governance.roles.models import (
     Assignment,
     Domain,
     Link,
+    Note,
     Policy,
     Role,
 )
@@ -40,7 +41,7 @@ def _fold(text):
 
 def search_results(query):
     """Matching people (with their ``circles``), roles, accountabilities,
-    domains, policies and links (50 each)"""
+    domains, policies, links and notes (50 each)"""
     terms = [_fold(term) for term in query.split()]
     if not terms:
         return {}
@@ -103,6 +104,13 @@ def search_results(query):
             .select_related("role__circle")
             .order_by("pk"),
             lambda link: [link.title, link.description],
+        ),
+        "notes": matching(
+            Note.objects
+            .filter(role__archived_on=None)
+            .select_related("role__circle")
+            .order_by("pk"),
+            lambda note: [note.title, note.body],
         ),
     }
 

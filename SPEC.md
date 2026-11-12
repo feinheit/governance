@@ -705,12 +705,13 @@ verify the mails; removed once they've proven themselves.
   roles, accountabilities, domains, policies and links (title and
   description, which may hold keywords: rules for people as employees
   live in the handbook, not in policies, and are found through links of
-  the roles keeping them), all terms matching,
+  the roles keeping them) and notes (title and body, opening the note on
+  its role's page), all terms matching,
   ignoring case and accents, in the texts as the pages show them
   (mentions with the current names, the core roles' constitutional
   texts); snippets as plain text. The API and `gov search` too.
 - **Export**: the whole current governance as Markdown (circles, roles,
-  their texts, policies, metrics, checklist items and links), `/export/governance.md`
+  their texts, policies, metrics, checklist items, links and notes), `/export/governance.md`
   (the people only with `?people=1`, `--with-people`: personal data
   is opt-in, decided 2026-11-08); no button, `gov export` (`GET
   export/`) offers it.

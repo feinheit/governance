@@ -7,6 +7,7 @@ from governance.roles.models import (
     ChecklistItem,
     Link,
     Metric,
+    Note,
     Policy,
     Role,
 )
@@ -36,6 +37,7 @@ class ExportTest(TestCase):
         Link.objects.create(
             role=cook, title="Recipes", url="https://example.com/", description="All"
         )
+        Note.objects.create(role=cook, title="Pots", body="- In the cupboard")
 
         # No button, the URL (and later the CLI) offers it
         response = self.client.get(anchor.get_absolute_url())
@@ -60,6 +62,7 @@ class ExportTest(TestCase):
         self.assertIn("**Metrics**\n\n- Soups sold (weekly)", text)
         self.assertIn("**Checklist items**\n\n- Fridge cleaned", text)
         self.assertIn("- [Recipes](https://example.com/): All", text)
+        self.assertIn("*Note: Pots*\n\n- In the cupboard\n", text)
         self.assertIn("- All governance records of the Circle", text)
         self.assertLess(text.index("## Example Ltd"), text.index("### Kitchen"))
 

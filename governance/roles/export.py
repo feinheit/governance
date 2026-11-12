@@ -36,7 +36,12 @@ def governance_markdown(*, with_people=False):
             .active()
             .filter(is_circle=False)
             .prefetch_related(
-                "accountabilities", "domains", "metrics", "checklistitems", "links"
+                "accountabilities",
+                "domains",
+                "metrics",
+                "checklistitems",
+                "links",
+                "notes",
             )
             .order_by("position", "name", "pk")
         )

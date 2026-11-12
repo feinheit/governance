@@ -18,6 +18,7 @@ from governance.roles.models import (
     Assignment,
     Domain,
     Link,
+    Note,
     Policy,
     Role,
 )
@@ -141,6 +142,13 @@ class CLITest(TestCase):
         self.assertIn("Cook", result.output)
         result = self.gov("search", "stew", "--json")
         self.assertIn('"https://example.com/recipes/"', result.output)
+        # Notes by their texts, opened on the role's page
+        note = Note.objects.create(role=self.cook, title="Pots", body="Big for goulash")
+        result = self.gov("search", "goulash")
+        self.assertIn("Notes", result.output)
+        self.assertIn("Pots", result.output)
+        result = self.gov("search", "goulash", "--json")
+        self.assertIn(f"/roles/{self.cook.pk}/#note-{note.pk}", result.output)
 
     def test_proposals(self):
         """Drafts with instructions, their problems, publishing"""
