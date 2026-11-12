@@ -20,6 +20,7 @@ from governance.roles.models import (
     ChecklistItem,
     Link,
     Metric,
+    Note,
     Policy,
     Role,
     by_frequency,
@@ -123,7 +124,7 @@ def recent_history(role, count=10):
         # Only counts, the proposals of those days say more
         .exclude(kind__endswith="-unrecorded")
         # Operational, the history page shows them on request
-        .exclude(kind__regex=r"^(link|metric|checklist)-")
+        .exclude(kind__regex=r"^(link|note|metric|checklist)-")
     )
     # Whole days, their texts are merged into one change (merge_lists())
     days = changes.order_by("-date").values_list("date", flat=True).distinct()[:count]
@@ -164,6 +165,8 @@ def role_detail(request, pk):
         "can_edit_checklist": can_edit_items(request.user, role, ChecklistItem),
         "can_edit_links": can_edit_items(request.user, role, Link),
         "links": role.links.all(),
+        "can_edit_notes": can_edit_items(request.user, role, Note),
+        "notes": role.notes.all(),
         # From a role of theirs in the circle, in a role its Role Leads (adding
         # roles inside), like proposal_create(); admins too only then
         "can_propose": not role.archived_on

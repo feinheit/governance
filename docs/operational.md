@@ -7,10 +7,14 @@ Some things change without governance:
 | Assignments and focus ("Role Leads" on the role's page) | Circle Leads |
 | The circle's strategy | Circle Leads |
 | Metrics | Circle Leads |
-| Checklist items and links | everybody |
+| Checklist items, links and notes | everybody |
 | Policies of a domain | whoever holds the role with the domain |
 | Settings (deadline for async proposals, roles elected by policy) | Secretary |
 
+- Notes keep what helps doing a role's work, e.g. a checklist or how
+  something is ordered, in Markdown; "Notes" on the role's page, a
+  click unfolds them. Like links, they're in the history on request,
+  nobody gets a mail about them.
 - A circle may have several Circle Leads, each of them may do all of
   this. The Circle Leads of a sub-circle are assigned by the Circle Leads
   of the circle above; while nobody leads a sub-circle, the Circle Leads

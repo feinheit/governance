@@ -62,3 +62,10 @@ class LinkAdmin(admin.ModelAdmin):
     list_display = ["title", "role", "url"]
     search_fields = ["title", "url", "description"]
     raw_id_fields = ["role"]
+
+
+@admin.register(models.Note)
+class NoteAdmin(admin.ModelAdmin):
+    list_display = ["title", "role"]
+    search_fields = ["title", "body"]
+    raw_id_fields = ["role"]

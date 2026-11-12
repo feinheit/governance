@@ -50,6 +50,9 @@ LABELS = {
     "link-added": _("Link added"),
     "link-changed": _("Link changed"),
     "link-removed": _("Link removed"),
+    "note-added": _("Note added"),
+    "note-changed": _("Note changed"),
+    "note-removed": _("Note removed"),
     "metric-added": _("Metric added"),
     "metric-changed": _("Metric changed"),
     "metric-removed": _("Metric removed"),
@@ -58,8 +61,8 @@ LABELS = {
     "checklist-removed": _("Checklist item removed"),
 }
 ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected", "focus"}
-# Links, metrics and checklist items: operational, shown on request
-ITEM_KINDS = ("link-", "metric-", "checklist-")
+# Links, notes, metrics and checklist items: operational, shown on request
+ITEM_KINDS = ("link-", "note-", "metric-", "checklist-")
 # Added and removed texts of a role on a day, merged into one entry
 LISTS = {
     "accountabilities": (
@@ -171,7 +174,7 @@ def present(changes):
     roles = Role.objects.in_bulk(role_ids)
     for change in changes:
         change.label = LABELS.get(change.kind, change.kind)
-        # Links, metrics and checklist items: their text right away
+        # Links, notes, metrics and checklist items: their text right away
         change.is_item = change.kind.startswith(ITEM_KINDS)
         change.old_text = change.old if isinstance(change.old, str) else ""
         change.new_text = change.new if isinstance(change.new, str) else ""
@@ -213,7 +216,7 @@ class HistoryFilters(FilterForm):
     sub_circles = forms.BooleanField(label=_("With sub-circles"), required=False)
     assignments = forms.BooleanField(label=_("With assignments"), required=False)
     operational = forms.BooleanField(
-        label=_("With links, metrics and checklists"), required=False
+        label=_("With links, notes, metrics and checklists"), required=False
     )
 
 

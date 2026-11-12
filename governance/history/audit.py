@@ -33,11 +33,17 @@ TABLES = {
     "roles_domain": "domains",
     # Operational, shown in the history on request
     "roles_link": "links",
+    "roles_note": "notes",
     "roles_metric": "metrics",
     "roles_checklistitem": "checklist",
 }
 # Kinds of the items, keyed by their structure's key
-ITEMS = {"links": "link", "metrics": "metric", "checklist": "checklist"}
+ITEMS = {
+    "links": "link",
+    "notes": "note",
+    "metrics": "metric",
+    "checklist": "checklist",
+}
 # The core roles' constitutional texts come from the code (constitution 5.0),
 # GlassFrog switched to it on this day; the texts of 4.1 are rows
 CONSTITUTION_5 = dt.date(2022, 12, 13)
@@ -106,7 +112,11 @@ def _int(value):
 
 
 def item_text(kind, data):
-    """A link as Markdown, a metric's or checklist item's description"""
+    """A link as Markdown, a note's title and body, a metric's or checklist
+    item's description"""
+    if kind == "notes":
+        title = f"**{data.get('title') or ''}**"
+        return "\n\n".join(filter(None, [title, data.get("body")]))
     if kind == "links":
         text = f"[{data.get('title') or ''}]({data.get('url') or ''})"
         if description := data.get("description"):
@@ -116,7 +126,7 @@ def item_text(kind, data):
 
 
 def items(rows):
-    """Links, metrics and checklist items: ``{"link:5": {…}}``"""
+    """Links, notes, metrics and checklist items: ``{"link:5": {…}}``"""
     return {
         f"{ITEMS[kind]}:{pk}": {
             "kind": ITEMS[kind],
@@ -186,7 +196,14 @@ def structure_on(day):
 def structure_from_database(day):
     """The current structure from the tables, e.g. for the last day of
     GlassFrog's history"""
-    from governance.roles.models import ChecklistItem, Link, Metric, Policy, Role
+    from governance.roles.models import (
+        ChecklistItem,
+        Link,
+        Metric,
+        Note,
+        Policy,
+        Role,
+    )
 
     roles = Role.objects.active().prefetch_related("accountabilities", "domains")
     assignments = assignments_on(day)
@@ -222,6 +239,7 @@ def structure_from_database(day):
             kind: {obj.pk: obj.__dict__ for obj in model.objects.all()}
             for kind, model in [
                 ("links", Link),
+                ("notes", Note),
                 ("metrics", Metric),
                 ("checklist", ChecklistItem),
             ]

@@ -463,3 +463,27 @@ class Link(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Note(models.Model):
+    """What helps doing the role's work, e.g. a checklist or how something
+    is ordered: operational like links, not governance"""
+
+    role = models.ForeignKey(
+        Role, on_delete=models.CASCADE, related_name="notes", verbose_name=_("role")
+    )
+    title = models.CharField(_("title"), max_length=200)
+    body = models.TextField(_("body"), blank=True)
+    position = models.PositiveIntegerField(_("position"), default=0)
+    # GlassFrog's notes have TypeIDs (rnot_…) from its API v5
+    glassfrog_id = models.CharField(
+        _("GlassFrog ID"), max_length=40, null=True, blank=True, unique=True
+    )
+
+    class Meta:
+        ordering = ["position", "pk"]
+        verbose_name = _("note")
+        verbose_name_plural = _("notes")
+
+    def __str__(self):
+        return self.title

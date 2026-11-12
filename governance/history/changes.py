@@ -73,7 +73,7 @@ def diff_policies(old, new):
 
 
 def diff_items(old, new):
-    """Yields ``(role, kind, old, new)`` for links, metrics and checklist
+    """Yields ``(role, kind, old, new)`` for links, notes, metrics and checklist
     items added, changed and removed"""
     old_items, new_items = old.get("items", {}), new.get("items", {})
     for key in new_items.keys() - old_items.keys():

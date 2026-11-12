@@ -599,6 +599,31 @@ class OperationalItemsTest(TestCase):
         # Not on the role's page
         self.assertNotContains(self.client.get(circle.get_absolute_url()), "Link added")
 
+    def test_notes(self):
+        """Notes are changes like links: their title and body"""
+        from django.utils import timezone
+
+        from governance.accounts.models import User
+        from governance.history.audit import structure_from_database
+        from governance.roles.models import Note
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        day = timezone.localdate() - dt.timedelta(days=1)
+        history((day, structure_from_database(day)))
+        Note.objects.create(role=circle, title="Ordering", body="By *mail*")
+        update_changes(since=timezone.localdate())
+        self.assertEqual(
+            list(Change.objects.values_list("kind", "role", "new")),
+            [("note-added", circle.pk, "**Ordering**\n\nBy *mail*")],
+        )
+        url = f"/history/?role={circle.pk}"
+        self.assertNotContains(self.client.get(url), "Note added")
+        response = self.client.get(f"{url}&operational=1")
+        self.assertContains(response, "Note added")
+        self.assertContains(response, "<em>mail</em>")
+        self.assertNotContains(self.client.get(circle.get_absolute_url()), "Note added")
+
 
 class OneHistoryTest(TestCase):
     def test_circle_role_and_sub_circles(self):

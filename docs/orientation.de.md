@@ -20,7 +20,7 @@ anderer.
   seinen Sub-Kreisen) und der Rolle, die sie ändern.
 - **Geschichte**: was sich wann geändert hat; für einen Kreis mit seinen
   Rollen ("Mit Sub-Kreisen" auch, was darin ist) oder für eine Rolle, auf
-  Wunsch mit den Zuweisungen und mit Links, Metriken und Checklisten. Die
+  Wunsch mit den Zuweisungen und mit Links, Notizen, Metriken und Checklisten. Die
   Seiten der Kreise und Rollen verlinken ihre.
 - **Suchen** findet Personen (nach Name, Kurzname und Mailadresse, mit ihren Kreisen),
   Rollen, Accountabilities, Domains, Policies und Links (nach Titel und
@@ -50,7 +50,7 @@ Auf dem Mac <kbd>Ctrl</kbd> statt <kbd>Alt</kbd>. Fährst du mit der Maus
 
 Ein **Kreis** zeigt Purpose, Strategie, Domains, Accountabilities, seine
 Policies, seine Kernrollen und Meetings, offene Vorschläge, Checklisten
-und Metriken, Links, die Geschichte und seine Rollen mit ihren Role
+und Metriken, Links, Notizen, die Geschichte und seine Rollen mit ihren Role
 Leads (wer eine Rolle ausfüllt, Verfassung 1.1; die Role Leads eines
 Kreises sind die Circle Leads darin, 1.4). Gewählte Rollen, deren
 Amtszeit innert 14 Tagen endet oder die niemand hat, sind mit "Wahl
@@ -64,7 +64,7 @@ Maus über einer Zelle oder beim Antippen erscheinen die Knöpfe.
 
 Eine **Rolle** zeigt Purpose, Domains, Accountabilities, ihre Policies,
 wer sie hat (mit Fokus und Amtszeit, die Circle Leads weisen hier zu und
-entfernen), Checklisten, Metriken und Links. Alle können die Domains und
+entfernen), Checklisten, Metriken, Links und Notizen. Alle können die Domains und
 Accountabilities an ihren Griffen in eine andere Reihenfolge ziehen, das
 ist keine Änderung der Governance. Eine Domain mit Policies
 verlinkt sie ("2 Policies") und klappt sie auf; die Karte Policies
@@ -98,7 +98,7 @@ Texte sind einfaches Markdown (`**fett**`, Listen mit `-`, Links). Mit
 `@` erwähnst du eine Rolle: das Feld schlägt Namen vor, der Link zeigt
 immer den aktuellen Namen der Rolle.
 
-Kurze Formulare (Strategie, Metriken, Checklisten-Punkte, Links, Policies
+Kurze Formulare (Strategie, Metriken, Checklisten-Punkte, Links, Notizen, Policies
 einer Domain, Einstellungen, Zuweisen, Fokus und Entfernen, die Spannung
 eines Entwurfs) öffnen sich über der Seite.
 Escape schliesst sie; sobald etwas eingegeben ist, erst beim zweiten Mal.

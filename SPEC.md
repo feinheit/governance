@@ -139,6 +139,12 @@ accountability texts are known where proposals or `roles.json` have them.
   GlassFrog's "global" items, shown everywhere, aren't supported; items
   without circle and role belong to the anchor.
 - **`Link`**: `role`, `title`, `url`, `description`; anybody edits them.
+- **`Note`**: `role`, `title`, `body` (Markdown), `glassfrog_id`
+  (GlassFrog's notes, `rnot_…` from its API v5, imported after the
+  switchover: the v3 export had none); like links, anybody edits them,
+  the audit log keeps them, the history shows them on request, no mails
+  (decided 2026-11-12). A core role's notes stay with it (a Circle
+  Lead's), they aren't moved to the circle.
 - **Users**: everybody named in GlassFrog's data, matched by email,
   people who left as inactive users. Afterwards admins add people, and
   deactivate those who leave in the Django admin, which ends their
@@ -598,7 +604,7 @@ verify the mails; removed once they've proven themselves.
   last focus: changes of the focus come from the audit log's updates of
   assignments (`update.focus_changes()`, per day the first and the last,
   not on the day of assigning).
-- **Links, metrics and checklist items** are changes too (`link-added`
+- **Links, notes, metrics and checklist items** are changes too (`link-added`
   etc., `diff_items()`), operational: the history shows them on request,
   the role's page not.
 - **Filters** like Workbench's (`governance/filters.py`,
@@ -608,7 +614,7 @@ verify the mails; removed once they've proven themselves.
   inside them; today's roles, whose past moved along with them, those
   which left show their move, decided 2026-11-08) or a role alone (a
   former circle with its roles coming, going and moving out, not their
-  history), with assignments, with links, metrics and
+  history), with assignments, with links, notes, metrics and
   checklists; links to a day (`?day=`) open its page. A policy's page has
   its own history (its changes, the adopted proposals changing it), the
   days linking to its role's. The proposals by status,
@@ -637,12 +643,13 @@ verify the mails; removed once they've proven themselves.
   meeting has a button in the header. A role's governance meetings (for its inside, 1.3.1) are rare, its menu starts them and links its meetings (a circle's menu too, besides its Meetings card: easier to find), also the ad hoc tactical meetings it was invited to and a role's those of its circle, which invite all its roles (since it moved into the circle, if it did; `Meeting.objects.of_role()`; GlassFrog's tactical meetings have no invited roles; a circle's list has its own, not its super-circle's).
 - **Circle page**: purpose, strategy, domains, accountabilities, its
   policies, core roles (due elections marked), meetings, pending proposals,
-  metrics, checklists, links, history, roles with Role Leads and sub-circles.
+  metrics, checklists, links, notes, history, roles with Role Leads and sub-circles.
 - **Role page**: purpose, domains (linking to their
   policies, which the link opens, `frontend/open_details.js`), accountabilities, its policies, Role Leads with focus and
   terms (next to the name; lists of current assignments don't say since
   when, the focus is often younger: `roles/_assignment_note.html`), pending proposals
-  (also for its inside), metrics, checklists, links, history (its former
+  (also for its inside), metrics, checklists, links, notes (folded,
+  `#note-ID` unfolds one), history (its former
   names, the latest proposals and changes without the assignments and
   the counts of texts not recorded, `recent_history()`: GlassFrog
   renamed many roles without a proposal).
@@ -721,13 +728,13 @@ verify the mails; removed once they've proven themselves.
   the handbook's links were updated at the switchover using the
   imported GlassFrog IDs.
 - **Modals** like Workbench's for short forms opened from a page and
-  going back to it: the strategy, metrics, checklist items, links,
+  going back to it: the strategy, metrics, checklist items, links, notes,
   policies of a domain and settings on the role's page, a Role Lead's focus,
   a draft's tension, and a role's Role Leads (a card
   on its page: assigning, the focus and removing, confirmed first, back
   to the page with `?next=`; a circle's page lists its roles' Role Leads,
   changed on their pages), and the confirmations of deleting metrics,
-  checklist items and links and of removing a domain's policy
+  checklist items, links and notes and of removing a domain's policy
   of deleting a draft or an API token and of withdrawing (`generic/confirm.html`, GET asks, POST does it). A `<dialog>` loaded by htmx
   with the `HX-Modal` header (`frontend/modal.js`,
   `governance/modals.py`), the views stay as they are:

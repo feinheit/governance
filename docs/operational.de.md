@@ -7,10 +7,14 @@ Einiges ändert sich ohne Governance:
 | Zuweisungen und Fokus ("Role Leads" auf der Rollenseite) | Circle Leads |
 | Strategie des Kreises | Circle Leads |
 | Metriken | Circle Leads |
-| Checklisten-Punkte und Links | alle |
+| Checklisten-Punkte, Links und Notizen | alle |
 | Policies einer Domain | wer die Rolle mit der Domain hat |
 | Einstellungen (Frist für asynchrone Vorschläge, durch Policy gewählte Rollen) | Secretary |
 
+- Notizen halten fest, was bei der Arbeit einer Rolle hilft, z.B. eine
+  Checkliste oder wie etwas bestellt wird, in Markdown; "Notizen" auf der
+  Rollenseite, ein Klick klappt sie auf. Wie Links stehen sie auf Wunsch
+  in der Geschichte, Mails gibt es dazu keine.
 - Ein Kreis kann mehrere Circle Leads haben, alle dürfen all das. Die
   Circle Leads eines Sub-Kreises weisen die Circle Leads des
   übergeordneten Kreises zu; solange niemand einen Sub-Kreis leitet,

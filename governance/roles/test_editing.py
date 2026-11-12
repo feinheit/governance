@@ -163,6 +163,43 @@ class EditingTest(TestCase):
         self.client.post(f"/items/links/{link.pk}/delete/")
         self.assertFalse(Link.objects.exists())
 
+    def test_notes(self):
+        """Notes in Markdown, anybody edits them, nobody gets a mail"""
+        from django.core import mail
+
+        from governance.roles.models import Note
+
+        self.client.force_login(self.eve)
+        url = f"/roles/{self.kitchen.pk}/notes/new/"
+        self.assertContains(self.client.get(f"/roles/{self.kitchen.pk}/"), url)
+        self.assertEqual(
+            self.client.post(url, {"title": "", "body": ""}).status_code, 200
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                url,
+                {"title": "Ordering", "body": f"Ask **@[Cook](role:{self.cook.pk})**"},
+            )
+        note = Note.objects.get()
+        response = self.client.get(f"/roles/{self.kitchen.pk}/")
+        self.assertContains(response, f'id="note-{note.pk}"')
+        self.assertContains(response, "<strong>")
+        self.assertContains(response, self.cook.get_absolute_url())
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(
+                f"/items/notes/{note.pk}/", {"title": "Orders", "body": "By mail"}
+            )
+        note.refresh_from_db()
+        self.assertEqual((note.title, note.body), ("Orders", "By mail"))
+        self.client.post(f"/items/notes/{note.pk}/delete/")
+        self.assertFalse(Note.objects.exists())
+        self.assertEqual(mail.outbox, [])
+        # Archived roles keep theirs
+        self.cook.archived_on = dt.date.today()
+        self.cook.save()
+        url = f"/roles/{self.cook.pk}/notes/new/"
+        self.assertEqual(self.client.get(url).status_code, 403)
+
     def test_texts_order(self):
         """Anybody orders a role's accountabilities and domains, by dragging
         (their IDs) or with the arrows; it isn't governance, archived roles

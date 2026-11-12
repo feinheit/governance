@@ -7,7 +7,7 @@ from governance.accounts.models import APIToken, User
 from governance.history.models import Change
 from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal, Response
-from governance.roles.models import Accountability, Assignment, Policy, Role
+from governance.roles.models import Accountability, Assignment, Note, Policy, Role
 
 
 class BackupTest(TestCase):
@@ -22,6 +22,7 @@ class BackupTest(TestCase):
             role=cook, user=ada, focus="Soup", starts_on=dt.date(2026, 1, 1)
         )
         Policy.objects.create(role=kitchen, title="Tea")
+        Note.objects.create(role=cook, title="Pots", body="In the *cupboard*")
         now = timezone.now()
         published = Proposal.objects.create(
             circle=kitchen,
@@ -67,6 +68,10 @@ class BackupTest(TestCase):
         self.assertEqual(
             (role["circle"], role["glassfrog_id"], role["accountabilities"][0]["text"]),
             (kitchen.pk, 7, "Cooking"),
+        )
+        self.assertEqual(
+            [(n["title"], n["body"]) for n in role["notes"]],
+            [("Pots", "In the *cupboard*")],
         )
         self.assertEqual(
             [(r["user"], r["starts_on"]) for r in role["role_leads"]],

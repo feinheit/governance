@@ -1,5 +1,5 @@
 """Editing outside governance: the circle's strategy, metrics, checklist
-items and links, the order of accountabilities and domains, see the permissions in the decisions of SPEC.md"""
+items, links and notes, the order of accountabilities and domains, see the permissions in the decisions of SPEC.md"""
 
 from functools import partial
 
@@ -14,7 +14,7 @@ from django.views.decorators.http import require_POST
 from governance.forms import ModelForm
 from governance.history.update import update_today
 from governance.notifications import mails
-from governance.roles.models import ChecklistItem, Link, Metric, Role
+from governance.roles.models import ChecklistItem, Link, Metric, Note, Role
 from governance.roles.permissions import ALLOWED, NOT_ALLOWED, can_lead
 
 
@@ -26,10 +26,10 @@ def can_edit_strategy(user, role):
 
 def can_edit_items(user, role, model):
     """Metrics: the Circle Lead (a circle's own, or its roles'). Checklist
-    items and links: anybody, Holacracy defines no process for them."""
+    items, links and notes: anybody, Holacracy defines no process for them."""
     if role.archived_on:
         return NOT_ALLOWED
-    if model in {ChecklistItem, Link}:
+    if model in {ChecklistItem, Link, Note}:
         return ALLOWED
     return can_lead(user, role.governing_circle)
 
@@ -73,8 +73,13 @@ def strategy(request, pk):
     )
 
 
-MODELS = {"metrics": Metric, "checklist": ChecklistItem, "links": Link}
-FIELDS = {Link: ["title", "url", "description"]}
+MODELS = {
+    "metrics": Metric,
+    "checklist": ChecklistItem,
+    "links": Link,
+    "notes": Note,
+}
+FIELDS = {Link: ["title", "url", "description"], Note: ["title", "body"]}
 
 
 class ItemForm(ModelForm):
@@ -117,6 +122,7 @@ def item_edit(request, kind, pk=None, role_pk=None):
                 Metric: gettext("Metric of %(role)s"),
                 ChecklistItem: gettext("Checklist item of %(role)s"),
                 Link: gettext("Link of %(role)s"),
+                Note: gettext("Note of %(role)s"),
             }[model]
             % {"role": role},
             "form": form,
@@ -127,7 +133,7 @@ def item_edit(request, kind, pk=None, role_pk=None):
 
 
 def item_delete(request, kind, pk):
-    """Deleting a metric, checklist item or link, confirmed first (in a
+    """Deleting a metric, checklist item, link or note, confirmed first (in a
     modal on the role's page)"""
     model = MODELS.get(kind)
     if model is None:
@@ -146,6 +152,7 @@ def item_delete(request, kind, pk):
                 Metric: gettext("Delete this metric?"),
                 ChecklistItem: gettext("Delete this checklist item?"),
                 Link: gettext("Delete this link?"),
+                Note: gettext("Delete this note?"),
             }[model],
             "help": item.role,
             "text": item,

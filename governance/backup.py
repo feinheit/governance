@@ -3,7 +3,7 @@
 ``GET /api/backup/`` (``gov backup``): ``roles``, all of them (archived
 ones too) ordered by ID, each with its circle's ID and what belongs to it:
 texts, policies (with their history), Role Leads (past ones too), metrics,
-checklist items, links, its history (the day-to-day changes since 2018)
+checklist items, links, notes, its history (the day-to-day changes since 2018)
 and the proposals and meetings it's the circle of; ``meetings`` without a
 circle (ad hoc tactical meetings); ``people`` only when asked for
 (``?people=true``), the rest refers to them by ID. ``gov backup DIR``
@@ -24,6 +24,7 @@ from governance.roles.models import (
     Domain,
     Link,
     Metric,
+    Note,
     Policy,
     Role,
 )
@@ -126,6 +127,12 @@ def roles(user):
         links=by(
             "role",
             rows(Link.objects.all(), "role", "title", "url", "description", "position"),
+        ),
+        notes=by(
+            "role",
+            rows(
+                Note.objects.all(), "role", "title", "body", "position", "glassfrog_id"
+            ),
         ),
         history=history("role", role__isnull=False, policy__isnull=True),
         proposals=by("circle", proposals(user)),

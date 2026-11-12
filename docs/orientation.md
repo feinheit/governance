@@ -19,7 +19,7 @@ active person. Everybody signed in sees everything except others' drafts.
   its sub-circles) and the role they change.
 - **History**: what changed when; for a circle with its roles ("With
   sub-circles" also what's inside them) or for a role, on request with
-  the assignments and with links, metrics and checklists. The pages of
+  the assignments and with links, notes, metrics and checklists. The pages of
   circles and roles link theirs.
 - **Search** finds people (by name, short name and mail address, with their circles),
   roles, accountabilities, domains, policies and links (by title and
@@ -48,7 +48,7 @@ link with the mouse shows its shortcut.
 
 A **circle** shows its purpose, strategy, domains, accountabilities, its
 policies, its core roles and meetings, open proposals, checklists and
-metrics, links, the history and its roles with their Role Leads (who
+metrics, links, notes, the history and its roles with their Role Leads (who
 fills a role, constitution 1.1; a circle's Role Leads are the Circle
 Leads inside it, 1.4). Elected roles whose term ends within 14 days or
 which nobody holds are marked "election due", here and on the person
@@ -63,7 +63,7 @@ buttons.
 
 A **role** shows its purpose, domains, accountabilities, its policies,
 who holds it (with focus and term, the Circle Leads assign and remove
-here), checklists, metrics and links. Anybody drags the domains and
+here), checklists, metrics, links and notes. Anybody drags the domains and
 accountabilities into another order by their handles, which isn't a
 change of governance. A domain with policies links to
 them ("2 policies"), which opens them; the policies card is there only
@@ -97,7 +97,7 @@ Texts are simple Markdown (`**bold**`, lists with `-`, links). With `@`
 you mention a role: the field suggests names, the link always shows the
 role's current name.
 
-Short forms (strategy, metrics, checklist items, links, policies of a
+Short forms (strategy, metrics, checklist items, links, notes, policies of a
 domain, settings, assigning, a Role Lead's focus and removing them, the
 tension of a draft) open above the page. Escape closes them; once something has
 been entered, only when pressed twice.

@@ -360,6 +360,48 @@
         </section>
       {% endif %}
 
+      {% if notes or can_edit_notes %}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Notes" %}</h2></div>
+          <div class="list-group list-group-flush">
+            {% for note in notes %}
+              <details class="list-group-item wb-details" id="note-{{ note.pk }}">
+                <summary><span class="wb-row-title d-inline">{{ note }}</span></summary>
+                {% if note.body %}<div class="wb-markdown wb-description mt-2">{{ note.body|markdown }}</div>{% endif %}
+                {% if can_edit_notes %}
+                  <div class="d-flex gap-1 mt-2">
+                    <a
+                      class="btn btn-sm btn-quiet"
+                      href="{% url 'role_item' 'notes' note.pk %}"
+                      data-modal
+                      title="{% translate "Edit" %}"
+                    >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>
+                    <a
+                      {% button_class can_edit_notes "btn-destructive" title=_("Delete") %}
+                      href="{% url 'role_item_delete' 'notes' note.pk %}"
+                      data-modal
+                    >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>
+                  </div>
+                {% endif %}
+              </details>
+            {% empty %}
+              <div class="list-group-item text-body-secondary">
+                {% translate "E.g. a checklist or how something is ordered." %}
+              </div>
+            {% endfor %}
+            {% if can_edit_notes %}
+              <div class="list-group-item">
+                <a
+                  class="btn btn-sm btn-quiet"
+                  href="{% url 'role_notes_add' role.pk %}"
+                  data-modal
+                >{% icon "plus-lg" %} {% translate "Add a note" %}</a>
+              </div>
+            {% endif %}
+          </div>
+        </section>
+      {% endif %}
+
       <section class="card mb-4">
         <div class="card-header"><h2 class="h6 mb-0">{% translate "History" %}</h2></div>
         <ul class="list-group list-group-flush">
