@@ -9,14 +9,17 @@ from rich.text import Text
 from gov.core import cli, complete_roles, console, echo_json, request
 
 
+def _title(note):
+    # gov's console has no markup: the title as Text, linked and bold
+    return Text(note["title"], style=Style(bold=True, link=note["url"]))
+
+
 def _print(notes):
     if not notes:
         console.print("No notes.")
         return
     for note in notes:
-        # gov's console has no markup: the title as Text, linked and bold
-        title = Text(note["title"], style=Style(bold=True, link=note["url"]))
-        console.print(Text.assemble(title, f" ({note['id']})"))
+        console.print(Text.assemble(_title(note), f" ({note['id']})"))
         if note["body"]:
             console.print(Markdown(note["body"]))
         console.print()
@@ -63,7 +66,10 @@ def add(role, title, body, file, as_json):
         f"roles/{role}/notes/",
         json={"title": title, "body": _body(body, file) or ""},
     )
-    echo_json(data) if as_json else _print([data])
+    if as_json:
+        echo_json(data)
+    else:
+        console.print(Text.assemble(f"Added note {data['id']} ", _title(data), "."))
 
 
 @notes.command("update")
@@ -81,7 +87,10 @@ def update(id, title, body, file, as_json):
     if not changes:
         raise click.UsageError("Nothing to change: --title, --body or --file.")
     data = request("PATCH", f"notes/{id}/", json=changes)
-    echo_json(data) if as_json else _print([data])
+    if as_json:
+        echo_json(data)
+    else:
+        console.print(Text.assemble(f"Changed note {data['id']} ", _title(data), "."))
 
 
 @notes.command("remove")

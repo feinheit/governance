@@ -432,16 +432,16 @@ class CLITest(TestCase):
         result = self.gov(
             "notes", "add", self.kitchen.pk, "Pots", "--file", "-", input="- *Big*\n"
         )
-        self.assertIn("Pots", result.output)
-        self.assertIn("Big", result.output)
-        self.assertNotIn("[bold]", result.output)
         note = json.loads(self.gov("notes", "list", self.kitchen.pk, "--json").output)[
             0
         ]
+        self.assertEqual(result.output, f"Added note {note['id']} Pots.\n")
         self.assertEqual(note["body"], "- *Big*")
-        self.gov("notes", "update", note["id"], "--body", "Small ones too")
+        result = self.gov("notes", "update", note["id"], "--body", "Small ones too")
+        self.assertEqual(result.output, f"Changed note {note['id']} Pots.\n")
         result = self.gov("notes", "list", self.kitchen.pk)
         self.assertIn("Small ones too", result.output)
+        self.assertNotIn("[bold]", result.output)
         self.assertIn("Pots", self.gov("circles", "show", self.kitchen.pk).output)
         result = self.gov("notes", "update", note["id"])
         self.assertIn("Nothing to change", result.output)
