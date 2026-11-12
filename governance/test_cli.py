@@ -434,6 +434,7 @@ class CLITest(TestCase):
         )
         self.assertIn("Pots", result.output)
         self.assertIn("Big", result.output)
+        self.assertNotIn("[bold]", result.output)
         note = json.loads(self.gov("notes", "list", self.kitchen.pk, "--json").output)[
             0
         ]

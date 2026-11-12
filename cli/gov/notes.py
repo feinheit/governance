@@ -3,8 +3,10 @@ Markdown"""
 
 import click
 from rich.markdown import Markdown
+from rich.style import Style
+from rich.text import Text
 
-from gov.core import cli, complete_roles, console, echo_json, link, request
+from gov.core import cli, complete_roles, console, echo_json, request
 
 
 def _print(notes):
@@ -12,10 +14,9 @@ def _print(notes):
         console.print("No notes.")
         return
     for note in notes:
-        console.print(
-            f"[bold]{link(note['title'], note['url'])}[/bold] ({note['id']})",
-            highlight=False,
-        )
+        # gov's console has no markup: the title as Text, linked and bold
+        title = Text(note["title"], style=Style(bold=True, link=note["url"]))
+        console.print(Text.assemble(title, f" ({note['id']})"))
         if note["body"]:
             console.print(Markdown(note["body"]))
         console.print()
