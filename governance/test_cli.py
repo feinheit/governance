@@ -87,12 +87,15 @@ class CLITest(TestCase):
         config = gov.core.read_config()
         config["installations"]["http://testserver"] = {"token": token}
         gov.core.write_config(config)
-        result = CliRunner().invoke(
-            gov.cli,
-            [str(arg) for arg in args],
-            env={"GOVERNANCE_URL": "http://testserver", "GOV_DEBUG": "1"},
-            input=input,
-        )
+        # rich chooses colors and links when creating the console, from
+        # the real stdout: plain text as into a pipe, also in a terminal
+        with patch.object(gov.core.console, "_color_system", None):
+            result = CliRunner().invoke(
+                gov.cli,
+                [str(arg) for arg in args],
+                env={"GOVERNANCE_URL": "http://testserver", "GOV_DEBUG": "1"},
+                input=input,
+            )
         if result.exception and not isinstance(result.exception, SystemExit):
             raise result.exception
         return result
