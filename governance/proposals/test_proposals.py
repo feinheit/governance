@@ -431,3 +431,47 @@ class DeleteEmptyTest(TestCase):
             {tension.pk, changes.pk, responded.pk, on_agenda.pk},
         )
         self.assertFalse(Proposal.objects.filter(pk__in=[empty.pk, blank.pk]))
+
+
+class DeleteEmptyDraftsTest(TestCase):
+    def test_migration_deletes_empty_drafts_on_ended_agendas(self):
+        """Empty drafts on the agenda of an ended meeting go, the item stays;
+        not those on a meeting's agenda not ended yet, nor adopted ones"""
+        from importlib import import_module
+
+        from django.apps import apps
+
+        from governance.meetings.models import AgendaItem, Meeting
+
+        migration = import_module(
+            "governance.proposals.migrations.0011_delete_empty_drafts"
+        )
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        now = timezone.now()
+        ended = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.GOVERNANCE, started_at=now, ended_at=now
+        )
+        running = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.GOVERNANCE, started_at=now
+        )
+
+        def on_agenda(meeting, **kwargs):
+            proposal = Proposal.objects.create(
+                circle=kitchen, proposer=ada, created_at=now, **kwargs
+            )
+            AgendaItem.objects.create(
+                meeting=meeting, position=1, proposal=proposal, label="Election"
+            )
+            return proposal
+
+        gone = on_agenda(ended)
+        adopted = on_agenda(ended, status=Proposal.ADOPTED)
+        current = on_agenda(running)
+        migration.delete_empty_drafts(apps, None)
+        self.assertEqual(
+            set(Proposal.objects.values_list("pk", flat=True)),
+            {adopted.pk, current.pk},
+        )
+        self.assertFalse(Proposal.objects.filter(pk=gone.pk))
+        self.assertEqual(AgendaItem.objects.filter(label="Election").count(), 3)
