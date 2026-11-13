@@ -134,6 +134,20 @@ def proposal_to_meeting(proposal, problems):
     )
 
 
+def proposal_conflicting(proposal, problems, adopted):
+    """A proposal adopted meanwhile (or another change, ``adopted`` is
+    ``None``) conflicts with the published one: it's its proposer's draft
+    again"""
+    return to_everybody(
+        proposal,
+        gettext_noop("Conflict in %(circle)s: %(proposal)s"),
+        "notifications/proposal_conflicting.txt",
+        problems=problems,
+        adopted=adopted,
+        adopted_url=adopted and settings.BASE_URL + adopted.get_absolute_url(),
+    )
+
+
 def proposal_expired(proposal):
     """It waited for a meeting too long: the proposer's draft again"""
     return send(

@@ -61,10 +61,7 @@ Policy eine festlegt), antworten sie:
 
 Sind alle anderen ohne Einwand, ist der Vorschlag sofort angenommen,
 sonst innert einer Stunde nach der Frist ("wird angenommen am"); ohne Frist
-erst, wenn alle zugestimmt haben. Geht das dann
-nicht (z.B. weil eine Rolle, die er ändert, inzwischen geändert wurde),
-wartet er auf das nächste Governance Meeting, und die Mitglieder des
-Kreises erhalten eine Mail mit dem Grund. Verlässt jemand den Kreis,
+erst, wenn alle zugestimmt haben. Verlässt jemand den Kreis,
 wird er deswegen nicht früher angenommen: er wartet auf die Frist. Einwände gibt es
 asynchron nicht, sie werden im Meeting geprüft: asynchron ist für
 unumstrittene Änderungen.
@@ -75,6 +72,20 @@ aktuellen Mitglieder), Fragen und Bedenken stehen mit Namen.
 Veröffentlichte Vorschläge lassen sich nicht ändern: "Zurück zum Entwurf"
 (der Kreis beginnt danach von vorne) oder "Zurückziehen". Beides erfahren
 die Mitglieder des Kreises per Mail. Während sein Meeting läuft, verwirft ihn stattdessen, wer dort Secretary ist.
+
+## Konflikte
+
+Ändert ein inzwischen angenommener Vorschlag (asynchron oder im Meeting),
+was auch ein offener Vorschlag ändert, z.B. dieselbe Accountability,
+lässt sich der offene so nicht mehr annehmen. Listen und seine Seite
+zeigen ihn als **Konflikt**, seine Seite sagt warum. Ein veröffentlichter
+wird sofort wieder dein Entwurf, und die Mitglieder des Kreises erhalten
+eine Mail: öffne die Rolle oder Policy im Vorschlag, das Formular zeigt
+beide Fassungen zum Zusammenführen, und veröffentliche ihn wieder (der
+Kreis beginnt von vorne). Einer, der auf ein Meeting wartet, wartet
+weiter, wer Secretary ist, führt ihn im Meeting zusammen. Änderungen
+einer Rolle an den Policies ihrer Domains werden in der folgenden Nacht
+gefunden.
 
 ## Wartet auf ein Meeting
 

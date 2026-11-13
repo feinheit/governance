@@ -59,10 +59,7 @@ Until the deadline the circle sets (if a policy sets one), they respond:
 
 When everybody else has no objection, the proposal is adopted right away,
 otherwise within an hour after the deadline ("to be adopted on"); without
-a deadline only when everybody consented. If it
-can't be adopted then (e.g. a role it changes was changed meanwhile), it
-waits for the next governance meeting, and the circle's members get a
-mail saying why. Somebody leaving the circle doesn't make it pass
+a deadline only when everybody consented. Somebody leaving the circle doesn't make it pass
 earlier: it waits for the deadline.
 Objections don't exist async, they're tested in the meeting: async is for
 uncontroversial changes.
@@ -73,6 +70,18 @@ current members), questions and concerns show their author.
 Published proposals can't be changed: "Back to the draft" (the circle
 starts over afterwards) or "Withdraw". Both tell the circle's members by
 mail. While its meeting runs, the secretary discards it there instead.
+
+## Conflicts
+
+When a proposal adopted meanwhile (async or in a meeting) changes what an
+open proposal changes too, e.g. the same accountability, the open one
+can't be adopted like this anymore. Lists and its page mark it as
+**conflict**, its page says why. A published one goes back to your draft
+right away, and the circle's members get a mail: open the role or policy
+in the proposal, the form shows both versions to merge, and publish it
+again (the circle starts over). One waiting for a meeting stays there,
+the secretary merges it in the meeting. A role's own changes of the
+policies for its domains are found the next night.
 
 ## Waiting for a meeting
 

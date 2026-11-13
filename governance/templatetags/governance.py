@@ -95,6 +95,8 @@ TONES = {
     "withdrawn": "neutral",
     "consent": "success",
     "objection": "danger",
+    # Can't be adopted like this, like an objection (Proposal.conflicting)
+    "conflicting": "danger",
     "meeting": "warning",
     "comment": "info",
     "added": "success",

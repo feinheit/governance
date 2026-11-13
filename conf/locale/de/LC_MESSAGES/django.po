@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 07:53+0100\n"
+"POT-Creation-Date: 2026-11-13 08:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -106,6 +106,7 @@ msgid "API token"
 msgstr "API-Token"
 
 #: governance/accounts/models.py governance/templates/accounts/api_tokens.html
+#: governance/templates/base.html
 msgid "API tokens"
 msgstr "API-Tokens"
 
@@ -797,6 +798,11 @@ msgstr "Wartet auf ein Meeting in %(circle)s: %(proposal)s"
 
 #: governance/notifications/mails.py
 #, python-format
+msgid "Conflict in %(circle)s: %(proposal)s"
+msgstr "Konflikt in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
 msgid "Back to your draft in %(circle)s: %(proposal)s"
 msgstr "Wieder dein Entwurf in %(circle)s: %(proposal)s"
 
@@ -1337,6 +1343,14 @@ msgstr "veröffentlicht"
 #: governance/proposals/models.py
 msgid "deadline"
 msgstr "Frist"
+
+#: governance/proposals/models.py
+msgid "conflicting"
+msgstr "im Konflikt"
+
+#: governance/proposals/models.py
+msgid "A change adopted meanwhile conflicts with it: it can't be adopted like this."
+msgstr "Eine inzwischen angenommene Änderung steht im Konflikt damit: so kann er nicht angenommen werden."
 
 #: governance/proposals/models.py
 msgid "waiting since"
@@ -2116,10 +2130,6 @@ msgid "Mail addresses"
 msgstr "Mailadressen"
 
 #: governance/templates/base.html
-msgid "API"
-msgstr "API"
-
-#: governance/templates/base.html
 msgid "Administration"
 msgstr "Verwaltung"
 
@@ -2467,6 +2477,7 @@ msgstr "Ergebnisse"
 
 #: governance/templates/meetings/_outputs.html
 #: governance/templates/notifications/meeting_ended.txt
+#: governance/templates/notifications/proposal_conflicting.txt
 #: governance/templates/notifications/proposal_withdrawn.txt
 msgid "Adopted"
 msgstr "Angenommen"
@@ -2624,6 +2635,7 @@ msgstr "Eine Spannung, in ein bis zwei Wörtern"
 #: governance/templates/meetings/meeting_detail.html
 #: governance/templates/notifications/proposal_adopted.txt
 #: governance/templates/notifications/proposal_back_to_draft.txt
+#: governance/templates/notifications/proposal_conflicting.txt
 #: governance/templates/notifications/proposal_expired.txt
 #: governance/templates/notifications/proposal_published.txt
 #: governance/templates/notifications/proposal_retracted.txt
@@ -2815,6 +2827,20 @@ msgstr "In %(circle)s wurde ein Vorschlag angenommen."
 msgid "%(proposer)s has taken the proposal in %(circle)s back to the draft to change it. It's not open for responses anymore; when it's published again, the circle starts over."
 msgstr "%(proposer)s hat den Vorschlag in %(circle)s zurück zum Entwurf genommen, um ihn zu ändern. Er ist nicht mehr offen für Antworten; wird er wieder veröffentlicht, beginnt der Kreis von vorne."
 
+#: governance/templates/notifications/proposal_conflicting.txt
+#, python-format
+msgid "The proposal in %(circle)s conflicts with \"%(adopted)s\", adopted meanwhile, and can't be adopted like this anymore:"
+msgstr "Der Vorschlag in %(circle)s steht im Konflikt mit \"%(adopted)s\", inzwischen angenommen, und kann so nicht mehr angenommen werden:"
+
+#: governance/templates/notifications/proposal_conflicting.txt
+#, python-format
+msgid "The proposal in %(circle)s conflicts with a change made meanwhile and can't be adopted like this anymore:"
+msgstr "Der Vorschlag in %(circle)s steht im Konflikt mit einer inzwischen gemachten Änderung und kann so nicht mehr angenommen werden:"
+
+#: governance/templates/notifications/proposal_conflicting.txt
+msgid "It's a draft again and not open for responses anymore: once updated and published again, the circle starts over."
+msgstr "Er ist wieder ein Entwurf und nicht mehr offen für Antworten; wird er angepasst und wieder veröffentlicht, beginnt der Kreis von vorne."
+
 #: governance/templates/notifications/proposal_expired.txt
 #, python-format
 msgid "The proposal in %(circle)s waited three months for a governance meeting without being processed. It's your draft again, only you see it: bring it to a meeting, publish it async or delete it."
@@ -2979,6 +3005,11 @@ msgstr "Verschieben"
 #, python-format
 msgid "Move into %(circle)s"
 msgstr "Nach %(circle)s verschieben"
+
+#: governance/templates/proposals/_proposal_row.html
+#: governance/templates/proposals/proposal_detail.html
+msgid "conflict"
+msgstr "Konflikt"
 
 #: governance/templates/proposals/proposal_detail.html
 msgid "from the role"

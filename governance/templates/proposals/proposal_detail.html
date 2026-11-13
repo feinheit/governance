@@ -18,7 +18,8 @@
             >{{ proposal.role }}</a></span>{% endif %}
         <span><span class="wb-meta-label">{% translate "status" %}</span> <span
             class="badge {{ proposal.status|tone }}"
-          >{{ proposal.get_status_display }}</span></span>
+          >{{ proposal.get_status_display }}</span>{% if proposal.is_conflicting %}
+            <span class="badge {{ "conflicting"|tone }}">{% translate "conflict" %}</span>{% endif %}</span>
         {# The latest that happened: created, published, adopted or withdrawn #}
         {% if not proposal.published_at and not proposal.decided_at %}<span><span
               class="wb-meta-label"

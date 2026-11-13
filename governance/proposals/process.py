@@ -273,6 +273,42 @@ def retract(proposal):
     transaction.on_commit(partial(mails.proposal_retracted, proposal))
 
 
+def recheck_conflicts(adopted=None):
+    """After adopting a proposal (and daily, also for changes outside
+    proposals, e.g. a role's policies for its domains): the open proposals which can't be adopted
+    like this anymore are marked as conflicting (lists and pages show it,
+    decided 2026-11-13), published ones go back to their proposer's draft
+    right away (their consents were to a proposal which can't pass) and
+    the circle learns why; saving them merged with the current structure
+    clears it (``Proposal.save()``)"""
+    open_proposals = (
+        Proposal.objects
+        .filter(status__in=[Proposal.DRAFT, Proposal.PUBLISHED, Proposal.IN_MEETING])
+        .exclude(instructions=[])
+        .select_related("circle", "proposer")
+    )
+    if adopted is not None:
+        open_proposals = open_proposals.exclude(pk=adopted.pk)
+    for proposal in open_proposals:
+        found = problems(proposal)
+        if found and proposal.status == Proposal.PUBLISHED:
+            # Only while it's published: not one adopted meanwhile (the
+            # daily run doesn't lock the structure)
+            if Proposal.objects.filter(
+                pk=proposal.pk, status=Proposal.PUBLISHED
+            ).update(
+                status=Proposal.DRAFT,
+                published_at=None,
+                deadline=None,
+                conflicting=True,
+            ):
+                transaction.on_commit(
+                    partial(mails.proposal_conflicting, proposal, found, adopted)
+                )
+        elif bool(found) != proposal.conflicting:
+            Proposal.objects.filter(pk=proposal.pk).update(conflicting=bool(found))
+
+
 # How long a proposal waits for a meeting before going back to its
 # proposer's draft (decided 2026-11-13)
 WAITING_PERIOD = dt.timedelta(days=90)

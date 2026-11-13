@@ -237,7 +237,7 @@ commits the app's JSON backup daily to a git repository instead.
   today. Circles in the organization's order: `Role.objects.depth_first()`.
 - Badges are tinted in tones (`wb-tone-*` in `main.css`, light and dark):
   states and kinds through the `tone` filter (`badge {{ x.status|tone }}`),
-  role kinds in the circle browser's colors (circle blue, core and elected purple), ad hoc tactical meetings hollow and dashed (not a circle's, `Meeting.kind_key`). Red only for objections; removing is housekeeping, gray.
+  role kinds in the circle browser's colors (circle blue, core and elected purple), ad hoc tactical meetings hollow and dashed (not a circle's, `Meeting.kind_key`). Red only for objections and conflicts (`Proposal.conflicting`); removing is housekeeping, gray.
   Changed texts are diffs (`governance/diff.py`, the `diff` filter):
   removed words red, added green, like diffs elsewhere.
   Buttons: `btn-destructive` (red ink) for deleting, removing somebody,

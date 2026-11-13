@@ -221,12 +221,17 @@ class ProcessTest(TestCase):
             mail.outbox = []
             with self.captureOnCommitCallbacks(execute=True):
                 self.assertEqual(adopt_due_proposals(), [proposal])
-            # The other one conflicts now: it goes to the meeting, those who
-            # got it learn why
+            # The other one conflicts now: back to its proposer's draft
+            # right away, those who got it learn why
             conflicting.refresh_from_db()
-            self.assertEqual(conflicting.status, Proposal.IN_MEETING)
+            self.assertEqual(conflicting.status, Proposal.DRAFT)
+            self.assertTrue(conflicting.is_conflicting)
+            self.assertEqual(
+                (conflicting.published_at, conflicting.deadline), (None, None)
+            )
             messages = [m for m in mail.outbox if "Another name" in m.subject]
-            self.assertIn("next governance meeting", messages[0].body)
+            self.assertIn("Conflict", messages[0].subject)
+            self.assertIn('conflicts with "Better name"', messages[0].body)
             self.assertIn("has been changed", messages[0].body)
             self.assertEqual(
                 {m.to[0] for m in messages}, {"ada@example.com", "bob@example.com"}
@@ -619,3 +624,97 @@ class WaitingTest(TestCase):
         self.assertEqual(expire_waiting(now=NOW + dt.timedelta(days=91)), [])
         proposal.refresh_from_db()
         self.assertEqual(proposal.status, Proposal.WITHDRAWN)
+
+
+@time_machine.travel(NOW, tick=False)
+class ConflictTest(TestCase):
+    """Open proposals a change adopted meanwhile conflicts with show it at
+    once (decided 2026-11-13)"""
+
+    def setUp(self):
+        self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        self.bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        self.kitchen = Role.objects.create(
+            name="Kitchen", is_circle=True, async_acceptance_days=2
+        )
+        self.kitchen.create_core_roles()
+        self.cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        for user in [self.ada, self.bob]:
+            Assignment.objects.create(role=self.cook, user=user)
+
+    def rename(self, name, original="Cook", **kwargs):
+        return Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            role=self.cook,
+            tension=f"Call it {name}",
+            created_at=timezone.now(),
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{self.cook.pk}/name",
+                    "original_value": original,
+                    "value": name,
+                },
+            ],
+            names={f"roles/{self.cook.pk}": "Cook"},
+            **kwargs,
+        )
+
+    def test_waiting_and_drafts(self):
+        """Those waiting for a meeting and drafts stay where they are,
+        marked; merged with the current structure, the mark goes"""
+        from governance.proposals.instructions import adopt
+
+        waiting = self.rename("Baker", status=Proposal.IN_MEETING)
+        draft = self.rename("Butcher")
+        unrelated = Proposal.objects.create(
+            circle=self.kitchen,
+            proposer=self.ada,
+            role=self.cook,
+            tension="Another role",
+            created_at=timezone.now(),
+            instructions=[
+                {"op": "add", "path": "/roles/n1"},
+                {"op": "add", "path": "/roles/n1/name", "value": "Waiter"},
+            ],
+            status=Proposal.IN_MEETING,
+        )
+        adopt(self.rename("Chef"))
+        for proposal in [waiting, draft, unrelated]:
+            proposal.refresh_from_db()
+        self.assertEqual(waiting.status, Proposal.IN_MEETING)
+        self.assertEqual(draft.status, Proposal.DRAFT)
+        self.assertTrue(waiting.is_conflicting)
+        self.assertTrue(draft.is_conflicting)
+        self.assertFalse(unrelated.conflicting)
+        # Everybody sees it in the lists and on its page, with why
+        self.client.force_login(self.bob)
+        self.assertContains(self.client.get("/proposals/"), ">conflict<", 1)
+        response = self.client.get(waiting.get_absolute_url())
+        self.assertContains(response, ">conflict<")
+        self.assertContains(response, "can't be adopted like this")
+        api = self.client.get(f"/api/proposals/{waiting.pk}/").json()
+        self.assertTrue(api["conflicting"])
+        self.assertTrue(api["problems"])
+        # Amended against the current name
+        waiting.instructions[0]["original_value"] = "Chef"
+        waiting.save(update_fields=["instructions"])
+        waiting.refresh_from_db()
+        self.assertFalse(waiting.conflicting)
+
+    def test_daily(self):
+        """The daily task also finds conflicts with changes outside
+        proposals"""
+        from django.core import mail
+
+        published = publish(self.rename("Baker"))
+        Role.objects.filter(pk=self.cook.pk).update(name="Chef")
+        mail.outbox = []
+        with self.captureOnCommitCallbacks(execute=True):
+            call_command("fairy_tasks")
+        published.refresh_from_db()
+        self.assertEqual(published.status, Proposal.DRAFT)
+        self.assertTrue(published.conflicting)
+        messages = [m for m in mail.outbox if "Conflict" in m.subject]
+        self.assertIn("a change made meanwhile", messages[0].body)

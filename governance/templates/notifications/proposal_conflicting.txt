@@ -1,0 +1,12 @@
+{% load governance i18n %}{% autoescape off %}{% if adopted %}{% blocktranslate with circle=proposal.circle adopted=adopted %}The proposal in {{ circle }} conflicts with "{{ adopted }}", adopted meanwhile, and can't be adopted like this anymore:{% endblocktranslate %}{% else %}{% blocktranslate with circle=proposal.circle %}The proposal in {{ circle }} conflicts with a change made meanwhile and can't be adopted like this anymore:{% endblocktranslate %}{% endif %}
+{% for problem in problems %}
+- {{ problem }}{% endfor %}
+
+{% blocktranslate %}It's a draft again and not open for responses anymore: once updated and published again, the circle starts over.{% endblocktranslate %}
+
+{% translate "Tension" %}:
+{{ proposal.tension|plain }}
+
+{{ url }}{% if adopted %}
+{% translate "Adopted" %}: {{ adopted_url }}{% endif %}
+{% endautoescape %}

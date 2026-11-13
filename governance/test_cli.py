@@ -276,7 +276,20 @@ class CLITest(TestCase):
             ],
         }
         later = Proposal.objects.create(
-            **published, tension="Later", deadline=now + dt.timedelta(days=5)
+            **published
+            | {
+                # Not conflicting with the sooner one, adopted first
+                "instructions": [
+                    {
+                        "op": "replace",
+                        "path": f"/roles/{dishes.pk}/aim",
+                        "original_value": "",
+                        "value": "Clean plates",
+                    }
+                ]
+            },
+            tension="Later",
+            deadline=now + dt.timedelta(days=5),
         )
         sooner = Proposal.objects.create(
             **published, tension="Sooner", deadline=now + dt.timedelta(days=2)

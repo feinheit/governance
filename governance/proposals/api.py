@@ -96,6 +96,8 @@ class ProposalOut(Schema):
     adopted_on: str | None
     decided_at: str | None
     url: str
+    # A change adopted meanwhile conflicts with it (open ones only)
+    conflicting: bool
     problems: list[str]
     responses: ResponsesOut | None
     # The user's current position on a published proposal: consent or
@@ -147,8 +149,10 @@ def out(request, proposal):
         "adopted_on": proposal.adopted_on and proposal.adopted_on.isoformat(),
         "decided_at": _iso(proposal.decided_at),
         "url": settings.BASE_URL + proposal.get_absolute_url(),
+        "conflicting": proposal.is_conflicting,
         "problems": problems(proposal)
-        if own_draft(request.user, proposal) and proposal.instructions
+        if (own_draft(request.user, proposal) or proposal.is_conflicting)
+        and proposal.instructions
         else [],
         "responses": responses_out(proposal),
         "my_response": my_response(request.user, proposal),

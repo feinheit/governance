@@ -12,7 +12,8 @@ everything in all circles" in their settings.
 | A proposal is published | The circle's members, "everything", the proposer |
 | The proposer takes it back to a draft | The same |
 | The proposer withdraws it | The same |
-| It can't be adopted async and waits for a meeting (an objection, a conflict) | The same |
+| It can't be adopted async at the deadline and waits for a meeting | The same |
+| A change adopted meanwhile conflicts with it: back to the proposer's draft | The same |
 | It's adopted async (by the last consent or at the deadline) | The same, and the Role Leads of roles it removes or moves away, and the Secretaries and Circle Leads of sub-circles it moves roles or policies into or out of |
 | A question or comment | The proposer |
 | The proposer answers | Who asked or commented (still members of the circle) |

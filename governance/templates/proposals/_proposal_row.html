@@ -9,6 +9,9 @@
     </div>
   </div>
   <div class="wb-row-aside">
+    {% if proposal.is_conflicting %}<span
+        class="badge {{ "conflicting"|tone }}"
+      >{% translate "conflict" %}</span>{% endif %}
     {% if proposal.status != "adopted" %}<span
         class="badge {{ proposal.status|tone }}"
       >{{ proposal.get_status_display }}</span>{% endif %}

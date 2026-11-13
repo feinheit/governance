@@ -231,8 +231,9 @@ class GovernanceMeetingScenarioTest(TestCase):
 
 
 class AsyncAndMeetingScenarioTest(TestCase):
-    """An async proposal and a meeting change the same accountability: at
-    the deadline the async one goes to the meeting, the secretary merges"""
+    """An async proposal and a meeting change the same accountability: when
+    the meeting adopts its change, the async one goes back to its
+    proposer's draft at once, who merges and publishes it again"""
 
     def setUp(self):
         self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
@@ -269,7 +270,6 @@ class AsyncAndMeetingScenarioTest(TestCase):
         return Meeting.objects.running().get()
 
     def test_async_after_the_meeting(self):
-        start = timezone.now()
         # Eve publishes her change
         self.client.force_login(self.eve)
         self.client.post(
@@ -296,48 +296,35 @@ class AsyncAndMeetingScenarioTest(TestCase):
         self.cooking.refresh_from_db()
         self.assertEqual(self.cooking.text, "Cooking food")
 
-        # The deadline passes: the async proposal conflicts, it waits for a
-        # meeting instead of being adopted
-        with time_machine.travel(start + dt.timedelta(days=5), tick=False):
+        # The async proposal conflicts now: back to Eve's draft, marked
+        async_proposal.refresh_from_db()
+        self.assertEqual(async_proposal.status, Proposal.DRAFT)
+        self.assertTrue(async_proposal.is_conflicting)
+
+        # Eve merges both versions and publishes it again
+        self.client.force_login(self.eve)
+        self.assertContains(
+            self.client.get(async_proposal.get_absolute_url()),
+            "has been changed since the proposal was drafted",
+        )
+        url = f"/proposals/{async_proposal.pk}/roles/{self.cook.pk}/"
+        form = self.client.get(url).context["form"]
+        name = f"accountabilities-{self.cooking.pk}"
+        self.assertEqual(
+            form[name].initial,
+            "<<<<<<< currently\nCooking food\n=======\nCooking meals\n>>>>>>> proposal",
+        )
+        self.change_cooking(async_proposal, "Cooking food and meals")
+        async_proposal.refresh_from_db()
+        self.assertFalse(async_proposal.conflicting)
+        self.client.post(f"/proposals/{async_proposal.pk}/publish/")
+
+        # The new deadline passes
+        with time_machine.travel(timezone.now() + dt.timedelta(days=5), tick=False):
             call_command("hourly_tasks")
-            async_proposal.refresh_from_db()
-            self.assertEqual(
-                (async_proposal.status, async_proposal.meeting),
-                (Proposal.IN_MEETING, None),
-            )
-            self.cooking.refresh_from_db()
-            self.assertEqual(self.cooking.text, "Cooking food")
-
-            # The next meeting: the secretary merges both versions
-            meeting = self.meeting()
-            self.client.post(
-                f"/meetings/{meeting.pk}/agenda/add/", {"proposal": async_proposal.pk}
-            )
-            item = AgendaItem.objects.get(proposal=async_proposal)
-            self.client.post(f"/agenda/{item.pk}/process/")
-            self.assertContains(
-                self.client.get(meeting.get_absolute_url()),
-                "has been changed since the proposal was drafted",
-            )
-            url = f"/proposals/{async_proposal.pk}/roles/{self.cook.pk}/"
-            form = self.client.get(url).context["form"]
-            name = f"accountabilities-{self.cooking.pk}"
-            self.assertEqual(
-                form[name].initial,
-                "<<<<<<< currently\nCooking food\n=======\nCooking meals\n"
-                ">>>>>>> proposal",
-            )
-            self.change_cooking(async_proposal, "Cooking food and meals")
-            self.client.force_login(self.bob)
-            response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
-            self.assertContains(response, "The proposal is adopted.")
-
         async_proposal.refresh_from_db()
         self.cooking.refresh_from_db()
-        self.assertEqual(
-            (async_proposal.status, async_proposal.meeting),
-            (Proposal.ADOPTED, meeting),
-        )
+        self.assertEqual(async_proposal.status, Proposal.ADOPTED)
         self.assertEqual(self.cooking.text, "Cooking food and meals")
 
 

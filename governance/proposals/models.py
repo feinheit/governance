@@ -108,6 +108,14 @@ class Proposal(models.Model):
     created_at = models.DateTimeField(_("created at"))
     published_at = models.DateTimeField(_("published at"), null=True, blank=True)
     deadline = models.DateTimeField(_("deadline"), null=True, blank=True)
+    conflicting = models.BooleanField(
+        _("conflicting"),
+        default=False,
+        help_text=_(
+            "A change adopted meanwhile conflicts with it: it can't be"
+            " adopted like this."
+        ),
+    )
     waiting_since = models.DateTimeField(
         _("waiting since"),
         null=True,
@@ -204,8 +212,20 @@ class Proposal(models.Model):
             self.waiting_since = None
         elif self.waiting_since is None:
             self.waiting_since = timezone.now()
-        if self.waiting_since != waiting and kwargs.get("update_fields"):
+        update_fields = kwargs.get("update_fields")
+        if self.waiting_since != waiting and update_fields:
             kwargs["update_fields"] = {*kwargs["update_fields"], "waiting_since"}
+        if (
+            self.conflicting
+            and self.status in {self.DRAFT, self.PUBLISHED, self.IN_MEETING}
+            and (update_fields is None or "instructions" in update_fields)
+        ):
+            # Changed, e.g. merged with the current structure: still?
+            from governance.proposals.instructions import problems
+
+            self.conflicting = bool(problems(self))
+            if update_fields:
+                kwargs["update_fields"] = {*kwargs["update_fields"], "conflicting"}
         super().save(*args, **kwargs)
         if self.status in {self.DRAFT, self.PUBLISHED, self.IN_MEETING}:
             # Pending: the roles and policies it changes now (the pages of
@@ -245,6 +265,15 @@ class Proposal(models.Model):
             and self.glassfrog_id is None
             and not self.adopted_in_glassfrog
         )
+
+    @property
+    def is_conflicting(self):
+        """Open, and can't be adopted like this (``recheck_conflicts()``)"""
+        return self.conflicting and self.status in {
+            self.DRAFT,
+            self.PUBLISHED,
+            self.IN_MEETING,
+        }
 
     @property
     def is_tension(self):

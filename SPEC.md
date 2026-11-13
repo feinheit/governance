@@ -282,7 +282,15 @@ when everybody else consented, or by the hourly task (`hourly_tasks`)
 after the deadline; pages and mails show the day, not a time
 (`adopted_on`: the deadline's day, unless it's after the day's last run;
 hourly since 2026-11-10, before nightly). Due proposals are
-adopted in order of publication, conflicting ones go to the meeting.
+adopted in order of publication. Adopting a proposal (async or in a
+meeting) rechecks the open ones (`process.recheck_conflicts()`, also
+nightly for changes outside proposals such as domain policies, decided
+2026-11-13): those it conflicts with are marked (`Proposal.conflicting`,
+a red "conflict" badge in the lists, the problems on the page and in the
+API, cleared when saving them merged), published ones go back to their
+proposer's draft at once with a mail to the circle (the consents were to
+a proposal which can't pass; no new state). One still failing at its
+deadline or last consent (e.g. its role left) goes to the meeting.
 Adoptions run one after the other (`locking.lock_structure()`, an
 advisory lock until the transaction ends), so that two at once check
 against each other's changes; so do the views changing assignments,
@@ -535,9 +543,11 @@ Plain text mails per active recipient in their language (none for
 people who left, also as proposers), after the transaction commits (`notifications/mails.py`), to the circle's members: published
 async proposals, those taken back, those their proposer withdraws
 (published or waiting for a meeting, `process.retract()`), those which
-can't be adopted async and wait for a meeting (a conflict at the
+can't be adopted async and wait for a meeting (a problem at the
 deadline or the last consent, `mails.proposal_to_meeting()` with the
-problems), adopted ones with the diff (also to
+problems), those back to the draft because a proposal adopted meanwhile
+conflicts (`mails.proposal_conflicting()`, with the problems; those
+waiting three months only to their proposer, `mails.proposal_expired()`), adopted ones with the diff (also to
 the proposer, and to the members before adopting, e.g. the Role Leads of
 roles the proposal removes or moves away, and the Secretaries, who
 invite them to meetings, and Circle Leads of the sub-circles it moves

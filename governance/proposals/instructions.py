@@ -685,6 +685,9 @@ def adopt(proposal):
     proposal.ended_role_leads.add(*applier.ended_users)
     close_circles([*applier.removed, *applier.reverted], proposal)
     update_changes(since=timezone.localdate())
+    from governance.proposals.process import recheck_conflicts
+
+    recheck_conflicts(proposal)
     if not (proposal.meeting and proposal.meeting.is_running):
         # The meeting mails its outputs together when it ends
         transaction.on_commit(partial(mails.proposal_adopted, proposal, before))
