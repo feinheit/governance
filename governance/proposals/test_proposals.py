@@ -392,3 +392,42 @@ class ProposalFiltersTest(TestCase):
         self.assertContains(
             response, f'<option value="{cook.pk}" selected>Cook</option>', html=True
         )
+
+
+class DeleteEmptyTest(TestCase):
+    def test_migration_deletes_empty_proposals(self):
+        """Proposals without a tension and without changes are deleted, not
+        those with either, a response or an agenda item"""
+        from importlib import import_module
+
+        from django.apps import apps
+
+        from governance.meetings.models import AgendaItem, Meeting
+        from governance.proposals.models import Response
+
+        migration = import_module(
+            "governance.proposals.migrations.0008_delete_empty_proposals"
+        )
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+
+        def proposal(**kwargs):
+            return Proposal.objects.create(
+                circle=kitchen, proposer=ada, created_at=timezone.now(), **kwargs
+            )
+
+        empty = proposal()
+        blank = proposal(tension=" \n")
+        tension = proposal(tension="Soup")
+        changes = proposal(instructions=[{"op": "test", "path": "/roles/1"}])
+        responded = proposal(status=Proposal.PUBLISHED)
+        Response.objects.create(proposal=responded, user=ada, kind="comment")
+        on_agenda = proposal()
+        meeting = Meeting.objects.create(circle=kitchen, kind=Meeting.GOVERNANCE)
+        AgendaItem.objects.create(meeting=meeting, position=1, proposal=on_agenda)
+        migration.delete_empty(apps, None)
+        self.assertEqual(
+            set(Proposal.objects.values_list("pk", flat=True)),
+            {tension.pk, changes.pk, responded.pk, on_agenda.pk},
+        )
+        self.assertFalse(Proposal.objects.filter(pk__in=[empty.pk, blank.pk]))
