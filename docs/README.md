@@ -10,7 +10,7 @@ the tool, not Holacracy.
 
 - [Finding your way](orientation.md): circles, roles, people, search,
   history, mails
-- [Tensions and proposals](proposals.md): drafting, publishing async,
+- [Proposals](proposals.md): drafting, publishing async,
   responding
 - [Meetings](meetings.md): governance and tactical meetings, elections
 - [Operational work](operational.md): what changes without governance

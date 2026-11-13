@@ -1,4 +1,4 @@
-# Tensions and proposals
+# Proposals
 
 Governance only changes through proposals. A proposal is a **draft**,
 **published** (async), **waiting for a meeting**, **adopted** or

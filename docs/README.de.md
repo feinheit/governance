@@ -10,7 +10,7 @@ das Tool, nicht Holacracy.
 
 - [Sich zurechtfinden](orientation.de.md): Kreise, Rollen, Personen, Suche,
   Geschichte, Mails
-- [Spannungen und Vorschläge](proposals.de.md): entwerfen, asynchron
+- [Vorschläge](proposals.de.md): entwerfen, asynchron
   veröffentlichen, antworten
 - [Meetings](meetings.de.md): Governance und Tactical Meetings, Wahlen
 - [Operative Arbeit](operational.de.md): was ohne Governance geändert wird

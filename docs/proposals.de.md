@@ -1,4 +1,4 @@
-# Spannungen und Vorschläge
+# Vorschläge
 
 Governance ändert sich nur über Vorschläge. Ein Vorschlag ist
 **Entwurf**, **veröffentlicht** (asynchron), **wartet auf ein Meeting**,
