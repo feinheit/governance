@@ -271,7 +271,7 @@ def retract(proposal):
 
 
 def adopt_due_proposals(now=None):
-    """Adopts the published proposals whose deadline passed (daily task)"""
+    """Adopts the published proposals whose deadline passed (hourly task)"""
     due = Proposal.objects.filter(
         status=Proposal.PUBLISHED, deadline__lte=now or timezone.now()
     ).select_related("circle")
