@@ -1529,7 +1529,6 @@ body:has(.wb-modal[open]) {
 .list-group-item.wb-frequency-heading {
   display: flex;
   justify-content: space-between;
-  background: var(--bs-secondary-bg);
   font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
