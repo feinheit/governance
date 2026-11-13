@@ -79,3 +79,10 @@ class HelpTest(TestCase):
             response,
             'href="https://github.com/holacracyone/Holacracy-Constitution/tree/v5.0"',
         )
+
+    def test_drawings(self):
+        """SVGs next to the docs are inlined, in the page's colors"""
+        response = self.client.get("/help/proposals/")
+        self.assertContains(response, '<svg aria-label="Zustände von Vorschlägen"')
+        self.assertContains(response, "wartet auf ein Meeting</text>")
+        self.assertNotContains(response, "<img")

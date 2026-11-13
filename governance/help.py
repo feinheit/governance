@@ -52,6 +52,9 @@ SOURCES = {
 # The docs come from the repository, not from users: HTML like <kbd> is fine
 _markdown = MarkdownIt("commonmark", {"html": True}).enable("table")
 _link = re.compile(r'href="([^":#]+\.md)(#[^"]*)?"')
+# Drawings next to the docs (e.g. scripts/proposal_states.py), inlined: in
+# the page's colors (light and dark), their text in its font
+_svg = re.compile(r'<img src="([^":/]+\.svg)" alt="([^"]*)"\s*/?>')
 
 
 def url(page):
@@ -73,7 +76,11 @@ def render_page(page, language="de"):
             return match[0]
         return f'href="{url(files[match[1]])}{match[2] or ""}"'
 
-    html = _markdown.render(text)
+    def svg(match):
+        drawing = (settings.BASE_DIR / "docs" / here / match[1]).read_text()
+        return drawing.replace("<svg ", f'<svg aria-label="{match[2]}" ', 1)
+
+    html = _svg.sub(svg, _markdown.render(text))
     html = re.sub(r"^<h1>.*?</h1>\n", "", html, count=1)  # The page's title
     return title, mark_safe(_link.sub(link, html))
 

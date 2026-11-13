@@ -941,6 +941,16 @@ a.wb-row-title:hover {
   border-bottom: 1px solid var(--bs-border-color);
   vertical-align: top;
 }
+/* Drawings from docs/ (inlined by governance/help.py), scrolling sideways
+   on phones rather than shrinking their text */
+.wb-help p:has(> svg) {
+  overflow-x: auto;
+}
+.wb-help p > svg {
+  width: 100%;
+  min-width: 40rem;
+  height: auto;
+}
 
 /* Badges in tones: a tinted background with ink of the same hue (AA on
    it), for states and kinds (the tone filter); the circle, core and

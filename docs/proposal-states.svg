@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ps" viewBox="0 0 760 480" role="img"><title>States of proposals</title><style>
+.ps { font: 13px system-ui, -apple-system, "Segoe UI", sans-serif; }
+.ps-state text { font-weight: 600; }
+.ps-line { fill: none; stroke-width: 1.25; }
+.ps-text { fill: var(--bs-body-color, #212529); }
+.ps-line { stroke: var(--bs-secondary-color, #6c757d); }
+.ps-head { fill: var(--bs-secondary-color, #6c757d); }
+.ps-neutral rect { fill: var(--wb-neutral-bg, #eceef2); stroke: var(--wb-neutral-ink, #4a525c); }
+.ps-neutral text { fill: var(--wb-neutral-ink, #4a525c); }
+.ps-info rect { fill: var(--wb-info-bg, #d9f1f4); stroke: var(--wb-info-ink, #0b6470); }
+.ps-info text { fill: var(--wb-info-ink, #0b6470); }
+.ps-success rect { fill: var(--wb-success-bg, #dcf3e9); stroke: var(--wb-success-ink, #0f6e4b); }
+.ps-success text { fill: var(--wb-success-ink, #0f6e4b); }
+.ps-warning rect { fill: var(--wb-warning-bg, #fbefd2); stroke: var(--wb-warning-ink, #855600); }
+.ps-warning text { fill: var(--wb-warning-ink, #855600); }
+@media (prefers-color-scheme: dark) {
+  .ps-text { fill: var(--bs-body-color, #dee2e6); }
+  .ps-line { stroke: var(--bs-secondary-color, #9aa1a9); }
+  .ps-head { fill: var(--bs-secondary-color, #9aa1a9); }
+  .ps-neutral rect { fill: var(--wb-neutral-bg, #262a31); stroke: var(--wb-neutral-ink, #c3c8d0); }
+  .ps-neutral text { fill: var(--wb-neutral-ink, #c3c8d0); }
+  .ps-info rect { fill: var(--wb-info-bg, #0e3338); stroke: var(--wb-info-ink, #7fd3de); }
+  .ps-info text { fill: var(--wb-info-ink, #7fd3de); }
+  .ps-success rect { fill: var(--wb-success-bg, #0f3326); stroke: var(--wb-success-ink, #6fd6a8); }
+  .ps-success text { fill: var(--wb-success-ink, #6fd6a8); }
+  .ps-warning rect { fill: var(--wb-warning-bg, #3a2c0c); stroke: var(--wb-warning-ink, #f0c060); }
+  .ps-warning text { fill: var(--wb-warning-ink, #f0c060); }
+}
+</style><defs><marker id="ps-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ps-head" d="M0 0 L10 5 L0 10 z"/></marker></defs><circle class="ps-head" cx="18" cy="225" r="6"/>
+<path class="ps-line" d="M24 225 H98.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="24" y="245" text-anchor="start"><tspan x="24" dy="0">New</tspan><tspan x="24" dy="15">proposal</tspan></text>
+<path class="ps-line" d="M145 205.0 C145 90, 260 75, 318.0 75" marker-end="url(#ps-arrow)"/><text class="ps-text" x="205" y="62" text-anchor="middle"><tspan x="205" dy="0">Publish (async)</tspan></text>
+<path class="ps-line" d="M320.0 95 C300 95, 205 130, 205 203.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="387" y="150" text-anchor="end"><tspan x="387" dy="0">Back to the draft,</tspan><tspan x="387" dy="15">or a conflict</tspan></text>
+<path class="ps-line" d="M250.0 233 C300 233, 300 352, 318.0 352" marker-end="url(#ps-arrow)"/><text class="ps-text" x="288" y="262" text-anchor="start"><tspan x="288" dy="0">brought to</tspan><tspan x="288" dy="15">a meeting</tspan></text>
+<path class="ps-line" d="M320.0 370 C240 370, 175 320, 175 247.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="150" y="318" text-anchor="end"><tspan x="150" dy="0">three months</tspan><tspan x="150" dy="15">without a meeting</tspan></text>
+<path class="ps-line" d="M395 105.0 V338.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="405" y="140" text-anchor="start"><tspan x="405" dy="0">a meeting asked for,</tspan><tspan x="405" dy="15">or brought to one</tspan></text>
+<path class="ps-line" d="M470.0 85 H583.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="527.5" y="59" text-anchor="middle"><tspan x="527.5" dy="0">everybody consented,</tspan><tspan x="527.5" dy="15">or the deadline</tspan></text>
+<path class="ps-line" d="M415 65.0 V22 H752 V360 H737.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="577.5" y="16" text-anchor="middle"><tspan x="577.5" dy="0">Withdraw</tspan></text>
+<path class="ps-line" d="M450.0 340.0 L605.0 107.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="522.0" y="250.0" text-anchor="start"><tspan x="522.0" dy="0">Adopt</tspan><tspan x="522.0" dy="15">(in the meeting)</tspan></text>
+<path class="ps-line" d="M470.0 360 H583.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="527.5" y="396" text-anchor="middle"><tspan x="527.5" dy="0">Discard (in the meeting),</tspan><tspan x="527.5" dy="15">or Withdraw</tspan></text>
+<path class="ps-line" d="M660 380.0 V460 H135 V247.0" marker-end="url(#ps-arrow)"/><text class="ps-text" x="417.5" y="454" text-anchor="middle"><tspan x="417.5" dy="0">Draft again (a new draft)</tspan></text>
+<g class="ps-state ps-neutral"><rect x="100.0" y="205.0" width="150" height="40" rx="8"/><text x="175" y="229.5" text-anchor="middle">draft</text></g>
+<g class="ps-state ps-warning"><rect x="320.0" y="65.0" width="150" height="40" rx="8"/><text x="395" y="89.5" text-anchor="middle">published</text></g>
+<g class="ps-state ps-info"><rect x="320.0" y="340.0" width="150" height="40" rx="8"/><text x="395" y="364.5" text-anchor="middle">waiting for a meeting</text></g>
+<g class="ps-state ps-success"><rect x="585.0" y="65.0" width="150" height="40" rx="8"/><text x="660" y="89.5" text-anchor="middle">adopted</text></g>
+<g class="ps-state ps-neutral"><rect x="585.0" y="340.0" width="150" height="40" rx="8"/><text x="660" y="364.5" text-anchor="middle">withdrawn</text></g></svg>

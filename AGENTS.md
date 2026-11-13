@@ -91,6 +91,10 @@ page's language (`governance/help.py`, add new pages to `_NAMES`). The
 files link each other relatively within their language (`meetings.md`,
 `meetings.de.md`). Update both in the same commit when a change affects
 what users see; `mails.md` lists every mail with its recipients.
+Drawings are SVG files next to them (`proposal-states.svg` and
+`.de.svg`, written by `scripts/proposal_states.py`), linked as images
+(GitHub shows them) and inlined by the help in the page's colors; no
+diagram libraries in the frontend (Mermaid was 15 MB).
 
 # Translations
 

@@ -2,7 +2,15 @@
 
 Governance only changes through proposals. A proposal is a **draft**,
 **published** (async), **waiting for a meeting**, **adopted** or
-**withdrawn**.
+**withdrawn**:
+
+![States of proposals](proposal-states.svg)
+
+A tension turned into a proposal in a meeting starts out waiting.
+Removed from a meeting's agenda, a proposal goes back to where it was,
+except a published one the meeting processed already: that one becomes
+a draft. Removing a circle or role withdraws its open proposals, drafts
+too.
 
 ## Capturing a tension and drafting changes
 

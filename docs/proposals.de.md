@@ -2,7 +2,16 @@
 
 Governance ändert sich nur über Vorschläge. Ein Vorschlag ist
 **Entwurf**, **veröffentlicht** (asynchron), **wartet auf ein Meeting**,
-ist **angenommen** oder **zurückgezogen**.
+ist **angenommen** oder **zurückgezogen**:
+
+![Zustände von Vorschlägen](proposal-states.de.svg)
+
+Eine Spannung, die im Meeting zum Vorschlag wird, wartet zuerst auf ein
+Meeting. Von der Agenda eines Meetings genommen, ist ein Vorschlag
+wieder, was er vorher war, ausser ein veröffentlichter, den das Meeting
+schon behandelt hat: der wird ein Entwurf. Wird ein Kreis oder eine
+Rolle entfernt, werden ihre offenen Vorschläge zurückgezogen, auch
+Entwürfe.
 
 ## Spannung festhalten und Änderungen entwerfen
 
