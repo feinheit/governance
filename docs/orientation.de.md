@@ -104,15 +104,10 @@ Escape schliesst sie; sobald etwas eingegeben ist, erst beim zweiten Mal.
 
 ## Mails
 
-Du erhältst Mails zu den Kreisen, in denen du Mitglied bist, also eine
-Rolle hast (auch als Circle Lead oder Circle Rep eines Sub-Kreises):
-veröffentlichte und angenommene Vorschläge, geänderte Policies einer
-Domain und die Ergebnisse von Meetings. Du erfährst auch von Rollen, die
-du erhältst oder abgibst, von Änderungen deines Fokus und als Secretary, wer deinem Kreis beitritt
-oder ihn verlässt. Wer einen Vorschlag macht, erfährt von Fragen und
-Wünschen nach einem Meeting, wer Secretary ist, von letzteren, und auf deine
-Fragen kommt die Antwort per Mail. In deinen Einstellungen kannst du
-Mails zu allem in allen Kreisen wählen. [Mails](mails.de.md) listet alle auf.
+Du erhältst Mails zu dem, was in den Kreisen geschieht, in denen du eine
+Rolle hast, und zu deinen Rollen und Vorschlägen; in deinen
+Einstellungen kannst du Mails zu allem in allen Kreisen wählen.
+[Mails](mails.de.md) listet auf, welche Mails an wen gehen.
 
 ## API
 

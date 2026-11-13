@@ -103,15 +103,10 @@ been entered, only when pressed twice.
 
 ## Mails
 
-You get mails about the circles you're a member of, that is, where you
-hold a role (also as Circle Lead or Circle Rep of a sub-circle):
-published and adopted proposals, changed policies of a domain and the
-outputs of meetings. You also hear about roles you get or lose and changes of your focus, and as
-Secretary about people joining or leaving your circle. As proposer you
-hear about questions and requests for a meeting, as Secretary about the
-latter, and your questions get their answers by mail. In your settings you
-can choose mails about everything in all circles. [Mails](mails.md)
-lists them all.
+You get mails about what happens in the circles you hold a role in, and
+about your roles and proposals; in your settings you can choose mails
+about everything in all circles. [Mails](mails.md) lists which mails go
+to whom.
 
 ## API
 
