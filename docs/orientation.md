@@ -13,8 +13,8 @@ active person. Everybody signed in sees everything except others' drafts.
   the same structure as a list.
 - **Your name** (top right) opens a menu: your page, "Call a tactical
   meeting", **People**
-  (everybody with their roles), **Mail addresses**, Help, API and
-  signing out. On wide screens **People** is also in the navigation.
+  (everybody with their roles), **Mail addresses**, Help, API,
+  for admins "Administration" (the Django admin) and signing out. On wide screens **People** is also in the navigation.
 - **Proposals**: all proposals, filtered by status, circle (with
   its sub-circles) and the role they change.
 - **History**: what changed when; for a circle with its roles ("With

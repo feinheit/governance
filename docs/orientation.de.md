@@ -13,8 +13,8 @@ anderer.
   Darunter steht dieselbe Struktur als Liste.
 - **Dein Name** (oben rechts) öffnet ein Menü: deine Seite, "Tactical
   Meeting einberufen",
-  **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API und
-  Abmelden. Auf breiten Bildschirmen stehen **Personen** auch in der
+  **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API,
+  für Admins "Verwaltung" (das Django-Admin) und Abmelden. Auf breiten Bildschirmen stehen **Personen** auch in der
   Navigation.
 - **Vorschläge**: alle Vorschläge, gefiltert nach Status, Kreis (mit
   seinen Sub-Kreisen) und der Rolle, die sie ändern.

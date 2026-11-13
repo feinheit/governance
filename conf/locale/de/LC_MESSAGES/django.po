@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 08:20+0100\n"
+"POT-Creation-Date: 2026-11-13 07:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2105,6 +2105,10 @@ msgstr "Mailadressen"
 #: governance/templates/base.html
 msgid "API"
 msgstr "API"
+
+#: governance/templates/base.html
+msgid "Administration"
+msgstr "Verwaltung"
 
 #: governance/templates/base.html
 msgid "Sign out"

@@ -119,3 +119,15 @@ class DeactivateTest(TestCase):
         self.assertFalse(Assignment.objects.current().filter(role=bakery).exists())
         published.refresh_from_db()
         self.assertEqual(published.status, Proposal.PUBLISHED)
+
+
+class AdminLinkTest(TestCase):
+    def test_menu_links_the_admin_for_staff(self):
+        """The menu of one's name leads admins to the Django admin"""
+        url = reverse("admin:index")
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        self.client.force_login(ada)
+        self.assertNotContains(self.client.get(reverse("help")), f'href="{url}"')
+        ada.is_admin = True
+        ada.save()
+        self.assertContains(self.client.get(reverse("help")), f'href="{url}"')
