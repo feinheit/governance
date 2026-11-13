@@ -11,10 +11,10 @@ active person. Everybody signed in sees everything except others' drafts.
   click zooms into a circle, a second one opens its page; the background
   or Escape zooms out again. "My roles" highlights your roles. Below is
   the same structure as a list.
-- **Your name** (top right) opens a menu: your page, "Call a tactical
-  meeting", **People**
-  (everybody with their roles), **Mail addresses**, Help, API,
-  for admins "Administration" (the Django admin) and signing out. On wide screens **People** is also in the navigation.
+- **Your name** (top right) opens a menu: your page, settings, "API
+  tokens", "Call a tactical meeting", **People** (everybody with their
+  roles), **Mail addresses**, Help, for admins "Administration" (the
+  Django admin) and signing out. On wide screens **People** is also in the navigation.
 - **Proposals**: all proposals, filtered by status, circle (with
   its sub-circles) and the role they change.
 - **History**: what changed when; for a circle with its roles ("With
@@ -110,11 +110,11 @@ to whom.
 
 ## API
 
-For scripts and other tools: under "API" (in the menu of your name) you create a token (read only,
+For scripts and other tools: under "API tokens" (in the menu of your name) you create a token (read only,
 or read and write, valid until 30 days after its last use). The API reads the structure and
 proposals, creates drafts and manages the links and notes of roles and circles; its documentation is at `/api/docs`.
 
 The command line tool `gov` uses the API and gets its token by itself
 (`gov login`, confirmed in the browser). It shows circles, roles and
 proposals, searches, prepares drafts and manages links and notes (`gov links`, `gov notes`); how to install it is on the
-"API" page.
+"API tokens" page.

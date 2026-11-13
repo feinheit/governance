@@ -11,10 +11,10 @@ anderer.
   vergrössert einen Kreis, ein zweiter öffnet seine Seite; der Hintergrund
   oder Escape verkleinert wieder. "Meine Rollen" hebt deine Rollen hervor.
   Darunter steht dieselbe Struktur als Liste.
-- **Dein Name** (oben rechts) öffnet ein Menü: deine Seite, "Tactical
-  Meeting einberufen",
-  **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, API,
-  für Admins "Verwaltung" (das Django-Admin) und Abmelden. Auf breiten Bildschirmen stehen **Personen** auch in der
+- **Dein Name** (oben rechts) öffnet ein Menü: deine Seite,
+  Einstellungen, "API-Tokens", "Tactical Meeting einberufen",
+  **Personen** (alle mit ihren Rollen), **Mailadressen**, Hilfe, für
+  Admins "Verwaltung" (das Django-Admin) und Abmelden. Auf breiten Bildschirmen stehen **Personen** auch in der
   Navigation.
 - **Vorschläge**: alle Vorschläge, gefiltert nach Status, Kreis (mit
   seinen Sub-Kreisen) und der Rolle, die sie ändern.
@@ -111,7 +111,7 @@ Einstellungen kannst du Mails zu allem in allen Kreisen wählen.
 
 ## API
 
-Für Skripte und andere Tools: unter "API" (im Menü deines Namens) erstellst du ein Token (nur
+Für Skripte und andere Tools: unter "API-Tokens" (im Menü deines Namens) erstellst du ein Token (nur
 lesen oder lesen und schreiben, gültig bis 30 Tage nach der letzten
 Verwendung). Die API liest die
 Struktur und Vorschläge, legt Entwürfe an und verwaltet die Links und Notizen von Rollen und Kreisen; ihre Dokumentation steht
@@ -120,4 +120,4 @@ unter `/api/docs`.
 Das Kommandozeilen-Tool `gov` nutzt die API und holt sich sein Token
 selbst (`gov login`, im Browser bestätigen). Es zeigt Kreise, Rollen und
 Vorschläge, sucht, bereitet Entwürfe vor und verwaltet Links und Notizen (`gov links`, `gov notes`); wie du es installierst,
-steht auf der Seite "API".
+steht auf der Seite "API-Tokens".
