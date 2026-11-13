@@ -1,6 +1,6 @@
 # Operative Arbeit
 
-Einiges ändert sich ohne Governance:
+Einiges ändert sich direkt im Tool, ohne Vorschlag:
 
 | Was | Wer |
 | --- | --- |

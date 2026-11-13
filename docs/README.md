@@ -1,6 +1,6 @@
 # Help
 
-Governance records how we're organized: circles and roles with purpose,
+This tool records how we're organized: circles and roles with purpose,
 accountabilities, domains and policies, who holds which role, and how
 that has changed since 2018. Changes go through proposals, async or in a
 governance meeting, as the
@@ -13,7 +13,7 @@ the tool, not Holacracy.
 - [Proposals](proposals.md): drafting, publishing async,
   responding
 - [Meetings](meetings.md): governance and tactical meetings, elections
-- [Operational work](operational.md): what changes without governance
+- [Operational work](operational.md): what changes without a proposal
 - [Mails](mails.md): when the tool sends mails and to whom
 
 ## What the tool doesn't do

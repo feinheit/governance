@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 08:38+0100\n"
+"POT-Creation-Date: 2026-11-13 08:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2030,8 +2030,8 @@ msgstr "Darstellung wechseln"
 
 #: governance/templates/accounts/api_tokens.html
 #, python-format
-msgid "API tokens give scripts access to the governance in your name, e.g. to prepare proposals. Send them as bearer token. They expire after %(days)s days."
-msgstr "API-Tokens geben Skripten in deinem Namen Zugriff auf die Governance, z.B. um Vorschläge vorzubereiten. Sende sie als Bearer-Token. Sie laufen nach %(days)s Tagen ab."
+msgid "API tokens give scripts access to this tool in your name, e.g. to prepare proposals. Send them as bearer token. They expire after %(days)s days."
+msgstr "API-Tokens geben Skripten in deinem Namen Zugriff auf dieses Tool, z.B. um Vorschläge vorzubereiten. Sende sie als Bearer-Token. Sie laufen nach %(days)s Tagen ab."
 
 #: governance/templates/accounts/api_tokens.html
 msgid "API documentation"
@@ -2064,12 +2064,12 @@ msgstr "gov berechtigen"
 
 #: governance/templates/accounts/cli_login.html
 #, python-format
-msgid "The <code>gov</code> command line interface on <strong>%(name)s</strong> wants to access the governance in your name."
-msgstr "Das Kommandozeilen-Tool <code>gov</code> auf <strong>%(name)s</strong> möchte in deinem Namen auf die Governance zugreifen."
+msgid "The <code>gov</code> command line interface on <strong>%(name)s</strong> wants to access this tool in your name."
+msgstr "Das Kommandozeilen-Tool <code>gov</code> auf <strong>%(name)s</strong> möchte in deinem Namen auf dieses Tool zugreifen."
 
 #: governance/templates/accounts/cli_login.html
-msgid "The <code>gov</code> command line interface wants to access the governance in your name."
-msgstr "Das Kommandozeilen-Tool <code>gov</code> möchte in deinem Namen auf die Governance zugreifen."
+msgid "The <code>gov</code> command line interface wants to access this tool in your name."
+msgstr "Das Kommandozeilen-Tool <code>gov</code> möchte in deinem Namen auf dieses Tool zugreifen."
 
 #: governance/templates/accounts/cli_login.html
 #, python-format

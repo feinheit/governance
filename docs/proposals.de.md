@@ -49,8 +49,8 @@ Die Kernrollen (Circle Lead, Facilitator, Secretary, Circle Rep) bleiben,
 wie die Verfassung sie definiert: Vorschläge fügen ihnen keine
 Accountabilities oder Domains hinzu. Eine Policy kann Befugnisse der
 Circle Leads an eine andere Rolle oder einen Prozess übertragen (z.B. wie
-eine Rolle besetzt wird); die App setzt solche Policies nicht um, die
-Zuweisungen erfassen weiterhin die Circle Leads (oder der Secretary).
+eine Rolle besetzt wird); das Tool setzt solche Policies nicht um, die
+Zuweisungen erfassen weiterhin die Circle Leads (oder wer Secretary ist).
 
 Entwürfe sind privat, bis du sie veröffentlichst oder in ein Meeting
 bringst.

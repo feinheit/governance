@@ -85,7 +85,9 @@ the history, the API and `gov`.
 # User documentation
 
 `docs/`, succinct, explains the tool (not Holacracy) and what it doesn't
-do: `name.md` in English, `name.de.md` in German, each quoting the labels
+do. The app is "the tool" ("das Tool"), "governance" only the structure
+(circles, roles, accountabilities, policies) and changing it through
+proposals, never the app: `name.md` in English, `name.de.md` in German, each quoting the labels
 of the interface in its language. `/help/name/` renders them in the
 page's language (`governance/help.py`, add new pages to `_NAMES`). The
 files link each other relatively within their language (`meetings.md`,

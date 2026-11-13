@@ -1,6 +1,6 @@
 # Operational work
 
-Some things change without governance:
+Some things change directly in the tool, without a proposal:
 
 | What | Who |
 | --- | --- |

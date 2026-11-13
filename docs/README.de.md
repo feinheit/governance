@@ -1,6 +1,6 @@
 # Hilfe
 
-Governance hält fest, wie wir organisiert sind: Kreise und Rollen mit
+Das Tool hält fest, wie wir organisiert sind: Kreise und Rollen mit
 Purpose, Accountabilities, Domains und Policies, wer welche Rolle hat, und
 wie sich das seit 2018 verändert hat. Änderungen laufen über Vorschläge,
 asynchron oder im Governance Meeting, wie es die
@@ -13,7 +13,7 @@ das Tool, nicht Holacracy.
 - [Vorschläge](proposals.de.md): entwerfen, asynchron
   veröffentlichen, antworten
 - [Meetings](meetings.de.md): Governance und Tactical Meetings, Wahlen
-- [Operative Arbeit](operational.de.md): was ohne Governance geändert wird
+- [Operative Arbeit](operational.de.md): was sich ohne Vorschlag ändert
 - [Mails](mails.de.md): wann das Tool Mails verschickt und an wen
 
 ## Was das Tool nicht macht
