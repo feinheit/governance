@@ -48,3 +48,17 @@ class MailAddressesTest(TestCase):
             self.client.get(kitchen.get_absolute_url()),
             f"/people/addresses/#circle-{kitchen.pk}",
         )
+
+    def test_circle_links_its_members(self):
+        """The circle's roles link the addresses of its members, twice with
+        the menu "…"; not those of an archived circle"""
+        import datetime as dt
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        Role.objects.create(name="Cook", circle=kitchen)
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        link = f'href="/people/addresses/#circle-{kitchen.pk}"'
+        self.assertContains(self.client.get(kitchen.get_absolute_url()), link, 2)
+        kitchen.archived_on = dt.date(2026, 1, 1)
+        kitchen.save()
+        self.assertNotContains(self.client.get(kitchen.get_absolute_url()), link)

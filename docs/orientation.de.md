@@ -33,7 +33,8 @@ Leads, Facilitators, Secretaries und Circle Reps (bei unbesetzten Rollen
 Facilitator und Secretary die Vertretung: Secretary oder Facilitator,
 sonst die Circle Leads) und der Mitglieder jedes Kreises auf, zum
 Kopieren in eine Mail ("Kopieren") oder um ihnen zu schreiben ("Neue
-Mail"). Das Menü "…" eines Kreises verlinkt seine Mitglieder.
+Mail"). Das Menü "…" eines Kreises und seine Rollen verlinken die
+Adressen seiner Mitglieder.
 
 ## Tastenkürzel
 

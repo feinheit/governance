@@ -428,7 +428,14 @@
   {% if role.is_circle %}
     {# Below both columns, the circle's roles are many #}
     <section class="card">
-      <div class="card-header"><h2 class="h6 mb-0">{% translate "Roles" %}</h2></div>
+      <div class="card-header d-flex align-items-center gap-2">
+        <h2 class="h6 mb-0 me-auto">{% translate "Roles" %}</h2>
+        {% if not role.archived_on %}
+          {# Also in the menu "…" above #}
+          <a class="btn btn-sm btn-quiet" href="{% url 'mail_addresses' %}#circle-{{ role.pk }}">{% icon "envelope" %}
+            {% translate "Mail addresses" %}</a>
+        {% endif %}
+      </div>
       <ul class="list-group list-group-flush wb-columns">
         {% include "roles/_role_rows.html" with roles=roles %}
         {% if not roles %}<li class="list-group-item text-body-secondary">{% translate "None" %}</li>{% endif %}

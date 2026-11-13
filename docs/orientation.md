@@ -31,7 +31,7 @@ all Circle Leads, Facilitators, Secretaries and Circle Reps (for
 unfilled Facilitators and Secretaries who stands in: the Secretary or
 Facilitator, else the Circle Leads) and of each circle's members, to
 copy into a mail ("Copy") or to write to them ("New mail"). A circle's
-menu "…" links its members.
+menu "…" and its roles link its members' addresses.
 
 ## Keyboard shortcuts
 
