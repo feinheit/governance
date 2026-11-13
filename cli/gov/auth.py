@@ -81,8 +81,27 @@ class _CompleteOptions:
         return completions
 
 
+class _BashDescriptions(BashComplete):
+    """Bash has no descriptions: list them with the values when there are
+    several (bash inserts only what they have in common, an ID's beginning),
+    the value alone when there's one (bash inserts it)"""
+
+    def complete(self):
+        args, incomplete = self.get_completion_args()
+        completions = self.get_completions(args, incomplete)
+        if len(completions) < 2 or not any(item.help for item in completions):
+            return "\n".join(self.format_completion(item) for item in completions)
+        width = max(len(item.value) for item in completions)
+        return "\n".join(
+            f"plain,{item.value:<{width}}  -- {item.help.splitlines()[0]}"
+            if item.help and item.type == "plain"
+            else self.format_completion(item)
+            for item in completions
+        )
+
+
 for _shell, _class in [
-    ("bash", BashComplete),
+    ("bash", _BashDescriptions),
     ("zsh", ZshComplete),
     ("fish", FishComplete),
 ]:

@@ -38,8 +38,8 @@ Enable completing commands, options and IDs with Tab in your shell:
     gov completion fish > ~/.config/fish/completions/gov.fish   # fish
 
 IDs of circles, roles, policies and proposals are completed with their
-names (zsh and fish show them); typing a part of a name and Tab replaces it
-with the ID. The names are cached in `~/.cache/gov`, the structure for a
+names (bash lists them next to the IDs when there are several); typing a
+part of a name and Tab replaces it with the ID. The names are cached in `~/.cache/gov`, the structure for a
 day, your roles for an hour, proposals for five minutes.
 
 ## Reading

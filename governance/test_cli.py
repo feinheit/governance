@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import gov
-from click.shell_completion import ShellComplete
+from click.shell_completion import ShellComplete, get_completion_class
 from click.testing import CliRunner
 from django.test import Client, TestCase
 from django.utils.translation import deactivate_all
@@ -610,3 +610,26 @@ class CLITest(TestCase):
         # Cached: a renamed circle shows up the next day
         Role.objects.filter(pk=self.kitchen.pk).update(name="Galley")
         self.assertEqual(self.complete(["circles", "show"], "kitch"), [kitchen])
+
+    def test_bash_completion(self):
+        """Bash has no descriptions: they're listed with the IDs when there
+        are several, a single one is only the ID which bash inserts"""
+        self.gov("me")  # Stores a token
+
+        def complete(words):
+            env = {
+                "GOVERNANCE_URL": "http://testserver",
+                "COMP_WORDS": words,
+                "COMP_CWORD": str(len(words.split(" ")) - 1),
+            }
+            with patch.dict("os.environ", env):
+                bash = get_completion_class("bash")(gov.cli, {}, "gov", "_GOV_COMPLETE")
+                return bash.complete().splitlines()
+
+        self.assertEqual(
+            complete("gov circles show kitch"), [f"plain,{self.kitchen.pk}"]
+        )
+        listed = complete("gov roles show ")
+        self.assertGreater(len(listed), 1)
+        cook = next(line for line in listed if line.endswith("  -- Cook (Kitchen)"))
+        self.assertEqual(cook.split()[0], f"plain,{self.cook.pk}")
