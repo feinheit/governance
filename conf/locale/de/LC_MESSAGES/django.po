@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 08:00+0100\n"
+"POT-Creation-Date: 2026-11-13 08:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2002,7 +2002,6 @@ msgid "Proposals"
 msgstr "Vorschläge"
 
 #: governance/templates/404.html governance/templates/base.html
-#: governance/templates/help.html
 msgid "Help"
 msgstr "Hilfe"
 
@@ -2166,6 +2165,10 @@ msgstr "Abbrechen"
 #: governance/templates/meetings/_notes.html
 msgid "Save"
 msgstr "Speichern"
+
+#: governance/templates/help.html
+msgid "Chapters of the help"
+msgstr "Kapitel der Hilfe"
 
 #: governance/templates/help.html
 msgid "Language of the constitution"

@@ -28,7 +28,7 @@ class HelpTest(TestCase):
                 )
         # HolacracyOne's text, unchanged: from where and when
         response = self.client.get("/help/constitution/")
-        self.assertContains(response, "Holacracy Verfassung")
+        self.assertContains(response, "Holacracy-Verfassung")
         self.assertContains(response, "unverändert, in der Fassung vom 25. März 2026")
         self.assertContains(
             response,
@@ -86,3 +86,19 @@ class HelpTest(TestCase):
         self.assertContains(response, '<svg aria-label="Zustände von Vorschlägen"')
         self.assertContains(response, "wartet auf ein Meeting</text>")
         self.assertNotContains(response, "<img")
+
+    def test_chapters(self):
+        """All chapters above each page, in order, the current one marked;
+        in the page's language, also above the constitution in English"""
+        response = self.client.get("/help/meetings/")
+        chapters = re.findall(r'<a href="(/help/[^"]*)"', response.content.decode())
+        self.assertEqual(
+            chapters[: len(PAGES["de"])],
+            [f"/help/{p}/" if p else "/help/" for p in PAGES["de"]],
+        )
+        self.assertContains(
+            response, '<a href="/help/meetings/" aria-current="page">Meetings</a>'
+        )
+        response = self.client.get("/help/constitution/?language=en")
+        self.assertContains(response, ">Sich zurechtfinden</a>")
+        self.assertContains(response, 'aria-current="page">Holacracy-Verfassung</a>')

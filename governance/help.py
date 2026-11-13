@@ -61,12 +61,36 @@ def url(page):
     return reverse("help", args=[page]) if page else reverse("help")
 
 
+# The constitution's files are unchanged (NOTICE), their titles not quite
+# right (German needs the hyphen)
+TITLES = {
+    "Holacracy Verfassung": "Holacracy-Verfassung",
+}
+
+
+def _title(line):
+    title = re.sub(r"[*_]", "", line.removeprefix("# ")).strip()
+    return TITLES.get(title, title)
+
+
+def chapters(page, language="de"):
+    """All pages in their order (the start page first, the constitution
+    last), for the navigation above each: their titles, the current one"""
+    pages = PAGES["de" if language == "de" else "en"]
+    result = []
+    for key, file in pages.items():
+        with (settings.BASE_DIR / "docs" / file).open() as f:
+            title = _title(f.readline())
+        result.append({"url": url(key), "title": title, "current": key == page})
+    return result
+
+
 def render_page(page, language="de"):
     pages = PAGES["de" if language == "de" else "en"]
     if page not in pages:
         raise Http404
     text = (settings.BASE_DIR / "docs" / pages[page]).read_text()
-    title = re.sub(r"[*_]", "", text.split("\n", 1)[0].removeprefix("# ")).strip()
+    title = _title(text.split("\n", 1)[0])
     # Links relative to the page's file
     here = posixpath.dirname(pages[page])
     files = {posixpath.relpath(file, here or "."): key for key, file in pages.items()}
@@ -87,7 +111,10 @@ def render_page(page, language="de"):
 
 def help_page(request, page=""):
     language = "de" if get_language() == "de" else "en"
-    context = {"start": url("") if page else None}
+    if page not in PAGES[language]:
+        raise Http404
+    # In the page's language, also for the constitution in the other one
+    context = {"chapters": chapters(page, language)}
     if page == "constitution":
         # The constitution in the other language on request, the rest of
         # the page stays in the user's

@@ -4,13 +4,12 @@
 
 {% block content %}
   {# The user documentation from docs/ (governance/help.py) #}
-  {% if start %}
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb mb-1 small">
-        <li class="breadcrumb-item"><a href="{{ start }}">{% translate "Help" %}</a></li>
-      </ol>
-    </nav>
-  {% endif %}
+  {# All chapters, the current one marked (governance/help.py) #}
+  <nav class="wb-help-chapters" aria-label="{% translate 'Chapters of the help' %}">
+    {% for chapter in chapters %}
+      <a href="{{ chapter.url }}" {% if chapter.current %}aria-current="page"{% endif %}>{{ chapter.title }}</a>
+    {% endfor %}
+  </nav>
   {# The constitution may be in the other language (?language=), its source line too #}
   <div class="wb-page-header">
     <div class="min-w-0 flex-grow-1">
