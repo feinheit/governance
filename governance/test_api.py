@@ -159,6 +159,21 @@ class APITest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["problems"], [])
 
+    def test_only_tests(self):
+        """A test without a change of its subject is dropped, like the forms
+        do: a draft only checking a role exists is a tension"""
+        response = self.api(
+            "post",
+            "/api/proposals/",
+            {
+                "circle_id": self.kitchen.pk,
+                "role_id": self.cook.pk,
+                "tension": "Soups",
+                "instructions": [{"op": "test", "path": f"/roles/{self.cook.pk}"}],
+            },
+        )
+        self.assertEqual(response.json()["instructions"], [])
+
     def test_proposals(self):
         # Read only tokens don't change anything
         response = self.api(

@@ -14,6 +14,7 @@ from ninja.errors import HttpError
 
 from governance.proposals import process
 from governance.proposals.describe import describe
+from governance.proposals.drafting import normalize
 from governance.proposals.instructions import (
     ProposalError,
     names_for,
@@ -190,8 +191,9 @@ def responses_out(proposal):
 def set_instructions(proposal, instructions):
     if found := validate_format(instructions):
         raise HttpError(400, " ".join(found))
-    proposal.instructions = instructions
-    proposal.names = names_for(instructions)
+    # Like the forms: a test only for what changes (none without changes)
+    proposal.instructions = normalize(instructions)
+    proposal.names = names_for(proposal.instructions)
 
 
 @router.get("proposals/", response=list[ProposalOut])

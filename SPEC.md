@@ -210,7 +210,7 @@ can't withdraw other people's proposals. Open proposals imported from
 GlassFrog are processed like the app's own since the switchover, adopted
 async at their GlassFrog deadline: nobody resubmits a proposal nobody
 objected to (decided 2026-11-08; GlassFrog's responses weren't imported). Drafts are private to the proposer until published
-or brought into a meeting; a draft without instructions is a tension (the
+or brought into a meeting; a draft without changes is a tension (`Proposal.has_changes`: a `test` alone only checks that a role or policy exists; the API drops tests of subjects it doesn't change, like the forms, `drafting.normalize()`) (the
 tension inbox; GlassFrog's open tensions were imported as such). New
 proposals ask for the tension, an example and how the proposal helps
 (5.3.1).

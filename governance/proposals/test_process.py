@@ -256,6 +256,16 @@ class ProcessTest(TestCase):
             proposal.refresh_from_db()
             self.assertEqual(proposal.status, Proposal.ADOPTED)
 
+    def test_only_tests_are_no_changes(self):
+        """A draft only checking that a role exists (``test``, e.g. one
+        started in GlassFrog) changes nothing: a tension, not published"""
+        draft = self.proposal()
+        draft.instructions = draft.instructions[:1]
+        draft.save()
+        self.assertTrue(draft.is_tension)
+        with self.assertRaises(ProposalError):
+            publish(draft)
+
     def test_cannot_publish(self):
         tension = Proposal.objects.create(
             circle=self.kitchen,
@@ -574,7 +584,14 @@ class WaitingTest(TestCase):
                 role=self.cook,
                 tension="Better name",
                 created_at=timezone.now(),
-                instructions=[{"op": "test", "path": f"/roles/{self.cook.pk}"}],
+                instructions=[
+                    {
+                        "op": "replace",
+                        "path": f"/roles/{self.cook.pk}/name",
+                        "original_value": "Cook",
+                        "value": "Chef",
+                    }
+                ],
             )
         )
         respond(proposal, self.bob, Response.MEETING)

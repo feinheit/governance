@@ -276,8 +276,13 @@ class Proposal(models.Model):
         }
 
     @property
+    def has_changes(self):
+        """Not only ``test``s, which check that what it changes exists"""
+        return any(i.get("op") != "test" for i in self.instructions)
+
+    @property
     def is_tension(self):
-        return self.status == self.DRAFT and not self.instructions
+        return self.status == self.DRAFT and not self.has_changes
 
 
 class Response(models.Model):
