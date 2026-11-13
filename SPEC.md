@@ -46,8 +46,10 @@ use made-up circles, roles and people.
 `feinheit/glassfrog` (`~/projects/glassfrog`) was fetched daily until the
 switchover (`scripts/fetch_glassfrog.py`, in the git history); the app
 imported it, section 9. It explains the imported history. Urs and Dan set
-up these daily dumps in 2018: the structure's history since then comes
-from their git history (section 6).
+up these daily dumps in November 2018 for a visualization of the circles
+(Workbench project 2018-0700 "Hola Circle Viz"), Dan wrote the export
+script, the cron job and its error mail: the structure's history since
+then comes from their git history (section 6).
 
 **`glassfrog.json`** (`GET /api/v3/circles?include=members`) has a git
 history since 2018-11-16: circles with their roles, policies, domains and
