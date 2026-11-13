@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 07:51+0100\n"
+"POT-Creation-Date: 2026-11-13 07:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -797,6 +797,11 @@ msgstr "Wartet auf ein Meeting in %(circle)s: %(proposal)s"
 
 #: governance/notifications/mails.py
 #, python-format
+msgid "Back to your draft in %(circle)s: %(proposal)s"
+msgstr "Wieder dein Entwurf in %(circle)s: %(proposal)s"
+
+#: governance/notifications/mails.py
+#, python-format
 msgid "Withdrawn in %(circle)s: %(proposal)s"
 msgstr "Zurückgezogen in %(circle)s: %(proposal)s"
 
@@ -1332,6 +1337,14 @@ msgstr "veröffentlicht"
 #: governance/proposals/models.py
 msgid "deadline"
 msgstr "Frist"
+
+#: governance/proposals/models.py
+msgid "waiting since"
+msgstr "wartet seit"
+
+#: governance/proposals/models.py
+msgid "When it started waiting for a meeting, or the end of the last meeting it was on: after three months it goes back to its proposer's draft."
+msgstr "Seit wann er auf ein Meeting wartet, oder das Ende des letzten Meetings, in dem er war: nach drei Monaten wird er wieder ein Entwurf, den nur sieht, wer ihn vorgeschlagen hat."
 
 #: governance/proposals/models.py
 msgid "decided at"
@@ -2611,6 +2624,7 @@ msgstr "Eine Spannung, in ein bis zwei Wörtern"
 #: governance/templates/meetings/meeting_detail.html
 #: governance/templates/notifications/proposal_adopted.txt
 #: governance/templates/notifications/proposal_back_to_draft.txt
+#: governance/templates/notifications/proposal_expired.txt
 #: governance/templates/notifications/proposal_published.txt
 #: governance/templates/notifications/proposal_retracted.txt
 #: governance/templates/notifications/proposal_to_meeting.txt
@@ -2800,6 +2814,11 @@ msgstr "In %(circle)s wurde ein Vorschlag angenommen."
 #, python-format
 msgid "%(proposer)s has taken the proposal in %(circle)s back to the draft to change it. It's not open for responses anymore; when it's published again, the circle starts over."
 msgstr "%(proposer)s hat den Vorschlag in %(circle)s zurück zum Entwurf genommen, um ihn zu ändern. Er ist nicht mehr offen für Antworten; wird er wieder veröffentlicht, beginnt der Kreis von vorne."
+
+#: governance/templates/notifications/proposal_expired.txt
+#, python-format
+msgid "The proposal in %(circle)s waited three months for a governance meeting without being processed. It's your draft again, only you see it: bring it to a meeting, publish it async or delete it."
+msgstr "Der Vorschlag in %(circle)s hat drei Monate auf ein Governance Meeting gewartet, ohne behandelt zu werden. Er ist wieder dein Entwurf, nur du siehst ihn: bring ihn in ein Meeting, veröffentliche ihn async oder lösche ihn."
 
 #: governance/templates/notifications/proposal_published.txt
 #, python-format

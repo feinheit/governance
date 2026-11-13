@@ -18,6 +18,7 @@ everything in all circles" in their settings.
 | The proposer answers | Who asked or commented (still members of the circle) |
 | Somebody asks for a meeting | The proposer and the circle's Secretary (else the Facilitator, else the Circle Leads) |
 | The circle or role it belongs to is removed (also drafts) | The proposer |
+| It waited three months for a meeting and is the proposer's draft again | The proposer |
 
 Who wrote a response doesn't get it. Consents send nothing, the mail
 comes when the proposal is adopted. When nobody else has to

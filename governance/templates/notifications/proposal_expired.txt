@@ -1,0 +1,7 @@
+{% load governance i18n %}{% autoescape off %}{% blocktranslate with circle=proposal.circle %}The proposal in {{ circle }} waited three months for a governance meeting without being processed. It's your draft again, only you see it: bring it to a meeting, publish it async or delete it.{% endblocktranslate %}
+
+{% translate "Tension" %}:
+{{ proposal.tension|plain }}
+
+{{ url }}
+{% endautoescape %}

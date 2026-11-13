@@ -57,7 +57,8 @@ circle.
   and the agenda leads to the proposals' pages only for the others.
   "Discard" withdraws it (e.g. it isn't valid, or its proposer is
   gone); its proposer may "Draft again" on the proposal's page. "Done"
-  without adopting or discarding keeps it waiting for the next meeting.
+  without adopting or discarding keeps it waiting for the next meeting
+  (three months, then it's its proposer's draft again).
 - **Objections** aren't recorded: the facilitator asks for them in the
   objection round and tests them, the secretary integrates the valid
   ones by amending the proposal; the notes keep what matters. "Adopt"

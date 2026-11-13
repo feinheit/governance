@@ -60,6 +60,10 @@ def end_meeting(meeting, at=None):
     meeting.ended_at = at or timezone.now()
     meeting.current_item = None
     meeting.save(update_fields=["ended_at", "current_item"])
+    # Those left waiting for the next meeting wait from now on
+    meeting.proposals.filter(status=Proposal.IN_MEETING).update(
+        waiting_since=meeting.ended_at
+    )
     # Not the elections of core roles archived by turning back
     revert_after_meeting(meeting)
     announce_elections(meeting)

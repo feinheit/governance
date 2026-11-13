@@ -108,6 +108,16 @@ class Proposal(models.Model):
     created_at = models.DateTimeField(_("created at"))
     published_at = models.DateTimeField(_("published at"), null=True, blank=True)
     deadline = models.DateTimeField(_("deadline"), null=True, blank=True)
+    waiting_since = models.DateTimeField(
+        _("waiting since"),
+        null=True,
+        blank=True,
+        help_text=_(
+            "When it started waiting for a meeting, or the end of the last"
+            " meeting it was on: after three months it goes back to its"
+            " proposer's draft."
+        ),
+    )
     decided_at = models.DateTimeField(_("decided at"), null=True, blank=True)
     meeting = models.ForeignKey(
         "meetings.Meeting",
@@ -187,6 +197,15 @@ class Proposal(models.Model):
         return Truncator(plain_mentions(first_line)).chars(100)
 
     def save(self, *args, **kwargs):
+        # How long it waits for a meeting (expire_waiting()), from the
+        # moment it starts; the end of a meeting it was on restarts it
+        waiting = self.waiting_since
+        if self.status != self.IN_MEETING:
+            self.waiting_since = None
+        elif self.waiting_since is None:
+            self.waiting_since = timezone.now()
+        if self.waiting_since != waiting and kwargs.get("update_fields"):
+            kwargs["update_fields"] = {*kwargs["update_fields"], "waiting_since"}
         super().save(*args, **kwargs)
         if self.status in {self.DRAFT, self.PUBLISHED, self.IN_MEETING}:
             # Pending: the roles and policies it changes now (the pages of

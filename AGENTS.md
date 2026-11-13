@@ -182,7 +182,7 @@ each mail), `BASE_URL`, `GOOGLE_CLIENT_ID`,
 `GOOGLE_CLIENT_SECRET`, `SENTRY_DSN` and `SENTRY_ENVIRONMENT`. Only
 existing, active users sign in; admins add new people in the Django admin.
 The cron jobs are in argocd's `governance/values.yaml`: `fairy_tasks` at
-03:30 UTC (the history's changes, pruning API tokens, the reminders), and
+03:30 UTC (the history's changes, pruning API tokens, proposals waiting for a meeting three months back to drafts, the reminders), and
 `hourly_tasks` at a quarter past each hour (adopting async proposals at
 their deadline, `Proposal.adopted_on` knows the minute; meetings end and
 send their outputs a few hours after their last activity).

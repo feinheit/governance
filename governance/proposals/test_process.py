@@ -8,7 +8,12 @@ from django.utils import timezone
 from governance.accounts.models import User
 from governance.proposals.instructions import ProposalError
 from governance.proposals.models import Proposal, Response
-from governance.proposals.process import adopt_due_proposals, publish, respond
+from governance.proposals.process import (
+    adopt_due_proposals,
+    expire_waiting,
+    publish,
+    respond,
+)
 from governance.roles.models import Assignment, Role
 
 
@@ -538,3 +543,79 @@ class ConcurrentAdoptionTest(TransactionTestCase):
         bakery.refresh_from_db()
         cook.refresh_from_db()
         self.assertEqual((cook.circle, bakery.is_circle), (bakery, True))
+
+
+@time_machine.travel(NOW, tick=False)
+class WaitingTest(TestCase):
+    """Proposals waiting for a meeting go back to their proposer's draft
+    after three months (decided 2026-11-13)"""
+
+    def setUp(self):
+        self.ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        self.bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        self.kitchen = Role.objects.create(
+            name="Kitchen", is_circle=True, async_acceptance_days=2
+        )
+        self.kitchen.create_core_roles()
+        self.cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        for user in [self.ada, self.bob]:
+            Assignment.objects.create(role=self.cook, user=user)
+
+    def waiting(self):
+        proposal = publish(
+            Proposal.objects.create(
+                circle=self.kitchen,
+                proposer=self.ada,
+                role=self.cook,
+                tension="Better name",
+                created_at=timezone.now(),
+                instructions=[{"op": "test", "path": f"/roles/{self.cook.pk}"}],
+            )
+        )
+        respond(proposal, self.bob, Response.MEETING)
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.IN_MEETING)
+        self.assertEqual(proposal.waiting_since, NOW)
+        return proposal
+
+    def test_back_to_the_draft(self):
+        from django.core import mail
+
+        proposal = self.waiting()
+        with time_machine.travel(NOW + dt.timedelta(days=89), tick=False):
+            self.assertEqual(expire_waiting(), [])
+        with time_machine.travel(NOW + dt.timedelta(days=91), tick=False):
+            mail.outbox = []
+            with self.captureOnCommitCallbacks(execute=True):
+                call_command("fairy_tasks")
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.DRAFT)
+        self.assertEqual((proposal.published_at, proposal.waiting_since), (None, None))
+        # Only the proposer, whose draft it is
+        self.assertEqual([m.to for m in mail.outbox], [["ada@example.com"]])
+        self.assertIn("waited three months", mail.outbox[0].body)
+
+    def test_meetings(self):
+        """Not while on a running meeting's agenda; the end of a meeting
+        leaving it waiting restarts the period"""
+        from governance.meetings.activity import end_meeting
+        from governance.meetings.models import Meeting
+
+        proposal = self.waiting()
+        meeting = Meeting.objects.create(
+            circle=self.kitchen, kind=Meeting.GOVERNANCE, started_at=NOW
+        )
+        Proposal.objects.filter(pk=proposal.pk).update(meeting=meeting)
+        later = NOW + dt.timedelta(days=91)
+        self.assertEqual(expire_waiting(now=later), [])
+        end_meeting(meeting, at=NOW + dt.timedelta(days=30))
+        self.assertEqual(expire_waiting(now=later), [])
+        self.assertEqual(expire_waiting(now=later + dt.timedelta(days=30)), [proposal])
+
+    def test_without_proposer(self):
+        """Nobody would see the draft of somebody who left: withdrawn"""
+        proposal = self.waiting()
+        User.objects.filter(pk=self.ada.pk).update(is_active=False)
+        self.assertEqual(expire_waiting(now=NOW + dt.timedelta(days=91)), [])
+        proposal.refresh_from_db()
+        self.assertEqual(proposal.status, Proposal.WITHDRAWN)

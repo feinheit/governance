@@ -134,6 +134,19 @@ def proposal_to_meeting(proposal, problems):
     )
 
 
+def proposal_expired(proposal):
+    """It waited for a meeting too long: the proposer's draft again"""
+    return send(
+        User.objects.filter(pk=proposal.proposer_id),
+        lambda: (
+            _(gettext_noop("Back to your draft in %(circle)s: %(proposal)s"))
+            % {"circle": proposal.circle, "proposal": proposal}
+        ),
+        "notifications/proposal_expired.txt",
+        proposal_context(proposal),
+    )
+
+
 def proposal_retracted(proposal):
     return to_everybody(
         proposal,

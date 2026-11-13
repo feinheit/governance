@@ -52,7 +52,8 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
   der Vorschläge. "Verwerfen" zieht ihn zurück (z.B. ist er nicht gültig,
   oder die vorschlagende Person ist nicht mehr da); die vorschlagende
   Person kann ihn auf der Seite des Vorschlags "Neu entwerfen". "Erledigt"
-  ohne Annehmen oder Verwerfen lässt ihn auf das nächste Meeting warten.
+  ohne Annehmen oder Verwerfen lässt ihn auf das nächste Meeting warten
+  (drei Monate, dann ist er wieder ein Entwurf der vorschlagenden Person).
 - **Einwände** werden nicht festgehalten: Wer Facilitator ist, fragt in der Einwandrunde danach und prüft sie, wer Secretary ist, arbeitet die
   gültigen in den Vorschlag ein; die Notizen halten fest, was wichtig
   ist. "Annehmen" (zuunterst, wie "Verwerfen") wendet die

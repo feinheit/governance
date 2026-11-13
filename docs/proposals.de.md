@@ -76,6 +76,15 @@ Veröffentlichte Vorschläge lassen sich nicht ändern: "Zurück zum Entwurf"
 (der Kreis beginnt danach von vorne) oder "Zurückziehen". Beides erfahren
 die Mitglieder des Kreises per Mail. Während sein Meeting läuft, verwirft ihn stattdessen, wer dort Secretary ist.
 
+## Wartet auf ein Meeting
+
+Ein Vorschlag, der auf ein Meeting wartet (gewünscht, oder von einem
+Meeting mit "Erledigt" warten gelassen), wird nach drei Monaten wieder dein
+Entwurf, gezählt ab dem Beginn des Wartens oder dem Ende des letzten
+Meetings, in dem er war; du erhältst eine Mail. Nicht, solange ein Meeting
+ihn auf der Agenda hat. Bring ihn in ein Meeting, veröffentliche ihn
+wieder oder lösche ihn.
+
 ## Ohne Vorschlag
 
 - **Policies einer Domain**: wer eine Rolle mit Domain hat, legt deren

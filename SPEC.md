@@ -198,7 +198,12 @@ States: `draft` → `published` (async) → `adopted`, or → `in_meeting` →
 `adopted`/`withdrawn`. `in_meeting` ("waiting for a meeting") waits for
 the next governance meeting: someone asked for one in their response, the
 proposal is on an agenda or came up in a meeting (GlassFrog's `escalated`),
-also when no meeting is running. Escalated GlassFrog proposals older than
+also when no meeting is running. Three months after it started waiting
+(`waiting_since`, restarted when a meeting it was on ends) it goes back to
+its proposer's draft with a mail, unless a meeting not ended has it on its
+agenda (`process.expire_waiting()` in `fairy_tasks`, decided 2026-11-13:
+the list of waiting ones shouldn't only grow; those whose proposer left are
+withdrawn). Escalated GlassFrog proposals older than
 two months (published, else created) and not on an agenda were
 imported as drafts: their proposers bring them again or delete them, admins
 can't withdraw other people's proposals. Open proposals imported from

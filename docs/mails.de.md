@@ -18,6 +18,7 @@ die Mails "Zu allem in allen Kreisen" gewählt haben.
 | Die Antwort darauf | Wer gefragt oder kommentiert hat (noch Mitglieder des Kreises) |
 | Jemand wünscht ein Meeting | Wer ihn vorschlägt und wer im Kreis Secretary ist (sonst Facilitator, sonst die Circle Leads) |
 | Der Kreis oder die Rolle, zu der er gehört, wird entfernt (auch Entwürfe) | Wer ihn vorschlägt |
+| Er hat drei Monate auf ein Meeting gewartet und ist wieder ein Entwurf | Wer ihn vorschlägt |
 
 Wer eine Antwort schreibt, erhält sie nicht. Zustimmungen verschicken
 nichts, die Mail kommt mit dem Annehmen. Muss sonst niemand zustimmen

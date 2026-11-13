@@ -74,6 +74,14 @@ Published proposals can't be changed: "Back to the draft" (the circle
 starts over afterwards) or "Withdraw". Both tell the circle's members by
 mail. While its meeting runs, the secretary discards it there instead.
 
+## Waiting for a meeting
+
+A proposal waiting for a meeting (asked for, or left waiting by a meeting
+with "Done") goes back to your draft after three months, counted from when
+it started waiting or from the end of the last meeting it was on; you get
+a mail. Not while a meeting has it on its agenda. Bring it to a meeting,
+publish it again or delete it.
+
 ## Without a proposal
 
 - **Policies of a domain**: whoever holds a role with a domain sets its

@@ -1,9 +1,10 @@
 """The async process of proposals, see section 3 of SPEC.md
 
 A published proposal is adopted when every circle member consented, or by
-the daily task when its deadline passed without an objection or a request
+the hourly task when its deadline passed without an objection or a request
 for a meeting. Objections and requests move it to the next governance
-meeting, like a conflict found when adopting it at the deadline.
+meeting, like a conflict found when adopting it at the deadline. Waiting
+for a meeting three months, it goes back to its proposer's draft.
 """
 
 import datetime as dt
@@ -167,10 +168,12 @@ def everybody_consented(proposal):
 def to_meeting(proposal):
     """Only while it's published: not one adopted meanwhile (try_adopting()
     failing because another request adopted it)"""
+    now = timezone.now()
     if Proposal.objects.filter(pk=proposal.pk, status=Proposal.PUBLISHED).update(
-        status=Proposal.IN_MEETING
+        status=Proposal.IN_MEETING, waiting_since=now
     ):
         proposal.status = Proposal.IN_MEETING
+        proposal.waiting_since = now
         return True
     return False
 
@@ -268,6 +271,40 @@ def retract(proposal):
     meeting; everybody learns where it went, also those who consented"""
     withdraw(proposal)
     transaction.on_commit(partial(mails.proposal_retracted, proposal))
+
+
+# How long a proposal waits for a meeting before going back to its
+# proposer's draft (decided 2026-11-13)
+WAITING_PERIOD = dt.timedelta(days=90)
+
+
+def expire_waiting(now=None):
+    """Proposals waiting for a meeting for three months without being on a
+    running meeting's agenda go back to their proposer's draft, so that the
+    list of waiting ones doesn't only grow; those without a proposer still
+    signing in are withdrawn (nobody would see the draft)"""
+    expired = (
+        Proposal.objects
+        .filter(
+            status=Proposal.IN_MEETING,
+            waiting_since__lt=(now or timezone.now()) - WAITING_PERIOD,
+        )
+        # On the agenda of a meeting not ended yet
+        .exclude(meeting__isnull=False, meeting__ended_at=None)
+        .select_related("circle", "proposer")
+    )
+    result = []
+    for proposal in expired:
+        with transaction.atomic():
+            if proposal.proposer is None or not proposal.proposer.is_active:
+                withdraw(proposal)
+                continue
+            proposal.status = Proposal.DRAFT
+            proposal.published_at = proposal.deadline = proposal.meeting = None
+            proposal.save()
+            transaction.on_commit(partial(mails.proposal_expired, proposal))
+            result.append(proposal)
+    return result
 
 
 def adopt_due_proposals(now=None):
