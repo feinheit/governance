@@ -103,6 +103,7 @@
                   href="{% url 'user_settings' %}?next={{ request.get_full_path|urlencode }}"
                   data-modal
                 >{% translate "Settings" %}</a>
+                <a class="dropdown-item" href="{% url 'api_tokens' %}">{% translate "API tokens" %}</a>
                 <hr class="dropdown-divider">
                 {# Not tied to a circle: with any roles, also from several circles #}
                 <a class="dropdown-item" href="{% url 'tactical_call' %}">{% translate "Call a tactical meeting" %}</a>
@@ -110,7 +111,7 @@
                 <a class="dropdown-item" href="{% url 'people' %}">{% translate "People" %}</a>
                 <a class="dropdown-item" href="{% url 'mail_addresses' %}">{% translate "Mail addresses" %}</a>
                 <a class="dropdown-item" href="{% url 'help' %}">{% translate "Help" %}</a>
-                <a class="dropdown-item" href="{% url 'api_tokens' %}">{% translate "API" %}</a>
+                <hr class="dropdown-divider">
                 {% if request.user.is_staff %}<a
                     class="dropdown-item"
                     href="{% url 'admin:index' %}"
