@@ -542,6 +542,20 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertTrue(self.page.locator(".wb-mentions").is_hidden())
         self.assertEqual(self.errors, [])
 
+    def test_shortcuts_on_macs(self):
+        """The help shows the shortcuts with Ctrl on Macs (shortcuts.js)"""
+        page = self.context.new_page()
+        page.add_init_script(
+            "Object.defineProperty(Navigator.prototype, 'platform',"
+            " {get: () => 'MacIntel'})"
+        )
+        page.goto(f"{self.live_server_url}/help/orientation/")
+        keys = page.locator(".wb-help kbd").all_text_contents()
+        self.assertIn("Ctrl-H", keys)
+        self.assertNotIn("Alt-H", keys)
+        self.page.goto(f"{self.live_server_url}/help/orientation/")
+        self.assertIn("Alt-H", self.page.locator(".wb-help kbd").all_text_contents())
+
     def test_modals(self):
         """Forms open in a modal (modal.js), Escape keeps changed ones open
         until pressed again, saving loads the page"""

@@ -43,8 +43,7 @@ Mail"). Das Menü "…" eines Kreises verlinkt seine Mitglieder.
 | <kbd>Alt-O</kbd> | Organisation |
 | <kbd>Alt-Q</kbd> | ins Suchfeld |
 
-Auf dem Mac <kbd>Ctrl</kbd> statt <kbd>Alt</kbd>. Fährst du mit der Maus
-über einen Link, zeigt er sein Kürzel.
+Fährst du mit der Maus über einen Link, zeigt er sein Kürzel.
 
 ## Kreise, Rollen und Personen
 

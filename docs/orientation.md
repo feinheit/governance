@@ -41,8 +41,7 @@ menu "…" links its members.
 | <kbd>Alt-O</kbd> | Organization |
 | <kbd>Alt-Q</kbd> | Into the search field |
 
-On the Mac <kbd>Ctrl</kbd> instead of <kbd>Alt</kbd>. Hovering over a
-link with the mouse shows its shortcut.
+Hovering over a link with the mouse shows its shortcut.
 
 ## Circles, roles and people
 

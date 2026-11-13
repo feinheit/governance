@@ -26,3 +26,10 @@ for (const element of document.querySelectorAll("[data-shortcut]")) {
   element.setAttribute("aria-keyshortcuts", keys.replace("-", "+"))
   element.title = element.title ? `${element.title} (${keys})` : keys
 }
+
+// The help names the keys for Alt (docs/orientation.md), Macs press Ctrl
+if (isMac) {
+  for (const kbd of document.querySelectorAll(".wb-help kbd")) {
+    kbd.textContent = kbd.textContent.replace(/\bAlt-/g, "Ctrl-")
+  }
+}
