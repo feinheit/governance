@@ -475,3 +475,35 @@ class DeleteEmptyDraftsTest(TestCase):
         )
         self.assertFalse(Proposal.objects.filter(pk=gone.pk))
         self.assertEqual(AgendaItem.objects.filter(label="Election").count(), 3)
+
+
+class DeleteDraftsOnlyTestingTest(TestCase):
+    def test_migration(self):
+        """Drafts without a tension only checking a role exists go; not with
+        a tension or a change"""
+        from importlib import import_module
+
+        from django.apps import apps
+
+        migration = import_module(
+            "governance.proposals.migrations.0012_delete_drafts_only_testing"
+        )
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        test = {"op": "test", "path": f"/roles/{kitchen.pk}"}
+        change = {"op": "add", "path": "/roles/n1"}
+
+        def draft(tension, *instructions):
+            return Proposal.objects.create(
+                circle=kitchen,
+                proposer=ada,
+                created_at=timezone.now(),
+                tension=tension,
+                instructions=list(instructions),
+            )
+
+        gone = draft("", test)
+        kept = [draft("Soup", test), draft("", test, change)]
+        migration.delete_drafts_only_testing(apps, None)
+        self.assertFalse(Proposal.objects.filter(pk=gone.pk))
+        self.assertEqual(Proposal.objects.count(), len(kept))
