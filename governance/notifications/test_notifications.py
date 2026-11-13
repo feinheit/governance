@@ -116,7 +116,14 @@ class NotificationsTest(TestCase):
             role=self.waiter(self.eve),
             tension=f"@[Cooks](role:{self.cook.pk}) need a new name",
             created_at=timezone.now(),
-            instructions=[{"op": "test", "path": f"/roles/{self.cook.pk}"}],
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{self.cook.pk}/name",
+                    "original_value": "Cook",
+                    "value": "Chef",
+                }
+            ],
         )
         with self.captureOnCommitCallbacks(execute=True):
             publish(proposal)
