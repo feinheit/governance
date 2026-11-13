@@ -137,6 +137,18 @@ class EditingTest(TestCase):
             self.client.get(f"/items/nonsense/{item.pk}/").status_code, 403
         )
 
+    def test_checklists_and_metrics_cards(self):
+        """Two cards like the two steps of the tactical meetings"""
+        ChecklistItem.objects.create(role=self.kitchen, description="Fridge cleaned")
+        Metric.objects.create(role=self.cook, description="Soups per week")
+        self.client.force_login(self.eve)
+        page = self.client.get(f"/roles/{self.kitchen.pk}/").content.decode()
+        checklists = page.index(">Checklists</h2>")
+        metrics = page.index(">Metrics</h2>")
+        self.assertLess(checklists, page.index("Fridge cleaned"), metrics)
+        self.assertLess(metrics, page.index("Soups per week"))
+        self.assertNotIn("Checklists and metrics", page)
+
     def test_links(self):
         """Links to external tools, anybody edits them"""
         from governance.roles.models import Link

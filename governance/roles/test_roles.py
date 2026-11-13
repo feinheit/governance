@@ -176,4 +176,4 @@ class FrequencyTest(TestCase):
         self.assertIn("Menu planned", content)
         self.assertIn("Fridge", content)
         # The role's name links to it
-        self.assertIn(f'href="{role.get_absolute_url()}"\n        >Cook</a>', content)
+        self.assertIn(f'href="{role.get_absolute_url()}">Cook</a>', content)

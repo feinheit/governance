@@ -73,24 +73,20 @@ def mark_reps(circles):
             assignment.is_rep = assignment.user_id in reps[circle.pk]
 
 
-def role_items(user, role):
-    """The role's checklist items and metrics; for a circle also those of its
-    roles, like GlassFrog shows them"""
+def role_items(user, role, model):
+    """The role's checklist items or metrics grouped by their frequency; for a
+    circle also those of its roles, like GlassFrog shows them"""
     # Not the sub-circles' own items, they're on the sub-circles' pages
     roles = [
         role,
         *(role.roles.active().filter(is_circle=False) if role.is_circle else []),
     ]
-    for kind, label, model in [
-        ("checklist", gettext("checklist"), ChecklistItem),
-        ("metrics", gettext("metric"), Metric),
-    ]:
-        for item in model.objects.filter(role__in=roles).select_related("role"):
-            item.kind, item.kind_label = kind, label
-            item.editable = can_edit_items(user, item.role, model)
-            # Items of the circle's roles name their role
-            item.other_role = item.role if item.role_id != role.pk else None
-            yield item
+    items = list(model.objects.filter(role__in=roles).select_related("role"))
+    for item in items:
+        item.editable = can_edit_items(user, item.role, model)
+        # Items of the circle's roles name their role
+        item.other_role = item.role if item.role_id != role.pk else None
+    return by_frequency(items)
 
 
 def start(request):
@@ -186,10 +182,9 @@ def role_detail(request, pk):
         "policies": policies,
         # A role's policies for its domains, without governance (1.3.2)
         "can_change_domain_policies": can_change_domain_policies(request.user, role),
-        "metrics": role.metrics.all(),
-        "checklist_items": role.checklistitems.all(),
-        # Checklist items first, then metrics, grouped by their frequency
-        "role_items": by_frequency(role_items(request.user, role)),
+        # Two cards like the two steps of the tactical meetings
+        "checklist_items": role_items(request.user, role, ChecklistItem),
+        "metrics": role_items(request.user, role, Metric),
         # Published or in a meeting: proposals affecting the role, and its
         # own (a circle's, or a role's for its inside, 1.3.1)
         "pending": Proposal.objects

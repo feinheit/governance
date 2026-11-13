@@ -8,11 +8,9 @@
           rel="noopener"
         >{{ item }}</a>{% else %}{{ item }}{% endif %}
     </div>
-    <div class="wb-row-meta">
-      <span>{{ label }}</span>{% if item.other_role %}<a
-          href="{{ item.other_role.get_absolute_url }}"
-        >{{ item.other_role }}</a>{% endif %}
-    </div>
+    {% if item.other_role %}
+      <div class="wb-row-meta"><a href="{{ item.other_role.get_absolute_url }}">{{ item.other_role }}</a></div>
+    {% endif %}
   </div>
   {% if can_edit %}
     <div class="d-flex gap-1 flex-shrink-0">

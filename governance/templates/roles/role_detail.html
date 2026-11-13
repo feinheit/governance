@@ -285,36 +285,14 @@
         </section>
       {% endif %}
 
-      {% if role_items or can_edit_metrics or can_edit_checklist %}
-        <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Checklists and metrics" %}</h2></div>
-          <ul class="list-group list-group-flush">
-            {% for frequency, items in role_items %}
-              <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading wb-frequency-heading">
-                {{ frequency|capfirst }}
-                <span class="fw-normal">{{ items|length }}</span>
-              </li>
-              {% for item in items %}
-                {% include "roles/_role_item.html" with kind=item.kind label=item.kind_label can_edit=item.editable %}
-              {% endfor %}
-            {% endfor %}
-            {% if can_edit_checklist or can_edit_metrics %}
-              <li class="list-group-item d-flex flex-wrap gap-1">
-                {% if can_edit_checklist %}<a
-                    {% button_class can_edit_checklist %}
-                    href="{% url 'role_checklist_add' role.pk %}"
-                    data-modal
-                  >{% icon "plus-lg" %} {% translate "Add a checklist item" %}</a>{% endif %}
-                {% if can_edit_metrics %}<a
-                    {% button_class can_edit_metrics %}
-                    href="{% url 'role_metrics_add' role.pk %}"
-                    data-modal
-                  >{% icon "plus-lg" %} {% translate "Add a metric" %}</a>{% endif %}
-              </li>
-            {% endif %}
-          </ul>
-        </section>
-      {% endif %}
+      {% url 'role_checklist_add' role.pk as add_url %}
+      {% translate "Checklists" as title %}
+      {% translate "Add a checklist item" as add_label %}
+      {% include "roles/_role_items.html" with kind="checklist" groups=checklist_items can_add=can_edit_checklist %}
+      {% url 'role_metrics_add' role.pk as add_url %}
+      {% translate "Metrics" as title %}
+      {% translate "Add a metric" as add_label %}
+      {% include "roles/_role_items.html" with kind="metrics" groups=metrics can_add=can_edit_metrics %}
 
       {% if references or can_edit_references %}
         <section class="card mb-4">

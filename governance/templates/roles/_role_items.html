@@ -1,0 +1,27 @@
+{% load governance i18n %}
+{# The role's checklist items or metrics grouped by their frequency, two cards like the two steps of the tactical meetings #}
+{% if groups or can_add %}
+  <section class="card mb-4">
+    <div class="card-header"><h2 class="h6 mb-0">{{ title }}</h2></div>
+    <ul class="list-group list-group-flush">
+      {% for frequency, items in groups %}
+        <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading wb-frequency-heading">
+          {{ frequency|capfirst }}
+          <span class="fw-normal">{{ items|length }}</span>
+        </li>
+        {% for item in items %}
+          {% include "roles/_role_item.html" with can_edit=item.editable %}
+        {% endfor %}
+      {% endfor %}
+      {% if can_add %}
+        <li class="list-group-item d-flex flex-wrap gap-1">
+          <a
+            {% button_class can_add %}
+            href="{{ add_url }}"
+            data-modal
+          >{% icon "plus-lg" %} {{ add_label }}</a>
+        </li>
+      {% endif %}
+    </ul>
+  </section>
+{% endif %}

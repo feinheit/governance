@@ -661,12 +661,13 @@ verify the mails; removed once they've proven themselves.
   meeting has a button in the header. A role's governance meetings (for its inside, 1.3.1) are rare, its menu starts them and links its meetings (a circle's menu too, besides its Meetings card: easier to find), also the ad hoc tactical meetings it was invited to and a role's those of its circle, which invite all its roles (since it moved into the circle, if it did; `Meeting.objects.of_role()`; GlassFrog's tactical meetings have no invited roles; a circle's list has its own, not its super-circle's).
 - **Circle page**: purpose, strategy, domains, accountabilities, its
   policies, core roles (due elections marked), meetings, pending proposals,
-  metrics, checklists, links, notes, history, roles with Role Leads and sub-circles.
+  checklists and metrics (two cards, like the tactical meeting's two steps,
+  with those of its roles), links, notes, history, roles with Role Leads and sub-circles.
 - **Role page**: purpose, domains (linking to their
   policies, which the link opens, `frontend/open_details.js`), accountabilities, its policies, Role Leads with focus and
   terms (next to the name; lists of current assignments don't say since
   when, the focus is often younger: `roles/_assignment_note.html`), pending proposals
-  (also for its inside), metrics, checklists, links and notes (one card,
+  (also for its inside), checklists, metrics, links and notes (one card,
   notes folded, `#note-ID` unfolds one), history (its former
   names, the latest proposals and changes without the assignments and
   the counts of texts not recorded, `recent_history()`: GlassFrog

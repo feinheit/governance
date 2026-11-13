@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 08:44+0100\n"
+"POT-Creation-Date: 2026-11-13 12:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1893,7 +1893,7 @@ msgstr "Beschreibung"
 msgid "frequency"
 msgstr "Häufigkeit"
 
-#: governance/roles/models.py governance/roles/views.py
+#: governance/roles/models.py
 msgid "metric"
 msgstr "Metrik"
 
@@ -1946,10 +1946,6 @@ msgstr "Einstellungen von %(role)s"
 #: governance/roles/settings_views.py
 msgid "Policies explain the settings, the app uses them. Change both together."
 msgstr "Policies erklären die Einstellungen, die App verwendet sie. Ändere beide zusammen."
-
-#: governance/roles/views.py
-msgid "checklist"
-msgstr "Checkliste"
 
 #: governance/roles/views.py governance/templates/roles/role_detail.html
 msgid "Domains and policies affecting this circle"
@@ -2125,6 +2121,7 @@ msgstr "Tactical Meeting einberufen"
 #: governance/templates/base.html
 #: governance/templates/roles/mail_addresses.html
 #: governance/templates/roles/people.html
+#: governance/templates/roles/role_detail.html
 msgid "Mail addresses"
 msgstr "Mailadressen"
 
@@ -3151,6 +3148,7 @@ msgid "A Circle Lead can't be the Circle Rep (constitution 5.1.1). The change en
 msgstr "Wer Circle Lead ist, kann nicht Circle Rep sein (Verfassung 5.1.1). Die Änderung beendet diese Zuweisungen, die Kreise wählen die Rolle Circle Rep neu:"
 
 #: governance/templates/roles/_governance_lists.txt
+#: governance/templates/roles/role_detail.html
 msgid "Metrics"
 msgstr "Metriken"
 
@@ -3363,8 +3361,8 @@ msgid "None"
 msgstr "Keine"
 
 #: governance/templates/roles/role_detail.html
-msgid "Checklists and metrics"
-msgstr "Checklisten und Metriken"
+msgid "Checklists"
+msgstr "Checklisten"
 
 #: governance/templates/roles/role_detail.html
 msgid "Add a checklist item"
