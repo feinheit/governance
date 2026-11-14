@@ -236,6 +236,11 @@ class Accountability(models.Model):
     def __str__(self):
         return self.text
 
+    @property
+    def order_key(self):
+        """Its key in the role's order (roles/editing.py)"""
+        return str(self.pk)
+
 
 class Domain(models.Model):
     role = models.ForeignKey(
@@ -254,6 +259,11 @@ class Domain(models.Model):
 
     def __str__(self):
         return self.text
+
+    @property
+    def order_key(self):
+        """Its key in the role's order (roles/editing.py)"""
+        return str(self.pk)
 
 
 class PolicyQuerySet(models.QuerySet):
@@ -495,6 +505,11 @@ class Link(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def order_key(self):
+        """Its key in the role's order of links and notes, one list"""
+        return f"link-{self.pk}"
+
 
 class Note(models.Model):
     """What helps doing the role's work, e.g. a checklist or how something
@@ -517,6 +532,11 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def order_key(self):
+        """Its key in the role's order of links and notes, one list"""
+        return f"note-{self.pk}"
 
 
 # Edited outside governance (roles/editing.py), in the history on request

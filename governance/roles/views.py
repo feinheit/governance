@@ -17,7 +17,6 @@ from governance.roles.domain_policies import can_change_domain_policies
 from governance.roles.editing import (
     can_edit_items,
     can_edit_strategy,
-    order_key,
     references,
 )
 from governance.roles.models import (
@@ -174,9 +173,7 @@ def role_detail(request, pk):
         "can_edit_checklist": can_edit_items(request.user, role, ChecklistItem),
         # Links and notes in one card, anybody orders them (roles/editing.py)
         "can_edit_references": can_edit_items(request.user, role, Link),
-        "references": [
-            (item._meta.model_name, order_key(item), item) for item in references(role)
-        ],
+        "references": references(role),
         # From a role of theirs in the circle, in a role its Role Leads (adding
         # roles inside), like proposal_create(); admins too only then
         "can_propose": not role.archived_on

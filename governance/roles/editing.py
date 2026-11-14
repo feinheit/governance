@@ -105,13 +105,6 @@ def next_position(role, model):
     return max((item.position + 1 for item in items), default=0)
 
 
-def order_key(item):
-    """Links and notes are ``link-3`` and ``note-5``, texts their IDs"""
-    if isinstance(item, (Link, Note)):
-        return f"{item._meta.model_name}-{item.pk}"
-    return str(item.pk)
-
-
 class Reporter(NamedTuple):
     """A choice of who reports a checklist item or metric"""
 
@@ -371,10 +364,10 @@ def save_order(texts):
 @transaction.atomic
 def texts_order(request, pk, kind):
     """The accountabilities, domains or references dragged into an order
-    (frontend/sortable.js): their keys (``order_key()``) in the new order,
+    (frontend/sortable.js): their keys (``order_key``) in the new order,
     missing ones keep theirs after them"""
     role, texts = reorderable_texts(pk, kind)
-    by_key = {order_key(text): text for text in texts}
+    by_key = {text.order_key: text for text in texts}
     keys = [key for key in request.POST.getlist("ids") if key in by_key]
     order = [*dict.fromkeys(keys), *(key for key in by_key if key not in keys)]
     save_order([by_key[key] for key in order])
@@ -387,7 +380,7 @@ def text_move(request, pk, kind, key):
     """Moves an accountability, domain or reference up or down, without
     JavaScript"""
     role, texts = reorderable_texts(pk, kind)
-    index = next((i for i, text in enumerate(texts) if order_key(text) == key), None)
+    index = next((i for i, text in enumerate(texts) if text.order_key == key), None)
     if index is None:
         raise Http404
     other = index + (-1 if request.POST.get("direction") == "up" else 1)

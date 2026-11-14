@@ -302,13 +302,15 @@
             class="list-group list-group-flush"
             {% if can_edit_references and references|length > 1 %}data-sortable="#references-order"{% endif %}
           >
-            {% for kind, key, item in references %}
+            {% for item in references %}
               <li
                 class="list-group-item wb-row wb-row-compact"
-                {% if can_edit_references and references|length > 1 %}data-sortable-item="{{ key }}"{% endif %}
+                {% if can_edit_references and references|length > 1 %}
+                  data-sortable-item="{{ item.order_key }}"
+                {% endif %}
               >
                 {% if can_edit_references and references|length > 1 %}{% include "roles/_drag_handle.html" %}{% endif %}
-                {% if kind == "link" %}
+                {% if item.kind == "links" %}
                   <div class="wb-row-main">
                     <a class="wb-row-title" href="{{ item.url }}" target="_blank" rel="noopener">{{ item }}
                       <span class="small text-body-secondary ms-1">{% icon "box-arrow-up-right" %}</span></a>
@@ -338,7 +340,7 @@
                       data-modal
                     >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>
                   </div>
-                  {% if references|length > 1 %}{% include "roles/_move_arrows.html" with kind="references" %}{% endif %}
+                  {% if references|length > 1 %}{% include "roles/_move_arrows.html" with kind="references" key=item.order_key %}{% endif %}
                 {% endif %}
               </li>
             {% empty %}
