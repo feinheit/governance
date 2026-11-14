@@ -201,6 +201,7 @@ class Role(models.Model):
 
     def create_core_roles(self):
         """Creates the missing core roles of a circle"""
+        # No Circle Rep for the anchor circle: there's no circle above it to represent it in
         keys = [LEAD, FACILITATOR, SECRETARY] + ([REP] if self.circle_id else [])
         existing = set(self.roles.active().values_list("core_role", flat=True))
         for position, key in enumerate(keys):
