@@ -7,7 +7,7 @@ class ToneTest(SimpleTestCase):
     def test_tone(self):
         self.assertEqual(tone("published"), "wb-tone-warning")
         self.assertEqual(tone("objection"), "wb-tone-danger")
-        self.assertEqual(tone("accountabilities-added"), "wb-tone-success")
-        self.assertEqual(tone("policy-removed"), "wb-tone-neutral")
+        self.assertEqual(tone("added"), "wb-tone-success")  # Changes' actions
+        self.assertEqual(tone("removed"), "wb-tone-neutral")
         self.assertEqual(tone("purpose"), "wb-tone-info")
         self.assertEqual(tone("governance"), "wb-tone-core")  # Meetings

@@ -118,7 +118,7 @@ class MeetingsTest(TestCase):
         Change.objects.create(
             date=dt.date(2025, 1, 2),
             role=self.cook,
-            kind="moved",
+            action="moved",
             old=bakery.pk,
             new=self.kitchen.pk,
         )
@@ -127,14 +127,14 @@ class MeetingsTest(TestCase):
         Change.objects.create(
             date=dt.date(2025, 1, 4),
             role=self.cook,
-            kind="moved",
+            action="moved",
             old=self.kitchen.pk,
             new=bakery.pk,
         )
         Change.objects.create(
             date=dt.date(2025, 1, 5),
             role=self.cook,
-            kind="moved",
+            action="moved",
             old=bakery.pk,
             new=self.kitchen.pk,
         )

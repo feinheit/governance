@@ -7,8 +7,8 @@ from governance.history.models import Change
 class ChangeAdmin(admin.ModelAdmin):
     """Read only: a cache of the audit log's changes (``update_changes()``)"""
 
-    list_display = ["date", "kind", "role", "policy"]
-    list_filter = ["kind"]
+    list_display = ["date", "subject", "action", "role", "policy"]
+    list_filter = ["subject", "action"]
     search_fields = ["role__name", "policy__title"]
     date_hierarchy = "date"
     raw_id_fields = ["role", "policy"]

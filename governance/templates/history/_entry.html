@@ -9,7 +9,7 @@
   <span class="small text-body-secondary">{% if show_role %}{{ obj.circle }} ·
     {% endif %}{{ obj.proposer|default:"" }}</span>
 {% else %}
-  <span class="badge {{ obj.kind|tone }}">{{ obj.label }}</span>
+  <span class="badge {{ obj.action|tone }}">{{ obj.label }}</span>
   {% if show_role %}
     {% if obj.policy %}<a href="{{ obj.policy.get_absolute_url }}">{{ obj.policy }}</a>{% elif obj.role %}<a
         href="{{ obj.role.get_absolute_url }}"
@@ -18,15 +18,15 @@
   {% if obj.user %}<a href="{{ obj.user.get_absolute_url }}">{{ obj.user }}</a>{% endif %}
   {% if obj.old_role or obj.new_role %}<span class="small text-body-secondary">{{ obj.old_role|default:"–" }}
       → {{ obj.new_role|default:"–" }}</span>{% endif %}
-  {% if obj.kind == "reelected" %}
+  {% if obj.action == "reelected" %}
     <span
       class="small text-body-secondary"
     >{% blocktranslate with date=obj.term|date:"DATE_FORMAT" %}until {{ date }}{% endblocktranslate %}</span>
-  {% elif obj.kind == "name" or obj.kind == "policy-title" or obj.kind == "focus" %}
+  {% elif obj.action == "name" or obj.action == "title" or obj.action == "focus" %}
     <span class="small">{% if obj.old_text %}<span
           class="text-decoration-line-through text-body-secondary"
         >{{ obj.old_text }}</span>{% endif %} {{ obj.new_text }}</span>
-  {% elif obj.kind == "added" or obj.kind == "removed" or obj.kind == "policy-added" or obj.kind == "policy-removed" %}
+  {% elif obj.is_named %}
     {% if not show_role and not obj.policy %}<span
         class="small"
       >{{ obj.old_text|default:obj.new_text }}</span>{% endif %}

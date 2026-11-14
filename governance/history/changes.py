@@ -10,44 +10,45 @@ def _texts(texts):
 
 
 def diff_roles(old, new):
-    """Yields ``(role, kind, old, new)`` for the differences of two snapshots"""
+    """Yields ``(role, subject, action, old, new)`` for the differences of two
+    snapshots, see ``Change``"""
     old_roles, new_roles = old.get("roles", {}), new.get("roles", {})
     for pk in new_roles.keys() - old_roles.keys():
-        yield int(pk), "added", "", new_roles[pk]["name"]
+        yield int(pk), "", "added", "", new_roles[pk]["name"]
     for pk in old_roles.keys() - new_roles.keys():
-        yield int(pk), "removed", old_roles[pk]["name"], ""
+        yield int(pk), "", "removed", old_roles[pk]["name"], ""
     for pk in new_roles.keys() & old_roles.keys():
         a, b = old_roles[pk], new_roles[pk]
         for field in ["name", "purpose", "strategy"]:
             if (a.get(field) or "") != (b.get(field) or ""):
-                yield int(pk), field, a.get(field) or "", b.get(field) or ""
+                yield int(pk), "", field, a.get(field) or "", b.get(field) or ""
         if a["circle"] != b["circle"]:
-            yield int(pk), "moved", a["circle"], b["circle"]
+            yield int(pk), "", "moved", a["circle"], b["circle"]
         if a["is_circle"] != b["is_circle"]:
-            yield int(pk), "circle" if b["is_circle"] else "role", "", ""
+            yield int(pk), "", "circle" if b["is_circle"] else "role", "", ""
         for field in ["accountabilities", "domains"]:
             (a_known, a_unknown), (b_known, b_unknown) = (
                 _texts(a[field]),
                 _texts(b[field]),
             )
             for text in (a_known - b_known).elements():
-                yield int(pk), f"{field}-removed", text, ""
+                yield int(pk), field, "removed", text, ""
             for text in (b_known - a_known).elements():
-                yield int(pk), f"{field}-added", "", text
+                yield int(pk), field, "added", "", text
             if a_unknown != b_unknown or (
                 (a_unknown or b_unknown) and len(a[field]) != len(b[field])
             ):
-                yield int(pk), f"{field}-unrecorded", a_unknown, b_unknown
+                yield int(pk), field, "unrecorded", a_unknown, b_unknown
         a_users = {x["user"] for x in a["assignments"]}
         b_users = {x["user"] for x in b["assignments"]}
         for user in b_users - a_users:
-            yield int(pk), "assigned", "", user
+            yield int(pk), "", "assigned", "", user
         for user in a_users - b_users:
-            yield int(pk), "unassigned", user, ""
+            yield int(pk), "", "unassigned", user, ""
 
 
 def diff_policies(old, new):
-    """Yields ``(policy, role, kind, old, new)``"""
+    """Yields ``(policy, role, action, old, new)``"""
     old_policies, new_policies = old.get("policies", {}), new.get("policies", {})
     for pk in new_policies.keys() - old_policies.keys():
         yield int(pk), new_policies[pk]["role"], "added", "", new_policies[pk]["title"]
@@ -73,16 +74,16 @@ def diff_policies(old, new):
 
 
 def diff_items(old, new):
-    """Yields ``(role, kind, old, new)`` for links, notes, metrics and checklist
-    items added, changed and removed"""
+    """Yields ``(role, subject, action, old, new)`` for links, notes, metrics
+    and checklist items added, changed and removed"""
     old_items, new_items = old.get("items", {}), new.get("items", {})
     for key in new_items.keys() - old_items.keys():
         item = new_items[key]
-        yield item["role"], f"{item['kind']}-added", "", item["text"]
+        yield item["role"], item["kind"], "added", "", item["text"]
     for key in old_items.keys() - new_items.keys():
         item = old_items[key]
-        yield item["role"], f"{item['kind']}-removed", item["text"], ""
+        yield item["role"], item["kind"], "removed", item["text"], ""
     for key in new_items.keys() & old_items.keys():
         a, b = old_items[key], new_items[key]
         if a["text"] != b["text"]:
-            yield b["role"], f"{b['kind']}-changed", a["text"], b["text"]
+            yield b["role"], b["kind"], "changed", a["text"], b["text"]

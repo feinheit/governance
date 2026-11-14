@@ -22,54 +22,56 @@ from governance.roles.constitution import LEAD, REP
 from governance.roles.models import OPERATIONAL_MODELS, Role
 
 
+# Keyed by subject and action (``Change``)
 LABELS = {
-    "added": _("Role added"),
-    "removed": _("Role removed"),
-    "name": _("Renamed"),
-    "purpose": _("Purpose changed"),
-    "strategy": _("Strategy changed"),
-    "moved": _("Moved to another circle"),
-    "circle": _("Turned into a circle"),
-    "role": _("Turned back into a role"),
-    "accountabilities-added": _("Accountability added"),
-    "accountabilities-removed": _("Accountability removed"),
-    "accountabilities-unrecorded": _("Accountabilities changed (texts not recorded)"),
-    "domains-added": _("Domain added"),
-    "domains-removed": _("Domain removed"),
-    "domains-unrecorded": _("Domains changed (texts not recorded)"),
-    "assigned": _("Assigned"),
-    "unassigned": _("No longer assigned"),
-    "reelected": _("Re-elected"),
-    "focus": _("Focus changed"),
-    "policy-added": _("Policy added"),
-    "policy-removed": _("Policy removed"),
-    "policy-title": _("Policy renamed"),
-    "policy-body": _("Policy text changed"),
-    "policy-moved": _("Policy moved"),
-    "policy-domain": _("Policy moved to another domain"),
-    "link-added": _("Link added"),
-    "link-changed": _("Link changed"),
-    "link-removed": _("Link removed"),
-    "note-added": _("Note added"),
-    "note-changed": _("Note changed"),
-    "note-removed": _("Note removed"),
-    "metric-added": _("Metric added"),
-    "metric-changed": _("Metric changed"),
-    "metric-removed": _("Metric removed"),
-    "checklist-added": _("Checklist item added"),
-    "checklist-changed": _("Checklist item changed"),
-    "checklist-removed": _("Checklist item removed"),
+    ("", "added"): _("Role added"),
+    ("", "removed"): _("Role removed"),
+    ("", "name"): _("Renamed"),
+    ("", "purpose"): _("Purpose changed"),
+    ("", "strategy"): _("Strategy changed"),
+    ("", "moved"): _("Moved to another circle"),
+    ("", "circle"): _("Turned into a circle"),
+    ("", "role"): _("Turned back into a role"),
+    ("accountabilities", "added"): _("Accountability added"),
+    ("accountabilities", "removed"): _("Accountability removed"),
+    ("accountabilities", "unrecorded"): _(
+        "Accountabilities changed (texts not recorded)"
+    ),
+    ("domains", "added"): _("Domain added"),
+    ("domains", "removed"): _("Domain removed"),
+    ("domains", "unrecorded"): _("Domains changed (texts not recorded)"),
+    ("", "assigned"): _("Assigned"),
+    ("", "unassigned"): _("No longer assigned"),
+    ("", "reelected"): _("Re-elected"),
+    ("", "focus"): _("Focus changed"),
+    ("policy", "added"): _("Policy added"),
+    ("policy", "removed"): _("Policy removed"),
+    ("policy", "title"): _("Policy renamed"),
+    ("policy", "body"): _("Policy text changed"),
+    ("policy", "moved"): _("Policy moved"),
+    ("policy", "domain"): _("Policy moved to another domain"),
+    ("link", "added"): _("Link added"),
+    ("link", "changed"): _("Link changed"),
+    ("link", "removed"): _("Link removed"),
+    ("note", "added"): _("Note added"),
+    ("note", "changed"): _("Note changed"),
+    ("note", "removed"): _("Note removed"),
+    ("metric", "added"): _("Metric added"),
+    ("metric", "changed"): _("Metric changed"),
+    ("metric", "removed"): _("Metric removed"),
+    ("checklist", "added"): _("Checklist item added"),
+    ("checklist", "changed"): _("Checklist item changed"),
+    ("checklist", "removed"): _("Checklist item removed"),
 }
-ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected", "focus"}
+# Of the role itself
+ASSIGNMENT_ACTIONS = {"assigned", "unassigned", "reelected", "focus"}
 # Links, notes, metrics and checklist items: operational, shown on request
-ITEM_KINDS = tuple(f"{model.history_kind}-" for model in OPERATIONAL_MODELS)
+ITEM_SUBJECTS = {model.history_kind for model in OPERATIONAL_MODELS}
 
 
 def without_items(changes):
     """Without the changes of links, notes, metrics and checklist items"""
-    for prefix in ITEM_KINDS:
-        changes = changes.exclude(kind__startswith=prefix)
-    return changes
+    return changes.exclude(subject__in=ITEM_SUBJECTS)
 
 
 # Added and removed texts of a role on a day, merged into one entry
@@ -86,9 +88,9 @@ LISTS = {
 def user_of(change):
     """``old`` or ``new`` of assignments; re-elections have the term in
     ``new``, changes of the focus the user and the focus in both"""
-    if change.kind == "reelected":
+    if change.action == "reelected":
         return change.old
-    if change.kind == "focus":
+    if change.action == "focus":
         return change.new["user"]
     return change.new or change.old
 
@@ -97,9 +99,9 @@ def without_following(changes):
     """Without the assignments of a circle's role which follow those of its
     Circle Leads and Reps on the same day (``sync_circle_role_leads()``)"""
     core = {
-        (change.date, change.kind, user_of(change), change.role.circle_id)
+        (change.date, change.action, user_of(change), change.role.circle_id)
         for change in changes
-        if change.kind in {"assigned", "unassigned"}
+        if change.action in {"assigned", "unassigned"}
         and change.role
         and change.role.core_role in {LEAD, REP}
     }
@@ -109,7 +111,7 @@ def without_following(changes):
         if not (
             change.role
             and change.role.is_circle
-            and (change.date, change.kind, user_of(change), change.role_id) in core
+            and (change.date, change.action, user_of(change), change.role_id) in core
         )
     ]
 
@@ -145,24 +147,24 @@ def merge_lists(changes):
     one change with ``items``, like the proposal which made them"""
     merged, groups = [], {}
     for change in changes:
-        field, _sep, kind = change.kind.rpartition("-")
-        if field not in LISTS or kind not in {"added", "removed"}:
+        if change.subject not in LISTS or change.action not in {"added", "removed"}:
             merged.append(change)
             continue
-        key = (change.date, change.role_id, field)
+        key = (change.date, change.role_id, change.subject)
         if key not in groups:
             groups[key] = change
             change.removed, change.added = [], []
             merged.append(change)
         group = groups[key]
-        (group.removed if kind == "removed" else group.added).append(
-            change.old if kind == "removed" else change.new
+        removed = change.action == "removed"
+        (group.removed if removed else group.added).append(
+            change.old if removed else change.new
         )
     for (_date, _role, field), change in groups.items():
         changed, added, removed = LISTS[field]
         if len(change.removed) + len(change.added) == 1:
             continue  # One text, as before
-        change.kind = f"{field}-changed"
+        change.action = "changed"
         change.label = (
             added if not change.removed else removed if not change.added else changed
         )
@@ -175,30 +177,35 @@ def present(changes):
     changes = without_following(list(changes))
     user_ids, role_ids = set(), set()
     for change in changes:
-        if change.kind in ASSIGNMENT_KINDS:
+        if change.action in ASSIGNMENT_ACTIONS:
             user_ids.add(user_of(change))
-        elif change.kind in {"moved", "policy-moved"}:
+        elif change.action == "moved":
             role_ids.update(value for value in [change.old, change.new] if value)
     users = User.objects.in_bulk(user_ids)
     roles = Role.objects.in_bulk(role_ids)
     for change in changes:
-        change.label = LABELS.get(change.kind, change.kind)
+        change.label = LABELS.get((change.subject, change.action), change.action)
         # Links, notes, metrics and checklist items: their text right away
-        change.is_item = change.kind.startswith(ITEM_KINDS)
+        change.is_item = change.subject in ITEM_SUBJECTS
+        # A role or policy coming or going: its name
+        change.is_named = change.subject in {"", "policy"} and change.action in {
+            "added",
+            "removed",
+        }
         change.old_text = change.old if isinstance(change.old, str) else ""
         change.new_text = change.new if isinstance(change.new, str) else ""
         change.user = (
-            users.get(user_of(change)) if change.kind in ASSIGNMENT_KINDS else None
+            users.get(user_of(change)) if change.action in ASSIGNMENT_ACTIONS else None
         )
-        if change.kind == "focus":
+        if change.action == "focus":
             change.old_text, change.new_text = (
                 change.old["focus"],
                 change.new["focus"],
             )
-        if change.kind == "reelected":
+        if change.action == "reelected":
             # ``new`` is the end of the term, not a text
             change.term, change.new_text = dt.date.fromisoformat(change.new), ""
-        if change.kind in {"moved", "policy-moved"}:
+        if change.action == "moved":
             change.old_role, change.new_role = (
                 roles.get(change.old),
                 roles.get(change.new),
@@ -232,7 +239,7 @@ class HistoryFilters(FilterForm):
 def filtered(changes, filters):
     """Without the assignments and the operational items unless chosen"""
     if not filters.get("assignments"):
-        changes = changes.exclude(kind__in=ASSIGNMENT_KINDS)
+        changes = changes.exclude(action__in=ASSIGNMENT_ACTIONS)
     if not filters.get("operational"):
         changes = without_items(changes)
     return changes
@@ -255,8 +262,8 @@ def history(request):
         # Formerly a circle: its roles coming and going, not their history
         changes = changes.filter(
             Q(role=role)
-            | Q(role__circle=role, kind__in=["added", "removed"])
-            | Q(kind="moved", old=role.pk)
+            | Q(role__circle=role, subject="", action__in=["added", "removed"])
+            | Q(subject="", action="moved", old=role.pk)
         )
         adopted = adopted.filter(pk__in=role.changed_by_proposals.values("pk"))
     elif subject:
@@ -269,7 +276,7 @@ def history(request):
         changes = changes.filter(
             Q(role__in=circles)
             | Q(role__circle__in=circles)
-            | Q(kind="moved", old__in=[c.pk for c in circles])
+            | Q(subject="", action="moved", old__in=[c.pk for c in circles])
         )
         adopted = adopted.filter(circle__in=circles)
     all_days = sorted(

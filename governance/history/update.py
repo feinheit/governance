@@ -102,24 +102,28 @@ def update_changes(*, since=None):
                 rows[kind][int(data["id"])] = data
         current = structure(rows, role_leads.on(day), day)
         if previous is not None:
-            for role, kind, old, value in diff_roles(previous, current):
-                if role in roles:
-                    new.append(
-                        Change(date=day, role_id=role, kind=kind, old=old, new=value)
-                    )
-            for role, kind, old, value in diff_items(previous, current):
-                if role in roles:
-                    new.append(
-                        Change(date=day, role_id=role, kind=kind, old=old, new=value)
-                    )
-            for policy, role, kind, old, value in diff_policies(previous, current):
+            for diff in [diff_roles, diff_items]:
+                for role, subject, action, old, value in diff(previous, current):
+                    if role in roles:
+                        new.append(
+                            Change(
+                                date=day,
+                                role_id=role,
+                                subject=subject,
+                                action=action,
+                                old=old,
+                                new=value,
+                            )
+                        )
+            for policy, role, action, old, value in diff_policies(previous, current):
                 if policy in policies:
                     new.append(
                         Change(
                             date=day,
                             policy_id=policy,
                             role_id=role if role in roles else None,
-                            kind=f"policy-{kind}",
+                            subject="policy",
+                            action=action,
                             old=old,
                             new=value,
                         )
@@ -147,7 +151,7 @@ def reelections(role_leads, since):
             yield Change(
                 date=day,
                 role_id=election.role_id,
-                kind="reelected",
+                action="reelected",
                 old=election.user_id,
                 new=election.term_ends_on.isoformat(),
             )
@@ -187,7 +191,7 @@ def focus_changes(since, roles):
         yield Change(
             date=day,
             role_id=int(row["role_id"]),
-            kind="focus",
+            action="focus",
             old={"user": user, "focus": first},
             new={"user": user, "focus": last},
         )

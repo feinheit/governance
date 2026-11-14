@@ -174,7 +174,7 @@ class BusyDayTest(AuditTestCase):
         )
         self.assertEqual(
             [
-                (change.role, change.kind, change.old, change.new)
+                (change.role, change.action, change.old, change.new)
                 for change in Change.objects.filter(date=today)
             ],
             [(dishwasher, "name", "Dishwasher", "Washer")],
@@ -211,7 +211,7 @@ class ChangesRightAwayTest(AuditTestCase):
 
         def kinds():
             return {
-                (change.policy or change.role, change.kind)
+                (change.policy or change.role, change.action)
                 for change in Change.objects.filter(date=today)
             }
 
@@ -233,7 +233,7 @@ class ChangesRightAwayTest(AuditTestCase):
                 f"/roles/{cook.pk}/domain-policies/new/",
                 {"title": "Labels", "body": "Always", "domain": fridge.pk},
             )
-        self.assertIn((Policy.objects.get(title="Labels"), "policy-added"), kinds())
+        self.assertIn((Policy.objects.get(title="Labels"), "added"), kinds())
         # Moved to another domain of the role
         with self.captureOnCommitCallbacks(execute=True):
             self.client.post(
@@ -241,8 +241,12 @@ class ChangesRightAwayTest(AuditTestCase):
                 {"title": "Cold", "body": "", "domain": pantry.pk},
             )
         self.assertEqual(
-            list(Change.objects.filter(policy=cold).values_list("kind", "old", "new")),
-            [("policy-domain", "The fridge", "The pantry")],
+            list(
+                Change.objects.filter(policy=cold).values_list(
+                    "subject", "action", "old", "new"
+                )
+            ),
+            [("policy", "domain", "The fridge", "The pantry")],
         )
         # A domain renamed isn't the policy moving
         with self.captureOnCommitCallbacks(execute=True):

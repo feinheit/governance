@@ -169,7 +169,8 @@ class ViewsTest(TestCase):
             date=dt.date(2026, 3, 2),
             role=kitchen,
             policy=policy,
-            kind="policy-body",
+            subject="policy",
+            action="body",
             old="Sometimes",
             new="Always",
         )

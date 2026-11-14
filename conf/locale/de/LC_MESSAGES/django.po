@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:15+0100\n"
+"POT-Creation-Date: 2026-11-14 16:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -229,10 +229,13 @@ msgstr "Rolle"
 msgid "policy"
 msgstr "Policy"
 
-#: governance/history/models.py governance/meetings/models.py
-#: governance/proposals/models.py
-msgid "kind"
-msgstr "Art"
+#: governance/history/models.py
+msgid "subject"
+msgstr "Gegenstand"
+
+#: governance/history/models.py
+msgid "action"
+msgstr "Aktion"
 
 #: governance/history/models.py
 msgid "old"
@@ -524,6 +527,10 @@ msgstr "Kreis"
 #: governance/meetings/models.py
 msgid "Unknown for some meetings imported from GlassFrog."
 msgstr "Bei manchen aus GlassFrog importierten Meetings unbekannt."
+
+#: governance/meetings/models.py governance/proposals/models.py
+msgid "kind"
+msgstr "Art"
 
 #: governance/meetings/models.py
 msgid "started at"
@@ -1725,13 +1732,13 @@ msgid "%(circle)s in %(super_circle)s"
 msgstr "%(circle)s in %(super_circle)s"
 
 #: governance/roles/editing.py
-msgid "Reported by"
-msgstr "Berichtet von"
-
-#: governance/roles/editing.py
 #, python-format
 msgid "%(role)s in %(circle)s"
 msgstr "%(role)s in %(circle)s"
+
+#: governance/roles/editing.py
+msgid "Reported by"
+msgstr "Berichtet von"
 
 #: governance/roles/editing.py
 #, python-format

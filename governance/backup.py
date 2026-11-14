@@ -64,7 +64,7 @@ def history(key, **filters):
             Change.objects
             .filter(**filters)
             .order_by("date", "pk")
-            .values(key, "date", "kind", "old", "new")
+            .values(key, "date", "subject", "action", "old", "new")
         ),
     )
 

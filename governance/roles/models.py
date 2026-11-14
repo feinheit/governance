@@ -541,5 +541,5 @@ class Note(models.Model):
 
 # Edited outside governance (roles/editing.py), in the history on request
 # (history/audit.py): ``kind`` in URLs, the API and the history's structure,
-# ``history_kind`` in its changes (``link-added``)
+# ``history_kind`` the subject of its changes (``history.Change``)
 OPERATIONAL_MODELS = [Link, Note, Metric, ChecklistItem]

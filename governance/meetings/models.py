@@ -48,7 +48,7 @@ class MeetingQuerySet(models.QuerySet):
             # Since it moved into the circle, if it did
             moved_in = (
                 Change.objects
-                .filter(role=role, kind="moved", new=role.circle_id)
+                .filter(role=role, subject="", action="moved", new=role.circle_id)
                 .order_by("-date")
                 .values_list("date", flat=True)
                 .first()

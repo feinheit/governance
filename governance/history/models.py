@@ -27,7 +27,14 @@ class Change(models.Model):
         related_name="changes",
         verbose_name=_("policy"),
     )
-    kind = models.CharField(_("kind"), max_length=40)
+    # What changed: the role itself (empty), "accountabilities", "domains",
+    # "policy" or an operational item ("link", "note", "metric", "checklist",
+    # ``history_kind``)
+    subject = models.CharField(_("subject"), max_length=20, blank=True)
+    # How: "added", "removed", "changed", "moved", a field ("name", "title"),
+    # "unrecorded", the assignments' "assigned", "unassigned", "reelected",
+    # "focus", a role turning into a "circle" or back into a "role"
+    action = models.CharField(_("action"), max_length=20)
     old = models.JSONField(_("old"), null=True, blank=True)
     new = models.JSONField(_("new"), null=True, blank=True)
 
@@ -37,4 +44,4 @@ class Change(models.Model):
         verbose_name_plural = _("changes")
 
     def __str__(self):
-        return f"{self.date} {self.kind}"
+        return " ".join(filter(None, [str(self.date), self.subject, self.action]))

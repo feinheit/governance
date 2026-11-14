@@ -174,7 +174,7 @@ class GovernanceMeetingScenarioTest(TestCase):
         self.assertEqual(after["roles"][str(self.cook.pk)]["circle"], pastry.pk)
         self.assertNotIn(str(self.bakery.pk), after["roles"])
         changes = {
-            (change.policy or change.role, change.kind)
+            (change.policy or change.role, change.action)
             for change in Change.objects.filter(date=timezone.localdate())
         }
         # From day to day: Pastry is new today, not a role made a circle;
@@ -188,9 +188,9 @@ class GovernanceMeetingScenarioTest(TestCase):
                 (self.cleaner, "removed"),
                 (self.oven, "removed"),
                 (self.heater, "removed"),
-                (self.tea, "policy-moved"),
-                (self.flour, "policy-moved"),
-                (self.noise, "policy-removed"),
+                (self.tea, "moved"),
+                (self.flour, "moved"),
+                (self.noise, "removed"),
             },
             changes,
         )

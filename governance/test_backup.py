@@ -52,7 +52,7 @@ class BackupTest(TestCase):
             role=kitchen, title="Old", archived_on=dt.date(2026, 2, 1)
         )
         Change.objects.create(
-            date=dt.date(2026, 1, 2), role=cook, kind="name", old="Chef", new="Cook"
+            date=dt.date(2026, 1, 2), role=cook, action="name", old="Chef", new="Cook"
         )
         Meeting.objects.create(kind=Meeting.TACTICAL, started_at=now, called_by=ada)
 
@@ -78,8 +78,8 @@ class BackupTest(TestCase):
             [(ada.pk, "2026-01-01")],
         )
         self.assertEqual(
-            [(c["date"], c["kind"], c["old"]) for c in role["history"]],
-            [("2026-01-02", "name", "Chef")],
+            [(c["date"], c["subject"], c["action"], c["old"]) for c in role["history"]],
+            [("2026-01-02", "", "name", "Chef")],
         )
         # Archived policies too, the circle's proposals and meetings
         self.assertEqual([p["title"] for p in circle["policies"]], ["Tea", "Old"])

@@ -50,16 +50,16 @@ class HistoryTest(TestCase):
             sorted(diff_roles(old, new), key=str),
             sorted(
                 [
-                    (3, "added", "", "Waiter"),
-                    (2, "removed", "Dishwasher", ""),
-                    (1, "name", "Kok", "Cook"),
-                    (1, "purpose", "", "Food"),
-                    (1, "moved", None, 9),
-                    (1, "circle", "", ""),
-                    (1, "accountabilities-added", "", "Baking"),
-                    (1, "accountabilities-unrecorded", 1, 0),
-                    (1, "assigned", "", 8),
-                    (1, "unassigned", 7, ""),
+                    (3, "", "added", "", "Waiter"),
+                    (2, "", "removed", "Dishwasher", ""),
+                    (1, "", "name", "Kok", "Cook"),
+                    (1, "", "purpose", "", "Food"),
+                    (1, "", "moved", None, 9),
+                    (1, "", "circle", "", ""),
+                    (1, "accountabilities", "added", "", "Baking"),
+                    (1, "accountabilities", "unrecorded", 1, 0),
+                    (1, "", "assigned", "", 8),
+                    (1, "", "unassigned", 7, ""),
                 ],
                 key=str,
             ),
@@ -114,9 +114,9 @@ class ReelectedTest(TestCase):
         self.assertEqual(
             list(
                 Change.objects
-                .filter(role=secretary, kind__in=["assigned", "reelected"])
+                .filter(role=secretary, action__in=["assigned", "reelected"])
                 .order_by("date")
-                .values_list("date", "kind", "old", "new")
+                .values_list("date", "action", "old", "new")
             ),
             [
                 (dt.date(2026, 1, 5), "assigned", "", ada.pk),
@@ -141,7 +141,7 @@ class ReelectedTest(TestCase):
             record_election(meeting, secretary, ada, dt.date(2028, 12, 31))
         self.assertTrue(
             Change.objects.filter(
-                role=secretary, kind="reelected", date=dt.date(2027, 12, 2)
+                role=secretary, action="reelected", date=dt.date(2027, 12, 2)
             ).exists()
         )
 
@@ -165,8 +165,8 @@ class FollowingTest(TestCase):
         rep = bakery.roles.get(core_role="rep")
         day = dt.date(2026, 3, 1)
         changes = [
-            Change(date=day, role=rep, kind="assigned", old="", new=ada.pk),
-            Change(date=day, role=bakery, kind="assigned", old="", new=ada.pk),
+            Change(date=day, role=rep, action="assigned", old="", new=ada.pk),
+            Change(date=day, role=bakery, action="assigned", old="", new=ada.pk),
         ]
         self.assertEqual([c.role for c in present(changes)], [rep])
         # Alone, e.g. on the circle's own history, it stays
@@ -214,7 +214,7 @@ class FocusTest(TestCase):
             update_changes()
         self.assertEqual(
             list(
-                Change.objects.filter(role=cook, kind="focus").values_list(
+                Change.objects.filter(role=cook, action="focus").values_list(
                     "date", "old", "new"
                 )
             ),
@@ -272,15 +272,15 @@ class HistoryUpdateTest(TestCase):
         self.assertEqual(update_changes(), 4)
         self.assertEqual(
             list(
-                Change.objects.order_by("date", "kind").values_list(
-                    "kind", "role", "policy"
+                Change.objects.order_by("date", "action", "subject").values_list(
+                    "subject", "action", "role", "policy"
                 )
             ),
             [
-                ("added", cook.pk, None),
-                ("policy-added", cook.pk, policy.pk),
-                ("name", cook.pk, None),
-                ("policy-removed", cook.pk, policy.pk),
+                ("", "added", cook.pk, None),
+                ("policy", "added", cook.pk, policy.pk),
+                ("", "name", cook.pk, None),
+                ("policy", "removed", cook.pk, policy.pk),
             ],
         )
         self.assertEqual(update_changes(since=day + dt.timedelta(days=2)), 2)
@@ -401,7 +401,7 @@ class OrganizationHistoryPagesTest(TestCase):
         self.client.force_login(User.objects.create_user("ada@example.com"))
         kitchen = Role.objects.create(name="Kitchen", is_circle=True)
         for day in [dt.date(2026, 11, 1), dt.date(2026, 11, 3)]:
-            Change.objects.create(date=day, role=kitchen, kind="purpose")
+            Change.objects.create(date=day, role=kitchen, action="purpose")
 
         def adopted(tension, day):
             return Proposal.objects.create(
@@ -461,7 +461,7 @@ class FairyTasksTest(TestCase):
         cook.save()
         call_command("fairy_tasks")
         self.assertEqual(
-            list(Change.objects.filter(role=cook).values_list("kind", "old", "new")),
+            list(Change.objects.filter(role=cook).values_list("action", "old", "new")),
             [("name", "Cook", "Chef")],
         )
         self.assertEqual(Change.objects.get(role=cook).date, timezone.localdate())
@@ -477,7 +477,7 @@ class RolePageHistoryTest(TestCase):
         circle = Role.objects.create(name="Kitchen", is_circle=True)
         cook = Role.objects.create(name="Cook", circle=circle)
         Change.objects.create(
-            date=dt.date(2019, 3, 12), role=cook, kind="name", old="Kok", new="Cook"
+            date=dt.date(2019, 3, 12), role=cook, action="name", old="Kok", new="Cook"
         )
 
         response = self.client.get(cook.get_absolute_url())
@@ -504,7 +504,7 @@ class FormerNamesTest(TestCase):
             (3, "Cook", "Chef"),
         ]:
             Change.objects.create(
-                date=dt.date(2025, 1, day), role=cook, kind="name", old=old, new=new
+                date=dt.date(2025, 1, day), role=cook, action="name", old=old, new=new
             )
         self.assertEqual(former_names(cook), [("Cook", dt.date(2025, 1, 3))])
 
@@ -519,13 +519,20 @@ class MergedListsTest(TestCase):
         circle = Role.objects.create(name="Kitchen", is_circle=True)
         cook = Role.objects.create(name="Cook", circle=circle)
         day = dt.date(2026, 1, 2)
-        for kind, old, new in [
-            ("accountabilities-removed", "Cooking the soup", ""),
-            ("accountabilities-added", "", "Cooking the soup daily"),
-            ("accountabilities-added", "", "Baking bread"),
-            ("accountabilities-removed", "Washing dishes", ""),
+        for action, old, new in [
+            ("removed", "Cooking the soup", ""),
+            ("added", "", "Cooking the soup daily"),
+            ("added", "", "Baking bread"),
+            ("removed", "Washing dishes", ""),
         ]:
-            Change.objects.create(date=day, role=cook, kind=kind, old=old, new=new)
+            Change.objects.create(
+                date=day,
+                role=cook,
+                subject="accountabilities",
+                action=action,
+                old=old,
+                new=new,
+            )
 
         for url in [f"/history/?role={cook.pk}", "/history/"]:
             with self.subTest(url=url):
@@ -554,7 +561,7 @@ class OperationalItemsTest(TestCase):
 
         for model in OPERATIONAL_MODELS:
             for action in ["added", "changed", "removed"]:
-                self.assertIn(f"{model.history_kind}-{action}", LABELS)
+                self.assertIn((model.history_kind, action), LABELS)
 
     def test_diff(self):
         old = {
@@ -572,9 +579,9 @@ class OperationalItemsTest(TestCase):
         self.assertEqual(
             sorted(diff_items(old, new)),
             [
-                (7, "link-changed", "[Board](https://a)", "[Tasks](https://a)"),
-                (7, "metric-removed", "Sales", ""),
-                (8, "checklist-added", "", "Clean"),
+                (7, "link", "changed", "[Board](https://a)", "[Tasks](https://a)"),
+                (7, "metric", "removed", "Sales", ""),
+                (8, "checklist", "added", "", "Clean"),
             ],
         )
 
@@ -594,8 +601,8 @@ class OperationalItemsTest(TestCase):
         Link.objects.create(role=circle, title="Board", url="https://example.com/")
         update_changes(since=timezone.localdate())
         self.assertEqual(
-            list(Change.objects.values_list("kind", "role", "new")),
-            [("link-added", circle.pk, "[Board](https://example.com/)")],
+            list(Change.objects.values_list("subject", "action", "role", "new")),
+            [("link", "added", circle.pk, "[Board](https://example.com/)")],
         )
 
         url = f"/history/?role={circle.pk}"
@@ -626,7 +633,8 @@ class OperationalItemsTest(TestCase):
                 f"/roles/{circle.pk}/notes/new/", {"title": "Pots", "body": ""}
             )
         self.assertEqual(
-            list(Change.objects.values_list("kind", flat=True)), ["note-added"]
+            list(Change.objects.values_list("subject", "action")),
+            [("note", "added")],
         )
         _token, secret = APIToken.create_for(user=ada, title="Test", access="write")
         with self.captureOnCommitCallbacks(execute=True):
@@ -637,8 +645,8 @@ class OperationalItemsTest(TestCase):
                 headers={"authorization": f"Bearer {secret}"},
             )
         self.assertEqual(
-            sorted(Change.objects.values_list("kind", flat=True)),
-            ["link-added", "note-added"],
+            sorted(Change.objects.values_list("subject", "action")),
+            [("link", "added"), ("note", "added")],
         )
 
     def test_notes(self):
@@ -656,8 +664,8 @@ class OperationalItemsTest(TestCase):
         Note.objects.create(role=circle, title="Ordering", body="By *mail*")
         update_changes(since=timezone.localdate())
         self.assertEqual(
-            list(Change.objects.values_list("kind", "role", "new")),
-            [("note-added", circle.pk, "**Ordering**\n\nBy *mail*")],
+            list(Change.objects.values_list("subject", "action", "role", "new")),
+            [("note", "added", circle.pk, "**Ordering**\n\nBy *mail*")],
         )
         url = f"/history/?role={circle.pk}"
         self.assertNotContains(self.client.get(url), "Note added")
@@ -685,7 +693,7 @@ class OneHistoryTest(TestCase):
             (bakery, "Bakry", "Bakery"),
             (baker, "Becker", "Baker"),
         ]:
-            Change.objects.create(date=day, role=role, kind="name", old=old, new=new)
+            Change.objects.create(date=day, role=role, action="name", old=old, new=new)
 
         def names(url):
             text = self.client.get(url).content.decode()
@@ -726,7 +734,7 @@ class OneHistoryTest(TestCase):
             Change.objects.create(
                 date=dt.date(2026, 1, 1) + dt.timedelta(days=days),
                 role=cook,
-                kind="purpose",
+                action="purpose",
                 old="",
                 new=f"Purpose {days}",
             )
@@ -749,7 +757,7 @@ class MovedAwayTest(TestCase):
         Change.objects.create(
             date=dt.date(2025, 2, 2),
             role=cook,
-            kind="moved",
+            action="moved",
             old=kitchen.pk,
             new=bakery.pk,
         )
@@ -771,13 +779,13 @@ class FormerCircleTest(TestCase):
             name="Baker", circle=bakery, archived_on=dt.date(2025, 3, 1)
         )
         oven = Role.objects.create(name="Oven", circle=kitchen)
-        for kind, role, old, new in [
+        for action, role, old, new in [
             ("name", baker, "Becker", "Baker"),
             ("removed", baker, "Baker", ""),
             ("moved", oven, bakery.pk, kitchen.pk),
         ]:
             Change.objects.create(
-                date=dt.date(2025, 3, 1), role=role, kind=kind, old=old, new=new
+                date=dt.date(2025, 3, 1), role=role, action=action, old=old, new=new
             )
         response = self.client.get(f"/history/?role={bakery.pk}")
         self.assertContains(response, baker.get_absolute_url())

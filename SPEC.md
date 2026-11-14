@@ -624,7 +624,11 @@ verify the mails; removed once they've proven themselves.
   governance" in the GlassFrog period); a cache for the history pages,
   updated by `fairy_tasks` for yesterday and today, after adopting and
   after assignments (also their focus), elections, domain policies and
-  strategies (`update_today()`). One row per accountability or domain
+  strategies (`update_today()`). Each row has a `subject` (empty for the
+  role itself, `accountabilities`, `domains`, `policy`, `link` etc.) and
+  an `action` (`added`, `removed`, `name`, `moved`, `assigned` …),
+  two fields rather than one string to take apart (decided 2026-11-14).
+  One row per accountability or domain
   added or removed; the pages merge a role's of a day into one entry
   ("Accountabilities changed", `views.merge_lists()`), like the proposal
   which made them, texts replaced by similar ones as a diff (`pairs()`,
@@ -640,7 +644,7 @@ verify the mails; removed once they've proven themselves.
   last focus: changes of the focus come from the audit log's updates of
   assignments (`update.focus_changes()`, per day the first and the last,
   not on the day of assigning).
-- **Links, notes, metrics and checklist items** are changes too (`link-added`
+- **Links, notes, metrics and checklist items** are changes too (subject `link`
   etc., `diff_items()`), operational: the history shows them on request
   (right away, `update_today()` on the pages and in the API), the role's
   page not.

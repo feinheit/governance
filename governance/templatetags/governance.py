@@ -85,7 +85,7 @@ def button_class(right, style="btn-quiet", size="btn-sm", title=""):
 
 
 # The colors of badges (main.css): states of proposals, kinds of responses,
-# actions of changes (proposals/describe.py) and kinds of history.Change;
+# actions of changes (proposals/describe.py) and of history.Change;
 # removing isn't bad (it may be a good cleanup), only objections are red
 TONES = {
     "draft": "neutral",
@@ -116,7 +116,4 @@ TONES = {
 @register.filter
 def tone(value):
     """The badge's class for a state or kind: ``badge {{ x.status|tone }}``"""
-    value = str(value)
-    if value not in TONES:
-        value = value.rsplit("-", 1)[-1]  # accountabilities-added
-    return f"wb-tone-{TONES.get(value, 'info')}"
+    return f"wb-tone-{TONES.get(str(value), 'info')}"

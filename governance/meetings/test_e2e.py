@@ -620,7 +620,7 @@ class MeetingE2ETest(LiveServerTestCase):
         Change.objects.create(
             date=dt.date(2026, 1, 2),
             role=self.cook,
-            kind="purpose",
+            action="purpose",
             old="Frying",
             new="Food",
         )
