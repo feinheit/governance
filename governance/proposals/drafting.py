@@ -42,12 +42,13 @@ ADD_ANOTHER = {
 
 
 def new_fields(data, kind):
-    """The names of the fields for new texts, ``new_domains-0`` etc., in
-    their order"""
+    """The fields for new texts, ``new_domains-0`` etc.: ``{index: name}``
+    in their order"""
     pattern = re.compile(rf"new_{kind}-(\d+)")
-    return sorted(
-        (name for name in data if pattern.fullmatch(name)),
-        key=lambda name: int(name.rsplit("-", 1)[1]),
+    return dict(
+        sorted(
+            (int(match[1]), name) for name in data if (match := pattern.fullmatch(name))
+        )
     )
 
 
@@ -163,7 +164,7 @@ def role_instructions(proposal, key, role, data):
                         "value": text,
                     })
     for kind, _label, _new_label in TEXT_KINDS:
-        for text in filter(None, (data[name] for name in new_fields(data, kind))):
+        for text in filter(None, map(data.get, new_fields(data, kind).values())):
             add({
                 "op": "add",
                 "path": f"{base}/{kind}/{new_key(taken)}/description",
@@ -407,7 +408,7 @@ class RoleForm(MergeMixin, Form):
             ]
             count = len(texts) + len(orphans) + 1
             if self.is_bound and (posted := new_fields(self.data, kind)):
-                count = max(count, int(posted[-1].rsplit("-", 1)[1]) + 1)
+                count = max(count, max(posted) + 1)
             for index, text in enumerate([*texts, *orphans, *[""] * count][:count]):
                 name = f"new_{kind}-{index}"
                 self.fields[name] = text_field(new_label, text)
