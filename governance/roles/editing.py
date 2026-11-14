@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from governance.forms import ModelForm
+from governance.forms import BLANK_CHOICE_LABEL, ModelForm
 from governance.history.update import update_today
 from governance.notifications import mails
 from governance.roles.models import (
@@ -145,7 +145,11 @@ def reporter_choices(reporters):
     circle, roles = [], []
     for key, (_role, whole, label) in reporters.items():
         (circle if whole or "-" in key else roles).append((key, label))
-    return [*circle, *([(_("Roles"), roles)] if roles else [])]
+    return [
+        ("", BLANK_CHOICE_LABEL),
+        *circle,
+        *([(_("Roles"), roles)] if roles else []),
+    ]
 
 
 class ItemForm(ModelForm):
@@ -157,20 +161,25 @@ class ItemForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.reporters = reporters
         if reporters:
+            adding = self.instance._state.adding
             current = (self.instance.role_id, self.instance.whole_circle)
+            if not adding:
+                initial = next(
+                    key
+                    for key, (role, whole, _label) in reporters.items()
+                    if (role.pk, whole) == current
+                )
+            else:
+                # Chosen when adding, unless there's only one choice (a
+                # role's page)
+                initial = next(iter(reporters)) if len(reporters) == 1 else None
             self.fields["reported_by"] = forms.ChoiceField(
                 label=_("Reported by"),
                 choices=reporter_choices(reporters),
-                # Unchanged without it
-                required=False,
-                initial=next(
-                    (
-                        key
-                        for key, (role, whole, _label) in reporters.items()
-                        if (role.pk, whole) == current
-                    ),
-                    None,
-                ),
+                # Existing ones stay unchanged without it, so do new ones
+                # with only one choice
+                required=adding and len(reporters) > 1,
+                initial=initial,
             )
             self.order_fields(["description", "reported_by"])
 

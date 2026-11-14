@@ -150,7 +150,10 @@ accountability texts are known where proposals or `roles.json` have them.
   form's "Reported by" (`editing.reporters()`) chooses among the circle
   itself, its roles (a sub-circle reporting in it, grouped) and the circle
   in its super-circle; a role's page only the role in its circle (and the
-  whole circle's, if a role's item has it already, `role_reporters()`). The import mapped GlassFrog's items of a sub-circle's role
+  whole circle's, if a role's item has it already, `role_reporters()`).
+  Adding on a circle's page chooses explicitly (empty at first, no
+  default; the constitution's reviews are of what participants report
+  "for their Roles", 3.2, the whole circle's is GlassFrog's convention). The import mapped GlassFrog's items of a sub-circle's role
   to the sub-circle's own, fixed by hand after the switchover.
   GlassFrog's "global" items, shown everywhere, aren't supported; items
   without circle and role belong to the anchor.

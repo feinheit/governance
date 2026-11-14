@@ -48,14 +48,22 @@ class ModalTest(TestCase):
         """Redirects become HX-Redirect: fetch would follow them itself"""
         self.client.force_login(self.ada)
         response = self.client.post(
-            self.url, {"description": "Soups per week", "frequency": "weekly"}, **MODAL
+            self.url,
+            {
+                "description": "Soups per week",
+                "frequency": "weekly",
+                "reported_by": self.kitchen.pk,
+            },
+            **MODAL,
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["HX-Redirect"], f"/roles/{self.kitchen.pk}/")
         self.assertTrue(Metric.objects.exists())
 
         # Without the header as before
-        response = self.client.post(self.url, {"description": "Soups served"})
+        response = self.client.post(
+            self.url, {"description": "Soups served", "reported_by": self.kitchen.pk}
+        )
         self.assertRedirects(response, f"/roles/{self.kitchen.pk}/")
 
     def test_login(self):

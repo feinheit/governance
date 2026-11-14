@@ -124,7 +124,12 @@ class EditingTest(TestCase):
         self.client.force_login(outsider)
         self.client.post(
             f"/roles/{self.kitchen.pk}/checklist/new/",
-            {"description": "Fridge cleaned", "frequency": "monthly", "link": ""},
+            {
+                "description": "Fridge cleaned",
+                "frequency": "monthly",
+                "link": "",
+                "reported_by": self.kitchen.pk,
+            },
         )
         item = ChecklistItem.objects.get()
         self.assertEqual(item.role, self.kitchen)
@@ -159,6 +164,15 @@ class EditingTest(TestCase):
         self.assertLess(page.index('<optgroup label="Roles">'), page.index(">Cook<"))
         self.assertLess(page.index(">Cook<"), page.index("</optgroup>"))
         self.assertIn(">Pastry<", page)
+        # Nothing chosen when adding, a choice is required
+        self.assertIn('<option value="" selected>- Select an option -</option>', page)
+        self.assertEqual(
+            self.client.post(
+                url, {"description": "Oven", "frequency": "", "link": ""}
+            ).status_code,
+            200,
+        )
+        self.assertFalse(ChecklistItem.objects.exists())
         data = {"description": "Oven", "frequency": "", "link": ""}
         for reported_by, role, whole in [
             (f"{self.cook.pk}", self.cook, False),
@@ -194,7 +208,9 @@ class EditingTest(TestCase):
         self.client.force_login(self.eve)
         url = f"/roles/{self.cook.pk}/checklist/new/"
         response = self.client.get(url)
-        self.assertContains(response, ">Cook in Kitchen<")
+        # The only choice, already chosen
+        self.assertContains(response, ">- Select an option -<")
+        self.assertContains(response, " selected>Cook in Kitchen<")
         self.assertNotContains(response, "whole circle")
         self.assertNotContains(response, "optgroup")
         data = {"description": "Oven", "frequency": "", "link": ""}
