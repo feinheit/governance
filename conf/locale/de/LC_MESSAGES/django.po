@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 16:47+0100\n"
+"POT-Creation-Date: 2026-11-14 21:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -3314,6 +3314,7 @@ msgid "Nobody holds a role yet."
 msgstr "Noch niemand hat eine Rolle."
 
 #: governance/templates/roles/person_detail.html
+#: governance/templates/search/search.html
 msgid "inactive"
 msgstr "inaktiv"
 
@@ -3343,6 +3344,7 @@ msgstr "Sprache"
 
 #: governance/templates/roles/policy_detail.html
 #: governance/templates/roles/role_detail.html
+#: governance/templates/search/_archived.html
 #, python-format
 msgid "archived on %(date)s"
 msgstr "archiviert am %(date)s"
@@ -3458,6 +3460,10 @@ msgstr "Alle Vorschläge innerhalb dieser Rolle"
 #, python-format
 msgid "Search: %(query)s"
 msgstr "Suchen: %(query)s"
+
+#: governance/templates/search/search.html
+msgid "Archived and inactive too"
+msgstr "Auch Archiviertes und Inaktive"
 
 #: governance/templates/search/search.html
 msgid "Nothing found."

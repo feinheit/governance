@@ -753,6 +753,11 @@ verify the mails; removed once they've proven themselves.
   ignoring case and accents, in the texts as the pages show them
   (mentions with the current names, the core roles' constitutional
   texts); snippets as plain text. The API and `gov search` too.
+  "Archived and inactive too" (`?archived=1`, the API's `archived`,
+  `gov search --archived`) adds archived roles with their texts, links,
+  notes, checklist items and metrics, archived policies and inactive
+  people, after the current ones (the limit of 50 counts them too),
+  marked "archived on" or "inactive" (issue #6).
 - **Export**: the whole current governance as Markdown (circles, roles,
   their texts, policies, metrics, checklist items, links and notes), `/export/governance.md`
   (the people only with `?people=1`, `--with-people`: personal data

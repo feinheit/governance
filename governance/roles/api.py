@@ -1,6 +1,7 @@
 """Reading circles and roles, see section 8 of SPEC.md"""
 
 import copy
+import datetime as dt
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -56,6 +57,7 @@ class PolicyOut(Schema):
     body: str
     role_id: int
     domain_id: int | None
+    archived_on: dt.date | None
     url: str
 
     @staticmethod
@@ -76,6 +78,7 @@ class RoleSummaryOut(Schema):
     name: str
     core_role: str
     is_circle: bool
+    archived_on: dt.date | None
     url: str
 
     @staticmethod
@@ -169,6 +172,7 @@ class FoundTextOut(Schema):
 class PersonFoundOut(Schema):
     id: int
     name: str
+    is_active: bool
     url: str
     # Whose roles the person holds
     circles: list[RoleSummaryOut]
@@ -485,9 +489,10 @@ def item_delete(request, kind: str, pk: int):
 
 
 @router.get("search/", response=SearchOut)
-def search(request, q: str):
-    """All terms have to match, ignoring case and accents"""
-    results = search_results(q) or {
+def search(request, q: str, *, archived: bool = False):
+    """All terms have to match, ignoring case and accents; ``archived``:
+    also archived roles and policies and inactive people"""
+    results = search_results(q, archived=archived) or {
         "people": [],
         "roles": [],
         "accountabilities": [],

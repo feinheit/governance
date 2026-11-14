@@ -1,3 +1,4 @@
+import datetime as dt
 import json
 import tempfile
 import urllib.parse
@@ -152,6 +153,13 @@ class CLITest(TestCase):
         self.assertIn("Pots", result.output)
         result = self.gov("search", "goulash", "--json")
         self.assertIn(f"/roles/{self.cook.pk}/#note-{note.pk}", result.output)
+        # Archived roles only on request, marked
+        Role.objects.create(
+            name="Old soup cook", circle=self.kitchen, archived_on=dt.date(2026, 1, 1)
+        )
+        self.assertNotIn("Old soup cook", self.gov("search", "old", "soup").output)
+        result = self.gov("search", "old", "soup", "--archived")
+        self.assertIn("Old soup cook (archived on 2026-01-01)", result.output)
 
     def test_proposals(self):
         """Drafts with instructions, their problems, publishing"""

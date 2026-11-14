@@ -87,6 +87,7 @@
               placeholder="{% translate 'Search' %}"
               value="{{ request.GET.q }}"
             >
+            {% block search_fields %}{% endblock %}
           </form>
           <div class="wb-nav-user d-flex align-items-center gap-2">
             {% include "_theme_toggle.html" %}

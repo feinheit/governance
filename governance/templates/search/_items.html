@@ -6,7 +6,10 @@
     <ul class="list-group list-group-flush">
       {% for item in items %}
         <li class="list-group-item wb-row-link">
-          <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+          <div class="wb-row-heading">
+            <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+            {% include "search/_archived.html" with obj=item.role %}
+          </div>
           {% if item.role.circle %}<div class="wb-row-meta"><span>{{ item.role.circle }}</span></div>{% endif %}
           <div class="mt-1">
             {% if item.link %}<a

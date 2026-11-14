@@ -27,7 +27,10 @@ anderer.
   Beschreibung), Notizen (nach Titel und Text), Checklisten-Punkte und
   Metriken, die alle eingegebenen Wörter enthalten. Die
   Beschreibung eines Links kann Stichwörter aufzählen, z.B. für einen
-  Abschnitt des Handbuchs.
+  Abschnitt des Handbuchs. "Auch Archiviertes und Inaktive" findet auch
+  archivierte Rollen (mit ihren Texten, Links, Notizen,
+  Checklisten-Punkten und Metriken), archivierte Policies und inaktive
+  Personen, nach den aktuellen und markiert.
 
 **Mailadressen** listet die Adressen aller mit einer Rolle, aller Circle
 Leads, Facilitators, Secretaries und Circle Reps (bei unbesetzten Rollen

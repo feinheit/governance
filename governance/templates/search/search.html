@@ -9,6 +9,22 @@
       {% if query %}{% blocktranslate %}Search: {{ query }}{% endblocktranslate %}{% else %}{% translate "Search" %}{% endif %}
     </h1>
   </div>
+  {# The terms stay those of the search field in the navigation #}
+  <form method="get" class="wb-filters mb-3" data-autosubmit>
+    <input type="hidden" name="q" value="{{ query }}">
+    <div class="form-check form-check-inline mb-0">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        name="archived"
+        value="1"
+        id="search-archived"
+        {% if archived %}checked{% endif %}
+      >
+      <label class="form-check-label" for="search-archived">{% translate "Archived and inactive too" %}</label>
+    </div>
+    <button type="submit" class="btn btn-sm btn-quiet" data-filter-submit>{% translate "Search" %}</button>
+  </form>
   {% if empty %}<p class="text-body-secondary">{% translate "Nothing found." %}</p>{% endif %}
   {% with people=results.people roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies links=results.links notes=results.notes checklist_items=results.checklist_items metrics=results.metrics %}
     {% if people %}
@@ -17,7 +33,12 @@
         <ul class="list-group list-group-flush">
           {% for person in people %}
             <li class="list-group-item wb-row-link">
-              <a class="wb-row-title" href="{{ person.get_absolute_url }}">{{ person }}</a>
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ person.get_absolute_url }}">{{ person }}</a>
+                {% if not person.is_active %}<span
+                    class="badge wb-tone-neutral"
+                  >{% translate "inactive" %}</span>{% endif %}
+              </div>
               {% if person.circles %}
                 <div class="wb-row-meta">
                   {% for circle in person.circles %}<span>{{ circle }}</span>{% endfor %}
@@ -37,6 +58,7 @@
               <div class="wb-row-heading">
                 <a class="wb-row-title" href="{{ role.get_absolute_url }}">{{ role }}</a>
                 {% if role.is_circle %}<span class="badge wb-tone-circle">{% translate "Circle" %}</span>{% endif %}
+                {% include "search/_archived.html" with obj=role %}
               </div>
               <div class="wb-row-meta">
                 {% if role.circle %}<span>{{ role.circle }}</span>{% endif %}<span
@@ -54,7 +76,10 @@
           {% for item in accountabilities %}
             <li class="list-group-item wb-row-link">
               {# Like the other results: the page the hit leads to, the role's #}
-              <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+                {% include "search/_archived.html" with obj=item.role %}
+              </div>
               {% if item.role.circle %}<div class="wb-row-meta"><span>{{ item.role.circle }}</span></div>{% endif %}
               <div class="wb-markdown mt-1">{{ item.text|markdown }}</div>
             </li>
@@ -69,7 +94,10 @@
           {% for item in domains %}
             <li class="list-group-item wb-row-link">
               {# Like the other results: the page the hit leads to, the role's #}
-              <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ item.role.get_absolute_url }}">{{ item.role }}</a>
+                {% include "search/_archived.html" with obj=item.role %}
+              </div>
               {% if item.role.circle %}<div class="wb-row-meta"><span>{{ item.role.circle }}</span></div>{% endif %}
               <div class="wb-markdown mt-1">{{ item.text|markdown }}</div>
             </li>
@@ -83,7 +111,10 @@
         <ul class="list-group list-group-flush">
           {% for policy in policies %}
             <li class="list-group-item wb-row-link">
-              <a class="wb-row-title" href="{{ policy.get_absolute_url }}">{{ policy }}</a>
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ policy.get_absolute_url }}">{{ policy }}</a>
+                {% include "search/_archived.html" with obj=policy %}
+              </div>
               <div class="wb-row-meta">
                 <span>{{ policy.role }}</span><span>{{ policy.body|plain|truncatechars:160 }}</span>
               </div>
@@ -98,7 +129,10 @@
         <ul class="list-group list-group-flush">
           {% for link in links %}
             <li class="list-group-item wb-row-link">
-              <a class="wb-row-title" href="{{ link.url }}" target="_blank" rel="noopener">{{ link }}</a>
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ link.url }}" target="_blank" rel="noopener">{{ link }}</a>
+                {% include "search/_archived.html" with obj=link.role %}
+              </div>
               <div class="wb-row-meta">
                 <a href="{{ link.role.get_absolute_url }}">{{ link.role }}</a>{% if link.description %}<span
                   >{{ link.description }}</span>{% endif %}
@@ -114,7 +148,10 @@
         <ul class="list-group list-group-flush">
           {% for note in notes %}
             <li class="list-group-item wb-row-link">
-              <a class="wb-row-title" href="{{ note.role.get_absolute_url }}#note-{{ note.pk }}">{{ note }}</a>
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ note.role.get_absolute_url }}#note-{{ note.pk }}">{{ note }}</a>
+                {% include "search/_archived.html" with obj=note.role %}
+              </div>
               <div class="wb-row-meta">
                 <span>{{ note.role }}</span>{% if note.body %}<span
                   >{{ note.body|plain|truncatechars:160 }}</span>{% endif %}
@@ -130,3 +167,5 @@
     {% include "search/_items.html" with items=metrics %}
   {% endwith %}
 {% endblock content %}
+
+{% block search_fields %}{% if archived %}<input type="hidden" name="archived" value="1">{% endif %}{% endblock %}

@@ -1,0 +1,5 @@
+{% load i18n %}
+{# Whether a role or policy found (with ?archived=1) is archived #}
+{% if obj.archived_on %}<span
+    class="badge wb-tone-neutral"
+  >{% blocktranslate with date=obj.archived_on|date:"SHORT_DATE_FORMAT" %}archived on {{ date }}{% endblocktranslate %}</span>{% endif %}

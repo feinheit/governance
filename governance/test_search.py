@@ -181,3 +181,70 @@ class SearchTest(TestCase):
             content.index(zoe.get_absolute_url()),
             content.index(cook.get_absolute_url()),
         )
+
+    def test_archived(self):
+        """On request also archived roles with their texts, links, notes,
+        checklist items and metrics, archived policies and inactive people,
+        after the current ones and marked"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Soup cook", circle=kitchen)
+        old = Role.objects.create(
+            name="Old soup cook", circle=kitchen, archived_on=dt.date(2026, 1, 1)
+        )
+        Accountability.objects.create(role=old, text="Stirring the soup")
+        Domain.objects.create(role=old, text="The soup pot")
+        Link.objects.create(role=old, title="Soup recipes", url="https://example.com/")
+        Note.objects.create(role=old, title="Soup", body="")
+        ChecklistItem.objects.create(role=old, description="Soup tasted")
+        Metric.objects.create(role=old, description="Soups cooked")
+        Policy.objects.create(
+            role=kitchen, title="Old soup policy", archived_on=dt.date(2026, 2, 1)
+        )
+        User.objects.create_user(
+            "soup@example.com", full_name="Soupy Sam", is_active=False
+        )
+
+        response = self.client.get("/search/", {"q": "soup"})
+        self.assertEqual(response.context["results"]["roles"], [cook])
+        self.assertTrue(
+            all(
+                not value
+                for key, value in response.context["results"].items()
+                if key != "roles"
+            )
+        )
+        self.assertContains(response, 'name="archived"')
+        self.assertNotContains(response, "checked")
+
+        response = self.client.get("/search/", {"q": "soup", "archived": "1"})
+        results = response.context["results"]
+        self.assertEqual(results["roles"], [cook, old])  # Current ones first
+        for key in [
+            "people",
+            "accountabilities",
+            "domains",
+            "policies",
+            "links",
+            "notes",
+            "checklist_items",
+            "metrics",
+        ]:
+            self.assertEqual(len(results[key]), 1, key)
+        self.assertContains(response, "checked")
+        self.assertContains(response, "archived on 01.01.2026")
+        self.assertContains(response, "archived on 01.02.2026")
+        self.assertContains(response, "inactive")
+        # The search field in the navigation keeps searching archived ones
+        self.assertContains(
+            response, '<input type="hidden" name="archived" value="1">', count=1
+        )
+
+        response = self.client.get("/api/search/", {"q": "soup", "archived": "true"})
+        data = response.json()
+        self.assertEqual(
+            [role["archived_on"] for role in data["roles"]], [None, "2026-01-01"]
+        )
+        self.assertEqual(data["policies"][0]["archived_on"], "2026-02-01")
+        self.assertFalse(data["people"][0]["is_active"])
+        self.assertEqual(len(data["notes"]), 1)

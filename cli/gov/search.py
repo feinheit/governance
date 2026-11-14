@@ -5,6 +5,15 @@ import click
 from gov.core import cli, console, echo_json, link, make_table, request
 
 
+def _archived(name, item):
+    """With the date of archiving or "inactive" (``--archived``)"""
+    if item.get("archived_on"):
+        return f"{name} (archived on {item['archived_on']})"
+    if item.get("is_active") is False:
+        return f"{name} (inactive)"
+    return name
+
+
 def _text(item):
     return item["text"], link(item["role"], item["url"])
 
@@ -17,7 +26,7 @@ TABLES = [
         ["ID>", "Name", "Circles"],
         lambda person: (
             link(person["id"], person["url"]),
-            link(person["name"], person["url"]),
+            link(_archived(person["name"], person), person["url"]),
             ", ".join(circle["name"] for circle in person["circles"]),
         ),
     ),
@@ -25,7 +34,10 @@ TABLES = [
         "roles",
         "Roles",
         ["ID>", "Role"],
-        lambda role: (link(role["id"], role["url"]), link(role["name"], role["url"])),
+        lambda role: (
+            link(role["id"], role["url"]),
+            link(_archived(role["name"], role), role["url"]),
+        ),
     ),
     ("accountabilities", "Accountabilities", ["Text", "Role"], _text),
     ("domains", "Domains", ["Text", "Role"], _text),
@@ -35,7 +47,7 @@ TABLES = [
         ["ID>", "Policy", "Role>"],
         lambda policy: (
             link(policy["id"], policy["url"]),
-            link(policy["title"], policy["url"]),
+            link(_archived(policy["title"], policy), policy["url"]),
             str(policy["role_id"]),
         ),
     ),
@@ -72,12 +84,21 @@ TABLES = [
 
 @cli.command()
 @click.argument("terms", nargs=-1, required=True)
+@click.option(
+    "--archived",
+    is_flag=True,
+    help="Also archived roles (with their texts, links, notes, checklist"
+    " items and metrics), archived policies and inactive people",
+)
 @click.option("--json", "as_json", is_flag=True)
-def search(terms, as_json):
+def search(terms, archived, as_json):
     """People, roles, accountabilities, domains, policies, links, notes,
     checklist items and metrics containing all TERMS (ignoring case and
     accents)"""
-    data = request("GET", "search/", params={"q": " ".join(terms)})
+    params = {"q": " ".join(terms)}
+    if archived:
+        params["archived"] = "true"
+    data = request("GET", "search/", params=params)
     if as_json:
         echo_json(data)
         return

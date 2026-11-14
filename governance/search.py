@@ -6,13 +6,16 @@ roles with the constitution's texts, the active people's names, short
 names and mail addresses, the links of active roles by their titles and
 descriptions (which may hold keywords: the handbook's sections are found
 this way), their notes by titles and bodies, their checklist items and
-metrics by descriptions. The data is small enough for
+metrics by descriptions. With ``archived`` also archived roles (with
+their texts, links, notes, checklist items and metrics), archived policies
+and inactive people, after the current ones. The data is small enough for
 searching in Python, no full text index needed.
 """
 
 import unicodedata
 from types import SimpleNamespace
 
+from django.db.models import F
 from django.shortcuts import render
 
 from governance.accounts.models import User
@@ -42,9 +45,10 @@ def _fold(text):
     ).casefold()
 
 
-def search_results(query):
+def search_results(query, *, archived=False):
     """Matching people (with their ``circles``), roles, accountabilities,
-    domains, policies, links, notes, checklist items and metrics (50 each)"""
+    domains, policies, links, notes, checklist items and metrics (50 each,
+    the current ones first)"""
     terms = [_fold(term) for term in query.split()]
     if not terms:
         return {}
@@ -65,28 +69,44 @@ def search_results(query):
                     break
         return found
 
-    roles = list(Role.objects.active().select_related("circle").order_by("pk"))
+    current_first = F("archived_on").asc(nulls_first=True)
+    roles = list(
+        (Role.objects.all() if archived else Role.objects.active())
+        .select_related("circle")
+        .order_by(current_first, "pk")
+    )
+
+    def of_roles(model):
+        """Of the roles searched, those of current roles first"""
+        items = (
+            model.objects.all()
+            if archived
+            else model.objects.filter(role__archived_on=None)
+        )
+        return items.select_related("role__circle").order_by(
+            F("role__archived_on").asc(nulls_first=True), "pk"
+        )
 
     def texts_of(model, kind):
         """The role's own and the constitution's"""
-        own = list(
-            model.objects
-            .filter(role__archived_on=None)
-            .select_related("role__circle")
-            .order_by("pk")
-        )
+        own = list(of_roles(model))
         constitutional = [
             SimpleNamespace(pk=None, text=str(text), role=role, role_id=role.pk)
             for role in roles
             if role.core
             for text in getattr(role.core, kind)
         ]
-        return constitutional + own
+        # Stable: the current roles' first in both
+        return sorted(
+            constitutional + own, key=lambda item: bool(item.role.archived_on)
+        )
 
     return {
         "people": with_circles(
             matching(
-                User.objects.active(),
+                (User.objects.all() if archived else User.objects.active()).order_by(
+                    "-is_active", "pk"
+                ),
                 lambda user: [user.full_name, user.short_name, user.email],
             )
         ),
@@ -98,29 +118,22 @@ def search_results(query):
         ),
         "domains": matching(texts_of(Domain, "domains"), lambda item: [item.text]),
         "policies": matching(
-            Policy.objects.active().select_related("role").order_by("pk"),
+            (Policy.objects.all() if archived else Policy.objects.active())
+            .select_related("role")
+            .order_by(current_first, "pk"),
             lambda policy: [policy.title, policy.body],
         ),
         "links": matching(
-            Link.objects
-            .filter(role__archived_on=None)
-            .select_related("role__circle")
-            .order_by("pk"),
+            of_roles(Link),
             lambda link: [link.title, link.description],
         ),
         "notes": matching(
-            Note.objects
-            .filter(role__archived_on=None)
-            .select_related("role__circle")
-            .order_by("pk"),
+            of_roles(Note),
             lambda note: [note.title, note.body],
         ),
         **{
             key: matching(
-                model.objects
-                .filter(role__archived_on=None)
-                .select_related("role__circle")
-                .order_by("pk"),
+                of_roles(model),
                 lambda item: [item.description],
             )
             for key, model in [
@@ -154,12 +167,14 @@ def with_circles(people):
 
 def search(request):
     query = request.GET.get("q", "").strip()
-    results = search_results(query)
+    archived = bool(request.GET.get("archived"))
+    results = search_results(query, archived=archived)
     return render(
         request,
         "search/search.html",
         {
             "query": query,
+            "archived": archived,
             "results": results,
             "empty": bool(query.split()) and not any(results.values()),
         },

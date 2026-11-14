@@ -25,7 +25,10 @@ active person. Everybody signed in sees everything except others' drafts.
   roles, accountabilities, domains, policies, links (by title and
   description), notes (by title and text), checklist items and metrics
   containing all the words entered. A link's description
-  may list keywords, e.g. for a section of the handbook.
+  may list keywords, e.g. for a section of the handbook. "Archived and
+  inactive too" also finds archived roles (with their texts, links,
+  notes, checklist items and metrics), archived policies and inactive
+  people, after the current ones and marked.
 
 **Mail addresses** lists the addresses of everybody holding a role, of
 all Circle Leads, Facilitators, Secretaries and Circle Reps (for
