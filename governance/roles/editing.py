@@ -140,11 +140,12 @@ def reporters(circle):
 
 def reporter_choices(reporters):
     """The circle's two first (the whole circle, the circle in its
-    super-circle), then its roles in a group; a role's page has keys with
-    suffixes too, without a group"""
+    super-circle), then its roles in a group; the choices of a role's page
+    (``role_reporters()``, ``item_reporters()``) without a group"""
     circle, roles = [], []
     for key, (_role, whole, label) in reporters.items():
-        (circle if whole or "-" in key else roles).append((key, label))
+        ungrouped = whole or key.endswith(("-up", "-role", "-current"))
+        (circle if ungrouped else roles).append((key, label))
     return [
         ("", BLANK_CHOICE_LABEL),
         *circle,
