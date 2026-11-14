@@ -2370,8 +2370,8 @@ msgid "Outcome"
 msgstr "Ergebnis"
 
 #: governance/templates/meetings/_current.html
-msgid "Optional: what was decided or requested, e.g. next actions or a project. Governance tensions are captured by their owners."
-msgstr "Optional: was entschieden oder verlangt wurde, z.B. nächste Aktionen oder ein Projekt. Governance-Spannungen erfassen die, die sie haben, selbst."
+msgid "Optional: what was decided or requested, e.g. next actions or a project, naming the role taking it on with @. Governance tensions are captured by their owners."
+msgstr "Optional: was entschieden oder verlangt wurde, z.B. nächste Aktionen oder ein Projekt, mit @ und der Rolle, die es übernimmt. Governance-Spannungen erfassen die, die sie haben, selbst."
 
 #: governance/templates/meetings/_current.html
 msgid "Link"
@@ -2663,8 +2663,8 @@ msgid "You take part in this meeting as an admin, not as a member of the circle.
 msgstr "Du nimmst als Admin an diesem Meeting teil, nicht als Mitglied des Kreises. Übernimm nur, wenn du weisst, dass es nötig ist."
 
 #: governance/templates/meetings/meeting_detail.html
-msgid "A tension, in one or two words"
-msgstr "Eine Spannung, in ein bis zwei Wörtern"
+msgid "A tension, in one or two words; “– Name” for somebody else"
+msgstr "Eine Spannung, in ein bis zwei Wörtern; „– Name“ für jemand anderen"
 
 #: governance/templates/meetings/meeting_detail.html
 #: governance/templates/notifications/proposal_adopted.txt

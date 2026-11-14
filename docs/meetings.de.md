@@ -4,7 +4,10 @@ Meetings plant ihr im Kalender. Im Tool beginnt ein Meeting, wenn jemand
 es startet; wer nicht Secretary des Kreises ist (oder die Rolle vertritt),
 bestätigt das. Alle folgen auf einem geteilten oder dem eigenen
 Bildschirm und fügen Agendapunkte vom eigenen Gerät aus hinzu; die Seite
-aktualisiert sich von selbst.
+aktualisiert sich von selbst. Ein Agendapunkt gehört, wer ihn hinzufügt;
+für jemand anderen endet er mit dem Namen, wie die Agenda ihn zeigt, z.B.
+"Neue Messer – Ada" (ganzer Name, Vorname oder Kurzname, wenn ihn nur
+eine Person im Meeting hat).
 
 - **Wer leitet**: Wer im Meeting Secretary ist, hat die Buttons: Schritte,
   Agendapunkte bearbeiten, Annehmen, Wahlen, Teilnehmende, das

@@ -4,7 +4,10 @@ You plan meetings in the calendar. In the tool a meeting begins when
 somebody starts it; the tool asks those who aren't the circle's
 Secretary (or standing in for them) to confirm. Everybody follows on a
 shared screen or their own and adds agenda items from their own device;
-the page updates by itself.
+the page updates by itself. Whoever adds an item owns it; to add one for
+somebody else, end it with their name like the agenda shows it, e.g.
+"New knives – Ada" (full, first or short name, if only one person in the
+meeting has it).
 
 - **Who leads**: the meeting's secretary has the buttons: steps,
   processing items, adopting, elections, attendees, ending

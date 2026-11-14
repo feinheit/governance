@@ -464,7 +464,11 @@ doesn't change anymore (`runnable_meeting()`).
 `meetings/test_e2e.py` covers it in a browser.
 
 **Governance meetings**: check-in, agenda, closing (5.4.3). Members and
-attendees add items while it runs (5.4.4): a tension in a few words, or a
+attendees add items while it runs (5.4.4): a tension in a few words (the
+item's owner is who adds it; "Knives – Eve", like the agenda shows items,
+makes Eve its owner when the name, full, first or short, is unique among
+the circle's members, the attendees and the people filling the invited
+roles, otherwise the text stays as typed; `owner_from_label()`), or a
 proposal: their own, waiting for a meeting, published async (which ends
 the acceptance period: re-proposed at the meeting, 5.3) or drafts (not
 empty ones). Others' proposals wait for their proposers, whom members ask

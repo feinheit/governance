@@ -1,3 +1,4 @@
+import re
 from itertools import groupby
 from urllib.parse import urlencode
 
@@ -653,10 +654,60 @@ def agenda_add(request, pk):
             label=Truncator(str(proposal)).chars(500),
         )
     elif label := request.POST.get("label", "").strip():
+        label, owner = owner_from_label(meeting, label)
         AgendaItem.objects.create(
-            meeting=meeting, position=position, owner=request.user, label=label[:500]
+            meeting=meeting,
+            position=position,
+            owner=owner or request.user,
+            label=label[:500],
         )
     return redirect(meeting)
+
+
+# "Knives – Eve": the agenda shows items like this, the secretary adds
+# others' items the same way
+OWNER_TRAILER = re.compile(r"^(.*\S)\s+[-–—]\s+([^-–—]*\S)\s*$")
+
+
+def owner_from_label(meeting, label):
+    """The label without the trailer naming its owner and the owner, if
+    the name is unique among the circle's members, the attendees and the
+    people filling the invited roles (full, first or short name); else the
+    label as typed and None"""
+    if not (match := OWNER_TRAILER.match(label)):
+        return label, None
+    name = match[2].casefold()
+    people = (
+        User.objects
+        .active()
+        .filter(
+            Q(pk__in=meeting.attendees.values("pk"))
+            | Q(
+                pk__in=Assignment.objects
+                .current()
+                .filter(role__in=meeting.invited_roles.all())
+                .values("user")
+            )
+            | (
+                Q(pk__in=members(meeting.circle).values("pk"))
+                if meeting.circle
+                else Q()
+            )
+        )
+        .distinct()
+    )
+    found = [
+        user
+        for user in people
+        if name
+        in {
+            user.full_name.casefold(),
+            user.full_name.split(" ")[0].casefold(),
+            user.get_short_name().casefold(),
+            user.email.split("@")[0].casefold(),
+        }
+    ]
+    return (match[1], found[0]) if len(found) == 1 else (label, None)
 
 
 @require_POST

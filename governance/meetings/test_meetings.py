@@ -494,6 +494,48 @@ class MeetingsTest(TestCase):
         self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Dishes"})
         self.assertFalse(meeting.agenda_items.exists())
 
+    def test_agenda_item_for_someone_else(self):
+        """The secretary adds others' items with a trailer like the agenda
+        shows them ("– Eve"), a unique name of the members, attendees or
+        people filling the invited roles; else the text stays as typed"""
+        brown = User.objects.create_user("eve.b@example.com", full_name="Eve Brown")
+        Assignment.objects.create(role=self.cook, user=brown)
+        self.eve.full_name = "Eve Adams"
+        self.eve.save()
+        outsider = User.objects.create_user("zoe@example.com", full_name="Zoe")
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now(),
+            secretary=self.bob,
+        )
+        url = f"/meetings/{meeting.pk}/agenda/add/"
+        self.client.force_login(self.bob)
+        for label in [
+            "Knives – Eve Adams",  # Full name
+            "Pots - EVE.B",  # Short name (the email's), dash, case
+            "Plates — ada",  # First name, em dash
+            "Spoons – Eve",  # Two Eves by first name: as typed
+            "Cups – Zoe",  # Not in the meeting: as typed
+            "Pan-cakes",  # No trailer
+        ]:
+            self.client.post(url, {"label": label})
+        self.assertEqual(
+            [(item.label, item.owner) for item in meeting.agenda_items.all()],
+            [
+                ("Knives", self.eve),
+                ("Pots", brown),
+                ("Plates", self.ada),
+                ("Spoons – Eve", self.bob),
+                ("Cups – Zoe", self.bob),
+                ("Pan-cakes", self.bob),
+            ],
+        )
+        # Attendees count too
+        meeting.attendees.add(outsider)
+        self.client.post(url, {"label": "Cups – Zoe"})
+        self.assertEqual(meeting.agenda_items.last().owner, outsider)
+
     def test_agenda(self):
         from governance.proposals.models import Proposal
 
