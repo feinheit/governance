@@ -162,7 +162,7 @@ class ItemForm(ModelForm):
                     None,
                 ),
             )
-            self.order_fields(["reported_by"])
+            self.order_fields(["description", "reported_by"])
 
     def save(self, *args, **kwargs):
         if self.reporters and (key := self.cleaned_data.get("reported_by")):
