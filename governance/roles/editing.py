@@ -140,10 +140,11 @@ def reporters(circle):
 
 def reporter_choices(reporters):
     """The circle's two first (the whole circle, the circle in its
-    super-circle), then its roles in a group"""
+    super-circle), then its roles in a group; a role's page has keys with
+    suffixes too, without a group"""
     circle, roles = [], []
     for key, (_role, whole, label) in reporters.items():
-        (circle if whole or key.endswith("-up") else roles).append((key, label))
+        (circle if whole or "-" in key else roles).append((key, label))
     return [*circle, *([(_("Roles"), roles)] if roles else [])]
 
 
@@ -187,26 +188,51 @@ def item_form(model):
     return type("Form", (ItemForm,), {"Meta": type("Meta", (ItemForm.Meta,), meta)})
 
 
+def role_reporters(role):
+    """A role's page: the role reports it in its circle; the whole circle's
+    of a role only if it's set already (a circle's, of old)"""
+    return {
+        f"{role.pk}-role": (
+            role,
+            False,
+            gettext("%(role)s in %(circle)s") % {"role": role, "circle": role.circle},
+        )
+    }
+
+
 def item_reporters(request, item, model):
-    """The choices of who reports a checklist item or metric: the roles of
-    the circle whose page it was edited on (``?circle=``), else of the
-    circle reviewing it, those the user may edit it for"""
+    """The choices of who reports a checklist item or metric: on a circle's
+    page (``?circle=``, or adding to a circle) the circle's and its roles',
+    on a role's page the role only; those the user may edit it for, the
+    current one in any case"""
     if model not in {Metric, ChecklistItem}:
         return None
-    circle = item.reported_in
+    current = (item.role_id, item.whole_circle)
+    choices = None
     if (pk := request.GET.get("circle", "")).isdigit():
         page = Role.objects.active().circles().filter(pk=pk).first()
-        if page and any(
-            (role.pk, whole) == (item.role_id, item.whole_circle)
-            for role, whole, _label in reporters(page).values()
-        ):
-            circle = page
-    if circle is None:
-        return None
-    current = (item.role_id, item.whole_circle)
+        if page:
+            choices = reporters(page)
+            if not any((r.pk, w) == current for r, w, _label in choices.values()):
+                choices = None
+    if choices is None:
+        if item.role.is_circle:
+            choices = reporters(item.role)
+        elif item.role.circle:
+            choices = role_reporters(item.role)
+        else:
+            return None
+    if not any((r.pk, w) == current for r, w, _label in choices.values()):
+        choices[f"{item.role_id}-current"] = (
+            item.role,
+            item.whole_circle,
+            gettext("%(circle)s (whole circle)") % {"circle": item.role}
+            if item.whole_circle
+            else str(item.role),
+        )
     return {
         key: (role, whole, label)
-        for key, (role, whole, label) in reporters(circle).items()
+        for key, (role, whole, label) in choices.items()
         if (role.pk, whole) == current
         or can_edit_items(request.user, role, model, whole_circle=whole)
     }

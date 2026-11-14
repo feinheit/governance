@@ -14,8 +14,8 @@ Some things change directly in the tool, without a proposal:
 - Checklist items and metrics are reported in tactical meetings, "Reported
   by" says by whom: the whole circle (in its own meetings), one of its
   roles, a sub-circle among them (in this circle's meetings, not in the
-  sub-circle's own), or the circle in the circle above's meetings. A
-  circle's page lists all of them. Metrics are edited by the Circle Leads
+  sub-circle's own), or the circle in the circle above's meetings; on a
+  role's page only the role. A circle's page lists all of them. Metrics are edited by the Circle Leads
   of the circle whose meetings review them.
 - Notes keep what helps doing a role's work, e.g. a checklist or how
   something is ordered, in Markdown; "Links and notes" on the role's

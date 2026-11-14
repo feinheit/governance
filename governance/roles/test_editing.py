@@ -188,6 +188,28 @@ class EditingTest(TestCase):
         self.assertContains(response, "Cook")
         self.assertNotContains(response, "Kitchen in Example Ltd")
 
+    def test_reported_by_on_a_roles_page(self):
+        """A role's page adds and edits the role's items only, reported in
+        its circle; the whole circle's stays when it's set already"""
+        self.client.force_login(self.eve)
+        url = f"/roles/{self.cook.pk}/checklist/new/"
+        response = self.client.get(url)
+        self.assertContains(response, ">Cook in Kitchen<")
+        self.assertNotContains(response, "whole circle")
+        self.assertNotContains(response, "optgroup")
+        data = {"description": "Oven", "frequency": "", "link": ""}
+        self.client.post(url, data | {"reported_by": f"{self.kitchen.pk}"})
+        self.assertFalse(ChecklistItem.objects.exists())  # Not a choice
+        self.client.post(url, data | {"reported_by": f"{self.cook.pk}-role"})
+        item = ChecklistItem.objects.get()
+        self.assertEqual((item.role, item.whole_circle), (self.cook, False))
+
+        item.whole_circle = True
+        item.save()
+        response = self.client.get(f"/items/checklist/{item.pk}/")
+        self.assertContains(response, ">Cook in Kitchen<")
+        self.assertContains(response, "Cook (whole circle)")
+
     def test_checklists_and_metrics_cards(self):
         """Two cards like the two steps of the tactical meetings"""
         ChecklistItem.objects.create(role=self.kitchen, description="Fridge cleaned")

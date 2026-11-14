@@ -15,8 +15,8 @@ Einiges ändert sich direkt im Tool, ohne Vorschlag:
   "Berichtet von" sagt von wem: vom ganzen Kreis (in seinen eigenen
   Meetings), von einer seiner Rollen, auch einem Sub-Kreis (in den
   Meetings dieses Kreises, nicht in denen des Sub-Kreises), oder vom
-  Kreis in den Meetings des übergeordneten Kreises. Die Seite eines
-  Kreises zeigt sie alle. Metriken bearbeiten die Circle Leads des
+  Kreis in den Meetings des übergeordneten Kreises; auf der Seite einer
+  Rolle nur die Rolle. Die Seite eines Kreises zeigt sie alle. Metriken bearbeiten die Circle Leads des
   Kreises, in dessen Meetings sie berichtet werden.
 - Notizen halten fest, was bei der Arbeit einer Rolle hilft, z.B. eine
   Checkliste oder wie etwas bestellt wird, in Markdown; "Links und
