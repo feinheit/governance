@@ -124,7 +124,9 @@ one there shows its result, "Reopen" goes back to it to correct it:
   tool doesn't track them. Several of them, e.g. one for everybody
   holding a role, are one link to the to-do list containing them. The
   outcome names the role taking it on with `@` (see
-  [finding your way](orientation.md)), e.g. "@Sales sends the offer".
+  [finding your way](orientation.md)), e.g. "@Sales sends the offer", and
+  the person too when several fill the role and only one of them takes
+  it on ("@Sales (Ada) sends the offer"); without, it's all of them.
 - **A governance tension** goes into a governance meeting: its owner
   writes it down in a tension ("New proposal" on the circle's page, see [proposals](proposals.md))
   or brings it to the next governance meeting's agenda. The tool can't

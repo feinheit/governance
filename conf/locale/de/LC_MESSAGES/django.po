@@ -2370,8 +2370,8 @@ msgid "Outcome"
 msgstr "Ergebnis"
 
 #: governance/templates/meetings/_current.html
-msgid "Optional: what was decided or requested, e.g. next actions or a project, naming the role taking it on with @. Governance tensions are captured by their owners."
-msgstr "Optional: was entschieden oder verlangt wurde, z.B. nächste Aktionen oder ein Projekt, mit @ und der Rolle, die es übernimmt. Governance-Spannungen erfassen die, die sie haben, selbst."
+msgid "Optional: what was decided or requested, e.g. next actions or a project, naming the role taking it on with @, and the person if several fill it. Governance tensions are captured by their owners."
+msgstr "Optional: was entschieden oder verlangt wurde, z.B. nächste Aktionen oder ein Projekt, mit @ und der Rolle, die es übernimmt, und der Person, wenn mehrere die Rolle haben. Governance-Spannungen erfassen die, die sie haben, selbst."
 
 #: governance/templates/meetings/_current.html
 msgid "Link"

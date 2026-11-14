@@ -119,7 +119,9 @@ Agenda streicht sie durch; ein Klick darauf zeigt das Ergebnis, "Wieder
   verfolgt sie nicht. Mehrere davon, z.B. eine für alle, die eine Rolle
   innehaben, sind ein Link auf die To-do-Liste, die sie enthält. Das
   Ergebnis nennt die Rolle, die sie übernimmt, mit `@` (siehe
-  [Sich zurechtfinden](orientation.de.md)), z.B. "@Sales schickt die Offerte".
+  [Sich zurechtfinden](orientation.de.md)), z.B. "@Sales schickt die Offerte",
+  und auch die Person, wenn mehrere die Rolle haben und nur eine es
+  übernimmt ("@Sales (Ada) schickt die Offerte"); sonst gilt es für alle.
 - **Eine Governance-Spannung** gehört in ein Governance Meeting: wer sie
   hat, notiert sie als Spannung ("Neuer Vorschlag" auf der Seite des Kreises, siehe [Vorschläge](proposals.de.md))
   oder bringt sie in die Agenda des nächsten Governance Meetings. Das
