@@ -9,10 +9,12 @@ import gov
 from click.shell_completion import ShellComplete, get_completion_class
 from click.testing import CliRunner
 from django.test import Client, TestCase
+from django.utils import timezone
 from django.utils.translation import deactivate_all
 
 from governance import cli_version
 from governance.accounts.models import APIToken, User
+from governance.meetings.models import AgendaItem, Meeting
 from governance.proposals.models import Proposal
 from governance.roles.models import (
     Accountability,
@@ -601,6 +603,69 @@ class CLITest(TestCase):
         self.assertIn("# **Holacracy Constitution**", self.gov("constitution").output)
         result = self.gov("constitution", "--language", "de")
         self.assertIn("# **Holacracy Verfassung**", result.output)
+
+    def test_meetings(self):
+        """A tactical meeting's outcomes with the people filling the roles
+        they mention, the tasks already linked, the circle's links: what
+        the governance-tactical skill turns into tasks"""
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        Link.objects.create(
+            role=self.kitchen, title="Projects", url="https://tasks.example.com/1"
+        )
+        meeting = Meeting.objects.create(
+            circle=self.kitchen,
+            kind=Meeting.TACTICAL,
+            started_at=timezone.now() - dt.timedelta(hours=2),
+            ended_at=timezone.now() - dt.timedelta(hours=1),
+            secretary=bob,
+            minutes="Short one",
+        )
+        meeting.attendees.add(self.ada, bob)
+        AgendaItem.objects.create(
+            meeting=meeting,
+            label="Knives",
+            owner=bob,
+            outcome=f"@[Old name](role:{self.cook.pk}): new knives are bought",
+            is_completed=True,
+        )
+        AgendaItem.objects.create(
+            meeting=meeting,
+            label="Menu",
+            owner=self.ada,
+            outcome="The winter menu is printed",
+            link="https://tasks.example.com/todos/2",
+        )
+        AgendaItem.objects.create(meeting=meeting, label="Just news", owner=bob)
+        Meeting.objects.create(
+            circle=self.kitchen, kind=Meeting.GOVERNANCE, started_at=timezone.now()
+        )
+
+        result = self.gov("meetings", "--circle", self.kitchen.pk, "--kind", "tactical")
+        self.assertIn("tactical meeting Kitchen", result.output)
+        self.assertNotIn("governance meeting", result.output)
+        self.assertEqual(
+            [m["outcomes"] for m in json.loads(self.gov("meetings", "--json").output)],
+            [0, 2],  # Newest first
+        )
+
+        result = self.gov("meetings", "show", meeting.pk)
+        self.assertIn("@Cook: new knives are bought", result.output)
+        self.assertIn("@Cook: Ada <ada@example.com>", result.output)
+        self.assertIn("https://tasks.example.com/todos/2", result.output)
+        self.assertIn("Kitchen: Projects", result.output)
+        self.assertIn("Short one", result.output)
+
+        data = json.loads(self.gov("meetings", "show", meeting.pk, "--json").output)
+        knives, menu, news = data["items"]
+        self.assertEqual(knives["owner"]["email"], "bob@example.com")
+        self.assertEqual(
+            [(r["id"], [p["email"] for p in r["role_leads"]]) for r in knives["roles"]],
+            [(self.cook.pk, ["ada@example.com"])],
+        )
+        self.assertEqual(menu["roles"], [])
+        self.assertEqual((news["outcome"], news["link"]), ("", ""))
+        self.assertEqual(data["links"][0]["url"], "https://tasks.example.com/1")
+        self.assertEqual(data["secretary"], "Bob")
 
     def test_backup(self):
         """Printed, or a file per role written into a directory; the people

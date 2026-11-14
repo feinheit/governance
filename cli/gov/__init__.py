@@ -9,6 +9,7 @@ from gov import (  # noqa: F401 Register the commands
     export,
     items,
     links,
+    meetings,
     notes,
     policies,
     proposals,

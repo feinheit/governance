@@ -8,6 +8,7 @@ from governance.accounts.api import router as accounts_router
 from governance.accounts.api_auth import user_auth
 from governance.backup import backup
 from governance.help import PAGES
+from governance.meetings.api import router as meetings_router
 from governance.proposals.api import router as proposals_router
 from governance.roles.api import router as roles_router
 
@@ -21,6 +22,7 @@ api = NinjaAPI(
 api.add_router("/", accounts_router)
 api.add_router("/", roles_router)
 api.add_router("/", proposals_router)
+api.add_router("/", meetings_router)
 
 
 @api.get("backup/")

@@ -824,7 +824,7 @@ roles/{id}/context/` (the role's page's context, `roles/context.py`), `GET const
 circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
-the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET export/`, `GET me/`
+the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links of the circle and the invited roles like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
 (the user, the token's access and their roles); objects come with the URL
 of their page, times in local time (their first ten characters are the
 day the pages show), proposals with `adopted_on`. Clients send instructions only (e.g. written by an LLM from
@@ -866,7 +866,7 @@ The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
 write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
 `gov roles context`, `gov domains`, `gov export`, `gov backup`, `gov constitution`, `gov search`, `gov links`, `gov notes`, `gov metrics` and `gov checklist`
-(list, add, update, remove) and `gov proposals` (list, show,
+(list, add, update, remove), `gov meetings` (list, show) and `gov proposals` (list, show,
 create, update, publish; open, consent, request-meeting, comment). The Claude Code skill `governance-proposal`
 (`cli/skills/`) prepares a draft from a tension with it; publishing stays
 the user's decision. `governance-review` reviews a circle's or a role's
