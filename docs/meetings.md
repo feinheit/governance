@@ -128,5 +128,10 @@ one there shows its result, "Reopen" goes back to it to correct it:
   add tensions for somebody else; a to-do reminds them if needed.
 
 The outputs mail at the end lists the items with an outcome or a link.
+The Claude Code skill `governance-tactical` (with `gov`, see
+[finding your way](orientation.md)) proposes the missing tasks in the task
+management tool from the outcomes without a link, with the people holding
+the mentioned roles, checks the linked ones, and creates or changes
+nothing before you confirmed it.
 Tactical meetings imported from GlassFrog have their agenda items only,
 GlassFrog's actions and projects aren't imported.

@@ -108,6 +108,7 @@ class MeetingSummaryOut(Schema):
 
 class MeetingOut(MeetingSummaryOut):
     secretary: str | None
+    # As recorded, not necessarily who was there: not for assigning tasks
     attendees: list[PersonOut]
     invited_roles: list[ProposalSummaryOut]
     # All agenda items, those without an outcome too

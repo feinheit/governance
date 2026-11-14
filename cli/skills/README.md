@@ -2,8 +2,8 @@
 
 [Claude Code](https://claude.com/claude-code) skills which do governance
 tasks through the `gov` CLI. They prepare, people decide: the skills only
-create drafts, which are private until the user publishes them, and stick
-to what the user says instead of guessing.
+create drafts, which are private until the user publishes them, or tasks
+the user confirmed, and stick to what the user says instead of guessing.
 
 They need `gov`, logged in with `gov login URL --write`. If `gov` only has
 read access, the skills ask the user to log in again instead of working
@@ -37,3 +37,17 @@ Policies which are really employment rules or documentation get a
 suggestion where they would fit better (the handbook, the staff
 regulations, relational agreements). It only reads; the findings the
 user picks become drafts with `governance-proposal`.
+
+## governance-tactical
+
+Follows up on a tactical meeting (`gov meetings show`): proposes a task in
+the circle's task management tool for each outcome without a link, with
+the outcome's words as its title, all Role Leads of the mentioned role as
+assignees (matched by email, one task for all of them or one each,
+asking when the outcome doesn't say; they get back to who asked if they disagree; without a mention the item's owner, marked
+as a guess) and a link back to the meeting, and checks the tasks already
+linked (missing, unassigned, a different title). It creates or changes
+tasks only after the user confirmed the list, through whatever reaches
+the task management tool in the session (its skill, connector or command
+line tool); without one it writes a Markdown to-do list. It names no
+tool: the circle's links say where the projects are.

@@ -871,6 +871,12 @@ create, update, publish; open, consent, request-meeting, comment). The Claude Co
 (`cli/skills/`) prepares a draft from a tension with it; publishing stays
 the user's decision. `governance-review` reviews a circle's or a role's
 governance against the constitution (`gov constitution`), read only.
+`governance-tactical` turns a tactical meeting's outcomes into tasks in
+the circle's task management tool and checks the tasks already linked
+(`gov meetings show`), through whatever reaches that tool in the session,
+after the user confirmed them; the app stays without an integration
+(actions and projects are out of scope, decided 2026-11-14: no embedding
+of the task management tool in the progress updates either).
 
 ## 9. Import from GlassFrog
 

@@ -124,5 +124,10 @@ Agenda streicht sie durch; ein Klick darauf zeigt das Ergebnis, "Wieder
   wenn nötig.
 
 Die Mail mit den Ergebnissen am Ende listet die Punkte mit Ergebnis oder
-Link. Aus GlassFrog importierte Tactical Meetings haben nur ihre
+Link. Der Claude-Code-Skill `governance-tactical` (mit `gov`, siehe
+[Sich zurechtfinden](orientation.de.md)) schlägt aus den Ergebnissen ohne
+Link die fehlenden Aufgaben im Aufgaben-Tool vor, für alle, die die
+erwähnten Rollen haben, prüft die verlinkten und legt nichts an oder
+ändert nichts, bevor du es bestätigt hast.
+Aus GlassFrog importierte Tactical Meetings haben nur ihre
 Agendapunkte, GlassFrogs Aktionen und Projekte werden nicht importiert.
