@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext
 
 from governance.accounts.models import User
-from governance.history.views import ASSIGNMENT_KINDS, timeline
+from governance.history.views import ASSIGNMENT_KINDS, timeline, without_items
 from governance.meetings.elections import mark_due_elections
 from governance.meetings.models import Meeting
 from governance.meetings.teasers import with_teasers
@@ -127,13 +127,10 @@ def recent_history(role, count=10):
     proposals = role.changed_by_proposals.filter(status="adopted").select_related(
         "proposer"
     )[:count]
-    changes = (
-        role.changes
-        .exclude(kind__in=ASSIGNMENT_KINDS)
+    changes = without_items(  # Operational, the history page shows them on request
+        role.changes.exclude(kind__in=ASSIGNMENT_KINDS)
         # Only counts, the proposals of those days say more
         .exclude(kind__endswith="-unrecorded")
-        # Operational, the history page shows them on request
-        .exclude(kind__regex=r"^(link|note|metric|checklist)-")
     )
     # Whole days, their texts are merged into one change (merge_lists())
     days = changes.order_by("-date").values_list("date", flat=True).distinct()[:count]

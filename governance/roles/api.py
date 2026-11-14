@@ -12,7 +12,7 @@ from ninja.errors import HttpError
 
 from governance.history.update import update_today
 from governance.roles.context import affecting
-from governance.roles.editing import can_edit_items, next_position
+from governance.roles.editing import MODELS, can_edit_items, next_position
 from governance.roles.export import governance_markdown
 from governance.roles.models import (
     FREQUENCY_CHOICES,
@@ -413,13 +413,10 @@ class ItemPatch(Schema):
     whole_circle: bool | None = None
 
 
-ITEM_MODELS = {"metrics": Metric, "checklist": ChecklistItem}
-
-
 def item_model(kind):
-    if kind not in ITEM_MODELS:
+    if kind not in {Metric.kind, ChecklistItem.kind}:
         raise HttpError(404, "Not found: metrics or checklist.")
-    return ITEM_MODELS[kind]
+    return MODELS[kind]
 
 
 def save_role_item(request, item, data):

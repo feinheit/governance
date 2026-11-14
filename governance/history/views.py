@@ -19,7 +19,7 @@ from governance.history.audit import structure_on
 from governance.history.models import Change
 from governance.proposals.models import Proposal
 from governance.roles.constitution import LEAD, REP
-from governance.roles.models import Role
+from governance.roles.models import OPERATIONAL_MODELS, Role
 
 
 LABELS = {
@@ -62,7 +62,16 @@ LABELS = {
 }
 ASSIGNMENT_KINDS = {"assigned", "unassigned", "reelected", "focus"}
 # Links, notes, metrics and checklist items: operational, shown on request
-ITEM_KINDS = ("link-", "note-", "metric-", "checklist-")
+ITEM_KINDS = tuple(f"{model.history_kind}-" for model in OPERATIONAL_MODELS)
+
+
+def without_items(changes):
+    """Without the changes of links, notes, metrics and checklist items"""
+    for prefix in ITEM_KINDS:
+        changes = changes.exclude(kind__startswith=prefix)
+    return changes
+
+
 # Added and removed texts of a role on a day, merged into one entry
 LISTS = {
     "accountabilities": (
@@ -225,8 +234,7 @@ def filtered(changes, filters):
     if not filters.get("assignments"):
         changes = changes.exclude(kind__in=ASSIGNMENT_KINDS)
     if not filters.get("operational"):
-        for prefix in ITEM_KINDS:
-            changes = changes.exclude(kind__startswith=prefix)
+        changes = without_items(changes)
     return changes
 
 

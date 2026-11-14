@@ -22,7 +22,7 @@ from django.utils import timezone
 from django.utils.translation import override
 
 from governance.roles.constitution import CORE_ROLES
-from governance.roles.models import Assignment
+from governance.roles.models import OPERATIONAL_MODELS, Assignment
 
 
 # Audit table → key of the structure
@@ -32,18 +32,10 @@ TABLES = {
     "roles_accountability": "accountabilities",
     "roles_domain": "domains",
     # Operational, shown in the history on request
-    "roles_link": "links",
-    "roles_note": "notes",
-    "roles_metric": "metrics",
-    "roles_checklistitem": "checklist",
+    **{model._meta.db_table: model.kind for model in OPERATIONAL_MODELS},
 }
-# Kinds of the items, keyed by their structure's key
-ITEMS = {
-    "links": "link",
-    "notes": "note",
-    "metrics": "metric",
-    "checklist": "checklist",
-}
+# Kinds of the items in the history's changes, keyed by their structure's key
+ITEMS = {model.kind: model.history_kind for model in OPERATIONAL_MODELS}
 # The core roles' constitutional texts come from the code (constitution 5.0),
 # GlassFrog switched to it on this day; the texts of 4.1 are rows
 CONSTITUTION_5 = dt.date(2022, 12, 13)
@@ -196,14 +188,7 @@ def structure_on(day):
 def structure_from_database(day):
     """The current structure from the tables, e.g. for the last day of
     GlassFrog's history"""
-    from governance.roles.models import (
-        ChecklistItem,
-        Link,
-        Metric,
-        Note,
-        Policy,
-        Role,
-    )
+    from governance.roles.models import Policy, Role
 
     roles = Role.objects.active().prefetch_related("accountabilities", "domains")
     assignments = assignments_on(day)
@@ -236,13 +221,8 @@ def structure_from_database(day):
             for policy in Policy.objects.active().select_related("domain")
         },
         "items": items({
-            kind: {obj.pk: obj.__dict__ for obj in model.objects.all()}
-            for kind, model in [
-                ("links", Link),
-                ("notes", Note),
-                ("metrics", Metric),
-                ("checklist", ChecklistItem),
-            ]
+            model.kind: {obj.pk: obj.__dict__ for obj in model.objects.all()}
+            for model in OPERATIONAL_MODELS
         }),
     }
 

@@ -21,12 +21,12 @@
     <div class="d-flex gap-1 flex-shrink-0">
       <a
         {% button_class can_edit title=_("Edit") %}
-        href="{% url 'role_item' kind item.pk %}{% if role.is_circle %}?circle={{ role.pk }}{% endif %}"
+        href="{% url 'role_item' item.kind item.pk %}{% if role.is_circle %}?circle={{ role.pk }}{% endif %}"
         data-modal
       >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>
       <a
         {% button_class can_edit "btn-destructive" title=_("Delete") %}
-        href="{% url 'role_item_delete' kind item.pk %}"
+        href="{% url 'role_item_delete' item.kind item.pk %}"
         data-modal
       >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>
     </div>

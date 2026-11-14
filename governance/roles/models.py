@@ -455,12 +455,18 @@ def reported_in(role, *, whole_circle=False):
 
 
 class Metric(RoleItem):
+    kind = "metrics"
+    history_kind = "metric"
+
     class Meta(RoleItem.Meta):
         verbose_name = _("metric")
         verbose_name_plural = _("metrics")
 
 
 class ChecklistItem(RoleItem):
+    kind = "checklist"
+    history_kind = "checklist"
+
     class Meta(RoleItem.Meta):
         verbose_name = _("checklist item")
         verbose_name_plural = _("checklist items")
@@ -469,6 +475,9 @@ class ChecklistItem(RoleItem):
 class Link(models.Model):
     """A link to an external tool of a circle or role, e.g. where projects
     and actions are managed (a to-do management tool, a board)"""
+
+    kind = "links"
+    history_kind = "link"
 
     role = models.ForeignKey(
         Role, on_delete=models.CASCADE, related_name="links", verbose_name=_("role")
@@ -491,6 +500,9 @@ class Note(models.Model):
     """What helps doing the role's work, e.g. a checklist or how something
     is ordered: operational like links, not governance"""
 
+    kind = "notes"
+    history_kind = "note"
+
     role = models.ForeignKey(
         Role, on_delete=models.CASCADE, related_name="notes", verbose_name=_("role")
     )
@@ -505,3 +517,9 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# Edited outside governance (roles/editing.py), in the history on request
+# (history/audit.py): ``kind`` in URLs, the API and the history's structure,
+# ``history_kind`` in its changes (``link-added``)
+OPERATIONAL_MODELS = [Link, Note, Metric, ChecklistItem]

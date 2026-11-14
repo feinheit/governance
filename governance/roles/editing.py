@@ -16,6 +16,7 @@ from governance.forms import BLANK_CHOICE_LABEL, ModelForm
 from governance.history.update import update_today
 from governance.notifications import mails
 from governance.roles.models import (
+    OPERATIONAL_MODELS,
     ChecklistItem,
     Link,
     Metric,
@@ -83,12 +84,7 @@ def strategy(request, pk):
     )
 
 
-MODELS = {
-    "metrics": Metric,
-    "checklist": ChecklistItem,
-    "links": Link,
-    "notes": Note,
-}
+MODELS = {model.kind: model for model in OPERATIONAL_MODELS}
 FIELDS = {Link: ["title", "url", "description"], Note: ["title", "body"]}
 
 

@@ -547,6 +547,15 @@ class MergedListsTest(TestCase):
 
 
 class OperationalItemsTest(TestCase):
+    def test_labels(self):
+        """Each operational model's changes have labels"""
+        from governance.history.views import LABELS
+        from governance.roles.models import OPERATIONAL_MODELS
+
+        for model in OPERATIONAL_MODELS:
+            for action in ["added", "changed", "removed"]:
+                self.assertIn(f"{model.history_kind}-{action}", LABELS)
+
     def test_diff(self):
         old = {
             "items": {
