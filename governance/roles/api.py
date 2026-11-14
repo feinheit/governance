@@ -213,6 +213,8 @@ class SearchOut(Schema):
     policies: list[PolicyOut]
     links: list[FoundLinkOut]
     notes: list[FoundNoteOut]
+    checklist_items: list[ItemOut]
+    metrics: list[ItemOut]
 
 
 @router.get("circles/", response=list[CircleOut])
@@ -496,6 +498,8 @@ def search(request, q: str):
         "policies": [],
         "links": [],
         "notes": [],
+        "checklist_items": [],
+        "metrics": [],
     }
 
     def found(item):

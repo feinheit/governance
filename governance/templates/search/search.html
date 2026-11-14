@@ -10,7 +10,7 @@
     </h1>
   </div>
   {% if empty %}<p class="text-body-secondary">{% translate "Nothing found." %}</p>{% endif %}
-  {% with people=results.people roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies links=results.links notes=results.notes %}
+  {% with people=results.people roles=results.roles accountabilities=results.accountabilities domains=results.domains policies=results.policies links=results.links notes=results.notes checklist_items=results.checklist_items metrics=results.metrics %}
     {% if people %}
       <section class="card mb-4">
         <div class="card-header"><h2 class="h6 mb-0">{% translate "People" %}</h2></div>
@@ -124,5 +124,9 @@
         </ul>
       </section>
     {% endif %}
+    {% translate "Checklist items" as title %}
+    {% include "search/_items.html" with items=checklist_items %}
+    {% translate "Metrics" as title %}
+    {% include "search/_items.html" with items=metrics %}
   {% endwith %}
 {% endblock content %}

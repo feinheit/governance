@@ -533,6 +533,9 @@ class CLITest(TestCase):
         )
         self.gov("metrics", "add", self.cook.pk, "Soups sold")
         self.assertIn("Soups sold", self.gov("metrics", "list", self.cook.pk).output)
+        result = self.gov("search", "soups")
+        self.assertIn("Metrics", result.output)
+        self.assertIn("Soups sold", result.output)
 
     def test_policies(self):
         from governance.roles.models import Domain, Policy

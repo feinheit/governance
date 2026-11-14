@@ -24,7 +24,8 @@ anderer.
   Seiten der Kreise und Rollen verlinken ihre.
 - **Suchen** findet Personen (nach Name, Kurzname und Mailadresse, mit ihren Kreisen),
   Rollen, Accountabilities, Domains, Policies, Links (nach Titel und
-  Beschreibung) und Notizen (nach Titel und Text), die alle eingegebenen Wörter enthalten. Die
+  Beschreibung), Notizen (nach Titel und Text), Checklisten-Punkte und
+  Metriken, die alle eingegebenen Wörter enthalten. Die
   Beschreibung eines Links kann Stichwörter aufzählen, z.B. für einen
   Abschnitt des Handbuchs.
 

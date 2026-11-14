@@ -55,6 +55,18 @@ TABLES = [
         ["Note", "Role"],
         lambda note: (link(note["title"], note["url"]), note["role"]),
     ),
+    *(
+        (
+            key,
+            title,
+            ["ID>", "Description", "Role"],
+            lambda item: (str(item["id"]), item["description"], item["role"]),
+        )
+        for key, title in [
+            ("checklist_items", "Checklist items"),
+            ("metrics", "Metrics"),
+        ]
+    ),
 ]
 
 
@@ -62,8 +74,9 @@ TABLES = [
 @click.argument("terms", nargs=-1, required=True)
 @click.option("--json", "as_json", is_flag=True)
 def search(terms, as_json):
-    """People, roles, accountabilities, domains, policies, links and notes
-    containing all TERMS (ignoring case and accents)"""
+    """People, roles, accountabilities, domains, policies, links, notes,
+    checklist items and metrics containing all TERMS (ignoring case and
+    accents)"""
     data = request("GET", "search/", params={"q": " ".join(terms)})
     if as_json:
         echo_json(data)

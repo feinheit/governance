@@ -6,8 +6,10 @@ from governance.accounts.models import User
 from governance.roles.models import (
     Accountability,
     Assignment,
+    ChecklistItem,
     Domain,
     Link,
+    Metric,
     Note,
     Policy,
     Role,
@@ -50,6 +52,26 @@ class SearchTest(TestCase):
             self.client.get("/search/", {"q": "nothing"}), "Nothing found"
         )
         self.assertNotContains(self.client.get("/search/"), "Nothing found")
+
+    def test_checklists_and_metrics(self):
+        """By description, leading to the role's page; not those of archived
+        roles"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        circle = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=circle)
+        old = Role.objects.create(
+            name="Old cook", circle=circle, archived_on=dt.date(2026, 1, 1)
+        )
+        ChecklistItem.objects.create(role=cook, description="Fridge cleaned")
+        ChecklistItem.objects.create(role=old, description="Fridge defrosted")
+        Metric.objects.create(
+            role=circle, description="Fridge temperature", whole_circle=True
+        )
+        response = self.client.get("/search/", {"q": "fridge"})
+        self.assertContains(response, "Fridge cleaned")
+        self.assertContains(response, "Fridge temperature")
+        self.assertContains(response, cook.get_absolute_url())
+        self.assertNotContains(response, "Fridge defrosted")
 
     def test_links(self):
         """By title and description (keywords), leading to the page and to

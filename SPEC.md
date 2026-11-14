@@ -740,7 +740,8 @@ verify the mails; removed once they've proven themselves.
   description, which may hold keywords: rules for people as employees
   live in the handbook, not in policies, and are found through links of
   the roles keeping them) and notes (title and body, opening the note on
-  its role's page), all terms matching,
+  its role's page), checklist items and metrics (their descriptions,
+  leading to the role reporting them), all terms matching,
   ignoring case and accents, in the texts as the pages show them
   (mentions with the current names, the core roles' constitutional
   texts); snippets as plain text. The API and `gov search` too.
