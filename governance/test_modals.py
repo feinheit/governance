@@ -52,7 +52,7 @@ class ModalTest(TestCase):
             {
                 "description": "Soups per week",
                 "frequency": "weekly",
-                "reported_by": self.kitchen.pk,
+                "reported_by": f"{self.kitchen.pk}-whole",
             },
             **MODAL,
         )
@@ -62,7 +62,8 @@ class ModalTest(TestCase):
 
         # Without the header as before
         response = self.client.post(
-            self.url, {"description": "Soups served", "reported_by": self.kitchen.pk}
+            self.url,
+            {"description": "Soups served", "reported_by": f"{self.kitchen.pk}-whole"},
         )
         self.assertRedirects(response, f"/roles/{self.kitchen.pk}/")
 

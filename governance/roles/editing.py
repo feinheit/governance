@@ -2,6 +2,7 @@
 items, links and notes, the order of accountabilities and domains, see the permissions in the decisions of SPEC.md"""
 
 from functools import partial
+from typing import NamedTuple
 
 from django import forms
 from django.core.exceptions import PermissionDenied
@@ -115,42 +116,96 @@ def order_key(item):
     return str(item.pk)
 
 
-def reporters(circle):
-    """Who reports a checklist item or metric reviewed by the circle (or by
-    its super-circle): ``{key: (role, whole_circle, label)}``; a sub-circle
-    is one of the circle's roles, reporting in the circle"""
-    choices = {
-        str(circle.pk): (
-            circle,
-            True,
-            gettext("%(circle)s (whole circle)") % {"circle": circle},
+class Reporter(NamedTuple):
+    """A choice of who reports a checklist item or metric"""
+
+    role: Role
+    whole_circle: bool
+    label: str
+    # In the group of the circle's roles
+    grouped: bool = False
+
+    @property
+    def key(self):
+        """The choice's value: two choices may have the same role, the circle"""
+        return f"{self.role.pk}-whole" if self.whole_circle else str(self.role.pk)
+
+
+def circle_reporters(circle):
+    """A circle's page: the whole circle, the circle in its super-circle and
+    the circle's roles (a sub-circle too) in its own"""
+    reporters = [
+        Reporter(
+            role=circle,
+            whole_circle=True,
+            label=gettext("%(circle)s (whole circle)") % {"circle": circle},
+        )
+    ]
+    if circle.circle and not circle.circle.archived_on:
+        reporters.append(
+            Reporter(
+                role=circle,
+                whole_circle=False,
+                label=gettext("%(circle)s in %(super_circle)s")
+                % {"circle": circle, "super_circle": circle.circle},
+            )
+        )
+    reporters.extend(
+        Reporter(role=role, whole_circle=False, label=role.name, grouped=True)
+        for role in circle.roles.active().order_by("position", "name")
+    )
+    return reporters
+
+
+def role_reporters(role):
+    """A role's page: the role in its circle"""
+    if not role.circle:
+        return []
+    return [
+        Reporter(
+            role=role,
+            whole_circle=False,
+            label=gettext("%(role)s in %(circle)s")
+            % {"role": role, "circle": role.circle},
+        )
+    ]
+
+
+def page_reporters(request, item):
+    """The choices of the page the form was opened on: a circle's page
+    passes ``?circle=``, adding on a circle's page adds to the circle"""
+    pk = request.GET.get("circle", "")
+    page = pk.isdigit() and Role.objects.active().circles().filter(pk=pk).first()
+    if page:
+        return circle_reporters(page)
+    if item.role.is_circle:
+        return circle_reporters(item.role)
+    return role_reporters(item.role)
+
+
+def item_reporters(request, item, model):
+    """The choices of who reports a checklist item or metric: the page's,
+    those the user may edit it for, and the item's current one in any case
+    (e.g. a role's item of the whole circle, from when it was a circle)"""
+    if model not in {Metric, ChecklistItem}:
+        return None
+    choices = {reporter.key: reporter for reporter in page_reporters(request, item)}
+    current = Reporter(
+        role=item.role,
+        whole_circle=item.whole_circle,
+        label=gettext("%(circle)s (whole circle)") % {"circle": item.role}
+        if item.whole_circle
+        else str(item.role),
+    )
+    choices.setdefault(current.key, current)
+    return {
+        key: reporter
+        for key, reporter in choices.items()
+        if key == current.key
+        or can_edit_items(
+            request.user, reporter.role, model, whole_circle=reporter.whole_circle
         )
     }
-    for role in circle.roles.active().order_by("position", "name"):
-        choices[str(role.pk)] = (role, False, role.name)
-    if circle.circle and not circle.circle.archived_on:
-        choices[f"{circle.pk}-up"] = (
-            circle,
-            False,
-            gettext("%(circle)s in %(super_circle)s")
-            % {"circle": circle, "super_circle": circle.circle},
-        )
-    return choices
-
-
-def reporter_choices(reporters):
-    """The circle's two first (the whole circle, the circle in its
-    super-circle), then its roles in a group; the choices of a role's page
-    (``role_reporters()``, ``item_reporters()``) without a group"""
-    circle, roles = [], []
-    for key, (_role, whole, label) in reporters.items():
-        ungrouped = whole or key.endswith(("-up", "-role", "-current"))
-        (circle if ungrouped else roles).append((key, label))
-    return [
-        ("", BLANK_CHOICE_LABEL),
-        *circle,
-        *([(_("Roles"), roles)] if roles else []),
-    ]
 
 
 class ItemForm(ModelForm):
@@ -159,35 +214,43 @@ class ItemForm(ModelForm):
         widgets = {"description": forms.Textarea(attrs={"rows": 2})}
 
     def __init__(self, *args, reporters=None, **kwargs):
+        """``reporters``: ``{key: Reporter}`` (``item_reporters()``)"""
         super().__init__(*args, **kwargs)
         self.reporters = reporters
-        if reporters:
-            adding = self.instance._state.adding
-            current = (self.instance.role_id, self.instance.whole_circle)
-            if not adding:
-                initial = next(
-                    key
-                    for key, (role, whole, _label) in reporters.items()
-                    if (role.pk, whole) == current
-                )
-            else:
-                # Chosen when adding, unless there's only one choice (a
-                # role's page)
-                initial = next(iter(reporters)) if len(reporters) == 1 else None
-            self.fields["reported_by"] = forms.ChoiceField(
-                label=_("Reported by"),
-                choices=reporter_choices(reporters),
-                # Existing ones stay unchanged without it, so do new ones
-                # with only one choice
-                required=adding and len(reporters) > 1,
-                initial=initial,
-            )
-            self.order_fields(["description", "reported_by"])
+        if not reporters:
+            return
+        adding = self.instance._state.adding
+        if not adding:
+            initial = Reporter(
+                role=self.instance.role,
+                whole_circle=self.instance.whole_circle,
+                label="",
+            ).key
+        elif len(reporters) == 1:  # A role's page
+            initial = next(iter(reporters))
+        else:  # Chosen explicitly
+            initial = None
+        ungrouped = [(k, r.label) for k, r in reporters.items() if not r.grouped]
+        grouped = [(k, r.label) for k, r in reporters.items() if r.grouped]
+        self.fields["reported_by"] = forms.ChoiceField(
+            label=_("Reported by"),
+            choices=[
+                ("", BLANK_CHOICE_LABEL),
+                *ungrouped,
+                *([(_("Roles"), grouped)] if grouped else []),
+            ],
+            # Without it, existing ones stay unchanged, so do new ones with
+            # only one choice
+            required=adding and len(reporters) > 1,
+            initial=initial,
+        )
+        self.order_fields(["description", "reported_by"])
 
     def save(self, *args, **kwargs):
         if self.reporters and (key := self.cleaned_data.get("reported_by")):
-            role, whole, _label = self.reporters[key]
-            self.instance.role, self.instance.whole_circle = role, whole
+            reporter = self.reporters[key]
+            self.instance.role = reporter.role
+            self.instance.whole_circle = reporter.whole_circle
         return super().save(*args, **kwargs)
 
 
@@ -196,56 +259,6 @@ def item_form(model):
     if model in FIELDS:
         meta |= {"fields": FIELDS[model], "widgets": {}}
     return type("Form", (ItemForm,), {"Meta": type("Meta", (ItemForm.Meta,), meta)})
-
-
-def role_reporters(role):
-    """A role's page: the role reports it in its circle; the whole circle's
-    of a role only if it's set already (a circle's, of old)"""
-    return {
-        f"{role.pk}-role": (
-            role,
-            False,
-            gettext("%(role)s in %(circle)s") % {"role": role, "circle": role.circle},
-        )
-    }
-
-
-def item_reporters(request, item, model):
-    """The choices of who reports a checklist item or metric: on a circle's
-    page (``?circle=``, or adding to a circle) the circle's and its roles',
-    on a role's page the role only; those the user may edit it for, the
-    current one in any case"""
-    if model not in {Metric, ChecklistItem}:
-        return None
-    current = (item.role_id, item.whole_circle)
-    choices = None
-    if (pk := request.GET.get("circle", "")).isdigit():
-        page = Role.objects.active().circles().filter(pk=pk).first()
-        if page:
-            choices = reporters(page)
-            if not any((r.pk, w) == current for r, w, _label in choices.values()):
-                choices = None
-    if choices is None:
-        if item.role.is_circle:
-            choices = reporters(item.role)
-        elif item.role.circle:
-            choices = role_reporters(item.role)
-        else:
-            return None
-    if not any((r.pk, w) == current for r, w, _label in choices.values()):
-        choices[f"{item.role_id}-current"] = (
-            item.role,
-            item.whole_circle,
-            gettext("%(circle)s (whole circle)") % {"circle": item.role}
-            if item.whole_circle
-            else str(item.role),
-        )
-    return {
-        key: (role, whole, label)
-        for key, (role, whole, label) in choices.items()
-        if (role.pk, whole) == current
-        or can_edit_items(request.user, role, model, whole_circle=whole)
-    }
 
 
 def item_edit(request, kind, pk=None, role_pk=None):
@@ -259,7 +272,8 @@ def item_edit(request, kind, pk=None, role_pk=None):
         role = get_object_or_404(Role, pk=role_pk)
         item = model(role=role, position=next_position(role, model))
         if model in {Metric, ChecklistItem}:
-            # Added on a circle's page: the whole circle's, by default
+            # Added on a circle's page: checks the permission for the whole
+            # circle's, "Reported by" chooses
             item.whole_circle = role.is_circle
     whole_circle = getattr(item, "whole_circle", False)
     if not (

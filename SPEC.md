@@ -147,7 +147,7 @@ accountability texts are known where proposals or `roles.json` have them.
   reviewing them edit metrics, anybody edits checklist items (Holacracy
   defines no process), the audit log keeps their history. A circle's page
   lists its roles' items too and those its sub-circles report in it; the
-  form's "Reported by" (`editing.reporters()`) chooses among the circle
+  form's "Reported by" (`editing.circle_reporters()`) chooses among the circle
   itself, its roles (a sub-circle reporting in it, grouped) and the circle
   in its super-circle; a role's page only the role in its circle (and the
   whole circle's, if a role's item has it already, `role_reporters()`).

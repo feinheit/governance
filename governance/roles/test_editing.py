@@ -128,7 +128,7 @@ class EditingTest(TestCase):
                 "description": "Fridge cleaned",
                 "frequency": "monthly",
                 "link": "",
-                "reported_by": self.kitchen.pk,
+                "reported_by": f"{self.kitchen.pk}-whole",
             },
         )
         item = ChecklistItem.objects.get()
@@ -177,8 +177,8 @@ class EditingTest(TestCase):
         for reported_by, role, whole in [
             (f"{self.cook.pk}", self.cook, False),
             (f"{pastry.pk}", pastry, False),
-            (f"{self.kitchen.pk}-up", self.kitchen, False),
-            (f"{self.kitchen.pk}", self.kitchen, True),
+            (f"{self.kitchen.pk}", self.kitchen, False),
+            (f"{self.kitchen.pk}-whole", self.kitchen, True),
         ]:
             self.client.post(url, data | {"reported_by": reported_by})
             item = ChecklistItem.objects.latest("pk")
@@ -214,9 +214,9 @@ class EditingTest(TestCase):
         self.assertNotContains(response, "whole circle")
         self.assertNotContains(response, "optgroup")
         data = {"description": "Oven", "frequency": "", "link": ""}
-        self.client.post(url, data | {"reported_by": f"{self.kitchen.pk}"})
+        self.client.post(url, data | {"reported_by": f"{self.kitchen.pk}-whole"})
         self.assertFalse(ChecklistItem.objects.exists())  # Not a choice
-        self.client.post(url, data | {"reported_by": f"{self.cook.pk}-role"})
+        self.client.post(url, data | {"reported_by": f"{self.cook.pk}"})
         item = ChecklistItem.objects.get()
         self.assertEqual((item.role, item.whole_circle), (self.cook, False))
 
