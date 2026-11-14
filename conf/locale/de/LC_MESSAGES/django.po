@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 08:23+0100\n"
+"POT-Creation-Date: 2026-11-14 08:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -995,7 +995,7 @@ msgstr "Ein Beispiel einer vergangenen oder aktuellen Situation"
 msgid "How the proposal addresses the tension in the example"
 msgstr "Wie der Vorschlag die Spannung im Beispiel adressiert"
 
-#: governance/proposals/drafting.py
+#: governance/proposals/drafting.py governance/roles/editing.py
 #: governance/templates/history/role_as_of.html
 #: governance/templates/meetings/tactical_call.html
 #: governance/templates/roles/role_detail.html
@@ -3171,6 +3171,7 @@ msgstr "Wer Circle Lead ist, kann nicht Circle Rep sein (Verfassung 5.1.1). Die 
 
 #: governance/templates/roles/_governance_lists.txt
 #: governance/templates/roles/role_detail.html
+#: governance/templates/search/search.html
 msgid "Metrics"
 msgstr "Metriken"
 
@@ -3180,6 +3181,7 @@ msgid "in %(circle)s"
 msgstr "in %(circle)s"
 
 #: governance/templates/roles/_governance_lists.txt
+#: governance/templates/search/search.html
 msgid "Checklist items"
 msgstr "Checklistenpunkte"
 

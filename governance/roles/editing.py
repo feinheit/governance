@@ -138,6 +138,15 @@ def reporters(circle):
     return choices
 
 
+def reporter_choices(reporters):
+    """The circle's two first (the whole circle, the circle in its
+    super-circle), then its roles in a group"""
+    circle, roles = [], []
+    for key, (_role, whole, label) in reporters.items():
+        (circle if whole or key.endswith("-up") else roles).append((key, label))
+    return [*circle, *([(_("Roles"), roles)] if roles else [])]
+
+
 class ItemForm(ModelForm):
     class Meta:
         fields = ["description", "frequency", "link"]
@@ -150,7 +159,7 @@ class ItemForm(ModelForm):
             current = (self.instance.role_id, self.instance.whole_circle)
             self.fields["reported_by"] = forms.ChoiceField(
                 label=_("Reported by"),
-                choices=[(key, label) for key, (_r, _w, label) in reporters.items()],
+                choices=reporter_choices(reporters),
                 # Unchanged without it
                 required=False,
                 initial=next(

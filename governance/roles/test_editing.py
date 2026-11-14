@@ -149,13 +149,16 @@ class EditingTest(TestCase):
         self.client.force_login(self.eve)
         url = f"/roles/{self.kitchen.pk}/checklist/new/"
         response = self.client.get(url)
-        for label in [
-            "Kitchen (whole circle)",
-            "Cook",
-            "Pastry",
-            "Kitchen in Example Ltd",
-        ]:
-            self.assertContains(response, label)
+        page = response.content.decode()
+        # The circle's two first, then its roles
+        self.assertLess(
+            page.index("Kitchen (whole circle)"),
+            page.index("Kitchen in Example Ltd"),
+            page.index('<optgroup label="Roles">'),
+        )
+        self.assertLess(page.index('<optgroup label="Roles">'), page.index(">Cook<"))
+        self.assertLess(page.index(">Cook<"), page.index("</optgroup>"))
+        self.assertIn(">Pastry<", page)
         data = {"description": "Oven", "frequency": "", "link": ""}
         for reported_by, role, whole in [
             (f"{self.cook.pk}", self.cook, False),
