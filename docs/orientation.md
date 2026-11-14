@@ -116,5 +116,5 @@ proposals, creates drafts and manages the links and notes of roles and circles; 
 
 The command line tool `gov` uses the API and gets its token by itself
 (`gov login`, confirmed in the browser). It shows circles, roles and
-proposals, searches, prepares drafts and manages links and notes (`gov links`, `gov notes`); how to install it is on the
+proposals, searches, prepares drafts and manages links, notes, metrics and checklist items (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); how to install it is on the
 "API tokens" page.

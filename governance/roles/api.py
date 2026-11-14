@@ -14,7 +14,17 @@ from governance.history.update import update_today
 from governance.roles.context import affecting
 from governance.roles.editing import can_edit_items, next_position
 from governance.roles.export import governance_markdown
-from governance.roles.models import Assignment, Domain, Link, Note, Policy, Role
+from governance.roles.models import (
+    FREQUENCY_CHOICES,
+    Assignment,
+    ChecklistItem,
+    Domain,
+    Link,
+    Metric,
+    Note,
+    Policy,
+    Role,
+)
 from governance.search import search_results
 
 
@@ -95,6 +105,32 @@ class NoteOut(Schema):
         return f"{absolute(obj.role)}#note-{obj.pk}"
 
 
+class ItemOut(Schema):
+    """A metric or checklist item"""
+
+    id: int
+    role_id: int
+    role: str
+    # A circle's own item, reported by the whole circle in its own tactical
+    # meetings; else the role (a sub-circle too) reports it in its circle's
+    whole_circle: bool
+    # The circle whose tactical meetings review it
+    reported_in_id: int | None
+    description: str
+    # weekly, monthly, quarterly, yearly or empty
+    frequency: str
+    link: str
+
+    @staticmethod
+    def resolve_role(obj):
+        return obj.role.name
+
+    @staticmethod
+    def resolve_reported_in_id(obj):
+        circle = obj.reported_in
+        return circle.pk if circle else None
+
+
 class RoleOut(Schema):
     id: int
     name: str
@@ -114,6 +150,9 @@ class RoleOut(Schema):
     links: list[LinkOut]
     # What helps doing the role's work, in Markdown
     notes: list[NoteOut]
+    # Its own, not those of a circle's roles
+    metrics: list[ItemOut]
+    checklist_items: list[ItemOut]
     url: str
 
 
@@ -254,6 +293,8 @@ def role(request, pk: int):
         else [],
         "links": list(role.links.all()),
         "notes": list(role.notes.select_related("role")),
+        "metrics": list(role.metrics.select_related("role__circle")),
+        "checklist_items": list(role.checklistitems.select_related("role__circle")),
         "url": absolute(role),
     }
 
@@ -350,6 +391,96 @@ def note_delete(request, pk: int):
     # Deleting clears the instance's ID, not the copy's
     out = copy.copy(note)
     note.delete()
+    update_today()
+    return out
+
+
+class ItemIn(Schema):
+    description: str
+    frequency: str = ""
+    link: str = ""
+    whole_circle: bool = False
+
+
+class ItemPatch(Schema):
+    description: str | None = None
+    frequency: str | None = None
+    link: str | None = None
+    # Another role reports it (its ID)
+    role_id: int | None = None
+    whole_circle: bool | None = None
+
+
+ITEM_MODELS = {"metrics": Metric, "checklist": ChecklistItem}
+
+
+def item_model(kind):
+    if kind not in ITEM_MODELS:
+        raise HttpError(404, "Not found: metrics or checklist.")
+    return ITEM_MODELS[kind]
+
+
+def save_role_item(request, item, data):
+    """Metrics need the Circle Leads of the circle reviewing them, before and
+    after; only circles have items of the whole circle"""
+    if (role_id := data.pop("role_id", None)) is not None:
+        item.role = get_object_or_404(Role.objects.active(), pk=role_id)
+    if (whole := data.pop("whole_circle", None)) is not None:
+        item.whole_circle = whole
+    if item.whole_circle != item.role.is_circle and not item.role.circle_id:
+        raise HttpError(400, "The anchor circle's items are the whole circle's.")
+    if item.whole_circle and not item.role.is_circle:
+        raise HttpError(400, "whole_circle: only for circles.")
+    if data.get("frequency", "") not in {"", *dict(FREQUENCY_CHOICES)}:
+        raise HttpError(
+            400, f"frequency: one of {', '.join(dict(FREQUENCY_CHOICES))} or empty."
+        )
+    if not can_edit_items(
+        request.user, item.role, type(item), whole_circle=item.whole_circle
+    ):
+        raise HttpError(403, "Not allowed for this role.")
+    return save_item(item, data)
+
+
+def item_create(request, pk, model, data):
+    role = get_object_or_404(Role, pk=pk)
+    item = model(role=role, position=next_position(role, model))
+    return save_role_item(request, item, data.dict())
+
+
+@router.post("roles/{int:pk}/metrics/", response=ItemOut)
+def metric_create(request, pk: int, data: ItemIn):
+    """A metric of the role or circle"""
+    return item_create(request, pk, Metric, data)
+
+
+@router.post("roles/{int:pk}/checklist/", response=ItemOut)
+def checklist_item_create(request, pk: int, data: ItemIn):
+    """A checklist item of the role or circle"""
+    return item_create(request, pk, ChecklistItem, data)
+
+
+def existing_item(request, kind, pk):
+    item = get_object_or_404(item_model(kind).objects.select_related("role"), pk=pk)
+    if not can_edit_items(
+        request.user, item.role, type(item), whole_circle=item.whole_circle
+    ):
+        raise HttpError(403, "Not allowed for this role.")
+    return item
+
+
+@router.patch("items/{kind}/{int:pk}/", response=ItemOut)
+def item_update(request, kind: str, pk: int, data: ItemPatch):
+    item = existing_item(request, kind, pk)
+    return save_role_item(request, item, data.dict(exclude_none=True))
+
+
+@router.delete("items/{kind}/{int:pk}/", response=ItemOut)
+def item_delete(request, kind: str, pk: int):
+    """Returns the deleted metric or checklist item"""
+    item = existing_item(request, kind, pk)
+    out = copy.copy(item)
+    item.delete()
     update_today()
     return out
 

@@ -120,5 +120,5 @@ unter `/api/docs`.
 
 Das Kommandozeilen-Tool `gov` nutzt die API und holt sich sein Token
 selbst (`gov login`, im Browser bestätigen). Es zeigt Kreise, Rollen und
-Vorschläge, sucht, bereitet Entwürfe vor und verwaltet Links und Notizen (`gov links`, `gov notes`); wie du es installierst,
+Vorschläge, sucht, bereitet Entwürfe vor und verwaltet Links, Notizen, Metriken und Checklisten-Punkte (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); wie du es installierst,
 steht auf der Seite "API-Tokens".

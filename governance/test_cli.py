@@ -489,6 +489,51 @@ class CLITest(TestCase):
         )
         self.assertIn("No links.", self.gov("links", "list", self.kitchen.pk).output)
 
+    def test_checklist_and_metrics(self):
+        """Adding, moving, listing and removing checklist items and metrics;
+        metrics need the Circle Leads"""
+        result = self.gov(
+            "checklist", "add", self.cook.pk, "Fridge cleaned", "--frequency", "weekly"
+        )
+        self.assertIn("Fridge cleaned", result.output)
+        item = json.loads(self.gov("checklist", "list", self.cook.pk, "--json").output)[
+            0
+        ]
+        self.assertEqual(
+            (item["whole_circle"], item["reported_in_id"]), (False, self.kitchen.pk)
+        )
+        # Not reported by the anchor circle in a circle above
+        result = self.gov("checklist", "update", item["id"], "--role", self.kitchen.pk)
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("400", result.output)
+        self.gov(
+            "checklist",
+            "update",
+            item["id"],
+            "--role",
+            self.kitchen.pk,
+            "--whole-circle",
+        )
+        result = self.gov("checklist", "list", self.kitchen.pk)
+        self.assertIn("Kitchen (whole circle)", result.output)
+        self.assertIn(
+            "No checklist items.", self.gov("checklist", "list", self.cook.pk).output
+        )
+        result = self.gov("checklist", "update", item["id"])
+        self.assertIn("Nothing to change", result.output)
+        self.assertIn(
+            "Removed Fridge cleaned", self.gov("checklist", "remove", item["id"]).output
+        )
+
+        result = self.gov("metrics", "add", self.cook.pk, "Soups sold")
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("403", result.output)
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=self.ada
+        )
+        self.gov("metrics", "add", self.cook.pk, "Soups sold")
+        self.assertIn("Soups sold", self.gov("metrics", "list", self.cook.pk).output)
+
     def test_policies(self):
         from governance.roles.models import Domain, Policy
 
