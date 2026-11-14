@@ -75,17 +75,26 @@ def mark_reps(circles):
 
 def role_items(user, role, model):
     """The role's checklist items or metrics grouped by their frequency; for a
-    circle also those of its roles, like GlassFrog shows them"""
-    # Not the sub-circles' own items, they're on the sub-circles' pages
-    roles = [
-        role,
-        *(role.roles.active().filter(is_circle=False) if role.is_circle else []),
-    ]
-    items = list(model.objects.filter(role__in=roles).select_related("role"))
+    circle also those of its roles, like GlassFrog shows them, and those its
+    sub-circles report in it"""
+    query = Q(role=role)
+    if role.is_circle:
+        # Not the sub-circles' own items, they're on the sub-circles' pages
+        roles = role.roles.active()
+        query |= Q(role__in=roles, whole_circle=False)
+    items = list(model.objects.filter(query).select_related("role__circle"))
     for item in items:
-        item.editable = can_edit_items(user, item.role, model)
-        # Items of the circle's roles name their role
+        item.editable = can_edit_items(
+            user, item.role, model, whole_circle=item.whole_circle
+        )
+        # Items of the circle's roles name their role, the circle's own
+        # reported in the super-circle name the super-circle
         item.other_role = item.role if item.role_id != role.pk else None
+        item.super_circle = (
+            item.role.circle
+            if item.role_id == role.pk and role.is_circle and not item.whole_circle
+            else None
+        )
     return by_frequency(items)
 
 
@@ -161,7 +170,10 @@ def role_detail(request, pk):
         "can_end_assignment": can_end_assignment(request.user, role),
         "can_change_settings": can_change_settings(request.user, role),
         "can_edit_strategy": can_edit_strategy(request.user, role),
-        "can_edit_metrics": can_edit_items(request.user, role, Metric),
+        # Added as the whole circle's on a circle's page
+        "can_edit_metrics": can_edit_items(
+            request.user, role, Metric, whole_circle=role.is_circle
+        ),
         "can_edit_checklist": can_edit_items(request.user, role, ChecklistItem),
         # Links and notes in one card, anybody orders them (roles/editing.py)
         "can_edit_references": can_edit_items(request.user, role, Link),

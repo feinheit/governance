@@ -10,13 +10,18 @@
     </div>
     {% if item.other_role %}
       <div class="wb-row-meta"><a href="{{ item.other_role.get_absolute_url }}">{{ item.other_role }}</a></div>
+    {% elif item.super_circle %}
+      {# Reported in the super-circle's tactical meetings #}
+      <div class="wb-row-meta">
+        {% blocktranslate with circle=item.super_circle url=item.super_circle.get_absolute_url %}in <a href="{{ url }}">{{ circle }}</a>{% endblocktranslate %}
+      </div>
     {% endif %}
   </div>
   {% if can_edit %}
     <div class="d-flex gap-1 flex-shrink-0">
       <a
         {% button_class can_edit title=_("Edit") %}
-        href="{% url 'role_item' kind item.pk %}"
+        href="{% url 'role_item' kind item.pk %}{% if role.is_circle %}?circle={{ role.pk }}{% endif %}"
         data-modal
       >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>
       <a

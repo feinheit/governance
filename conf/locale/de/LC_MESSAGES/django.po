@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-13 12:25+0100\n"
+"POT-Creation-Date: 2026-11-14 08:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1716,6 +1716,20 @@ msgstr "Die Circle Leads legen die Strategie ausserhalb der Governance fest. Die
 
 #: governance/roles/editing.py
 #, python-format
+msgid "%(circle)s (whole circle)"
+msgstr "%(circle)s (ganzer Kreis)"
+
+#: governance/roles/editing.py
+#, python-format
+msgid "%(circle)s in %(super_circle)s"
+msgstr "%(circle)s in %(super_circle)s"
+
+#: governance/roles/editing.py
+msgid "Reported by"
+msgstr "Berichtet von"
+
+#: governance/roles/editing.py
+#, python-format
 msgid "Metric of %(role)s"
 msgstr "Metrik von %(role)s"
 
@@ -1892,6 +1906,14 @@ msgstr "Beschreibung"
 #: governance/roles/models.py
 msgid "frequency"
 msgstr "Häufigkeit"
+
+#: governance/roles/models.py
+msgid "whole circle"
+msgstr "ganzer Kreis"
+
+#: governance/roles/models.py
+msgid "A circle's own item, reported by the whole circle in its own tactical meetings; else the role (a sub-circle too) reports it in its circle's."
+msgstr "Ein eigener Punkt des Kreises, den der ganze Kreis in seinen eigenen Tactical Meetings berichtet; sonst berichtet ihn die Rolle (auch ein Sub-Kreis) in denen ihres Kreises."
 
 #: governance/roles/models.py
 msgid "metric"
@@ -3153,6 +3175,11 @@ msgid "Metrics"
 msgstr "Metriken"
 
 #: governance/templates/roles/_governance_lists.txt
+#, python-format
+msgid "in %(circle)s"
+msgstr "in %(circle)s"
+
+#: governance/templates/roles/_governance_lists.txt
 msgid "Checklist items"
 msgstr "Checklistenpunkte"
 
@@ -3164,6 +3191,11 @@ msgstr "Notiz"
 #: governance/templates/roles/circle_members.html
 msgid "Holds the role"
 msgstr "Hat die Rolle"
+
+#: governance/templates/roles/_role_item.html
+#, python-format
+msgid "in <a href=\"%(url)s\">%(circle)s</a>"
+msgstr "in <a href=\"%(url)s\">%(circle)s</a>"
 
 #: governance/templates/roles/_role_leads_card.html
 #: governance/templates/roles/assignments.html

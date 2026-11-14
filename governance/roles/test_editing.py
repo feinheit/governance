@@ -137,6 +137,54 @@ class EditingTest(TestCase):
             self.client.get(f"/items/nonsense/{item.pk}/").status_code, 403
         )
 
+    def test_reported_by(self):
+        """The circle's page chooses who reports an item: the whole circle,
+        one of its roles (a sub-circle in this circle's meetings) or the
+        circle in its super-circle's"""
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        anchor.create_core_roles()
+        self.kitchen.circle = anchor
+        self.kitchen.save()
+        pastry = Role.objects.create(name="Pastry", is_circle=True, circle=self.kitchen)
+        self.client.force_login(self.eve)
+        url = f"/roles/{self.kitchen.pk}/checklist/new/"
+        response = self.client.get(url)
+        for label in [
+            "Kitchen (whole circle)",
+            "Cook",
+            "Pastry",
+            "Kitchen in Example Ltd",
+        ]:
+            self.assertContains(response, label)
+        data = {"description": "Oven", "frequency": "", "link": ""}
+        for reported_by, role, whole in [
+            (f"{self.cook.pk}", self.cook, False),
+            (f"{pastry.pk}", pastry, False),
+            (f"{self.kitchen.pk}-up", self.kitchen, False),
+            (f"{self.kitchen.pk}", self.kitchen, True),
+        ]:
+            self.client.post(url, data | {"reported_by": reported_by})
+            item = ChecklistItem.objects.latest("pk")
+            self.assertEqual((item.role, item.whole_circle), (role, whole))
+            # Editing moves it
+            self.client.post(
+                f"/items/checklist/{item.pk}/?circle={self.kitchen.pk}",
+                data | {"reported_by": f"{self.cook.pk}"},
+            )
+            item.refresh_from_db()
+            self.assertEqual((item.role, item.whole_circle), (self.cook, False))
+        self.assertEqual(
+            self.client.post(url, data | {"reported_by": f"{anchor.pk}"}).status_code,
+            200,
+        )  # Not one of the circle's
+
+        # Metrics: the Circle Leads of the circle reporting them; Ada leads
+        # the kitchen, not the anchor circle
+        self.client.force_login(self.ada)
+        response = self.client.get(f"/roles/{self.kitchen.pk}/metrics/new/")
+        self.assertContains(response, "Cook")
+        self.assertNotContains(response, "Kitchen in Example Ltd")
+
     def test_checklists_and_metrics_cards(self):
         """Two cards like the two steps of the tactical meetings"""
         ChecklistItem.objects.create(role=self.kitchen, description="Fridge cleaned")

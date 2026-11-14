@@ -135,11 +135,22 @@ accountability texts are known where proposals or `roles.json` have them.
   assignments per focus. Circle membership isn't stored: the
   Role Leads of a circle's roles plus the Circle Leads and Circle Reps of its
   sub-circles (`permissions.members()`).
-- **`Metric`**, **`ChecklistItem`**: `role` (a circle for its own items),
+- **`Metric`**, **`ChecklistItem`**: `role`, `whole_circle` (a role
+  reports its items in its circle's tactical meetings, a sub-circle like
+  any role, GlassFrog's items of a sub-circle's role; a circle's own items,
+  reported by the whole circle in its own meetings, are `whole_circle`,
+  so nothing changes when a role becomes a circle, a circle turning back
+  into a role reports them itself; `RoleItem.reported_in`, decided
+  2026-11-14, issues #2 and #3),
   `description`, `frequency` (weekly, monthly, quarterly, yearly or none;
-  only groups them), `link`. Operational: the Circle Leads edit metrics,
-  anybody edits checklist items (Holacracy defines no process), the audit
-  log keeps their history. A circle's page lists its roles' items too.
+  only groups them), `link`. Operational: the Circle Leads of the circle
+  reviewing them edit metrics, anybody edits checklist items (Holacracy
+  defines no process), the audit log keeps their history. A circle's page
+  lists its roles' items too and those its sub-circles report in it; the
+  form's "Reported by" (`editing.reporters()`) chooses among the circle
+  itself, its roles (a sub-circle reporting in it) and the circle in its
+  super-circle. The import mapped GlassFrog's items of a sub-circle's role
+  to the sub-circle's own, fixed by hand after the switchover.
   GlassFrog's "global" items, shown everywhere, aren't supported; items
   without circle and role belong to the anchor.
 - **`Link`**: `role`, `title`, `url`, `description`; anybody edits them.
@@ -518,7 +529,7 @@ checked, some unchecked to narrow the invitation (3.1); the caller fills one of 
 a badge of their own, hollow and dashed ("Ad hoc Tactical Meeting",
 `Meeting.is_ad_hoc`). Steps: check-in, checklist review, metrics review (the
 invited roles' entries, for regular ones also the circle's own, not a
-sub-circle's own), progress updates (the links of the circle and the
+sub-circle's whole circle's), progress updates (the links of the circle and the
 invited roles, the outcomes and links of the circle's last three
 tactical meetings having some, "Show earlier meetings" ten, then ten
 more, `?earlier=`, which the page's updates keep; `progress_context()`),

@@ -160,22 +160,24 @@ def tactical_context(meeting, *, step, earlier=None):
     """Checklists and metrics of the invited roles (and the circle's own)"""
     if meeting.kind != Meeting.TACTICAL:
         return {}
-    # A sub-circle's own items are reported in the sub-circle's meetings,
-    # not in those of the circle containing it
+    # The invited roles report theirs, sub-circles too; a sub-circle's
+    # whole circle's items are reported in the sub-circle's meetings
+    items = Q(role__in=meeting.invited_roles.all(), whole_circle=False)
     roles = list(meeting.invited_roles.filter(is_circle=False))
     if meeting.circle:
-        roles.append(meeting.circle)
+        roles.append(meeting.circle)  # Its links (progress_context())
+        items |= Q(role=meeting.circle, whole_circle=True)
     return {
         "tactical_steps": TACTICAL_STEP_CHOICES,
         "invited_roles": meeting.invited_roles.select_related("circle").order_by(
             "circle__name", "position", "name"
         ),
         "checklist_items": ChecklistItem.objects
-        .filter(role__in=roles)
+        .filter(items)
         .select_related("role")
         .order_by("role__name", "position"),
         "metrics": Metric.objects
-        .filter(role__in=roles)
+        .filter(items)
         .select_related("role")
         .order_by("role__name", "position"),
     } | (progress_context(meeting, roles, earlier) if step == "progress" else {})

@@ -10,11 +10,11 @@
 {% endfor %}
 {% endif %}{% if role.metrics.all %}**{% translate "Metrics" %}**
 
-{% for item in role.metrics.all %}- {{ item.description }}{% if item.frequency %} ({{ item.get_frequency_display }}){% endif %}{% if item.link %}, {{ item.link }}{% endif %}
+{% for item in role.metrics.all %}- {{ item.description }}{% if item.frequency %} ({{ item.get_frequency_display }}){% endif %}{% if item.link %}, {{ item.link }}{% endif %}{% if role.is_circle and not item.whole_circle %} ({% blocktranslate with circle=role.circle %}in {{ circle }}{% endblocktranslate %}){% endif %}
 {% endfor %}
 {% endif %}{% if role.checklistitems.all %}**{% translate "Checklist items" %}**
 
-{% for item in role.checklistitems.all %}- {{ item.description }}{% if item.frequency %} ({{ item.get_frequency_display }}){% endif %}{% if item.link %}, {{ item.link }}{% endif %}
+{% for item in role.checklistitems.all %}- {{ item.description }}{% if item.frequency %} ({{ item.get_frequency_display }}){% endif %}{% if item.link %}, {{ item.link }}{% endif %}{% if role.is_circle and not item.whole_circle %} ({% blocktranslate with circle=role.circle %}in {{ circle }}{% endblocktranslate %}){% endif %}
 {% endfor %}
 {% endif %}{% if role.links.all %}**{% translate "Links" %}**
 

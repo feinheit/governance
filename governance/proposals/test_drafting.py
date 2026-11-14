@@ -867,6 +867,25 @@ class DraftingTest(TestCase):
         other.refresh_from_db()
         self.assertTrue(other.is_circle)
 
+    def test_turned_back_circles_items(self):
+        """A circle turning back into a role reports the whole circle's items
+        itself, in its circle"""
+        from governance.roles.models import ChecklistItem
+
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=self.kitchen)
+        bakery.create_core_roles()
+        item = ChecklistItem.objects.create(
+            role=bakery, description="Ovens off", whole_circle=True
+        )
+        proposal = self.draft()
+        proposal.instructions = [
+            {"op": "remove", "path": f"/roles/{bakery.pk}/supporting_circle"}
+        ]
+        proposal.save()
+        adopt(proposal)
+        item.refresh_from_db()
+        self.assertEqual(item.reported_in, self.kitchen)
+
     def test_circle_turned_back_explicitly(self):
         """Turning a circle back into a role on purpose closes it like
         losing its last roles does: its proposals are withdrawn, its meeting

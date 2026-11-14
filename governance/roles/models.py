@@ -405,7 +405,9 @@ def by_frequency(items, *, frequency=lambda item: item.frequency):
 class RoleItem(models.Model):
     """Something a role reports in the tactical meetings it's invited to
 
-    A circle's own items belong to the circle.
+    A role reports its items in its circle's meetings, a sub-circle like any
+    role; a circle's own items, reported by the whole circle in its own
+    meetings, are ``whole_circle``.
     """
 
     role = models.ForeignKey(
@@ -420,6 +422,15 @@ class RoleItem(models.Model):
     )
     link = models.URLField(_("link"), max_length=1000, blank=True)
     position = models.PositiveIntegerField(_("position"), default=0)
+    whole_circle = models.BooleanField(
+        _("whole circle"),
+        default=False,
+        help_text=_(
+            "A circle's own item, reported by the whole circle in its own"
+            " tactical meetings; else the role (a sub-circle too) reports it in"
+            " its circle's."
+        ),
+    )
     glassfrog_id = models.BigIntegerField(
         _("GlassFrog ID"), null=True, blank=True, unique=True
     )
@@ -430,6 +441,17 @@ class RoleItem(models.Model):
 
     def __str__(self):
         return self.description
+
+    @property
+    def reported_in(self):
+        """The circle whose tactical meetings review it"""
+        return reported_in(self.role, whole_circle=self.whole_circle)
+
+
+def reported_in(role, *, whole_circle=False):
+    """The circle whose tactical meetings review the role's items: the
+    role's circle, a circle itself for the whole circle's"""
+    return role if whole_circle else role.circle
 
 
 class Metric(RoleItem):

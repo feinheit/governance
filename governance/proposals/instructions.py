@@ -30,7 +30,15 @@ from governance.roles.assignments import (
     sync_circle_role_leads,
 )
 from governance.roles.constitution import CORE_ROLES, LEAD
-from governance.roles.models import Accountability, Assignment, Domain, Policy, Role
+from governance.roles.models import (
+    Accountability,
+    Assignment,
+    ChecklistItem,
+    Domain,
+    Metric,
+    Policy,
+    Role,
+)
 from governance.roles.permissions import members
 
 
@@ -519,6 +527,11 @@ class Applier:
         policies.update(archived_on=self.day)
         role.is_circle = False
         role.save(update_fields=["is_circle"])
+        # The whole circle's items are the role's, reported in its circle
+        for model in [Metric, ChecklistItem]:
+            model.objects.filter(role=role, whole_circle=True).update(
+                whole_circle=False
+            )
 
     def finish(self):
         # Circles left without roles of their own turn back into roles

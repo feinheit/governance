@@ -77,7 +77,15 @@ def roles(user):
         )
         for name, model in [("accountabilities", Accountability), ("domains", Domain)]
     }
-    items = ["role", "description", "frequency", "link", "position", "glassfrog_id"]
+    items = [
+        "role",
+        "description",
+        "frequency",
+        "link",
+        "position",
+        "whole_circle",
+        "glassfrog_id",
+    ]
     policies = nest(
         rows(
             Policy.objects.all(),

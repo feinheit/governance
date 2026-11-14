@@ -29,8 +29,12 @@ class TacticalTest(TestCase):
         Assignment.objects.create(role=self.sales, user=self.eve)
         ChecklistItem.objects.create(role=self.cook, description="Fridge cleaned")
         # The kitchen's own item, for its own meetings, not the anchor's
-        ChecklistItem.objects.create(role=self.kitchen, description="Kitchen tidy")
-        Metric.objects.create(role=self.kitchen, description="Meals served")
+        ChecklistItem.objects.create(
+            role=self.kitchen, description="Kitchen tidy", whole_circle=True
+        )
+        Metric.objects.create(
+            role=self.kitchen, description="Meals served", whole_circle=True
+        )
         Metric.objects.create(role=self.sales, description="Offers sent")
 
     def test_sub_circles_own_items(self):
@@ -53,6 +57,29 @@ class TacticalTest(TestCase):
         self.assertContains(
             self.client.get(self.kitchen.get_absolute_url()), "Kitchen tidy"
         )
+
+    def test_items_reported_in_super_circle(self):
+        """A circle reports some items in its super-circle's meetings, like a
+        role (GlassFrog's items of a sub-circle's role), not in its own"""
+        Metric.objects.create(role=self.kitchen, description="Covers per day")
+        Assignment.objects.create(
+            role=self.anchor.roles.get(core_role="secretary"), user=self.ada
+        )
+        self.client.force_login(self.ada)
+        for circle, shown in [(self.anchor, True), (self.kitchen, False)]:
+            self.client.post(f"/roles/{circle.pk}/meetings/new/", {"kind": "tactical"})
+            meeting = Meeting.objects.get(circle=circle)
+            self.client.post(f"/meetings/{meeting.pk}/step/", {"step": "metrics"})
+            response = self.client.get(meeting.get_absolute_url())
+            self.assertContains(response, "Offers sent" if shown else "Meals served")
+            (self.assertContains if shown else self.assertNotContains)(
+                response, "Covers per day"
+            )
+        # Both circles' pages list it
+        for circle in [self.anchor, self.kitchen]:
+            self.assertContains(
+                self.client.get(circle.get_absolute_url()), "Covers per day"
+            )
 
     def test_regular(self):
         self.client.force_login(self.ada)

@@ -8,13 +8,20 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.translation import gettext
+from django.utils.translation import gettext, gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from governance.forms import ModelForm
 from governance.history.update import update_today
 from governance.notifications import mails
-from governance.roles.models import ChecklistItem, Link, Metric, Note, Role
+from governance.roles.models import (
+    ChecklistItem,
+    Link,
+    Metric,
+    Note,
+    Role,
+    reported_in,
+)
 from governance.roles.permissions import ALLOWED, NOT_ALLOWED, can_lead
 
 
@@ -24,14 +31,16 @@ def can_edit_strategy(user, role):
     return can_lead(user, role)
 
 
-def can_edit_items(user, role, model):
-    """Metrics: the Circle Lead (a circle's own, or its roles'). Checklist
-    items, links and notes: anybody, Holacracy defines no process for them."""
+def can_edit_items(user, role, model, *, whole_circle=False):
+    """Metrics: the Circle Lead of the circle reviewing them (its roles', a
+    sub-circle's too, the whole circle's). Checklist items, links and notes:
+    anybody, Holacracy defines no process for them."""
     if role.archived_on:
         return NOT_ALLOWED
     if model in {ChecklistItem, Link, Note}:
         return ALLOWED
-    return can_lead(user, role.governing_circle)
+    circle = reported_in(role, whole_circle=whole_circle)
+    return can_lead(user, circle) if circle else NOT_ALLOWED
 
 
 class StrategyForm(ModelForm):
@@ -106,10 +115,60 @@ def order_key(item):
     return str(item.pk)
 
 
+def reporters(circle):
+    """Who reports a checklist item or metric reviewed by the circle (or by
+    its super-circle): ``{key: (role, whole_circle, label)}``; a sub-circle
+    is one of the circle's roles, reporting in the circle"""
+    choices = {
+        str(circle.pk): (
+            circle,
+            True,
+            gettext("%(circle)s (whole circle)") % {"circle": circle},
+        )
+    }
+    for role in circle.roles.active().order_by("position", "name"):
+        choices[str(role.pk)] = (role, False, role.name)
+    if circle.circle and not circle.circle.archived_on:
+        choices[f"{circle.pk}-up"] = (
+            circle,
+            False,
+            gettext("%(circle)s in %(super_circle)s")
+            % {"circle": circle, "super_circle": circle.circle},
+        )
+    return choices
+
+
 class ItemForm(ModelForm):
     class Meta:
         fields = ["description", "frequency", "link"]
         widgets = {"description": forms.Textarea(attrs={"rows": 2})}
+
+    def __init__(self, *args, reporters=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.reporters = reporters
+        if reporters:
+            current = (self.instance.role_id, self.instance.whole_circle)
+            self.fields["reported_by"] = forms.ChoiceField(
+                label=_("Reported by"),
+                choices=[(key, label) for key, (_r, _w, label) in reporters.items()],
+                # Unchanged without it
+                required=False,
+                initial=next(
+                    (
+                        key
+                        for key, (role, whole, _label) in reporters.items()
+                        if (role.pk, whole) == current
+                    ),
+                    None,
+                ),
+            )
+            self.order_fields(["reported_by"])
+
+    def save(self, *args, **kwargs):
+        if self.reporters and (key := self.cleaned_data.get("reported_by")):
+            role, whole, _label = self.reporters[key]
+            self.instance.role, self.instance.whole_circle = role, whole
+        return super().save(*args, **kwargs)
 
 
 def item_form(model):
@@ -117,6 +176,31 @@ def item_form(model):
     if model in FIELDS:
         meta |= {"fields": FIELDS[model], "widgets": {}}
     return type("Form", (ItemForm,), {"Meta": type("Meta", (ItemForm.Meta,), meta)})
+
+
+def item_reporters(request, item, model):
+    """The choices of who reports a checklist item or metric: the roles of
+    the circle whose page it was edited on (``?circle=``), else of the
+    circle reviewing it, those the user may edit it for"""
+    if model not in {Metric, ChecklistItem}:
+        return None
+    circle = item.reported_in
+    if (pk := request.GET.get("circle", "")).isdigit():
+        page = Role.objects.active().circles().filter(pk=pk).first()
+        if page and any(
+            (role.pk, whole) == (item.role_id, item.whole_circle)
+            for role, whole, _label in reporters(page).values()
+        ):
+            circle = page
+    if circle is None:
+        return None
+    current = (item.role_id, item.whole_circle)
+    return {
+        key: (role, whole, label)
+        for key, (role, whole, label) in reporters(circle).items()
+        if (role.pk, whole) == current
+        or can_edit_items(request.user, role, model, whole_circle=whole)
+    }
 
 
 def item_edit(request, kind, pk=None, role_pk=None):
@@ -129,13 +213,25 @@ def item_edit(request, kind, pk=None, role_pk=None):
     else:
         role = get_object_or_404(Role, pk=role_pk)
         item = model(role=role, position=next_position(role, model))
-    if not (right := can_edit_items(request.user, role, model)):
+        if model in {Metric, ChecklistItem}:
+            # Added on a circle's page: the whole circle's, by default
+            item.whole_circle = role.is_circle
+    whole_circle = getattr(item, "whole_circle", False)
+    if not (
+        right := can_edit_items(request.user, role, model, whole_circle=whole_circle)
+    ):
         raise PermissionDenied
-    form = item_form(model)(request.POST or None, instance=item)
+    form = item_form(model)(
+        request.POST or None,
+        instance=item,
+        reporters=item_reporters(request, item, model),
+    )
     if form.is_valid():
         form.save()
         update_today()  # The history shows them on request
-        return redirect(role)
+        # Back to the page it was edited on
+        page = request.GET.get("circle", "")
+        return redirect(page.isdigit() and Role.objects.filter(pk=page).first() or role)
     return render(
         request,
         "generic/object_form.html",
@@ -161,7 +257,14 @@ def item_delete(request, kind, pk):
     if model is None:
         raise PermissionDenied
     item = get_object_or_404(model.objects.select_related("role"), pk=pk)
-    if not (right := can_edit_items(request.user, item.role, model)):
+    if not (
+        right := can_edit_items(
+            request.user,
+            item.role,
+            model,
+            whole_circle=getattr(item, "whole_circle", False),
+        )
+    ):
         raise PermissionDenied
     if request.method == "POST":
         item.delete()

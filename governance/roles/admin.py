@@ -38,7 +38,8 @@ class PolicyAdmin(admin.ModelAdmin):
 
 @admin.register(models.Metric, models.ChecklistItem)
 class RoleItemAdmin(admin.ModelAdmin):
-    list_display = ["description", "role", "frequency"]
+    list_display = ["description", "role", "whole_circle", "frequency"]
+    list_filter = ["whole_circle"]
     raw_id_fields = ["role"]
 
 
