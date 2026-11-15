@@ -9,22 +9,37 @@
         <h1 class="mb-1">{% translate "API tokens" %}</h1>
         <p class="wb-description mb-0">
           {% blocktranslate trimmed %}
-            API tokens give scripts access to this tool in your name, e.g. to prepare proposals. Send them as bearer
-            token. They expire after {{ days }} days.
+            API tokens give command line tools like <code>gov</code> and scripts access to this tool in your name, sent
+            as bearer token. They expire {{ days }} days after their last use. <code>gov login</code> creates tokens
+            through the browser; create them here for computers without a browser.
           {% endblocktranslate %}
           <a href="{{ api_url }}docs">{% translate "API documentation" %}</a>
         </p>
-        <p class="wb-description mb-0 mt-2">
-          {% blocktranslate trimmed %}
-            The <code>gov</code> command line interface uses the API, it asks for its token itself:
-          {% endblocktranslate %}
-          <code class="user-select-all">uv tool install "{{ cli_install }}"</code>,
-          <code class="user-select-all">gov login {{ base_url }} --read</code>
-          {% translate "or" %}
-          <code>--write</code>.
-        </p>
       </div>
     </div>
+
+    <section class="card mb-3">
+      <div class="card-header"><h2 class="h6 mb-0">{% translate "Command line" %}</h2></div>
+      <div class="card-body">
+        <p>
+          {% blocktranslate trimmed %}
+            Install <code>gov</code> with <a href="https://docs.astral.sh/uv/">uv</a> and log in, with read access or
+            with <code>--write</code> to create and change proposals:
+          {% endblocktranslate %}
+        </p>
+        <pre class="wb-command user-select-all">uv tool install "{{ cli_install }}"
+gov login {{ base_url }} --read</pre>
+        <p>
+          {% blocktranslate trimmed %}
+            The Claude Code skills using <code>gov</code> come with it, link them into your skills:
+          {% endblocktranslate %}
+        </p>
+        <pre class="wb-command user-select-all">gov skills install</pre>
+        <p>{% translate "Upgrade it when <code>gov</code> tells you to:" %}</p>
+        <pre class="wb-command user-select-all">{{ cli_upgrade }}</pre>
+        <a href="{{ cli_readme_url }}" target="_blank" rel="noopener">{% translate "Installation and commands" %}</a>
+      </div>
+    </section>
 
     {% if secret %}
       <div class="alert alert-success">

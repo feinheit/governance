@@ -108,6 +108,8 @@ def api_tokens(request):
             "access_choices": APIToken.Access.choices,
             "api_url": request.build_absolute_uri("/api/"),
             "cli_install": cli_version.INSTALL,
+            "cli_upgrade": cli_version.UPGRADE,
+            "cli_readme_url": cli_version.README_URL,
             "base_url": request.build_absolute_uri("/"),
         },
     )

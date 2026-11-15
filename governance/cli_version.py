@@ -9,8 +9,9 @@ from django.utils.translation import gettext as _
 
 # Raise this when the API changes in ways older CLIs cannot handle
 MINIMUM = (0, 13, 0)
-# Where gov is installed from
+# Where gov is installed from and documented
 INSTALL = "git+https://github.com/feinheit/governance#subdirectory=cli"
+README_URL = "https://github.com/feinheit/governance/tree/main/cli#readme"
 _PROJECT = tomllib.loads((settings.BASE_DIR / "cli" / "pyproject.toml").read_text())[
     "project"
 ]

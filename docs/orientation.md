@@ -120,5 +120,5 @@ proposals and meetings, creates drafts and manages the links and notes of roles 
 
 The command line tool `gov` uses the API and gets its token by itself
 (`gov login`, confirmed in the browser). It shows circles, roles,
-proposals and meetings, searches, prepares drafts and manages links, notes, metrics and checklist items (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); how to install it is on the
-"API tokens" page.
+proposals and meetings, searches, prepares drafts and manages links, notes, metrics and checklist items (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); how to install it, and the Claude Code skills
+coming with it, is on the "API tokens" page.

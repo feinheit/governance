@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 21:49+0100\n"
+"POT-Creation-Date: 2026-11-15 14:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -2060,20 +2060,32 @@ msgstr "Darstellung wechseln"
 
 #: governance/templates/accounts/api_tokens.html
 #, python-format
-msgid "API tokens give scripts access to this tool in your name, e.g. to prepare proposals. Send them as bearer token. They expire after %(days)s days."
-msgstr "API-Tokens geben Skripten in deinem Namen Zugriff auf dieses Tool, z.B. um Vorschläge vorzubereiten. Sende sie als Bearer-Token. Sie laufen nach %(days)s Tagen ab."
+msgid "API tokens give command line tools like <code>gov</code> and scripts access to this tool in your name, sent as bearer token. They expire %(days)s days after their last use. <code>gov login</code> creates tokens through the browser; create them here for computers without a browser."
+msgstr "Mit API-Tokens erhalten Kommandozeilenwerkzeuge wie <code>gov</code> und Skripte in deinem Namen Zugriff auf dieses Tool, gesendet als Bearer-Token. Sie laufen %(days)s Tage nach ihrer letzten Verwendung ab. <code>gov login</code> erstellt Tokens über den Browser; erstelle sie hier für Computer ohne Browser."
 
 #: governance/templates/accounts/api_tokens.html
 msgid "API documentation"
 msgstr "API-Dokumentation"
 
 #: governance/templates/accounts/api_tokens.html
-msgid "The <code>gov</code> command line interface uses the API, it asks for its token itself:"
-msgstr "Das Kommandozeilen-Tool <code>gov</code> nutzt die API und holt sich sein Token selbst:"
+msgid "Command line"
+msgstr "Kommandozeile"
 
 #: governance/templates/accounts/api_tokens.html
-msgid "or"
-msgstr "oder"
+msgid "Install <code>gov</code> with <a href=\"https://docs.astral.sh/uv/\">uv</a> and log in, with read access or with <code>--write</code> to create and change proposals:"
+msgstr "Installiere <code>gov</code> mit <a href=\"https://docs.astral.sh/uv/\">uv</a> und melde dich an, mit Lesezugriff oder mit <code>--write</code>, um Vorschläge zu erstellen und zu ändern:"
+
+#: governance/templates/accounts/api_tokens.html
+msgid "The Claude Code skills using <code>gov</code> come with it, link them into your skills:"
+msgstr "Die Claude-Code-Skills, die <code>gov</code> nutzen, kommen mit; verlinke sie in deine Skills:"
+
+#: governance/templates/accounts/api_tokens.html
+msgid "Upgrade it when <code>gov</code> tells you to:"
+msgstr "Aktualisiere es, wenn <code>gov</code> dich dazu auffordert:"
+
+#: governance/templates/accounts/api_tokens.html
+msgid "Installation and commands"
+msgstr "Installation und Befehle"
 
 #: governance/templates/accounts/api_tokens.html
 msgid "Copy the token now, it will not be shown again:"

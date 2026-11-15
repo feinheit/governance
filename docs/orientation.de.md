@@ -124,5 +124,5 @@ unter `/api/docs`.
 
 Das Kommandozeilen-Tool `gov` nutzt die API und holt sich sein Token
 selbst (`gov login`, im Browser bestätigen). Es zeigt Kreise, Rollen,
-Vorschläge und Meetings, sucht, bereitet Entwürfe vor und verwaltet Links, Notizen, Metriken und Checklisten-Punkte (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); wie du es installierst,
-steht auf der Seite "API-Tokens".
+Vorschläge und Meetings, sucht, bereitet Entwürfe vor und verwaltet Links, Notizen, Metriken und Checklisten-Punkte (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); wie du es und die mitgelieferten
+Claude-Code-Skills installierst, steht auf der Seite "API-Tokens".

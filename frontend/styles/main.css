@@ -619,6 +619,16 @@ a.wb-row-title:hover {
   margin-inline: auto;
 }
 
+/* Commands to copy, e.g. installing gov */
+.wb-command {
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--bs-border-radius-sm);
+  background: var(--bs-tertiary-bg);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
 .wb-form-page .card-body > .mb-3:last-child {
   margin-bottom: 0 !important;
 }
