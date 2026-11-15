@@ -141,6 +141,49 @@ class ProblemsTest(TestCase):
                     problems(proposal), [f"The app can't apply {path} yet."]
                 )
 
+    def test_moves_need_circles(self):
+        """Moving into or out of a role which isn't a circle (anymore, e.g.
+        turned back since drafting, or from the API) is a problem; only a
+        role of the circle becomes one by moving roles into it"""
+        from governance.proposals.instructions import problems
+        from governance.roles.models import Policy
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        waiter = Role.objects.create(name="Waiter", circle=kitchen)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        baker = Role.objects.create(name="Baker", circle=bakery)
+        tea = Policy.objects.create(role=kitchen, title="Tea")
+        lead = kitchen.roles.get(core_role="lead")
+
+        def into(target, kind, obj):
+            return {
+                "op": "move",
+                "from": f"/{kind}/{obj.pk}",
+                "path": f"/roles/{target.pk}/supporting_circle/{kind}/{obj.pk}",
+            }
+
+        for instruction, expected in [
+            (into(cook, "policies", tea), "Cook isn't a circle."),
+            (into(lead, "roles", waiter), "Circle Lead isn't a circle."),
+            (into(baker, "roles", waiter), "Baker isn't governed by Kitchen."),
+            (
+                {
+                    "op": "move",
+                    "from": f"/circles/{cook.pk}/roles/{waiter.pk}",
+                    "path": f"/roles/{waiter.pk}",
+                },
+                "Cook isn't a circle.",
+            ),
+        ]:
+            with self.subTest(instruction=instruction):
+                proposal = Proposal(circle=kitchen, instructions=[instruction])
+                self.assertEqual(problems(proposal), [expected])
+        # Moving a role into a role of the circle makes it one
+        proposal = Proposal(circle=kitchen, instructions=[into(cook, "roles", waiter)])
+        self.assertEqual(problems(proposal), [])
+
     def test_new_circle_like_glassfrog(self):
         """GlassFrog turns a new role into a circle twice, before and after
         moving roles into it"""
