@@ -272,6 +272,51 @@ class ElectionsTest(TestCase):
             [m.subject for m in mail.outbox if m.subject.startswith("Your roles")], []
         )
 
+    def test_corrected_back_to_somebody_assigned_today(self):
+        """Ada was assigned today (before the meeting): the election of Bob
+        removes her assignment (ending the day it started), correcting the
+        result back to her brings it back as it was"""
+        self.secretary.assignments.all().delete()
+        cook = Role.objects.create(name="Cook", circle=self.kitchen)
+        Assignment.objects.create(role=cook, user=self.ada)  # Stays a member
+        today = timezone.localdate()
+        Assignment.objects.create(
+            role=self.secretary,
+            user=self.ada,
+            focus="Minutes",
+            starts_on=today,
+            elected_until=dt.date(2027, 3, 1),
+        )
+        self.client.force_login(self.ada)
+        url = f"/meetings/{self.meeting.pk}/elections/"
+        self.client.post(
+            url,
+            {
+                "role": self.secretary.pk,
+                "user": self.bob.pk,
+                "term_ends_on": "2027-12-31",
+            },
+        )
+        self.assertFalse(
+            Assignment.objects.filter(role=self.secretary, user=self.ada).exists()
+        )
+        self.client.post(
+            url,
+            {
+                "role": self.secretary.pk,
+                "user": self.ada.pk,
+                "term_ends_on": "2027-12-31",
+            },
+        )
+        self.assertEqual(
+            list(
+                Assignment.objects.filter(role=self.secretary).values_list(
+                    "user", "focus", "starts_on", "ends_on", "elected_until"
+                )
+            ),
+            [(self.ada.pk, "Minutes", today, None, dt.date(2027, 12, 31))],
+        )
+
     def test_elected_announced_when_the_meeting_ends(self):
         """The meeting's elections are announced when it ends, with the
         result recorded last"""
