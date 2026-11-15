@@ -190,8 +190,9 @@ class ProcessingTest(TestCase):
         """A proposal withdrawn meanwhile (e.g. a role it changes removed),
         or a tension without changes, isn't adopted in the meeting"""
         Proposal.objects.filter(pk=self.proposal.pk).update(status=Proposal.WITHDRAWN)
-        self.client.force_login(self.ada)
-        self.client.post(f"/agenda/{self.item.pk}/adopt/")
+        self.client.force_login(self.bob)  # The secretary
+        response = self.client.post(f"/agenda/{self.item.pk}/adopt/", follow=True)
+        self.assertContains(response, "The proposal has been withdrawn.")
         self.proposal.refresh_from_db()
         self.cook.refresh_from_db()
         self.assertEqual(
@@ -201,13 +202,15 @@ class ProcessingTest(TestCase):
         tension = Proposal.objects.create(
             circle=self.kitchen,
             proposer=self.eve,
+            role=self.cook,
             tension="Noise",
             status=Proposal.IN_MEETING,
             meeting=self.meeting,
             created_at=timezone.now(),
         )
         item = AgendaItem.objects.create(meeting=self.meeting, proposal=tension)
-        self.client.post(f"/agenda/{item.pk}/adopt/")
+        response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
+        self.assertContains(response, "A tension without changes isn&#x27;t adopted.")
         tension.refresh_from_db()
         self.assertEqual(tension.status, Proposal.IN_MEETING)
 
