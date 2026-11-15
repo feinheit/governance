@@ -9,10 +9,17 @@ They need `gov`, logged in with `gov login URL --write`. If `gov` only has
 read access, the skills ask the user to log in again instead of working
 around it.
 
-Link them into your personal skills to use them in any directory (from the
-repository root, again when skills are added):
+They come as a Claude Code plugin (`cli/` is the plugin, the repository
+its marketplace), install it in Claude Code:
 
-    for skill in "$PWD"/cli/skills/governance-*/; do ln -sfn "${skill%/}" ~/.claude/skills/; done
+    /plugin marketplace add feinheit/governance
+    /plugin install governance@feinheit-governance
+
+The plugin has no version, every commit is one;
+`/plugin marketplace update feinheit-governance` fetches new and changed
+skills, or enable auto-update for the marketplace in `/plugin`. The skills
+are then called `governance:governance-proposal` etc. When working on them,
+`claude --plugin-dir cli` uses the checkout.
 
 ## governance-proposal
 

@@ -1,0 +1,7 @@
+{
+  "name": "governance",
+  "description": "Skills doing governance tasks through the gov CLI: proposals from tensions, reviews, following up on tactical meetings",
+  "author": {
+    "name": "Feinheit AG"
+  }
+}

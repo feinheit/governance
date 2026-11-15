@@ -12,6 +12,12 @@ Install it with [uv](https://docs.astral.sh/uv/):
 
 Upgrade it when `gov` tells you to, it prints the command.
 
+The [Claude Code skills](skills/README.md) using `gov` come as a plugin,
+install it in Claude Code:
+
+    /plugin marketplace add feinheit/governance
+    /plugin install governance@feinheit-governance
+
 Log in, which opens the browser to authorize `gov`. Choose the access
 explicitly: `--read` only allows looking things up, `--write` also allows
 creating, changing and publishing proposals. Read access is the safer choice
