@@ -189,6 +189,7 @@ class NobodyLeadsTest(TestCase):
         """Nobody holds the anchor circle's Circle Lead nor any other core
         role (e.g. right after setting up the tool): the pages, meetings,
         proposals, mails and tasks work without anybody to stand in"""
+        from django.core import mail
         from django.core.management import call_command
 
         from governance.proposals.models import Proposal
@@ -270,3 +271,6 @@ class NobodyLeadsTest(TestCase):
         with self.captureOnCommitCallbacks(execute=True):
             call_command("fairy_tasks")
             call_command("hourly_tasks")
+        # Mails only to people, none to nobody
+        self.assertTrue(mail.outbox)
+        self.assertTrue(all(message.to == [eve.email] for message in mail.outbox))
