@@ -491,7 +491,8 @@ class MeetingsTest(TestCase):
             circle=self.kitchen, kind=Meeting.GOVERNANCE, ended_at=timezone.now()
         )
         self.client.force_login(self.eve)
-        self.client.post(f"/meetings/{meeting.pk}/agenda/add/", {"label": "Dishes"})
+        url = f"/meetings/{meeting.pk}/agenda/add/"
+        self.assertEqual(self.client.post(url, {"label": "Dishes"}).status_code, 403)
         self.assertFalse(meeting.agenda_items.exists())
 
     def test_agenda_item_for_someone_else(self):
