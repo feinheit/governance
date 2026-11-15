@@ -238,6 +238,41 @@ class ProcessTest(TestCase):
             )
             call_command("hourly_tasks")
 
+    def test_cannot_be_adopted_when_due(self):
+        """A change outside proposals (e.g. a role's policies for its domains,
+        rechecked only daily) makes a published proposal fail at its last
+        consent or its deadline: it waits for a meeting, those who got it
+        learn why"""
+        from django.core import mail
+
+        for decide in ["consent", "deadline"]:
+            with self.subTest(decide=decide):
+                Role.objects.filter(pk=self.cook.pk).update(name="Cook")
+                proposal = publish(self.proposal())
+                Role.objects.filter(pk=self.cook.pk).update(name="Cuisinier")
+                mail.outbox = []
+                with self.captureOnCommitCallbacks(execute=True):
+                    if decide == "consent":
+                        respond(proposal, self.bob, Response.CONSENT)
+                    else:
+                        with time_machine.travel(
+                            NOW + dt.timedelta(days=2, minutes=1), tick=False
+                        ):
+                            self.assertEqual(adopt_due_proposals(), [])
+                proposal.refresh_from_db()
+                self.assertEqual(proposal.status, Proposal.IN_MEETING)
+                self.assertIsNotNone(proposal.waiting_since)
+                self.cook.refresh_from_db()
+                self.assertEqual(self.cook.name, "Cuisinier")
+                messages = [
+                    m for m in mail.outbox if "Waiting for a meeting" in m.subject
+                ]
+                self.assertEqual(
+                    {m.to[0] for m in messages}, {"ada@example.com", "bob@example.com"}
+                )
+                self.assertIn("goes to the next governance meeting", messages[0].body)
+                self.assertIn("has been changed", messages[0].body)
+
     def test_without_a_deadline(self):
         """Without a period set by policy (the circle's or a super-circle's),
         a proposal is only adopted once everybody consented (5.3)"""
