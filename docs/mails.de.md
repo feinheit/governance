@@ -61,5 +61,3 @@ Eine Mail als reiner Text pro Person, in der Sprache ihrer Seite, mit
 dem Vornamen begrüsst und am Ende mit einem Link auf diese Seite. Die
 Mails gehen raus, sobald die Änderung gespeichert ist. Einzeln
 abbestellen lassen sie sich nicht, filtere sie in deinem Mailprogramm.
-Die Admins haben vielleicht eine Adresse eingerichtet, die
-eine Kopie jeder Mail erhält; sie sagt, an wen die Mail ging.

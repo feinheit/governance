@@ -221,44 +221,6 @@ class NotificationsTest(TestCase):
         to = sent(self.bob, Response.MEETING, "Still too short")
         self.assertEqual(sorted(to), ["eve@example.com", "zoe@example.com"])
 
-    def test_copies(self):
-        """MAIL_COPIES get one copy of each mail, in the language of their
-        account (if any), unless they received it themselves; as Cc without a To"""
-        proposal = Proposal.objects.create(
-            circle=self.kitchen,
-            proposer=self.eve,
-            role=self.waiter(self.eve),
-            tension="Better name",
-            created_at=timezone.now(),
-            instructions=[
-                {
-                    "op": "replace",
-                    "path": f"/roles/{self.cook.pk}/name",
-                    "original_value": "Cook",
-                    "value": "Chef",
-                }
-            ],
-            names={f"roles/{self.cook.pk}": "Cook"},
-        )
-        copies = ["Ada@example.com", "copy@example.com", "copy@example.com"]
-        User.objects.create_user("zed@example.com", full_name="Zed", language="de")
-        copies.append("Zed@example.com")
-        with (
-            self.settings(MAIL_COPIES=copies),
-            self.captureOnCommitCallbacks(execute=True),
-        ):
-            publish(proposal)
-        self.assertEqual(
-            sorted((m.to, m.cc, m.subject) for m in mail.outbox),
-            [
-                ([], ["copy@example.com"], "Proposal in Kitchen: Better name"),
-                ([], ["zed@example.com"], "Vorschlag in Kitchen: Better name"),
-                (["ada@example.com"], [], "Proposal in Kitchen: Better name"),
-                (["bob@example.com"], [], "Vorschlag in Kitchen: Better name"),
-                (["eve@example.com"], [], "Proposal in Kitchen: Better name"),
-            ],
-        )
-
     def test_greeting(self):
         """Mails greet the recipient by their first name in their language
         and end with a link to the overview of the mails"""
@@ -280,20 +242,11 @@ class NotificationsTest(TestCase):
             ],
             names={f"roles/{self.cook.pk}": "Cook"},
         )
-        with (
-            self.settings(MAIL_COPIES=["copy@example.com"]),
-            self.captureOnCommitCallbacks(execute=True),
-        ):
+        with self.captureOnCommitCallbacks(execute=True):
             publish(proposal)
-        bodies = {(m.to or m.cc)[0]: m.body for m in mail.outbox}
+        bodies = {m.to[0]: m.body for m in mail.outbox}
         self.assertTrue(bodies["ada@example.com"].startswith("Hello Ada,\n\n"))
         self.assertTrue(bodies["bob@example.com"].startswith("Hallo Bob,\n\n"))
-        # Copies say whose mail they are
-        self.assertTrue(
-            bodies["copy@example.com"].startswith(
-                "Copy of the mail to Ada, Bob Müller.\n\nHello,\n\n"
-            )
-        )
         self.assertIn("/help/mails/", bodies["ada@example.com"])
 
     def test_setting(self):

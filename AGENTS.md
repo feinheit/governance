@@ -183,8 +183,7 @@ commit to `latest/<app>`. The configuration comes from environment
 variables named like the settings: `DATABASE_URL`, `SECRET_KEY`,
 `ALLOWED_HOSTS`, `SECURE_SSL_HOST` and `SECURE_SSL_REDIRECT=True`
 (django-canonical-domain redirects everything else there), `LIVE=True`,
-`EMAIL_URL`, `MAIL_COPIES` (e.g. `["a@example.com"]`, who gets a copy of
-each mail), `BASE_URL`, `GOOGLE_CLIENT_ID`,
+`EMAIL_URL`, `BASE_URL`, `GOOGLE_CLIENT_ID`,
 `GOOGLE_CLIENT_SECRET`, `SENTRY_DSN` and `SENTRY_ENVIRONMENT`. Only
 existing, active users sign in; admins add new people in the Django admin.
 The cron jobs are in argocd's `governance/values.yaml`: `fairy_tasks` at
