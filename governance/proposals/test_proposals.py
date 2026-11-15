@@ -254,6 +254,12 @@ class DatesTest(TestCase):
         self.assertEqual(
             labels(), ["proposer", "status", "published (async)", "to be adopted on"]
         )
+        # The deadline when hovering the day
+        deadline = timezone.localtime(proposal.deadline)
+        self.assertContains(
+            self.client.get(proposal.get_absolute_url()),
+            f'title="{deadline:%-d %B %Y %H:%M}"',
+        )
         proposal.status, proposal.decided_at = Proposal.ADOPTED, now
         proposal.save()
         self.assertEqual(labels(), ["proposer", "status", "adopted"])

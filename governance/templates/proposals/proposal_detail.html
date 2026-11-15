@@ -32,7 +32,11 @@
         {% if proposal.deadline and proposal.status == "published" %}<span><span
               class="wb-meta-label"
             >{% translate "to be adopted on" %}</span>
-            {{ proposal.adopted_on|date:"SHORT_DATE_FORMAT" }}</span>{% endif %}
+            {# The deadline when hovering it, the hourly task adopts it after #}
+            <time
+              datetime="{{ proposal.deadline|date:'c' }}"
+              title="{{ proposal.deadline|date:'DATETIME_FORMAT' }}"
+            >{{ proposal.adopted_on|date:"SHORT_DATE_FORMAT" }}</time></span>{% endif %}
         {% if proposal.decided_at %}<span><span
               class="wb-meta-label"
             >{% if proposal.status == "withdrawn" %}{% translate "withdrawn" %}{% else %}{% translate "adopted" %}{% endif %}</span>
