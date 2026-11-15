@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "governance-cli"
-version = "0.26.0"
+version = "0.27.0"
 description = "Governance CLI"
 readme = "README.md"
 license = "BSD-3-Clause"
@@ -30,4 +30,9 @@ scripts.gov = "gov:cli"
 [tool.setuptools]
 packages = [
   "gov",
+  "gov.skills",
+]
+package-data."gov.skills" = [
+  "*.md",
+  "*/**/*",
 ]

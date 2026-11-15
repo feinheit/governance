@@ -9,10 +9,15 @@ They need `gov`, logged in with `gov login URL --write`. If `gov` only has
 read access, the skills ask the user to log in again instead of working
 around it.
 
-Link them into your personal skills to use them in any directory (from the
-repository root, again when skills are added):
+They come with `gov`, link them into your personal Claude Code skills:
 
-    for skill in "$PWD"/cli/skills/governance-*/; do ln -sfn "${skill%/}" ~/.claude/skills/; done
+    gov skills install
+
+The links point to where `gov` is installed (the checkout for editable
+installs), upgrading `gov` updates the skills. Run it again when `gov`
+brings new skills (`gov skills list` shows them), `--project` links them
+into the project in the current directory instead (`.claude/skills`),
+`gov skills uninstall` removes the links.
 
 ## governance-proposal
 

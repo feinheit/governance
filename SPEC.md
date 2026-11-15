@@ -872,7 +872,7 @@ write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
 `gov roles context`, `gov domains`, `gov export`, `gov backup`, `gov constitution`, `gov search`, `gov links`, `gov notes`, `gov metrics` and `gov checklist`
 (list, add, update, remove), `gov meetings` (list, show) and `gov proposals` (list, show,
 create, update, publish; open, consent, request-meeting, comment). The Claude Code skill `governance-proposal`
-(`cli/skills/`) prepares a draft from a tension with it; publishing stays
+(`cli/gov/skills/`, `gov skills install` links them into Claude Code) prepares a draft from a tension with it; publishing stays
 the user's decision. `governance-review` reviews a circle's or a role's
 governance against the constitution (`gov constitution`), read only.
 `governance-tactical` turns a tactical meeting's outcomes into tasks in

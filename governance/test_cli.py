@@ -754,3 +754,50 @@ class CLITest(TestCase):
         self.assertGreater(len(listed), 1)
         cook = next(line for line in listed if line.endswith("  -- Cook (Kitchen)"))
         self.assertEqual(cook.split()[0], f"plain,{self.cook.pk}")
+
+    def test_skills(self):
+        """Linking the skills into Claude Code's skills, replacing stale links
+        and leaving directories of their own alone"""
+        skills = self.directory / "claude" / "skills"
+        ours = Path(gov.skills.__file__).parent
+        skills.mkdir(parents=True)
+        # Linked from an environment uv removed, a skill gov doesn't have
+        # anymore, somebody's own skill and somebody's own directory
+        gone = self.directory / "old" / "gov" / "skills"
+        (skills / "governance-review").symlink_to(gone / "governance-review")
+        (skills / "governance-gone").symlink_to(gone / "governance-gone")
+        (skills / "mine").symlink_to(self.directory)
+        (skills / "governance-tactical").mkdir()
+
+        with patch.dict("os.environ", {"CLAUDE_CONFIG_DIR": str(skills.parent)}):
+            result = self.gov("skills", "list")
+            self.assertIn("governance-proposal", result.output)
+            self.assertIn("not linked", result.output)
+            self.assertIn("gov skills install", result.output)
+
+            result = self.gov("skills", "install")
+            self.assertIn("Linked governance-proposal.", result.output)
+            self.assertIn("Linked governance-review.", result.output)
+            self.assertIn("Removed governance-gone.", result.output)
+            self.assertIn("governance-tactical is a directory", result.output)
+            self.assertEqual(
+                (skills / "governance-review").readlink(), ours / "governance-review"
+            )
+            self.assertTrue((skills / "governance-proposal" / "SKILL.md").exists())
+            self.assertFalse((skills / "governance-gone").is_symlink())
+            self.assertTrue((skills / "mine").is_symlink())
+
+            # Nothing to do the second time
+            result = self.gov("skills", "install")
+            self.assertNotIn("Linked", result.output)
+
+            data = json.loads(self.gov("skills", "list", "--json").output)
+            states = {skill["name"]: skill["state"] for skill in data}
+            self.assertEqual(states["governance-proposal"], "linked")
+            self.assertEqual(states["governance-tactical"], "a directory of its own")
+
+            self.gov("skills", "uninstall")
+            self.assertEqual(
+                sorted(path.name for path in skills.iterdir()),
+                ["governance-tactical", "mine"],
+            )

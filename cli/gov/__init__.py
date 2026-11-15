@@ -15,6 +15,7 @@ from gov import (  # noqa: F401 Register the commands
     proposals,
     roles,
     search,
+    skills,
 )
 from gov.core import cli
 

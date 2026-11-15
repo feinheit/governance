@@ -12,6 +12,9 @@ Install it with [uv](https://docs.astral.sh/uv/):
 
 Upgrade it when `gov` tells you to, it prints the command.
 
+The [Claude Code skills](gov/skills/README.md) using `gov` come with it,
+link them into your Claude Code skills with `gov skills install`.
+
 Log in, which opens the browser to authorize `gov`. Choose the access
 explicitly: `--read` only allows looking things up, `--write` also allows
 creating, changing and publishing proposals. Read access is the safer choice

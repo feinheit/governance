@@ -11,7 +11,7 @@ from governance.proposals.models import Proposal
 from governance.roles.models import Assignment, Role
 
 
-SKILLS = settings.BASE_DIR / "cli" / "skills"
+SKILLS = settings.BASE_DIR / "cli" / "gov" / "skills"
 SKILL = SKILLS / "governance-proposal" / "SKILL.md"
 
 
