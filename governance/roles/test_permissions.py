@@ -182,3 +182,91 @@ class ElevatedRightsTest(TestCase):
         response = self.client.get(meeting.get_absolute_url())
         self.assertContains(response, "You take part in this meeting as an admin")
         self.assertContains(response, 'btn-elevated" title="As admin"')  # Take over
+
+
+class NobodyLeadsTest(TestCase):
+    def test_without_circle_leads(self):
+        """Nobody holds the anchor circle's Circle Lead nor any other core
+        role (e.g. right after setting up the tool): the pages, meetings,
+        proposals, mails and tasks work without anybody to stand in"""
+        from django.core.management import call_command
+
+        from governance.proposals.models import Proposal
+        from governance.proposals.process import publish
+
+        eve = User.objects.create_user("eve@example.com", full_name="Eve")
+        admin = User.objects.create_user("max@example.com", is_admin=True)
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        anchor.create_core_roles()
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        waiter = Role.objects.create(name="Waiter", circle=kitchen)
+        Assignment.objects.create(role=cook, user=eve)
+        self.assertEqual(list(circle_leads(anchor)), [])
+        self.assertEqual(list(circle_leads(kitchen)), [])
+        self.assertEqual(list(role_leads(waiter)), [])
+
+        urls = [
+            "/",
+            "/organization/",
+            "/circles/",
+            "/people/",
+            "/people/addresses/",
+            "/history/",
+            "/proposals/",
+            "/export/governance.md",
+            "/api/circles/",
+            "/api/export/",
+        ]
+        for role in [anchor, kitchen, cook, waiter]:
+            urls += [
+                role.get_absolute_url(),
+                f"/roles/{role.pk}/context/",
+                f"/api/roles/{role.pk}/",
+                f"/api/roles/{role.pk}/context/",
+            ]
+        urls += [f"/roles/{circle.pk}/members/" for circle in [anchor, kitchen]]
+        urls += [f"/roles/{circle.pk}/meetings/" for circle in [anchor, kitchen]]
+        for user in [eve, admin]:
+            self.client.force_login(user)
+            for url in urls:
+                with self.subTest(user=user, url=url):
+                    self.assertIn(self.client.get(url).status_code, {200, 302})
+
+        # A meeting with its due elections, which nobody owns
+        self.client.force_login(eve)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/roles/{kitchen.pk}/meetings/new/")
+        meeting = Meeting.objects.get()
+        self.assertEqual(
+            list(meeting.agenda_items.values_list("label", "owner")),
+            [("Election: Facilitator", None), ("Election: Secretary", None)],
+        )
+        self.assertEqual(self.client.get(meeting.get_absolute_url()).status_code, 200)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(f"/meetings/{meeting.pk}/end/")
+
+        # An async proposal, and the tasks with their reminders
+        proposal = Proposal.objects.create(
+            circle=kitchen,
+            proposer=eve,
+            role=cook,
+            tension="Better name",
+            created_at=timezone.now(),
+            instructions=[
+                {
+                    "op": "replace",
+                    "path": f"/roles/{waiter.pk}/name",
+                    "original_value": "Waiter",
+                    "value": "Server",
+                }
+            ],
+            names={f"roles/{waiter.pk}": "Waiter"},
+        )
+        with self.captureOnCommitCallbacks(execute=True):
+            publish(proposal)
+        self.assertEqual(self.client.get(proposal.get_absolute_url()).status_code, 200)
+        with self.captureOnCommitCallbacks(execute=True):
+            call_command("fairy_tasks")
+            call_command("hourly_tasks")
