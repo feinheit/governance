@@ -3,7 +3,7 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 from speckenv import env
-from speckenv_django import django_database_url, django_email_url
+from speckenv_django import django_database_url, django_mailer_url
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -150,24 +150,7 @@ if LIVE:  # pragma: no cover
     SECURE_HSTS_SECONDS = 31536000
 
 EMAIL_URL = env("EMAIL_URL", default="console:" if DEBUG else "smtp:")
-_email = django_email_url(EMAIL_URL)
-MAILERS = {
-    "default": {
-        "BACKEND": _email["EMAIL_BACKEND"],
-        "OPTIONS": {
-            option: _email[setting]
-            for option, setting in [
-                ("host", "EMAIL_HOST"),
-                ("port", "EMAIL_PORT"),
-                ("username", "EMAIL_HOST_USER"),
-                ("password", "EMAIL_HOST_PASSWORD"),
-                ("use_tls", "EMAIL_USE_TLS"),
-                ("use_ssl", "EMAIL_USE_SSL"),
-            ]
-            if _email[setting]
-        },
-    }
-}
+MAILERS = {"default": django_mailer_url(EMAIL_URL)}
 
 if DEBUG_TOOLBAR:  # pragma: no cover
     INTERNAL_IPS = ["127.0.0.1"]
