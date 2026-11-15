@@ -82,7 +82,9 @@ def list_(project, as_json):
     if as_json:
         echo_json(data)
         return
-    table = make_table("Skill", "State", "Description…")
+    table = make_table("Skill", "State", "Description")
+    # Only the descriptions wrap
+    table.columns[0].no_wrap = table.columns[1].no_wrap = True
     for row in data:
         table.add_row(row["name"], row["state"], row["description"])
     console.print(table)
