@@ -381,3 +381,11 @@ class RoleContextTest(TestCase):
             self.client.get(f"/roles/{cook.pk}/context/", headers={"HX-Modal": "true"}),
             "<html",
         )
+
+    def test_nothing_affects_the_anchor_circle(self):
+        """Nothing contains the anchor circle (its page doesn't link the
+        context, ``gov roles context`` may still ask)"""
+        from governance.roles.context import affecting
+
+        anchor = Role.objects.create(name="Company", is_circle=True)
+        self.assertEqual(affecting(anchor), [])

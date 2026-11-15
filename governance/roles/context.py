@@ -19,7 +19,9 @@ def affecting(role):
     their policies"""
     ancestors = role.ancestors()
     circles = []
-    for circle, inner in zip(ancestors, [*ancestors[1:], role], strict=True):
+    # The inner one of each circle on the way down: the next circle, at
+    # last the role (none for the anchor circle)
+    for circle, inner in zip(ancestors, [*ancestors, role][1:], strict=True):
         policies = list(circle.policies.active().select_related("domain"))
         roles = []
         # Not the circle on the way down, it follows with its own section,
