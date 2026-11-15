@@ -5,7 +5,7 @@
       <a
         class="wb-row-title"
         href="{{ meeting.get_absolute_url }}"
-      >{% if meeting.started_at %}{{ meeting.started_at|date:"SHORT_DATE_FORMAT" }}{% else %}{% translate "not started yet" %}{% endif %}</a>
+      >{% if meeting.started_at %}{{ meeting.started_at|timestamp }}{% else %}{% translate "not started yet" %}{% endif %}</a>
       {# What it was about (meetings/teasers.py) #}
       {% if meeting.teaser %}<div class="wb-row-meta">
           <span>{{ meeting.teaser }}</span>

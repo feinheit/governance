@@ -25,7 +25,7 @@
       {% regroup earlier_outcomes by meeting as by_meeting %}
       {% for group in by_meeting %}
         <li class="list-group-item py-1 small fw-semibold text-body-secondary wb-group-heading">
-          <a href="{{ group.grouper.get_absolute_url }}">{{ group.grouper.started_at|date:"SHORT_DATE_FORMAT" }}</a>
+          <a href="{{ group.grouper.get_absolute_url }}">{{ group.grouper.started_at|timestamp }}</a>
         </li>
         {% for item in group.list %}
           <li class="list-group-item">

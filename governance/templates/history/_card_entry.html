@@ -7,6 +7,6 @@
     <a
       class="text-body-secondary"
       href="{{ role.get_history_url }}&amp;day={{ day }}#day-{{ day }}"
-    >{% if kind == "proposal" %}{{ obj.decided_at|date:"SHORT_DATE_FORMAT" }}{% else %}{{ obj.date|date:"SHORT_DATE_FORMAT" }}{% endif %}</a>
+    >{% if kind == "proposal" %}{{ obj.decided_at|timestamp }}{% else %}{{ obj.date|date:"SHORT_DATE_FORMAT" }}{% endif %}</a>
   </div>
 </li>

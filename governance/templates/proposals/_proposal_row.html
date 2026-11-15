@@ -5,7 +5,7 @@
     <div class="wb-row-meta">
       {% if show_circle %}<span>{{ proposal.circle }}</span>{% endif %}
       {% if proposal.proposer %}<span>{{ proposal.proposer }}</span>{% endif %}
-      <span>{{ proposal.decided_at|default:proposal.created_at|date:"SHORT_DATE_FORMAT" }}</span>
+      <span>{{ proposal.decided_at|default:proposal.created_at|timestamp }}</span>
     </div>
   </div>
   <div class="wb-row-aside">

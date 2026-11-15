@@ -1,4 +1,7 @@
+import datetime as dt
+
 from django import template
+from django.utils import formats
 from django.utils.html import format_html, strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext
@@ -117,3 +120,20 @@ TONES = {
 def tone(value):
     """The badge's class for a state or kind: ``badge {{ x.status|tone }}``"""
     return f"wb-tone-{TONES.get(str(value), 'info')}"
+
+
+@register.filter(expects_localtime=True)
+def timestamp(value, arg="SHORT_DATE_FORMAT"):
+    """A moment shown as its day (or ``arg``), with the exact time when
+    hovering it; days (no moment) only formatted"""
+    if not value:
+        return ""
+    shown = formats.date_format(value, arg)
+    if not isinstance(value, dt.datetime):
+        return shown
+    return format_html(
+        '<time datetime="{}" title="{}">{}</time>',
+        value.isoformat(),
+        formats.date_format(value, "DATETIME_FORMAT"),
+        shown,
+    )
