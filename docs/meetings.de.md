@@ -26,8 +26,8 @@ eine Person im Meeting hat).
   sich selbst; die Mail mit den Ergebnissen enthält sie.
 - **Teilnehmende** ("Teilnehmende" im Kopf der Agenda) sind die
   Mitglieder des Kreises beim Start; wer Secretary ist, lädt dort weitere ein
-  oder entfernt sie. "Meeting beenden" (■ daneben, gross in der
-  Abschlussrunde) fragt zuerst, solange Punkte unbearbeitet sind.
+  oder entfernt sie. "Meeting beenden" (■ daneben, gross im
+  Check-out) fragt zuerst, solange Punkte unbearbeitet sind.
 - **Ein Meeting pro Kreis**: wer ein zweites startet, landet im laufenden.
 - **Ende**: "Meeting beenden", oder von selbst drei Stunden nach der
   letzten Änderung. Dann erhalten Mitglieder und Teilnehmende die
@@ -35,7 +35,7 @@ eine Person im Meeting hat).
 
 ## Governance Meeting
 
-"Governance Meeting starten" auf der Seite des Kreises (bei seinen Meetings und im Menü "…", mit "Alle Meetings"), das darf jedes Mitglied. Ablauf: Check-in, Agenda, Abschluss. Wer eine Rolle hat,
+"Governance Meeting starten" auf der Seite des Kreises (bei seinen Meetings und im Menü "…", mit "Alle Meetings"), das darf jedes Mitglied. Ablauf: Check-in, Agenda, Check-out. Wer eine Rolle hat,
 startet eines auf der Seite der Rolle (im Menü "…"), um sie in Rollen aufzuteilen: mit
 der ersten angenommenen Rolle wird sie zum Kreis, wer die Rolle hat, wird Circle Lead des neuen Kreises. Das Tool fragt vorher nach, Abbrechen ist
 vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
@@ -102,7 +102,7 @@ vorgewählt: die Rolle selbst ändert ein Vorschlag in ihrem Kreis.
 Listen von Meetings zeigen, worum es ging: die angenommenen Vorschläge,
 sonst die Agendapunkte.
 
-Ablauf: Check-in, Checklisten, Metriken, Updates, Agenda, Abschluss. Die
+Ablauf: Check-in, Checklisten, Metriken, Updates, Agenda, Check-out. Die
 Updates zeigen die Links des Kreises (z.B. zum Aufgaben-Tool, ad hoc
 die der Kreise der eingeladenen Rollen) und die Ergebnisse der letzten
 drei Tactical Meetings, um nachzufragen ("Frühere Meetings anzeigen" für mehr).

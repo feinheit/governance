@@ -477,7 +477,7 @@ msgstr "%(role)s bleibt unbesetzt."
 
 #: governance/meetings/models.py
 msgid "Check-in round"
-msgstr "Check-in-Runde"
+msgstr "Check-in"
 
 #: governance/meetings/models.py
 #: governance/templates/meetings/meeting_detail.html
@@ -495,7 +495,7 @@ msgstr "Updates"
 
 #: governance/meetings/models.py
 msgid "Agenda building"
-msgstr "Agenda erstellen"
+msgstr "Agenda"
 
 #: governance/meetings/models.py
 msgid "Triage issues"
@@ -503,7 +503,7 @@ msgstr "Spannungen bearbeiten"
 
 #: governance/meetings/models.py
 msgid "Closing round"
-msgstr "Abschlussrunde"
+msgstr "Check-out"
 
 #: governance/meetings/models.py
 msgid "Agenda building and processing"

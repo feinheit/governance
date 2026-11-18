@@ -38,8 +38,8 @@ entfernt sie.
 Rollen in einer Rolle hinzuzufügen macht sie zum Kreis; wer sie hat, schlägt das selbst vor. Policies kommen erst danach: Eine Rolle legt die
 Policies für ihre Domains auf ihrer Seite fest. Ein Kreis ohne eigene Rollen wird beim Annehmen
 wieder zur Rolle, oder, wenn das eigene Meeting des Kreises seine letzten
-Rollen entfernt hat, wenn dieses Meeting endet (nach der
-Abschlussrunde); seine Policies werden archiviert, ausser derselbe
+Rollen entfernt hat, wenn dieses Meeting endet (nach dem
+Check-out); seine Policies werden archiviert, ausser derselbe
 Vorschlag verschiebt sie nach oben (der Entwurf zeigt das). Wird ein
 Kreis entfernt oder wieder zur Rolle, werden seine offenen Vorschläge
 zurückgezogen, das laufende Meeting eines entfernten Kreises endet;
