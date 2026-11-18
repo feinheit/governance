@@ -42,8 +42,8 @@ Take the newest ended one unless the user means another, then read it:
 It has the agenda `items` (each with `label`, `owner`, `outcome` with
 mentions as `@[Name](role:ID)`, `outcome_plain` with the roles' current
 names, `roles`: the mentioned roles with their `role_leads` and their
-email addresses, and `link`), the `links` of the circle and the invited
-roles (where their projects are), `minutes` and `url`. Leave `attendees`
+email addresses, and `link`), the `links` of the circle (an ad hoc
+meeting's of the invited roles' circles: where their projects are), `minutes` and `url`. Leave `attendees`
 alone: who was invited needn't attend, and the list isn't kept
 reliably, so it says nothing about who takes on a task. A
 running meeting works too, with the items so far; say that it isn't over.

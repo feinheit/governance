@@ -4,6 +4,8 @@ from django.db.models import Q
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from governance.roles.models import Link
+
 
 # The process of tactical meetings (constitution, article 3)
 TACTICAL_STEP_CHOICES = [
@@ -161,6 +163,20 @@ class Meeting(models.Model):
     def is_ad_hoc(self):
         """A tactical meeting called with any roles, not a circle's (3.1)"""
         return self.kind == self.TACTICAL and self.circle_id is None
+
+    def progress_links(self):
+        """Where the projects are: the circle's links, an ad hoc meeting's
+        those of the invited roles' circles (not the roles', which link
+        anything, e.g. their documentation)"""
+        circles = (
+            [self.circle_id] if self.circle_id else self.invited_roles.values("circle")
+        )
+        return (
+            Link.objects
+            .filter(role__in=circles)
+            .select_related("role")
+            .order_by("role__name", "position")
+        )
 
     @property
     def kind_label(self):

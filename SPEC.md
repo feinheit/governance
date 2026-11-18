@@ -537,8 +537,8 @@ checked, some unchecked to narrow the invitation (3.1); the caller fills one of 
 a badge of their own, hollow and dashed ("Ad hoc Tactical Meeting",
 `Meeting.is_ad_hoc`). Steps: check-in, checklist review, metrics review (the
 invited roles' entries, for regular ones also the circle's own, not a
-sub-circle's whole circle's), progress updates (the links of the circle and the
-invited roles, the outcomes and links of the circle's last three
+sub-circle's whole circle's), progress updates (the circle's links, an ad hoc meeting's those of the
+invited roles' circles, not the roles' own: `Meeting.progress_links()`, the outcomes and links of the circle's last three
 tactical meetings having some, "Show earlier meetings" ten, then ten
 more, `?earlier=`, which the page's updates keep; `progress_context()`),
 agenda, processing tensions,
@@ -823,7 +823,7 @@ roles/{id}/context/` (the role's page's context, `roles/context.py`), `GET const
 circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
-the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links of the circle and the invited roles like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
+the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
 (the user, the token's access and their roles); objects come with the URL
 of their page, times in local time (their first ten characters are the
 day the pages show), proposals with `adopted_on`. Clients send instructions only (e.g. written by an LLM from

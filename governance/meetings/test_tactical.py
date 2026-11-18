@@ -145,13 +145,16 @@ class TacticalTest(TestCase):
         self.assertIn("Bob buys new knives", mail.outbox[0].body)
         self.assertIn("tasks.example.com", mail.outbox[0].body)
 
-        # The next meeting's progress updates: the links of the circle and
-        # its roles, and the outcomes of the earlier meetings to check on
+        # The next meeting's progress updates: the circle's links, and the
+        # outcomes of the earlier meetings to check on
         Link.objects.create(
             role=self.kitchen, title="Kitchen board", url="https://tasks.example.com/1"
         )
         Link.objects.create(
             role=self.sales, title="Sales board", url="https://tasks.example.com/2"
+        )
+        Link.objects.create(  # Its roles' links aren't where the projects are
+            role=self.cook, title="Recipe book", url="https://recipes.example.com/"
         )
         self.client.post(
             f"/roles/{self.kitchen.pk}/meetings/new/", {"kind": "tactical"}
@@ -161,6 +164,7 @@ class TacticalTest(TestCase):
         response = self.client.get(meeting.get_absolute_url())
         self.assertContains(response, "Kitchen board")
         self.assertNotContains(response, "Sales board")  # Not invited
+        self.assertNotContains(response, "Recipe book")
         self.assertContains(response, "Bob buys new knives")
         self.assertContains(response, 'href="https://tasks.example.com/todos/3"')
 
@@ -563,6 +567,17 @@ class TacticalTest(TestCase):
         self.assertNotContains(response, "Meals served")  # Not invited
         self.assertContains(response, "Invited roles")  # Who was called
         self.assertContains(self.client.get(f"/people/{self.eve.pk}/"), "Your meetings")
+        # The progress updates show the links of the invited roles' circles
+        Link.objects.create(
+            role=self.kitchen, title="Kitchen board", url="https://tasks.example.com/1"
+        )
+        Link.objects.create(
+            role=self.cook, title="Recipe book", url="https://recipes.example.com/"
+        )
+        self.client.post(f"/meetings/{meeting.pk}/step/", {"step": "progress"})
+        response = self.client.get(meeting.get_absolute_url())
+        self.assertContains(response, "Kitchen board")
+        self.assertNotContains(response, "Recipe book")
 
         # She runs it, the invited Bob adds items, Ada neither
         meeting.refresh_from_db()

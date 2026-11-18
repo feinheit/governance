@@ -109,8 +109,8 @@ Lists of meetings show what they were about: the adopted proposals,
 else the agenda items.
 
 Steps: check-in, checklists, metrics, updates, agenda, closing. The
-updates show the links of the circle and the invited roles (e.g. to the
-task management tool) and the outcomes of the last three tactical
+updates show the circle's links (e.g. to the task management tool; an
+ad hoc meeting's those of the invited roles' circles) and the outcomes of the last three tactical
 meetings, to check on them ("Show earlier meetings" for more). For each
 agenda item the secretary may record an "Outcome" and a "Link", which
 save themselves while typing (the others see them), "Save and done" or

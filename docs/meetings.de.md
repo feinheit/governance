@@ -103,9 +103,9 @@ Listen von Meetings zeigen, worum es ging: die angenommenen Vorschläge,
 sonst die Agendapunkte.
 
 Ablauf: Check-in, Checklisten, Metriken, Updates, Agenda, Abschluss. Die
-Updates zeigen die Links des Kreises und der eingeladenen Rollen (z.B.
-zum Aufgaben-Tool) und die Ergebnisse der letzten drei Tactical Meetings,
-um nachzufragen ("Frühere Meetings anzeigen" für mehr).
+Updates zeigen die Links des Kreises (z.B. zum Aufgaben-Tool, ad hoc
+die der Kreise der eingeladenen Rollen) und die Ergebnisse der letzten
+drei Tactical Meetings, um nachzufragen ("Frühere Meetings anzeigen" für mehr).
 Zu jedem Agendapunkt kann, wer Secretary ist, ein "Ergebnis" und einen "Link"
 festhalten, die sich beim Tippen speichern (die anderen sehen sie),
 "Speichern und erledigt" oder einfach "Erledigt". Die Ergebnisse der

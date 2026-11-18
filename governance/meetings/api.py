@@ -5,7 +5,6 @@ Everybody sees all meetings, like on the pages; the API doesn't run them.
 """
 
 from django.conf import settings
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from ninja import Router, Schema
@@ -13,7 +12,7 @@ from ninja import Router, Schema
 from governance.meetings.models import AgendaItem, Meeting
 from governance.meetings.outputs import meeting_outputs
 from governance.roles.mentions import MENTION, plain_mentions
-from governance.roles.models import Assignment, Link, Role
+from governance.roles.models import Assignment, Role
 
 
 router = Router(tags=["meetings"])
@@ -65,7 +64,7 @@ class ItemOut(Schema):
 
 
 class LinkOut(Schema):
-    """Where the projects of the circle and the invited roles are"""
+    """Where the projects of the circle are (``Meeting.progress_links()``)"""
 
     id: int
     role_id: int
@@ -167,8 +166,8 @@ def meetings(request, *, circle_id: int | None = None, kind: str = ""):
 @router.get("meetings/{int:pk}/", response=MeetingOut)
 def meeting(request, pk: int):
     """A meeting with its agenda items, their outcomes and the roles they
-    mention with their Role Leads, the links of the circle and the invited
-    roles, and its outputs"""
+    mention with their Role Leads, the links of the circle (an ad hoc
+    meeting's of the invited roles' circles), and its outputs"""
     meeting = get_object_or_404(
         Meeting.objects.select_related("circle", "secretary"), pk=pk
     )
@@ -226,8 +225,7 @@ def meeting(request, pk: int):
             }
             for item in items
         ],
-        # Like the progress updates of tactical meetings: the circle's and
-        # the invited roles' (a sub-circle's are its own)
+        # Like the progress updates of tactical meetings
         "links": [
             {
                 "id": link.pk,
@@ -237,13 +235,7 @@ def meeting(request, pk: int):
                 "url": link.url,
                 "description": link.description,
             }
-            for link in Link.objects
-            .filter(
-                Q(role__in=[role for role in invited if not role.is_circle])
-                | Q(role=meeting.circle_id)
-            )
-            .select_related("role")
-            .order_by("role__name", "position")
+            for link in meeting.progress_links()
         ],
         "adopted": [
             {

@@ -44,7 +44,7 @@ from governance.proposals.views import (
     group_changes,
 )
 from governance.roles.constitution import FACILITATOR, SECRETARY
-from governance.roles.models import Assignment, ChecklistItem, Link, Metric, Role
+from governance.roles.models import Assignment, ChecklistItem, Metric, Role
 from governance.roles.permissions import (
     acting_secretaries,
     asks_before_starting,
@@ -164,9 +164,7 @@ def tactical_context(meeting, *, step, earlier=None):
     # The invited roles report theirs, sub-circles too; a sub-circle's
     # whole circle's items are reported in the sub-circle's meetings
     items = Q(role__in=meeting.invited_roles.all(), whole_circle=False)
-    roles = list(meeting.invited_roles.filter(is_circle=False))
     if meeting.circle:
-        roles.append(meeting.circle)  # Its links (progress_context())
         items |= Q(role=meeting.circle, whole_circle=True)
     return {
         "tactical_steps": TACTICAL_STEP_CHOICES,
@@ -181,12 +179,11 @@ def tactical_context(meeting, *, step, earlier=None):
         .filter(items)
         .select_related("role")
         .order_by("role__name", "position"),
-    } | (progress_context(meeting, roles, earlier) if step == "progress" else {})
+    } | (progress_context(meeting, earlier) if step == "progress" else {})
 
 
-def progress_context(meeting, roles, count):
-    """Progress updates: where the projects are (the links of the circle and
-    the invited roles), and the outcomes of the circle's last tactical
+def progress_context(meeting, count):
+    """Progress updates: where the projects are (``progress_links()``), and the outcomes of the circle's last tactical
     meetings with outcomes or links to check on (``count`` of them)"""
     try:
         count = min(max(int(count), EARLIER_MEETINGS), MAX_EARLIER_MEETINGS)
@@ -211,10 +208,7 @@ def progress_context(meeting, roles, count):
         more = (count if count >= MORE_EARLIER_MEETINGS else 0) + MORE_EARLIER_MEETINGS
     return {
         "earlier_more": more,
-        "progress_links": Link.objects
-        .filter(role__in=roles)
-        .select_related("role")
-        .order_by("role__name", "position"),
+        "progress_links": meeting.progress_links(),
         "earlier_outcomes": AgendaItem.objects
         .filter(meeting__in=earlier[:count])
         .exclude(outcome="", link="")
