@@ -491,7 +491,7 @@ msgstr "Metriken"
 
 #: governance/meetings/models.py
 msgid "Progress updates"
-msgstr "Fortschritte"
+msgstr "Updates"
 
 #: governance/meetings/models.py
 msgid "Agenda building"
