@@ -495,7 +495,7 @@ msgstr "Updates"
 
 #: governance/meetings/models.py
 msgid "Agenda building"
-msgstr "Agenda"
+msgstr "Agenda erstellen"
 
 #: governance/meetings/models.py
 msgid "Triage issues"
