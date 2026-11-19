@@ -121,7 +121,8 @@ accountability texts are known where proposals or `roles.json` have them.
   without any, the constitution's default: no time limit, async proposals
   without a deadline are adopted once everybody consented, 5.3), `glassfrog_id`/`glassfrog_circle_id`.
   The policies stay the explanation of these settings, the Secretary sets
-  them on the "Settings" pages.
+  them on the "Settings" pages (unfilled: the Facilitator, else the
+  Circle Leads, 5.3.6).
 - **`Accountability`**, **`Domain`**: `role`, `text`, `position`. Their
   order isn't governance: anybody drags them into an order on the role's
   page (arrows without JavaScript, `roles/editing.py`), without a proposal
@@ -366,7 +367,9 @@ rule.
   has Circle Leads only when assigned. Archived circles and roles have
   nobody: archiving ends their assignments, and nobody from above fills
   them in. Facilitator and Secretary follow
-  the constitution's stand-ins (5.3.6); the app gives them no rights in
+  the constitution's stand-ins (5.3.6): an unfilled one is the other
+  one's ("As Facilitator", `filled_by()`), only without both the Circle
+  Leads', also for the circle's settings (decided 2026-11-19); the app gives them no rights in
   meetings the other members don't have, except the secretary amending. An
   assignment removed on the day it started was a mistake and is deleted.
   Adopted proposals record whose assignments they ended
@@ -991,10 +994,6 @@ Deliberately not modelled:
   - The API (`/api/me/`, the `role_leads` of roles and meetings) ignores
     the Circle Leads filling roles nobody is assigned to; `gov` and the
     skills (`governance-proposal`, `governance-tactical`) with it.
-  - An unfilled Secretary or Facilitator: who acts follows 5.3.6 (the
-    other one first, then the Circle Leads), also the circle's settings
-    (only an assigned Secretary may change them now) and the pages,
-    which name the Circle Leads (decided 2026-11-19).
   - "Conflicting" only for proposals without problems before the
     adoption, not those with problems from the start (decided 2026-11-19).
   - Ad hoc tactical meetings: the Circle Leads filling an invited role

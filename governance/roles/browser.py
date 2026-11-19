@@ -57,8 +57,10 @@ def circle_tree(user=None):
             data["mine"] = role.pk in mine
             if not role_leads[role.pk]:
                 data["unfilled"] = str(role.unfilled)
-                # The Circle Leads filling it (1.4.2)
-                data["filled_by"] = [str(u) for u in filled_by(role, leads)]
+                # The Circle Leads filling it (1.4.2, 5.3.6)
+                filled = filled_by(role, leads)
+                data["filled_by"] = [str(u) for u in filled]
+                data["filled_as"] = str(filled.label)
         if role.is_circle:
             data["children"] = [node(child) for child in children[role.pk]]
         return data
@@ -83,7 +85,6 @@ def circle_browser(request):
         "My roles": gettext("My roles"),
         "You hold no roles.": gettext("You hold no roles."),
         "elected": gettext("elected"),
-        "As Circle Lead": gettext("As Circle Lead"),
     }
     return render(
         request,

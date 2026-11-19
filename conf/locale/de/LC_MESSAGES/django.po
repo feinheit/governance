@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 21:27+0100\n"
+"POT-Creation-Date: 2026-11-19 21:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1628,16 +1628,6 @@ msgstr "Meine Rollen"
 msgid "You hold no roles."
 msgstr "Du hast keine Rollen."
 
-#: governance/roles/browser.py governance/templates/meetings/tactical_call.html
-#: governance/templates/roles/_role_leads.html
-#: governance/templates/roles/_role_leads_card.html
-#: governance/templates/roles/_tree_list.html
-#: governance/templates/roles/assignments.html
-#: governance/templates/roles/governance.txt
-#: governance/templates/roles/person_detail.html
-msgid "As Circle Lead"
-msgstr "Als Circle Lead"
-
 #: governance/roles/constitution.py
 msgid "Facilitator"
 msgstr ""
@@ -1975,6 +1965,11 @@ msgstr "Notiz"
 #: governance/roles/models.py
 msgid "notes"
 msgstr "Notizen"
+
+#: governance/roles/permissions.py
+#, python-format
+msgid "As %(role)s"
+msgstr "Als %(role)s"
 
 #: governance/roles/settings_views.py
 msgid "In calendar days. Sub-circles without a deadline of their own use this one, so the policy setting it should say that it applies to all sub-circles (constitution 5.2.1)."

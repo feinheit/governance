@@ -362,20 +362,22 @@ def callable_roles():
 
 def invitees(roles):
     """The people invited with the roles, each once with their roles, focus
-    and whether they fill it as Circle Lead: the Role Leads, the Circle
-    Leads of a role without anybody assigned (1.4.2)"""
+    and as what they fill it without being assigned: the Role Leads, the
+    Circle Leads of a role without anybody assigned (1.4.2), for the
+    Secretary and the Facilitator the other one first (5.3.6)"""
     focus = {
         (assignment.user_id, assignment.role_id): assignment.focus
         for assignment in Assignment.objects.current().filter(role__in=roles)
     }
-    people = {}
+    people, leads = {}, {}
     for role in roles:
+        filled_as = filled_by(role, leads).label
         for user in role_leads(role):
             key = (user.pk, role.pk)
             people.setdefault(user, []).append((
                 role,
                 focus.get(key),
-                key not in focus,
+                None if key in focus else filled_as,
             ))
     return sorted(people.items(), key=lambda item: str(item[0]).lower())
 

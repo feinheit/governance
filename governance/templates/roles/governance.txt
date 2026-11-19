@@ -21,7 +21,7 @@
 
 {% endfor %}{% for role in circle.export_roles %}{{ circle.subheading }} {{ role.name }}
 
-{% if with_people %}*{% for assignment in role.export_role_leads %}{% if forloop.first %}{% translate "Role Leads" %}: {% endif %}{{ assignment.user }}{% if assignment.focus %} ({{ assignment.focus }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}{% for user in role.export_filled_by %}{% if forloop.first %}{% translate "Role Leads" %}: {% endif %}{{ user }}{% if not forloop.last %}, {% else %} ({% translate "As Circle Lead" %}){% endif %}{% empty %}{{ role.unfilled }}{% endfor %}{% endfor %}*
+{% if with_people %}*{% for assignment in role.export_role_leads %}{% if forloop.first %}{% translate "Role Leads" %}: {% endif %}{{ assignment.user }}{% if assignment.focus %} ({{ assignment.focus }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}{% for user in role.export_filled_by %}{% if forloop.first %}{% translate "Role Leads" %}: {% endif %}{{ user }}{% if not forloop.last %}, {% else %} ({{ role.export_filled_by.label }}){% endif %}{% empty %}{{ role.unfilled }}{% endfor %}{% endfor %}*
 
 {% endif %}{% if role.display_purpose %}{{ role.display_purpose }}
 

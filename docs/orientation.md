@@ -75,13 +75,16 @@ this role" in the menu "…" shows what applies to it from outside: the
 domains and policies of its circles and the domains of their roles, from
 the outermost circle down. Its meetings, those of its circle and those it was invited to (see [Meetings](meetings.md)), are in the menu "…".
 Roles without anybody assigned are filled by the Circle Leads, except the
-Circle Rep; a Circle Lead without anybody by those of the circle above.
-The pages list them with "As Circle Lead" (the role's, its circle's,
+Circle Rep; a Circle Lead without anybody by those of the circle above;
+the Secretary by the Facilitator and the other way round, only without
+either of them by the Circle Leads (constitution 5.3.6).
+The pages list them with "As Circle Lead" ("As Facilitator", "As
+Secretary"; the role's, its circle's,
 the circle browser, your page, assigning, calling a tactical meeting,
 the Markdown export).
 
 **Your page**, the start page, shows your roles (also those without anybody assigned, which
-you fill as Circle Lead, marked "As Circle Lead"), your drafts and tensions, proposals
+you fill, marked "As Circle Lead" or the like), your drafts and tensions, proposals
 waiting for your response, your meetings and your settings: name, short
 name (in the menu at the top), language (German or English) and mails.
 "Settings" in the menu with your name changes them in one form; the

@@ -11,7 +11,7 @@
   {% for user in role.filled_by %}
     <a href="{{ user.get_absolute_url }}">{{ user }}</a>{% if not forloop.last %},
     {% endif %}{% if forloop.last %}
-      <span class="badge wb-tone-neutral">{% translate "As Circle Lead" %}</span>{% endif %}
+      <span class="badge wb-tone-neutral">{{ role.filled_by.label }}</span>{% endif %}
   {% empty %}
     <span class="text-body-secondary">{{ role.unfilled }}</span>
   {% endfor %}

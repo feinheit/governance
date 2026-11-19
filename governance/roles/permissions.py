@@ -12,7 +12,10 @@ constitution doesn't do) or ``AS_ADMIN``. The pages mark the latter two
 (``generic/_right.html``, the ``elevated`` filter).
 """
 
+from collections import UserList
+
 from django.db.models import Q
+from django.utils.translation import gettext as _
 
 from governance.roles.constitution import FACILITATOR, LEAD, REP, SECRETARY
 from governance.roles.models import Assignment, Role
@@ -64,9 +67,14 @@ def circle_leads(circle):
     return User.objects.none()
 
 
+# An unfilled Secretary or Facilitator: the other one stands in (5.3.6)
+OTHER_ELECTED = {SECRETARY: [FACILITATOR], FACILITATOR: [SECRETARY]}
+
+
 def role_leads(role):
     """Who fills a role: its Role Leads, while nobody holds it its circle's
-    Circle Leads (1.4.2), except an unfilled Circle Rep, which is nobody's;
+    Circle Leads (1.4.2), for the Secretary and the Facilitator the other
+    one first (5.3.6), except an unfilled Circle Rep, which is nobody's;
     archived roles have none"""
     from governance.accounts.models import User
 
@@ -77,30 +85,45 @@ def role_leads(role):
     )
     if role_leads.exists() or role.circle is None or role.core_role == REP:
         return role_leads
-    return circle_leads(role.circle)
+    return stand_ins(role.circle, OTHER_ELECTED.get(role.core_role, []))
+
+
+class FilledBy(UserList):
+    """The users filling a role without anybody assigned, ``label`` says as
+    what ("As Circle Lead")"""
+
+    def __init__(self, users=(), core_role=LEAD):
+        from governance.roles.constitution import CORE_ROLES
+
+        super().__init__(users)
+        self.core_role = core_role
+        self.label = _("As %(role)s") % {"role": CORE_ROLES[core_role].name}
 
 
 def filled_by(role, cache):
-    """The Circle Leads filling a role without anybody assigned (1.4.2), the
-    super-circle's for a Circle Lead (``circle_leads()``); nobody for the
-    Circle Rep, circles and archived roles. ``cache`` (a dict) keeps the
-    Circle Leads per circle for lists of roles."""
+    """Who fills a role without anybody assigned (``role_leads()``): the
+    Circle Leads (1.4.2), the super-circle's for a Circle Lead
+    (``circle_leads()``), for the Secretary and the Facilitator the other
+    one first (5.3.6); nobody for the Circle Rep, circles and archived
+    roles. ``cache`` (a dict) keeps them per circle for lists of roles."""
     if role.archived_on or role.is_circle or role.core_role == REP:
-        return []
+        return FilledBy()
     if role.circle_id is None:
-        return []
-    if role.circle_id not in cache:
-        cache[role.circle_id] = list(
-            circle_leads(role.circle).order_by("full_name", "email")
-        )
-    return cache[role.circle_id]
+        return FilledBy()
+    others = OTHER_ELECTED.get(role.core_role, [])
+    key = (role.circle_id, *others)
+    if key not in cache:
+        core_role, users = standing_in(role.circle, others)
+        cache[key] = FilledBy(users.order_by("full_name", "email"), core_role)
+    return cache[key]
 
 
 def held_as_circle_lead(user):
     """The active roles without anybody assigned, which the user fills as
     one of their circle's Circle Leads (1.4.2), also those of sub-circles without Circle
-    Lead (``circle_leads()`` is recursive); not the Circle Rep, nor circles
-    (their Circle Lead role is in the list)"""
+    Lead (``circle_leads()`` is recursive), or as the Secretary or the
+    Facilitator standing in for the other one (5.3.6, ``filled_by()``); not
+    the Circle Rep, nor circles (their Circle Lead role is in the list)"""
     roles = (
         Role.objects
         .active()
@@ -114,14 +137,11 @@ def held_as_circle_lead(user):
         )
         .select_related("circle")
     )
-    leading = {}
+    cache = {}
     held = []
     for role in roles:
-        if role.circle_id not in leading:
-            leading[role.circle_id] = (
-                circle_leads(role.circle).filter(pk=user.pk).exists()
-            )
-        if leading[role.circle_id]:
+        role.filled_by = filled_by(role, cache)
+        if user in role.filled_by:
             held.append(role)
     return held
 
@@ -271,6 +291,7 @@ def can_change_settings(user, role):
     whether a policy makes a role of the circle elected"""
     if role.archived_on or role.core_role:
         return NOT_ALLOWED
-    if holds_core_role(user, role.governing_circle, SECRETARY):
+    circle = role.governing_circle
+    if circle and acting_secretaries(circle).filter(pk=user.pk).exists():
         return ALLOWED
     return as_admin(user)

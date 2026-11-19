@@ -76,13 +76,16 @@ erscheint nur, wenn die Rolle eigene hat. "Domains und Policies, die
 diese Rolle betreffen" im Menü "…" zeigt, was von aussen für sie gilt: die
 Domains und Policies ihrer Kreise und die Domains von deren Rollen, vom
 äussersten Kreis nach innen. Ihre Meetings, die ihres Kreises und die, zu denen sie eingeladen war (siehe [Meetings](meetings.de.md)), stehen im Menü "…".
-Rollen ohne Zuweisung füllen die Circle Leads aus, ausser der Rolle Circle Rep; ist niemand der Rolle Circle Lead zugewiesen, die Circle Leads des übergeordneten Kreises.
-Die Seiten zeigen sie mit "Als Circle Lead" (die der Rolle, die ihres Kreises,
+Rollen ohne Zuweisung füllen die Circle Leads aus, ausser der Rolle Circle Rep; ist niemand der Rolle Circle Lead zugewiesen, die Circle Leads des übergeordneten Kreises;
+die Rolle Secretary füllt Facilitator aus und umgekehrt, erst ohne beide
+die Circle Leads (Verfassung 5.3.6).
+Die Seiten zeigen sie mit "Als Circle Lead" ("Als Facilitator", "Als
+Secretary"; die der Rolle, die ihres Kreises,
 der Kreis-Browser, deine Personenseite, das Zuweisen, das Einberufen eines
 Tactical Meetings, der Markdown-Export).
 
-**Deine Personenseite**, die Startseite, zeigt deine Rollen (auch die ohne Zuweisung, die du als
-Circle Lead ausfüllst, markiert "Als Circle Lead"), deine Entwürfe und Spannungen,
+**Deine Personenseite**, die Startseite, zeigt deine Rollen (auch die ohne Zuweisung, die du
+ausfüllst, markiert "Als Circle Lead" oder ähnlich), deine Entwürfe und Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine
 Einstellungen: Name, Kurzname (im Menü oben), Sprache (Deutsch oder
 Englisch) und Mails. "Einstellungen" im Menü mit deinem Namen ändert sie

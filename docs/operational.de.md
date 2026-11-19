@@ -9,7 +9,7 @@ Einiges ändert sich direkt im Tool, ohne Vorschlag:
 | Metriken | Circle Leads |
 | Checklisten-Punkte, Links und Notizen | alle |
 | Policies einer Domain | wer die Rolle mit der Domain hat |
-| Einstellungen (Frist für asynchrone Vorschläge, durch Policy gewählte Rollen) | Secretary |
+| Einstellungen (Frist für asynchrone Vorschläge, durch Policy gewählte Rollen) | Secretary (sonst Facilitator, sonst Circle Leads) |
 
 - Checklisten-Punkte und Metriken werden in Tactical Meetings berichtet,
   "Berichtet von" sagt von wem: vom ganzen Kreis (in seinen eigenen

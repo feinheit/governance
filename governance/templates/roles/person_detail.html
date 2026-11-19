@@ -36,7 +36,7 @@
                       {% if assignment %}
                         {% include "roles/_assignment_note.html" %}
                       {% else %}
-                        <span class="badge wb-tone-neutral">{% translate "As Circle Lead" %}</span>
+                        <span class="badge wb-tone-neutral">{{ role.filled_by.label }}</span>
                       {% endif %}
                     </div>
                   </div>

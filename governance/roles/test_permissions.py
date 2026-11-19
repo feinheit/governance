@@ -73,6 +73,42 @@ class CircleLeadsTest(TestCase):
         self.assertEqual(list(circle_leads(anchor)), [])
 
 
+class UnfilledSecretaryTest(TestCase):
+    def test_the_other_elected_role_first(self):
+        """An unfilled Secretary or Facilitator: the other one fills it,
+        else the Circle Leads (5.3.6), on the pages too; the circle's
+        settings are theirs"""
+        from governance.roles.permissions import held_as_circle_lead
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        Assignment.objects.create(role=kitchen.roles.get(core_role="lead"), user=ada)
+        secretary = kitchen.roles.get(core_role="secretary")
+        facilitator = kitchen.roles.get(core_role="facilitator")
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+
+        # Nobody elected: the Circle Lead
+        self.assertEqual(list(role_leads(secretary)), [ada])
+        self.assertTrue(can_change_settings(ada, cook))
+        self.assertIn(secretary, held_as_circle_lead(ada))
+
+        Assignment.objects.create(role=facilitator, user=bob)
+        self.assertEqual(list(role_leads(secretary)), [bob])
+        self.assertTrue(can_change_settings(bob, cook))
+        self.assertFalse(can_change_settings(ada, cook))
+        self.assertNotIn(secretary, held_as_circle_lead(ada))
+        self.assertIn(secretary, held_as_circle_lead(bob))
+        self.assertIn(cook, held_as_circle_lead(ada))
+        self.client.force_login(ada)
+        response = self.client.get(secretary.get_absolute_url())
+        self.assertContains(response, "As Facilitator")
+        self.assertNotContains(response, "As Circle Lead")
+        response = self.client.get(bob.get_absolute_url())
+        self.assertContains(response, "As Facilitator")
+
+
 class ArchivedTest(TestCase):
     def test_nobody_leads_archived_circles_and_roles(self):
         """Archived circles and roles have no Role Leads (archiving ends their

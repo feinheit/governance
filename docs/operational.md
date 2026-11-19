@@ -9,7 +9,7 @@ Some things change directly in the tool, without a proposal:
 | Metrics | Circle Leads |
 | Checklist items, links and notes | everybody |
 | Policies of a domain | whoever holds the role with the domain |
-| Settings (deadline for async proposals, roles elected by policy) | Secretary |
+| Settings (deadline for async proposals, roles elected by policy) | Secretary (else Facilitator, else Circle Leads) |
 
 - Checklist items and metrics are reported in tactical meetings, "Reported
   by" says by whom: the whole circle (in its own meetings), one of its
