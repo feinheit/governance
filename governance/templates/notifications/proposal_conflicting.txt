@@ -7,6 +7,6 @@
 {% translate "Tension" %}:
 {{ proposal.tension|plain }}
 
-{{ url }}{% if adopted %}
-{% translate "Adopted" %}: {{ adopted_url }}{% endif %}
+{% if user.pk == proposal.proposer_id %}{{ url }}
+{% endif %}{% if adopted %}{% translate "Adopted" %}: {{ adopted_url }}{% endif %}
 {% endautoescape %}

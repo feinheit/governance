@@ -236,6 +236,11 @@ class ProcessTest(TestCase):
             self.assertEqual(
                 {m.to[0] for m in messages}, {"ada@example.com", "bob@example.com"}
             )
+            # Only its proposer sees the draft: a link for nobody else
+            url = conflicting.get_absolute_url()
+            bodies = {m.to[0]: m.body for m in messages}
+            self.assertIn(url, bodies["ada@example.com"])
+            self.assertNotIn(url, bodies["bob@example.com"])
             call_command("hourly_tasks")
 
     def test_cannot_be_adopted_when_due(self):

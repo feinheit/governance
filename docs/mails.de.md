@@ -13,7 +13,7 @@ die Mails "Zu allem in allen Kreisen" gewählt haben.
 | Er wird wieder zum Entwurf | Dieselben |
 | Er wird zurückgezogen | Dieselben |
 | Er kann an der Frist nicht asynchron angenommen werden und wartet auf ein Meeting | Dieselben |
-| Eine inzwischen angenommene Änderung steht im Konflikt damit: wieder ein Entwurf | Dieselben |
+| Eine inzwischen angenommene Änderung steht im Konflikt damit: wieder ein Entwurf | Dieselben (den Link zum Entwurf nur, wer ihn vorgeschlagen hat) |
 | Er wird asynchron angenommen (mit der letzten Zustimmung oder an der Frist) | Dieselben, dazu wer Rollen hat, die er entfernt oder wegschiebt, und die Secretaries und Circle Leads der Sub-Kreise, in die oder aus denen er Rollen oder Policies verschiebt |
 | Eine Frage oder ein Kommentar | Wer ihn vorschlägt |
 | Die Antwort darauf | Wer gefragt oder kommentiert hat (noch Mitglieder des Kreises) |
