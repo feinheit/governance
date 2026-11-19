@@ -36,9 +36,18 @@ class UserToken(HttpBearer):
         return None
 
 
+class UserSession(SessionAuth):
+    def __call__(self, request):
+        # Invalid tokens are a 401, not the CSRF failure which the session
+        # authentication checks first
+        if request.headers.get("authorization", "").lower().startswith("bearer "):
+            return None
+        return super().__call__(request)
+
+
 def user_auth(*, allow_read_only=False):
     """Tokens first: the session authentication fails without a CSRF token
 
     Read only tokens are restricted to GET, HEAD and OPTIONS unless
     ``allow_read_only`` is set, e.g. for revoking the token itself."""
-    return [UserToken(allow_read_only=allow_read_only), SessionAuth()]
+    return [UserToken(allow_read_only=allow_read_only), UserSession()]

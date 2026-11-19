@@ -1,7 +1,7 @@
 import datetime as dt
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.utils import timezone
 
 from governance.accounts.models import APIToken, User, prune_api_tokens
@@ -35,6 +35,15 @@ class APITest(TestCase):
             content_type="application/json",
             headers={"authorization": f"Bearer {secret or self.secret}"},
         )
+
+    def test_invalid_token_on_writes(self):
+        """Invalid tokens are a 401 on writes too, not the CSRF failure of the
+        session authentication, so that gov logs in again"""
+        client = Client(enforce_csrf_checks=True)
+        response = client.delete(
+            "/api/tokens/current/", headers={"authorization": "Bearer gov_nope"}
+        )
+        self.assertEqual(response.status_code, 401)
 
     def test_tokens_extend_themselves(self):
         """A token in use stays valid, one nobody uses expires after 30 days"""
