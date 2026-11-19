@@ -430,6 +430,9 @@ def save_role_item(request, item, data):
         item.role = get_object_or_404(Role.objects.active(), pk=role_id)
     if (whole := data.pop("whole_circle", None)) is not None:
         item.whole_circle = whole
+    elif not item.role.is_circle:
+        # Moved to a role: not the whole circle's anymore
+        item.whole_circle = False
     if item.whole_circle != item.role.is_circle and not item.role.circle_id:
         raise HttpError(400, "The anchor circle's items are the whole circle's.")
     if item.whole_circle and not item.role.is_circle:

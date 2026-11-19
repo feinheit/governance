@@ -532,6 +532,12 @@ class CLITest(TestCase):
         self.assertIn(
             "No checklist items.", self.gov("checklist", "list", self.cook.pk).output
         )
+        # Back to a role, which isn't the whole circle's
+        result = self.gov("checklist", "update", item["id"], "--role", self.cook.pk)
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn(
+            "Fridge cleaned", self.gov("checklist", "list", self.cook.pk).output
+        )
         result = self.gov("checklist", "update", item["id"])
         self.assertIn("Nothing to change", result.output)
         self.assertIn(

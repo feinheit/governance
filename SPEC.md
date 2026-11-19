@@ -996,8 +996,6 @@ Deliberately not modelled:
     (only an assigned Secretary may change them now) and the pages,
     which name the Circle Leads (decided 2026-11-19).
   - The history misses changes of who reports a metric or checklist item.
-  - The API refuses moving a whole circle's item to a role without
-    `whole_circle=false`.
   - The conflict mail links everybody to what is the proposer's draft.
   - "Conflicting" only for proposals without problems before the
     adoption, not those with problems from the start (decided 2026-11-19).
