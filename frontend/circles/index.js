@@ -384,7 +384,11 @@ function Tooltip({ node, x, y, width, height }) {
         </div>
       ) : (
         <div className="text-body-secondary small">
-          {data.role_leads.length ? data.role_leads.join(", ") : data.unfilled}
+          {data.role_leads.length
+            ? data.role_leads.join(", ")
+            : data.filled_by?.length
+              ? `${data.filled_by.join(", ")} (${label("As Circle Lead")})`
+              : data.unfilled}
           {data.elected ? ` · ${label("elected")}` : ""}
         </div>
       )}

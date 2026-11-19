@@ -74,8 +74,10 @@ when the role has policies of its own. "Domains and policies affecting
 this role" in the menu "…" shows what applies to it from outside: the
 domains and policies of its circles and the domains of their roles, from
 the outermost circle down. Its meetings, those of its circle and those it was invited to (see [Meetings](meetings.md)), are in the menu "…".
-Unfilled roles are held by the Circle Leads, except the Circle Rep; an
-unfilled Circle Lead by those of the circle above.
+Roles without anybody assigned are filled by the Circle Leads, except the
+Circle Rep; a Circle Lead without anybody by those of the circle above.
+The pages list them with "As Circle Lead" (the role's, its circle's,
+the circle browser, your page).
 
 **Your page**, the start page, shows your roles (also those without anybody assigned, which
 you fill as Circle Lead, marked "As Circle Lead"), your drafts and tensions, proposals

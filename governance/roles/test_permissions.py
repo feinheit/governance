@@ -61,7 +61,7 @@ class CircleLeadsTest(TestCase):
         self.assertContains(response, "As Circle Lead", count=2)
         self.assertContains(response, bob.get_absolute_url())
         self.assertContains(
-            self.client.get(bakery.get_absolute_url()), "Held by the Circle Leads"
+            self.client.get(bakery.get_absolute_url()), "As Circle Lead"
         )
 
         # Once somebody leads the bakery, they do

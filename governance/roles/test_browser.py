@@ -58,3 +58,28 @@ class CircleBrowserTest(TestCase):
         self.assertEqual(secretary["unfilled"], "Held by the Circle Leads")
         lead = next(c for c in tree["children"] if c["name"] == "Circle Lead")
         self.assertEqual(lead["unfilled"], "Nobody")  # The anchor's
+
+    def test_circle_leads_fill_unassigned_roles(self):
+        """Roles without anybody assigned show the Circle Leads filling them
+        (1.4.2), also through sub-circles without Circle Lead; the Circle
+        Rep nobody's"""
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        self.client.force_login(ada)
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        anchor.create_core_roles()
+        Assignment.objects.create(role=anchor.roles.get(core_role="lead"), user=ada)
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        Role.objects.create(name="Cook", circle=kitchen)
+
+        kitchen_node = next(
+            c for c in circle_tree(ada)["children"] if c["name"] == "Kitchen"
+        )
+        nodes = {c["name"]: c for c in kitchen_node["children"]}
+        self.assertEqual(nodes["Cook"]["filled_by"], ["Ada"])
+        self.assertEqual(nodes["Circle Lead"]["filled_by"], ["Ada"])
+        self.assertEqual(nodes["Circle Rep"]["filled_by"], [])
+
+        response = self.client.get("/circles/")
+        self.assertContains(response, "As Circle Lead")
+        self.assertContains(response, "unassigned", count=1)  # The Rep

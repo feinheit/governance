@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 08:13+0100\n"
+"POT-Creation-Date: 2026-11-19 08:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1610,6 +1610,13 @@ msgstr "Meine Rollen"
 #: governance/roles/browser.py
 msgid "You hold no roles."
 msgstr "Du hast keine Rollen."
+
+#: governance/roles/browser.py governance/templates/roles/_role_leads.html
+#: governance/templates/roles/_role_leads_card.html
+#: governance/templates/roles/_tree_list.html
+#: governance/templates/roles/person_detail.html
+msgid "As Circle Lead"
+msgstr "Als Circle Lead"
 
 #: governance/roles/constitution.py
 msgid "Facilitator"
@@ -3223,11 +3230,6 @@ msgstr "in <a href=\"%(url)s\">%(circle)s</a>"
 #: governance/templates/roles/circle_members.html
 msgid "Edit focus"
 msgstr "Fokus bearbeiten"
-
-#: governance/templates/roles/_role_leads_card.html
-#: governance/templates/roles/person_detail.html
-msgid "As Circle Lead"
-msgstr "Als Circle Lead"
 
 #: governance/templates/roles/_role_leads_card.html
 #: governance/templates/roles/assignments.html

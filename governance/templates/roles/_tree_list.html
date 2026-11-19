@@ -16,6 +16,9 @@
         >{% translate "your role" %}</span>{% endif %}
       {% if child.role_leads %}
         <span class="text-body-secondary small">{{ child.role_leads|join:", " }}</span>
+      {% elif child.filled_by %}
+        <span class="text-body-secondary small">{{ child.filled_by|join:", " }}</span>
+        <span class="badge wb-tone-neutral">{% translate "As Circle Lead" %}</span>
       {% elif child.kind != "circle" %}
         <span class="text-body-secondary small">{% translate "unassigned" %}</span>
       {% endif %}

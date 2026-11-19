@@ -11,6 +11,7 @@ from django.utils.translation import gettext
 
 from governance.roles.constitution import LEAD
 from governance.roles.models import Assignment, Role
+from governance.roles.permissions import filled_by
 
 
 def circle_tree(user=None):
@@ -33,6 +34,7 @@ def circle_tree(user=None):
         role_leads[role_id].append(name or email)
         if user is not None and user_id == user.pk:
             mine.add(role_id)
+    leads = {}
     children = defaultdict(list)
     for role in roles:
         children[role.circle_id].append(role)
@@ -55,6 +57,8 @@ def circle_tree(user=None):
             data["mine"] = role.pk in mine
             if not role_leads[role.pk]:
                 data["unfilled"] = str(role.unfilled)
+                # The Circle Leads filling it (1.4.2)
+                data["filled_by"] = [str(u) for u in filled_by(role, leads)]
         if role.is_circle:
             data["children"] = [node(child) for child in children[role.pk]]
         return data
@@ -79,6 +83,7 @@ def circle_browser(request):
         "My roles": gettext("My roles"),
         "You hold no roles.": gettext("You hold no roles."),
         "elected": gettext("elected"),
+        "As Circle Lead": gettext("As Circle Lead"),
     }
     return render(
         request,

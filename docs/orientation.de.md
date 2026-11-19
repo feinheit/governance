@@ -76,7 +76,9 @@ erscheint nur, wenn die Rolle eigene hat. "Domains und Policies, die
 diese Rolle betreffen" im Menü "…" zeigt, was von aussen für sie gilt: die
 Domains und Policies ihrer Kreise und die Domains von deren Rollen, vom
 äussersten Kreis nach innen. Ihre Meetings, die ihres Kreises und die, zu denen sie eingeladen war (siehe [Meetings](meetings.de.md)), stehen im Menü "…".
-Unbesetzte Rollen haben die Circle Leads, ausser der Rolle Circle Rep; ist die Rolle Circle Lead unbesetzt, haben sie die Circle Leads des übergeordneten Kreises.
+Rollen ohne Zuweisung füllen die Circle Leads aus, ausser der Rolle Circle Rep; ist niemand der Rolle Circle Lead zugewiesen, die Circle Leads des übergeordneten Kreises.
+Die Seiten zeigen sie mit "Als Circle Lead" (die der Rolle, die ihres Kreises,
+der Kreis-Browser, deine Personenseite).
 
 **Deine Personenseite**, die Startseite, zeigt deine Rollen (auch die ohne Zuweisung, die du als
 Circle Lead ausfüllst, markiert "Als Circle Lead"), deine Entwürfe und Spannungen,

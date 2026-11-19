@@ -35,6 +35,7 @@ from governance.roles.permissions import (
     can_end_assignment,
     can_start_meeting,
     circle_leads,
+    filled_by,
     held_as_circle_lead,
     members,
     proposer_roles,
@@ -212,6 +213,10 @@ def role_detail(request, pk):
             .prefetch_related(current_assignments())
             .order_by("position", "name")
         )
+        # Who fills the roles without anybody assigned
+        leads = {}
+        for r in roles:
+            r.filled_by = [] if r.current_assignments else filled_by(r, leads)
         context["core_roles"] = [r for r in roles if r.core_role]
         # Sub-circles are roles too, the badge tells them apart
         context["roles"] = [r for r in roles if not r.core_role]

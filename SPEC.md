@@ -737,7 +737,9 @@ they had proven themselves (2026-11-15).
   (decided 2026-11-08).
 - **Circle browser** (`/circles/`, `frontend/circles`, circle packing):
   zoom by clicking, `?circle=ID`, "My roles", colors for assigned,
-  elected/core and unfilled roles with a legend, validated for light and
+  elected/core and unfilled roles with a legend (the list and tooltips
+  name the Circle Leads filling roles without anybody assigned, "As
+  Circle Lead", like the circle's page; `filled_by()`), validated for light and
   dark mode. The path and "My roles" beside the page's title, the legend
   beside the circle from 992px on (screens are rather wide than tall),
   no explanation above it. The circle is as high as the window allows

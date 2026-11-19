@@ -80,6 +80,22 @@ def role_leads(role):
     return circle_leads(role.circle)
 
 
+def filled_by(role, cache):
+    """The Circle Leads filling a role without anybody assigned (1.4.2), the
+    super-circle's for a Circle Lead (``circle_leads()``); nobody for the
+    Circle Rep, circles and archived roles. ``cache`` (a dict) keeps the
+    Circle Leads per circle for lists of roles."""
+    if role.archived_on or role.is_circle or role.core_role == REP:
+        return []
+    if role.circle_id is None:
+        return []
+    if role.circle_id not in cache:
+        cache[role.circle_id] = list(
+            circle_leads(role.circle).order_by("full_name", "email")
+        )
+    return cache[role.circle_id]
+
+
 def held_as_circle_lead(user):
     """The active roles without anybody assigned, which the user fills as
     one of their circle's Circle Leads (1.4.2), also those of sub-circles without Circle

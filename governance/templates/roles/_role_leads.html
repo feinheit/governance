@@ -8,5 +8,11 @@
     >{% blocktranslate with date=assignment.elected_until|date:"SHORT_DATE_FORMAT" %}elected until {{ date }}{% endblocktranslate %}</span>{% endif %}{% if not forloop.last %},
   {% endif %}
 {% empty %}
-  <span class="text-body-secondary">{{ role.unfilled }}</span>
+  {% for user in role.filled_by %}
+    <a href="{{ user.get_absolute_url }}">{{ user }}</a>{% if not forloop.last %},
+    {% endif %}{% if forloop.last %}
+      <span class="badge wb-tone-neutral">{% translate "As Circle Lead" %}</span>{% endif %}
+  {% empty %}
+    <span class="text-body-secondary">{{ role.unfilled }}</span>
+  {% endfor %}
 {% endfor %}
