@@ -82,6 +82,23 @@ class ViewsTest(TestCase):
             self.client.get(other.get_absolute_url()), "As Circle Lead"
         )
 
+    def test_person_orders_roles_like_the_circle(self):
+        """Roles held as Circle Lead aren't last, the circle's order counts"""
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        Assignment.objects.create(
+            role=kitchen.roles.get(core_role="lead"), user=self.user
+        )
+        Role.objects.create(name="Baker", circle=kitchen, position=10)
+        cook = Role.objects.create(name="Cook", circle=kitchen, position=20)
+        Assignment.objects.create(role=cook, user=self.user)
+
+        page = self.client.get(self.user.get_absolute_url()).content.decode()
+        names = ["Circle Lead</a>", "Facilitator</a>", "Baker</a>", "Cook</a>"]
+        indexes = [page.index(name) for name in names]
+        self.assertEqual(indexes, sorted(indexes))
+
     def test_one_link_for_tactical_meetings(self):
         """Ad-hoc tactical meetings aren't tied to a circle or role: the
         user's menu calls them, once on every page"""

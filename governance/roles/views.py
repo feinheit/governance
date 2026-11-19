@@ -373,16 +373,17 @@ def person_detail(request, pk):
         .current()
         .filter(user=user, role__archived_on=None)
         .select_related("role__circle")
-        .order_by("role__circle__name", "role__position", "role__name")
     )
-    by_circle = defaultdict(lambda: {"assignments": [], "held": []})
-    for assignment in assignments:
-        by_circle[assignment.role.circle]["assignments"].append(assignment)
-    # Roles without anybody assigned are the Circle Leads' (1.4.2)
+    # Roles without anybody assigned are the Circle Leads' (1.4.2), between
+    # the assigned ones in the circle's order
+    rows = [(assignment.role, assignment) for assignment in assignments]
     if user.is_active:
-        held = sorted(held_as_circle_lead(user), key=lambda r: (r.position, r.name))
-        for role in held:
-            by_circle[role.circle]["held"].append(role)
+        rows.extend((role, None) for role in held_as_circle_lead(user))
+    by_circle = defaultdict(list)
+    for role, assignment in sorted(
+        rows, key=lambda row: (row[0].position, row[0].name, row[0].pk)
+    ):
+        by_circle[role.circle].append({"role": role, "assignment": assignment})
     # Circles in depth-first order, like the organization's structure
     order = {
         circle.pk: index for index, circle in enumerate(Role.objects.depth_first())
