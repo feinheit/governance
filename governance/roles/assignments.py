@@ -18,7 +18,7 @@ from governance.notifications import mails
 from governance.notifications.role_leads import announce
 from governance.roles.constitution import LEAD, REP
 from governance.roles.models import Assignment, Role
-from governance.roles.permissions import can_assign, can_end_assignment
+from governance.roles.permissions import can_assign, can_end_assignment, filled_by
 
 
 def affected_circles(role):
@@ -199,6 +199,7 @@ def render_assignments(request, role, form, *, reps=None):
             .current()
             .for_display()
             .select_related("user"),
+            "filled_by": filled_by(role, {}),
             "form": form,
             "can_assign": form is not None,
             "reps": reps,

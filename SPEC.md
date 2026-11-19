@@ -766,7 +766,8 @@ they had proven themselves (2026-11-15).
 - **Export**: the whole current governance as Markdown (circles, roles,
   their texts, policies, metrics, checklist items, links and notes), `/export/governance.md`
   (the people only with `?people=1`, `--with-people`: personal data
-  is opt-in, decided 2026-11-08); no button, `gov export` (`GET
+  is opt-in, decided 2026-11-08; the Circle Leads filling roles without
+  anybody assigned "(As Circle Lead)", like the pages); no button, `gov export` (`GET
   export/`) offers it.
 - **Help** (`/help/`, `governance/help.py`): the user documentation in
   `docs/` (Markdown, also readable on GitHub: `name.md` in English,

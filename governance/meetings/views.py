@@ -49,6 +49,7 @@ from governance.roles.permissions import (
     acting_secretaries,
     asks_before_starting,
     can_start_meeting,
+    filled_by,
     members,
     role_leads,
     stand_ins,
@@ -348,15 +349,21 @@ def callable_roles():
             )
         )
     )
-    return sorted(
+    roles = sorted(
         (role for role in roles if role.circle_id in order),
         key=lambda role: (order[role.circle_id], role.position, role.name),
     )
+    # Who fills the roles without anybody assigned
+    leads = {}
+    for role in roles:
+        role.filled_by = [] if role.current_assignments else filled_by(role, leads)
+    return roles
 
 
 def invitees(roles):
-    """The people invited with the roles, each once with their roles and
-    focus: the Role Leads, an unfilled role's Circle Leads (1.4.2)"""
+    """The people invited with the roles, each once with their roles, focus
+    and whether they fill it as Circle Lead: the Role Leads, the Circle
+    Leads of a role without anybody assigned (1.4.2)"""
     focus = {
         (assignment.user_id, assignment.role_id): assignment.focus
         for assignment in Assignment.objects.current().filter(role__in=roles)
@@ -364,7 +371,12 @@ def invitees(roles):
     people = {}
     for role in roles:
         for user in role_leads(role):
-            people.setdefault(user, []).append((role, focus.get((user.pk, role.pk))))
+            key = (user.pk, role.pk)
+            people.setdefault(user, []).append((
+                role,
+                focus.get(key),
+                key not in focus,
+            ))
     return sorted(people.items(), key=lambda item: str(item[0]).lower())
 
 

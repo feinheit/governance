@@ -55,6 +55,11 @@ class AssignmentsTest(TestCase):
     def test_assign_and_remove(self):
         self.client.force_login(self.bob)
         url = f"/roles/{self.cook.pk}/assignments/"
+        # Without anybody assigned, the Circle Leads fill it
+        self.assertRegex(
+            self.client.get(url).content.decode(),
+            r">Bob</a>\s+<span[^>]*>As Circle Lead",
+        )
         response = self.client.post(url, {"user": self.eve.pk, "focus": "Soup"})
         self.assertRedirects(response, url)
         assignment = Assignment.objects.get(role=self.cook)

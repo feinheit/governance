@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from governance.roles.mentions import MENTION
 from governance.roles.models import Assignment, Role
+from governance.roles.permissions import filled_by
 
 
 def plain_mentions(text):
@@ -23,6 +24,7 @@ def governance_markdown(*, with_people=False):
     download's file name has it, the backup's git history too"""
     circles = Role.objects.depth_first()
     role_leads = {}
+    leads = {}
     if with_people:
         for assignment in (
             Assignment.objects.current().for_display().select_related("user")
@@ -48,6 +50,12 @@ def governance_markdown(*, with_people=False):
         circle.export_policies = list(circle.policies.active())
         for role in [circle, *circle.export_roles]:
             role.export_role_leads = role_leads.get(role.pk, [])
+            # The Circle Leads filling it without anybody assigned (1.4.2)
+            role.export_filled_by = (
+                filled_by(role, leads)
+                if with_people and not role.export_role_leads
+                else []
+            )
             role.export_role_policies = (
                 list(role.policies.active()) if role is not circle else []
             )

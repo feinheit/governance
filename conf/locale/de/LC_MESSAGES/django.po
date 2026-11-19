@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 08:16+0100\n"
+"POT-Creation-Date: 2026-11-19 08:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1611,9 +1611,12 @@ msgstr "Meine Rollen"
 msgid "You hold no roles."
 msgstr "Du hast keine Rollen."
 
-#: governance/roles/browser.py governance/templates/roles/_role_leads.html
+#: governance/roles/browser.py governance/templates/meetings/tactical_call.html
+#: governance/templates/roles/_role_leads.html
 #: governance/templates/roles/_role_leads_card.html
 #: governance/templates/roles/_tree_list.html
+#: governance/templates/roles/assignments.html
+#: governance/templates/roles/governance.txt
 #: governance/templates/roles/person_detail.html
 msgid "As Circle Lead"
 msgstr "Als Circle Lead"

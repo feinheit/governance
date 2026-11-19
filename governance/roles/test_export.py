@@ -66,6 +66,17 @@ class ExportTest(TestCase):
         self.assertIn("- All governance records of the Circle", text)
         self.assertLess(text.index("## Example Ltd"), text.index("### Kitchen"))
 
+        # The Circle Leads filling roles without anybody assigned, by name
+        Assignment.objects.create(role=anchor.roles.get(core_role="lead"), user=user)
+        text = self.client.get("/export/governance.md?people=1").content.decode()
+        self.assertIn(
+            "#### Facilitator\n\n*Role Leads: Ada Example (As Circle Lead)*", text
+        )
+        self.assertIn(
+            "#### Circle Lead\n\n*Role Leads: Ada Example (As Circle Lead)*", text
+        )
+        self.assertIn("#### Circle Rep\n\n*Nobody*", text)
+
         # Who holds the roles only when asked for: personal data
         text = self.client.get("/export/governance.md").content.decode()
         self.assertNotIn("Ada Example", text)

@@ -97,11 +97,11 @@ circle.
 - **Ad hoc**: "Call a tactical meeting" in the menu of your name (top
   right): first the roles, also from several circles (the field filters
   them by role, circle, person or focus), then "Next: who is invited"
-  lists their Role Leads with their focus (for unfilled roles the Circle
-  Leads), all checked; to
+  lists their Role Leads with their focus (for roles without anybody assigned
+  the Circle Leads, marked "As Circle Lead"), all checked; to
   invite only some of them (constitution 3.1), uncheck the others. You
-  hold one of the roles at least (or stand in for an unfilled one as
-  Circle Lead) and attend. "Start the meeting" starts it. "All meetings" in the menu "More
+  hold one of the roles at least (or fill one without anybody assigned
+  as Circle Lead) and attend. "Start the meeting" starts it. "All meetings" in the menu "More
   actions" (…) of a role's page lists its circle's meetings and those the
   role was invited to.
 

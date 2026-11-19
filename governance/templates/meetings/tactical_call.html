@@ -59,7 +59,11 @@
                         class="small text-body-secondary"
                       >{% for a in role.current_assignments %}{{ a.user }}{% if a.focus %}
                             ({{ a.focus }}){% endif %}{% if not forloop.last %},
-                          {% endif %}{% empty %}{% translate "unfilled" %}{% endfor %}</span>
+                          {% endif %}{% empty %}{% for user in role.filled_by %}{{ user }}{% if not forloop.last %},
+                            {% endif %}{% if forloop.last %}
+                              <span
+                                class="badge wb-tone-neutral"
+                              >{% translate "As Circle Lead" %}</span>{% endif %}{% empty %}{% translate "unfilled" %}{% endfor %}{% endfor %}</span>
                     </span>
                   </label>
                 {% endfor %}
@@ -101,8 +105,13 @@
                 >
                 <span>
                   {{ user }}
-                  <span class="small text-body-secondary">{% for role, focus in user_roles %}{{ role }}{% if focus %}
-                        ({{ focus }}){% endif %}{% if not forloop.last %},
+                  <span
+                    class="small text-body-secondary"
+                  >{% for role, focus, as_lead in user_roles %}{{ role }}{% if focus %}
+                        ({{ focus }}){% endif %}{% if as_lead %}
+                        <span
+                          class="badge wb-tone-neutral"
+                        >{% translate "As Circle Lead" %}</span>{% endif %}{% if not forloop.last %},
                       {% endif %}{% endfor %}</span>
                 </span>
               </label>

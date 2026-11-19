@@ -49,9 +49,21 @@
               </div>
             </li>
           {% empty %}
-            <li class="list-group-item text-body-secondary">
-              {% if role.archived_on %}{% translate "Nobody" %}{% else %}{{ role.unfilled }}{% endif %}
-            </li>
+            {# Without anybody assigned the Circle Leads fill the role (1.4.2) #}
+            {% for user in filled_by %}
+              <li class="list-group-item wb-row wb-row-compact">
+                <div class="wb-row-main">
+                  <div class="wb-row-heading">
+                    <a class="wb-row-title" href="{{ user.get_absolute_url }}">{{ user }}</a>
+                    <span class="badge wb-tone-neutral">{% translate "As Circle Lead" %}</span>
+                  </div>
+                </div>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-body-secondary">
+                {% if role.archived_on %}{% translate "Nobody" %}{% else %}{{ role.unfilled }}{% endif %}
+              </li>
+            {% endfor %}
           {% endfor %}
         </ul>
       </section>{% endif %}

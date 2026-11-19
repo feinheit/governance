@@ -464,10 +464,18 @@ class TacticalTest(TestCase):
             self.client.get("/meetings/tactical/new/").content.decode(),
             r"Zoe\s+\(Soup\)",
         )
+        self.assertRegex(
+            self.client.get("/meetings/tactical/new/").content.decode(),
+            r"Waiter\s+<span[^>]*>Eve\s+<span[^>]*>As Circle Lead",
+        )
         response = self.client.get(
             f"/meetings/tactical/new/?role={self.cook.pk}&role={waiter.pk}"
         )
         self.assertRegex(response.content.decode(), r"Cook\s+\(Soup\)")
+        # Eve fills the Waiter as Circle Lead
+        self.assertRegex(
+            response.content.decode(), r"Waiter\s+<span[^>]*>As Circle Lead"
+        )
         for user in [self.bob, zoe]:
             self.assertRegex(
                 response.content.decode(), rf'name="attendee"\s+value="{user.pk}"'

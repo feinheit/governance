@@ -77,7 +77,8 @@ the outermost circle down. Its meetings, those of its circle and those it was in
 Roles without anybody assigned are filled by the Circle Leads, except the
 Circle Rep; a Circle Lead without anybody by those of the circle above.
 The pages list them with "As Circle Lead" (the role's, its circle's,
-the circle browser, your page).
+the circle browser, your page, assigning, calling a tactical meeting,
+the Markdown export).
 
 **Your page**, the start page, shows your roles (also those without anybody assigned, which
 you fill as Circle Lead, marked "As Circle Lead"), your drafts and tensions, proposals
