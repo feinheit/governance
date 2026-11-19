@@ -731,6 +731,19 @@ class CLITest(TestCase):
         self.assertFalse(APIToken.objects.filter(title="Agent").exists())
         self.assertNotIn("testserver", gov.core.CONFIG.read_text())
 
+        # Unreachable: forgotten anyway, but the token is still valid
+        token, secret = APIToken.create_for(user=self.ada, title="Agent", access="read")
+        with patch.object(
+            gov.core.requests,
+            "request",
+            side_effect=gov.core.requests.ConnectionError("Unreachable"),
+        ):
+            result = self.gov("logout", token=secret)
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("couldn't revoke the token", result.output)
+        self.assertNotIn("testserver", gov.core.CONFIG.read_text())
+        self.assertTrue(APIToken.objects.filter(pk=token.pk).exists())
+
     def test_token_from_the_environment(self):
         """GOVERNANCE_URL and GOVERNANCE_TOKEN need no login, e.g. for the
         daily backup on a server"""
