@@ -68,8 +68,17 @@ keep them in the task's description instead of checking them.
 **Where.** The meeting's `links` say where the projects of the circle and
 the invited roles are, their titles and descriptions which list is which.
 Tasks already linked in this meeting show where the secretary put the
-others. When several places fit or none does, ask; never guess a project
-or list.
+others. Per task, in this order:
+
+1. A link whose name (more or less) matches the outcome's subject: use
+   that list.
+2. Otherwise the circle's general list for everyone, if there is one.
+3. Otherwise ask; don't create new lists, and never guess a project or
+   list. Ask too when several links match equally well.
+
+When the link points to a card table (a Kanban board) instead of a to-do
+list, create cards there instead of to-dos, in its first column for new
+cards unless the user says otherwise.
 
 **Per task:**
 
