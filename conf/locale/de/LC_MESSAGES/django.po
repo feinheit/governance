@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-15 19:24+0100\n"
+"POT-Creation-Date: 2026-11-19 08:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -3324,6 +3324,10 @@ msgstr "Noch niemand hat eine Rolle."
 #: governance/templates/search/search.html
 msgid "inactive"
 msgstr "inaktiv"
+
+#: governance/templates/roles/person_detail.html
+msgid "As Circle Lead"
+msgstr "Als Circle Lead"
 
 #: governance/templates/roles/person_detail.html
 msgid "No roles at the moment."

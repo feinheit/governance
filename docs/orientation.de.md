@@ -78,7 +78,8 @@ Domains und Policies ihrer Kreise und die Domains von deren Rollen, vom
 äussersten Kreis nach innen. Ihre Meetings, die ihres Kreises und die, zu denen sie eingeladen war (siehe [Meetings](meetings.de.md)), stehen im Menü "…".
 Unbesetzte Rollen haben die Circle Leads, ausser der Rolle Circle Rep; ist die Rolle Circle Lead unbesetzt, haben sie die Circle Leads des übergeordneten Kreises.
 
-**Deine Personenseite**, die Startseite, zeigt deine Rollen, deine Entwürfe und Spannungen,
+**Deine Personenseite**, die Startseite, zeigt deine Rollen (auch die ohne Zuweisung, die du als
+Circle Lead ausfüllst, markiert "Als Circle Lead"), deine Entwürfe und Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine
 Einstellungen: Name, Kurzname (im Menü oben), Sprache (Deutsch oder
 Englisch) und Mails. "Einstellungen" im Menü mit deinem Namen ändert sie

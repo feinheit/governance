@@ -48,6 +48,40 @@ class ViewsTest(TestCase):
             html=True,
         )
 
+    def test_person_shows_roles_held_as_circle_lead(self):
+        """The Circle Leads fill the roles without anybody assigned (1.4.2),
+        their pages list them too; not the Circle Rep, nor roles of others"""
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        Assignment.objects.create(
+            role=kitchen.roles.get(core_role="lead"), user=self.user
+        )
+        Role.objects.create(name="Cook", circle=kitchen)
+        dishes = Role.objects.create(name="Dishwasher", circle=kitchen)
+        other = User.objects.create_user("bob@example.com", full_name="Bob Example")
+        Assignment.objects.create(role=dishes, user=other)
+        # A sub-circle without Circle Lead: its roles are the Kitchen's
+        # Circle Leads' too
+        pantry = Role.objects.create(name="Pantry", is_circle=True, circle=kitchen)
+        pantry.create_core_roles()
+        Role.objects.create(name="Shelf Keeper", circle=pantry)
+        # Recursively
+        cellar = Role.objects.create(name="Cellar", is_circle=True, circle=pantry)
+        cellar.create_core_roles()
+        Role.objects.create(name="Wine Keeper", circle=cellar)
+
+        response = self.client.get(self.user.get_absolute_url())
+        self.assertContains(response, "Cook")
+        self.assertContains(response, "Shelf Keeper")
+        self.assertContains(response, "Wine Keeper")
+        self.assertNotContains(response, "Dishwasher")
+        self.assertNotContains(response, "Circle Rep")
+        self.assertContains(response, "As Circle Lead")
+        self.assertNotContains(
+            self.client.get(other.get_absolute_url()), "As Circle Lead"
+        )
+
     def test_one_link_for_tactical_meetings(self):
         """Ad-hoc tactical meetings aren't tied to a circle or role: the
         user's menu calls them, once on every page"""

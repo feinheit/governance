@@ -77,7 +77,8 @@ the outermost circle down. Its meetings, those of its circle and those it was in
 Unfilled roles are held by the Circle Leads, except the Circle Rep; an
 unfilled Circle Lead by those of the circle above.
 
-**Your page**, the start page, shows your roles, your drafts and tensions, proposals
+**Your page**, the start page, shows your roles (also those without anybody assigned, which
+you fill as Circle Lead, marked "As Circle Lead"), your drafts and tensions, proposals
 waiting for your response, your meetings and your settings: name, short
 name (in the menu at the top), language (German or English) and mails.
 "Settings" in the menu with your name changes them in one form; the

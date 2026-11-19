@@ -35,6 +35,7 @@ from governance.roles.permissions import (
     can_end_assignment,
     can_start_meeting,
     circle_leads,
+    held_as_circle_lead,
     members,
     proposer_roles,
     role_leads,
@@ -369,9 +370,14 @@ def person_detail(request, pk):
         .select_related("role__circle")
         .order_by("role__circle__name", "role__position", "role__name")
     )
-    by_circle = defaultdict(list)
+    by_circle = defaultdict(lambda: {"assignments": [], "held": []})
     for assignment in assignments:
-        by_circle[assignment.role.circle].append(assignment)
+        by_circle[assignment.role.circle]["assignments"].append(assignment)
+    # Roles without anybody assigned are the Circle Leads' (1.4.2)
+    if user.is_active:
+        held = sorted(held_as_circle_lead(user), key=lambda r: (r.position, r.name))
+        for role in held:
+            by_circle[role.circle]["held"].append(role)
     # Circles in depth-first order, like the organization's structure
     order = {
         circle.pk: index for index, circle in enumerate(Role.objects.depth_first())

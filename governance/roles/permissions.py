@@ -80,6 +80,36 @@ def role_leads(role):
     return circle_leads(role.circle)
 
 
+def held_as_circle_lead(user):
+    """The active roles without anybody assigned, which the user fills as
+    one of their circle's Circle Leads (1.4.2), also those of sub-circles without Circle
+    Lead (``circle_leads()`` is recursive); not the Circle Rep, nor circles
+    (their Circle Lead role is in the list)"""
+    roles = (
+        Role.objects
+        .active()
+        .filter(circle__isnull=False, is_circle=False)
+        .exclude(core_role=REP)
+        .exclude(
+            pk__in=Assignment.objects
+            .current()
+            .filter(user__is_active=True)
+            .values("role")
+        )
+        .select_related("circle")
+    )
+    leading = {}
+    held = []
+    for role in roles:
+        if role.circle_id not in leading:
+            leading[role.circle_id] = (
+                circle_leads(role.circle).filter(pk=user.pk).exists()
+            )
+        if leading[role.circle_id]:
+            held.append(role)
+    return held
+
+
 def stand_ins(circle, core_roles, *, day=None):
     """The Role Leads of the first of the circle's core roles somebody holds,
     else its Circle Leads: who stands in for unfilled roles, in the order

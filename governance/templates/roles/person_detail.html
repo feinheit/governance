@@ -14,7 +14,7 @@
   </div>
   <div class="row gx-4">
     <div class="col-lg-7">
-      {% for circle, assignments in by_circle.items %}
+      {% for circle, entries in by_circle.items %}
         <section class="card mb-4">
           <div class="card-header">
             <h2 class="h6 mb-0">
@@ -24,7 +24,7 @@
             </h2>
           </div>
           <ul class="list-group list-group-flush">
-            {% for assignment in assignments %}
+            {% for assignment in entries.assignments %}
               <li class="list-group-item wb-row wb-row-link">
                 <div class="wb-row-main">
                   <div class="wb-row-heading">
@@ -40,6 +40,16 @@
                     <span class="badge wb-tone-warning">{% translate "election due" %}</span>
                   </div>
                 {% endif %}
+              </li>
+            {% endfor %}
+            {% for role in entries.held %}
+              <li class="list-group-item wb-row wb-row-link">
+                <div class="wb-row-main">
+                  <div class="wb-row-heading">
+                    <a class="wb-row-title" href="{{ role.get_absolute_url }}">{{ role }}</a>
+                    <span class="badge wb-tone-neutral">{% translate "As Circle Lead" %}</span>
+                  </div>
+                </div>
               </li>
             {% endfor %}
           </ul>
