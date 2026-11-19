@@ -27,16 +27,23 @@
         {% endif %}
       </li>
     {% empty %}
-      {# Unfilled roles: the Circle Leads (1.4.2), for the Circle Lead itself those of the super-circle #}
-      <li class="list-group-item text-body-secondary">
-        {% if role.archived_on or role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
-          {% translate "Nobody" %}
-        {% else %}
-          {% if role.core_role == "lead" %}{% translate "the super-circle's Circle Leads (by default)" %}{% else %}{% translate "the Circle Leads (by default)" %}{% endif %}{% if leads %}:
-            {% for user in leads %}<a href="{{ user.get_absolute_url }}">{{ user }}</a>{% if not forloop.last %},
-              {% endif %}{% endfor %}{% endif %}
-        {% endif %}
-      </li>
+      {# Without anybody assigned the Circle Leads fill the role (1.4.2), the Circle Lead itself those of the super-circle (``leads``); nobody the Circle Rep #}
+      {% if role.archived_on or role.core_role == "rep" or role.core_role == "lead" and not role.circle.circle_id %}
+        <li class="list-group-item text-body-secondary">{% translate "Nobody" %}</li>
+      {% else %}
+        {% for user in leads %}
+          <li class="list-group-item wb-row wb-row-compact">
+            <div class="wb-row-main">
+              <div class="wb-row-heading">
+                <a class="wb-row-title" href="{{ user.get_absolute_url }}">{{ user }}</a>
+                <span class="badge wb-tone-neutral">{% translate "As Circle Lead" %}</span>
+              </div>
+            </div>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-body-secondary">{% translate "Nobody" %}</li>
+        {% endfor %}
+      {% endif %}
     {% endfor %}
     {% if can_assign %}
       <li class="list-group-item">

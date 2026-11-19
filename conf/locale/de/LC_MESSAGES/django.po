@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 08:11+0100\n"
+"POT-Creation-Date: 2026-11-19 08:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -3225,12 +3225,9 @@ msgid "Edit focus"
 msgstr "Fokus bearbeiten"
 
 #: governance/templates/roles/_role_leads_card.html
-msgid "the super-circle's Circle Leads (by default)"
-msgstr "die Circle Leads des übergeordneten Kreises (standardmässig)"
-
-#: governance/templates/roles/_role_leads_card.html
-msgid "the Circle Leads (by default)"
-msgstr "die Circle Leads (standardmässig)"
+#: governance/templates/roles/person_detail.html
+msgid "As Circle Lead"
+msgstr "Als Circle Lead"
 
 #: governance/templates/roles/_role_leads_card.html
 #: governance/templates/roles/assignments.html
@@ -3324,10 +3321,6 @@ msgstr "Noch niemand hat eine Rolle."
 #: governance/templates/search/search.html
 msgid "inactive"
 msgstr "inaktiv"
-
-#: governance/templates/roles/person_detail.html
-msgid "As Circle Lead"
-msgstr "Als Circle Lead"
 
 #: governance/templates/roles/person_detail.html
 msgid "No roles at the moment."

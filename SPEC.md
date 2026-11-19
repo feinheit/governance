@@ -353,7 +353,9 @@ rule.
   sub-circle's Circle Leads, admins for the anchor's). Elected roles aren't
   assigned this way. Role Leads resign through their Circle Leads, who end
   assignments of elected roles too ("Role Leads" on the role's page;
-  `can_end_assignment()`, a Rep's hold of the circle's role ends with it).
+  `can_end_assignment()`, a Rep's hold of the circle's role ends with it). Without anybody assigned, the
+  role's "Role Leads" are its Circle Leads (the super-circle's for a
+  Circle Lead), marked "As Circle Lead" like on their pages.
 - **Circle Leads**: a circle may have several, each with all the rights
   (texts speak of Circle Leads). While nobody holds a circle's Circle
   Lead role (its role in the super-circle), the super-circle's Circle

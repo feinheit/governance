@@ -52,13 +52,13 @@ class CircleLeadsTest(TestCase):
         # Pages show who covers unfilled roles
         self.client.force_login(eve)
         response = self.client.get(baker.get_absolute_url())
-        self.assertContains(response, "the Circle Leads (by default)")
+        self.assertContains(response, "As Circle Lead", count=2)
         self.assertContains(response, ada.get_absolute_url())
         self.assertContains(response, bob.get_absolute_url())
         response = self.client.get(
             bakery.roles.get(core_role="lead").get_absolute_url()
         )
-        self.assertContains(response, "the super-circle's Circle Leads")
+        self.assertContains(response, "As Circle Lead", count=2)
         self.assertContains(response, bob.get_absolute_url())
         self.assertContains(
             self.client.get(bakery.get_absolute_url()), "Held by the Circle Leads"
@@ -95,7 +95,7 @@ class ArchivedTest(TestCase):
         self.assertFalse(is_member(ada, kitchen))
         self.client.force_login(ada)
         self.assertNotContains(
-            self.client.get(cook.get_absolute_url()), "the Circle Leads (by default)"
+            self.client.get(cook.get_absolute_url()), "As Circle Lead"
         )
 
 
