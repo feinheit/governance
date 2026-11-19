@@ -26,6 +26,7 @@ from governance.roles.models import (
     Policy,
     Role,
 )
+from governance.roles.permissions import filling_unassigned
 from governance.search import search_results
 
 
@@ -70,6 +71,9 @@ class RoleLeadOut(Schema):
     name: str
     focus: str
     elected_until: str | None
+    # Without anybody assigned: as what they fill it, "lead" (1.4.2),
+    # "facilitator" or "secretary" (5.3.6)
+    filled_as: str | None = None
     url: str
 
 
@@ -255,6 +259,37 @@ def roles(request):
     ]
 
 
+def role_leads_out(role):
+    """The Role Leads, without anybody assigned who fills the role and as
+    what (1.4.2, 5.3.6), like the role's page"""
+    assignments = Assignment.objects.current().filter(role=role).select_related("user")
+    if assignments:
+        return [
+            {
+                "user_id": a.user_id,
+                "name": str(a.user),
+                "focus": a.focus,
+                "elected_until": a.elected_until.isoformat()
+                if a.elected_until
+                else None,
+                "url": absolute(a.user),
+            }
+            for a in assignments
+        ]
+    filled = filling_unassigned(role)
+    return [
+        {
+            "user_id": user.pk,
+            "name": str(user),
+            "focus": "",
+            "elected_until": None,
+            "filled_as": filled.core_role,
+            "url": absolute(user),
+        }
+        for user in filled
+    ]
+
+
 @router.get("roles/{int:pk}/", response=RoleOut)
 def role(request, pk: int):
     """A role or circle with its texts, policies, Role Leads and roles"""
@@ -279,21 +314,7 @@ def role(request, pk: int):
         "domains": constitutional("domains")
         + [{"id": d.pk, "text": d.text} for d in role.domains.all()],
         "policies": list(role.policies.active()),
-        "role_leads": [
-            {
-                "user_id": a.user_id,
-                "name": str(a.user),
-                "focus": a.focus,
-                "elected_until": a.elected_until.isoformat()
-                if a.elected_until
-                else None,
-                "url": absolute(a.user),
-            }
-            for a in Assignment.objects
-            .current()
-            .filter(role=role)
-            .select_related("user")
-        ],
+        "role_leads": role_leads_out(role),
         "roles": list(role.roles.active().order_by("position", "name"))
         if role.is_circle
         else [],

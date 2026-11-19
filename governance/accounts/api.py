@@ -14,6 +14,7 @@ from ninja.errors import HttpError
 from governance.accounts.api_auth import user_auth
 from governance.accounts.models import APIToken
 from governance.roles.models import Assignment, Role
+from governance.roles.permissions import held_as_circle_lead
 
 
 router = Router(tags=["accounts"])
@@ -25,6 +26,9 @@ class MyRoleOut(Schema):
     circle_id: int | None
     circle: str
     focus: str
+    # Filled without being assigned: "lead" (1.4.2), "facilitator" or
+    # "secretary" standing in for the other one (5.3.6)
+    filled_as: str | None = None
     url: str
 
 
@@ -46,12 +50,15 @@ def me(request):
     circles = {
         circle.pk: index for index, circle in enumerate(Role.objects.depth_first())
     }
-    assignments = sorted(
-        Assignment.objects
+    roles = [
+        (assignment.role, assignment.focus, None)
+        for assignment in Assignment.objects
         .current()
         .filter(user=user, role__archived_on=None)
-        .select_related("role__circle"),
-        key=lambda a: (circles.get(a.role.circle_id, -1), a.role.position, a.role.name),
+        .select_related("role__circle")
+    ] + [(role, "", role.filled_by.core_role) for role in held_as_circle_lead(user)]
+    roles.sort(
+        key=lambda r: (circles.get(r[0].circle_id, -1), r[0].position, r[0].name)
     )
     return {
         "id": user.pk,
@@ -64,14 +71,15 @@ def me(request):
         else "write",
         "roles": [
             {
-                "id": assignment.role_id,
-                "name": assignment.role.name,
-                "circle_id": assignment.role.circle_id,
-                "circle": str(assignment.role.circle or ""),
-                "focus": assignment.focus,
-                "url": settings.BASE_URL + assignment.role.get_absolute_url(),
+                "id": role.pk,
+                "name": role.name,
+                "circle_id": role.circle_id,
+                "circle": str(role.circle or ""),
+                "focus": focus,
+                "filled_as": filled_as,
+                "url": settings.BASE_URL + role.get_absolute_url(),
             }
-            for assignment in assignments
+            for role, focus, filled_as in roles
         ],
     }
 

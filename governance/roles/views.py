@@ -29,14 +29,13 @@ from governance.roles.models import (
     by_frequency,
 )
 from governance.roles.permissions import (
-    FilledBy,
     asks_before_starting,
     can_assign,
     can_change_settings,
     can_end_assignment,
     can_start_meeting,
-    circle_leads,
     filled_by,
+    filling_unassigned,
     held_as_circle_lead,
     members,
     proposer_roles,
@@ -248,11 +247,7 @@ def role_detail(request, pk):
     if role.circle_id:
         # Who covers the role while nobody holds it (1.4.2, 5.3.6), a
         # circle's role the super-circle's Circle Leads
-        context["leads"] = (
-            FilledBy(circle_leads(role.circle).order_by("full_name", "email"))
-            if role.is_circle
-            else filled_by(role, {})
-        )
+        context["leads"] = filling_unassigned(role)
     return render(request, "roles/role_detail.html", context)
 
 

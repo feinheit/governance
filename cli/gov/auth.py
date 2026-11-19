@@ -18,6 +18,7 @@ from gov.core import (
     current_installation,
     echo_fields,
     echo_json,
+    filled_as,
     find_installation,
     installation_url,
     link,
@@ -209,6 +210,6 @@ def me(as_json):
         table.add_row(
             link(role["id"], role["url"]),
             link(f"  {role['name']}", role["url"]),
-            role["focus"],
+            role["focus"] or filled_as(role.get("filled_as")),
         )
     console.print(table)

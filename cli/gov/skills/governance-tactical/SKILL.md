@@ -42,7 +42,8 @@ Take the newest ended one unless the user means another, then read it:
 It has the agenda `items` (each with `label`, `owner`, `outcome` with
 mentions as `@[Name](role:ID)`, `outcome_plain` with the roles' current
 names, `roles`: the mentioned roles with their `role_leads` and their
-email addresses, and `link`), the `links` of the circle (an ad hoc
+email addresses, `filled_as` when nobody is assigned and they fill the
+role as Circle Lead or standing in, and `link`), the `links` of the circle (an ad hoc
 meeting's of the invited roles' circles: where their projects are), `minutes` and `url`. Leave `attendees`
 alone: who was invited needn't attend, and the list isn't kept
 reliably, so it says nothing about who takes on a task. A
@@ -95,7 +96,10 @@ cards unless the user says otherwise.
   person when each of them has to do it (e.g. everybody updates their
   own entries). If the outcome doesn't make it clear, ask, for that item. Whoever disagrees, or doesn't think the task can be
   expected of the role, gets back to the one who asked; that's not the
-  skill's to settle. An unfilled role: leave it unassigned and say so.
+  skill's to settle. A role nobody is assigned to is filled by its
+  Circle Leads (or the Facilitator or Secretary standing in for the other
+  one, `filled_as`): assign them and say so. Only a role nobody fills
+  (empty `role_leads`) stays unassigned; say so.
   **Without a mention**, the item's owner (who brought the tension) is
   only a guess: propose it, marked as such. Never assign someone who
   doesn't show up in the data.

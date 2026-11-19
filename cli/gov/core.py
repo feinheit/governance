@@ -585,6 +585,20 @@ def link(text, url):
     return Text(str(text), style=Style(link=url)) if url else str(text)
 
 
+# Who fills a role without being assigned (1.4.2, 5.3.6), the API's
+# ``filled_as``
+CORE_ROLE_NAMES = {
+    "lead": "Circle Lead",
+    "facilitator": "Facilitator",
+    "secretary": "Secretary",
+}
+
+
+def filled_as(value):
+    """ "as Circle Lead" for roles filled without being assigned, else empty"""
+    return f"as {CORE_ROLE_NAMES.get(value, value)}" if value else ""
+
+
 def make_table(*columns, **kwargs):
     """A table with headings, columns ending in ">" are right-aligned, those
     ending in "…" stay on one line and are shortened"""

@@ -10,6 +10,7 @@ from gov.core import (
     console,
     echo_fields,
     echo_json,
+    filled_as,
     link,
     make_table,
     request,
@@ -24,7 +25,12 @@ def _day(value):
 
 
 def _person(person):
-    return f"{person['name']} <{person['email']}>" if person else ""
+    if not person:
+        return ""
+    text = f"{person['name']} <{person['email']}>"
+    if person.get("filled_as"):
+        text += f" ({filled_as(person['filled_as'])})"
+    return text
 
 
 @cli.group(invoke_without_command=True)

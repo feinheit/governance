@@ -126,6 +126,16 @@ def filled_by(role, cache):
     return cache[key]
 
 
+def filling_unassigned(role):
+    """``filled_by()`` for one role, for a circle's role the super-circle's
+    Circle Leads (its role page, the API)"""
+    if role.is_circle:
+        if role.circle_id is None or role.archived_on:
+            return FilledBy()
+        return FilledBy(circle_leads(role.circle).order_by("full_name", "email"))
+    return filled_by(role, {})
+
+
 def held_as_circle_lead(user):
     """The active roles without anybody assigned, which the user fills as
     one of their circle's Circle Leads (1.4.2), also those of sub-circles without Circle

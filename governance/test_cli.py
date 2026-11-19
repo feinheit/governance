@@ -613,6 +613,46 @@ class CLITest(TestCase):
         result = self.gov("constitution", "--language", "de")
         self.assertIn("# **Holacracy Verfassung**", result.output)
 
+    def test_filling_roles(self):
+        """Roles filled without being assigned (1.4.2, 5.3.6) are yours, the
+        roles' and the meetings' Role Leads say as what"""
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=self.ada
+        )
+        waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
+        me = json.loads(self.gov("me", "--json").output)
+        mine = {role["id"]: role["filled_as"] for role in me["roles"]}
+        self.assertEqual((mine[self.cook.pk], mine[waiter.pk]), (None, "lead"))
+        self.assertRegex(self.gov("me").output, r"Waiter\s+as Circle Lead")
+
+        role = json.loads(self.gov("roles", "show", waiter.pk, "--json").output)
+        self.assertEqual(
+            [(lead["name"], lead["filled_as"]) for lead in role["role_leads"]],
+            [("Ada", "lead")],
+        )
+        self.assertRegex(
+            self.gov("roles", "show", waiter.pk).output, r"Ada\s+as Circle Lead"
+        )
+
+        meeting = Meeting.objects.create(
+            circle=self.kitchen, kind=Meeting.TACTICAL, started_at=timezone.now()
+        )
+        AgendaItem.objects.create(
+            meeting=meeting,
+            label="Trays",
+            outcome=f"@[Waiter](role:{waiter.pk}): trays",
+        )
+        data = json.loads(self.gov("meetings", "show", meeting.pk, "--json").output)
+        [mentioned] = data["items"][0]["roles"]
+        self.assertEqual(
+            [(lead["name"], lead["filled_as"]) for lead in mentioned["role_leads"]],
+            [("Ada", "lead")],
+        )
+        self.assertIn(
+            "@Waiter: Ada <ada@example.com> (as Circle Lead)",
+            self.gov("meetings", "show", meeting.pk).output,
+        )
+
     def test_meetings(self):
         """A tactical meeting's outcomes with the people filling the roles
         they mention, the tasks already linked, the circle's links: what

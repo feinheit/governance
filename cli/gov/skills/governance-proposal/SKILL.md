@@ -22,7 +22,9 @@ A proposal addresses a tension of one of the user's roles in a circle. Find
 out, in the user's words:
 
 - **the role** the tension comes from, and its circle: `gov me` lists the
-  user's roles with their IDs, grouped by circle. If it isn't obvious, ask.
+  user's roles with their IDs, grouped by circle, also those they fill
+  without being assigned (`filled_as`, e.g. as Circle Lead). If it isn't
+  obvious, ask.
 - **the tension**: the gap between what is and what could be, from the
   role's point of view.
 - **an example**: a past or current situation where the tension showed. Ask

@@ -10,6 +10,7 @@ from gov.core import (
     console,
     echo_fields,
     echo_json,
+    filled_as,
     link,
     make_table,
     request,
@@ -56,7 +57,7 @@ def show_role(id, *, as_json):
         for lead in role["role_leads"]:
             table.add_row(
                 link(lead["name"], lead["url"]),
-                lead["focus"],
+                lead["focus"] or filled_as(lead.get("filled_as")),
                 lead["elected_until"] or "",
             )
         console.print(table)

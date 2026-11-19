@@ -64,6 +64,7 @@ class CLILoginTest(TestCase):
                     "circle_id": kitchen.pk,
                     "circle": "Kitchen",
                     "focus": "Soup",
+                    "filled_as": None,
                     "url": f"{settings.BASE_URL}/roles/{cook.pk}/",
                 }
             ],

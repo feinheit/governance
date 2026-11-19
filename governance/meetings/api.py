@@ -13,6 +13,7 @@ from governance.meetings.models import AgendaItem, Meeting
 from governance.meetings.outputs import meeting_outputs
 from governance.roles.mentions import MENTION, plain_mentions
 from governance.roles.models import Assignment, Role
+from governance.roles.permissions import filling_unassigned
 
 
 router = Router(tags=["meetings"])
@@ -37,6 +38,12 @@ class PersonOut(Schema):
     email: str
 
 
+class RoleLeadOut(PersonOut):
+    # Without anybody assigned: as what they fill it, "lead" (1.4.2),
+    # "facilitator" or "secretary" (5.3.6)
+    filled_as: str | None = None
+
+
 class MentionedRoleOut(Schema):
     """A role an outcome mentions, e.g. the one taking on the next action"""
 
@@ -44,7 +51,7 @@ class MentionedRoleOut(Schema):
     name: str
     circle_id: int | None
     archived: bool
-    role_leads: list[PersonOut]
+    role_leads: list[RoleLeadOut]
     url: str
 
 
@@ -184,6 +191,13 @@ def meeting(request, pk: int):
         .order_by("user__full_name", "user__email")
     ):
         leads.setdefault(assignment.role_id, []).append(person(assignment.user))
+    for role in mentioned.values():
+        if role.pk not in leads:
+            # Nobody assigned: who fills it (1.4.2, 5.3.6)
+            filled = filling_unassigned(role)
+            leads[role.pk] = [
+                person(user) | {"filled_as": filled.core_role} for user in filled
+            ]
 
     def roles(item):
         ids = dict.fromkeys(int(match[2]) for match in MENTION.finditer(item.outcome))

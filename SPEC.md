@@ -875,7 +875,10 @@ reordering changes a field), the history by day, keys sorted;
 `governance.md` in the organization's order with the ID breaking ties
 (the Markdown has no date: the download's file name has it).
 The current state for reading is the Markdown export, exact IDs come
-from `gov search --json` and `gov roles show --json`.
+from `gov search --json` and `gov roles show --json`. Roles filled
+without being assigned (1.4.2, 5.3.6) are in `/api/me/` and in the
+`role_leads` of roles and meetings with `filled_as` ("lead",
+"facilitator", "secretary"), like the pages' "As Circle Lead".
 
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
@@ -994,10 +997,10 @@ Deliberately not modelled:
   for the switchover: more would still find bugs, but few that matter
   (decided 2026-11-08); a round when features combine in new ways.
   Round of 2026-11-19 (Circle Leads filling unfilled roles, who reports
-  items), open:
-  - The API (`/api/me/`, the `role_leads` of roles and meetings) ignores
-    the Circle Leads filling roles nobody is assigned to; `gov` and the
-    skills (`governance-proposal`, `governance-tactical`) with it.
+  items; its bugs fixed, decided: an unfilled Secretary or Facilitator is
+  the other one's first, also the settings, "conflicting" not for
+  proposals' own problems, those filling a role without being assigned
+  count like those assigned), open:
   - Risks: `role_leads()` of a sub-circle without Circle Lead names only
     its Circle Rep, not the super-circle's Circle Leads leading it;
     `held_as_circle_lead()` ignores inactive users' current assignments,
