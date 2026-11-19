@@ -986,6 +986,30 @@ Deliberately not modelled:
   of those which left; its unproven risks fixed too). Enough rounds
   for the switchover: more would still find bugs, but few that matter
   (decided 2026-11-08); a round when features combine in new ways.
+  Round of 2026-11-19 (Circle Leads filling unfilled roles, who reports
+  items), open:
+  - The API (`/api/me/`, the `role_leads` of roles and meetings) ignores
+    the Circle Leads filling roles nobody is assigned to; `gov` and the
+    skills (`governance-proposal`, `governance-tactical`) with it.
+  - An unfilled Secretary or Facilitator: who acts follows 5.3.6 (the
+    other one first, then the Circle Leads), also the circle's settings
+    (only an assigned Secretary may change them now) and the pages,
+    which name the Circle Leads (decided 2026-11-19).
+  - The history misses changes of who reports a metric or checklist item.
+  - The API refuses moving a whole circle's item to a role without
+    `whole_circle=false`.
+  - The conflict mail links everybody to what is the proposer's draft.
+  - "Conflicting" only for proposals without problems before the
+    adoption, not those with problems from the start (decided 2026-11-19).
+  - Ad hoc tactical meetings: the Circle Leads filling an invited role
+    add items and own "– Name" like those assigned (decided 2026-11-19).
+  - The circle browser's "Your roles" and the search's circles of a
+    person include the roles filled as Circle Lead (decided 2026-11-19).
+  - Risks: `role_leads()` of a sub-circle without Circle Lead names only
+    its Circle Rep, not the super-circle's Circle Leads leading it;
+    `held_as_circle_lead()` ignores inactive users' current assignments,
+    `proposer_roles()` counts them; `recheck_conflicts()` checks every
+    open proposal on every adoption.
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the
