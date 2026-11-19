@@ -73,7 +73,8 @@ OTHER_ELECTED = {SECRETARY: [FACILITATOR], FACILITATOR: [SECRETARY]}
 
 def role_leads(role):
     """Who fills a role: its Role Leads, while nobody holds it its circle's
-    Circle Leads (1.4.2), for the Secretary and the Facilitator the other
+    Circle Leads (1.4.2), a circle's role also those leading it from above
+    next to its Circle Rep, for the Secretary and the Facilitator the other
     one first (5.3.6), except an unfilled Circle Rep, which is nobody's;
     archived roles have none"""
     from governance.accounts.models import User
@@ -83,6 +84,13 @@ def role_leads(role):
     role_leads = User.objects.active().filter(
         pk__in=Assignment.objects.current().filter(role=role).values("user")
     )
+    if role.is_circle and role.circle_id:
+        # Its Circle Leads and Reps (``sync_circle_role_leads()``), while
+        # nobody leads it the Circle Leads above, also next to a Rep
+        return User.objects.active().filter(
+            Q(pk__in=role_leads.values("pk"))
+            | Q(pk__in=circle_leads(role).values("pk"))
+        )
     if role_leads.exists() or role.circle is None or role.core_role == REP:
         return role_leads
     return stand_ins(role.circle, OTHER_ELECTED.get(role.core_role, []))

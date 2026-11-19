@@ -1000,12 +1000,12 @@ Deliberately not modelled:
   items; its bugs fixed, decided: an unfilled Secretary or Facilitator is
   the other one's first, also the settings, "conflicting" not for
   proposals' own problems, those filling a role without being assigned
-  count like those assigned), open:
-  - Risks: `role_leads()` of a sub-circle without Circle Lead names only
-    its Circle Rep, not the super-circle's Circle Leads leading it;
-    `held_as_circle_lead()` ignores inactive users' current assignments,
-    `proposer_roles()` counts them; `recheck_conflicts()` checks every
-    open proposal on every adoption.
+  count like those assigned; its risks: a sub-circle with a Circle Rep
+  but without Circle Lead was only the Rep's in the super-circle, fixed;
+  inactive people keeping current assignments only happens outside the
+  admin, which ends them, and they can't sign in or use tokens;
+  `recheck_conflicts()` takes about 4 ms per open proposal, 0.2 s for 50,
+  fine).
 - **Next deploy**: not while a governance meeting which recorded
   elections runs: elections before migration `meetings.0006` lack the
   data to undo them, a correction or the meeting's end would end the

@@ -73,6 +73,27 @@ class CircleLeadsTest(TestCase):
         self.assertEqual(list(circle_leads(anchor)), [])
 
 
+class SubCircleWithoutLeadTest(TestCase):
+    def test_rep_and_leads_from_above(self):
+        """A sub-circle with a Circle Rep but without Circle Lead: its role
+        in the super-circle is the Rep's and the Circle Leads' leading it
+        from above (1.4.2), e.g. invited to an ad hoc tactical meeting"""
+        from governance.meetings.views import invitees
+
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        kitchen.create_core_roles()
+        Assignment.objects.create(role=kitchen.roles.get(core_role="lead"), user=ada)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        self.assertEqual(set(role_leads(bakery)), {ada})
+        Assignment.objects.create(role=bakery.roles.get(core_role="rep"), user=bob)
+        Assignment.objects.create(role=bakery, user=bob)  # sync_circle_role_leads()
+        self.assertEqual(set(role_leads(bakery)), {ada, bob})
+        self.assertEqual({user for user, _roles in invitees([bakery])}, {ada, bob})
+
+
 class UnfilledSecretaryTest(TestCase):
     def test_the_other_elected_role_first(self):
         """An unfilled Secretary or Facilitator: the other one fills it,
