@@ -142,6 +142,22 @@ class SearchTest(TestCase):
         response = self.client.get("/search/", {"q": "governance records"})
         self.assertContains(response, secretary.get_absolute_url())
 
+    def test_people_filling_roles(self):
+        """The circles of roles filled without being assigned too, e.g. as
+        Circle Lead (1.4.2)"""
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        anchor = Role.objects.create(name="Example Ltd", is_circle=True)
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True, circle=anchor)
+        kitchen.create_core_roles()
+        Role.objects.create(name="Cook", circle=kitchen)
+        bakery = Role.objects.create(name="Bakery", is_circle=True, circle=kitchen)
+        bakery.create_core_roles()
+        zoe = User.objects.create_user("zoe@example.com", full_name="Zoë")
+        Assignment.objects.create(role=kitchen.roles.get(core_role="lead"), user=zoe)
+        response = self.client.get("/search/", {"q": "zoe"})
+        [person] = response.context["results"]["people"]
+        self.assertEqual(person.circles, [kitchen, bakery])
+
     def test_people(self):
         """Active people by name, short name and mail address, first, with
         their circles"""

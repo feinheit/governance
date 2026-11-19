@@ -998,8 +998,6 @@ Deliberately not modelled:
     adoption, not those with problems from the start (decided 2026-11-19).
   - Ad hoc tactical meetings: the Circle Leads filling an invited role
     add items and own "– Name" like those assigned (decided 2026-11-19).
-  - The circle browser's "Your roles" and the search's circles of a
-    person include the roles filled as Circle Lead (decided 2026-11-19).
   - Risks: `role_leads()` of a sub-circle without Circle Lead names only
     its Circle Rep, not the super-circle's Circle Leads leading it;
     `held_as_circle_lead()` ignores inactive users' current assignments,

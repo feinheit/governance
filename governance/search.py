@@ -31,6 +31,7 @@ from governance.roles.models import (
     Policy,
     Role,
 )
+from governance.roles.permissions import held_as_circle_lead
 
 
 LIMIT = 50
@@ -145,7 +146,8 @@ def search_results(query, *, archived=False):
 
 
 def with_circles(people):
-    """The circles whose roles the people hold, in the organization's order"""
+    """The circles whose roles the people hold or fill, in the
+    organization's order"""
     order = {
         circle.pk: index for index, circle in enumerate(Role.objects.depth_first())
     }
@@ -159,6 +161,9 @@ def with_circles(people):
         circle = assignment.role.circle
         circles[assignment.user_id][circle.pk] = circle
     for person in people:
+        # Also those filled without being assigned (1.4.2, 5.3.6)
+        for role in held_as_circle_lead(person):
+            circles[person.pk][role.circle_id] = role.circle
         person.circles = sorted(
             circles[person.pk].values(), key=lambda c: order.get(c.pk, len(order))
         )

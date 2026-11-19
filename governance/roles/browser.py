@@ -61,6 +61,7 @@ def circle_tree(user=None):
                 filled = filled_by(role, leads)
                 data["filled_by"] = [str(u) for u in filled]
                 data["filled_as"] = str(filled.label)
+                data["mine"] = user is not None and user in filled
         if role.is_circle:
             data["children"] = [node(child) for child in children[role.pk]]
         return data

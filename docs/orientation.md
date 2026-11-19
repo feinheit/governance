@@ -9,7 +9,7 @@ active person. Everybody signed in sees everything except others' drafts.
   reached.
 - **Circles**: the circle browser shows the circles inside each other. A
   click zooms into a circle, a second one opens its page; the background
-  or Escape zooms out again. "My roles" highlights your roles. Below is
+  or Escape zooms out again. "My roles" highlights your roles (also those you fill without being assigned). Below is
   the same structure as a list.
 - **Your name** (top right) opens a menu: your page, settings, "API
   tokens", "Call a tactical meeting", **People** (everybody with their

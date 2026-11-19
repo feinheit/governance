@@ -9,7 +9,7 @@ anderer.
 - **Organisation**: der Anker-Kreis, von dem aus alles erreichbar ist.
 - **Kreise**: der Kreis-Browser zeigt die Kreise ineinander. Ein Klick
   vergrössert einen Kreis, ein zweiter öffnet seine Seite; der Hintergrund
-  oder Escape verkleinert wieder. "Meine Rollen" hebt deine Rollen hervor.
+  oder Escape verkleinert wieder. "Meine Rollen" hebt deine Rollen hervor (auch die, die du ohne Zuweisung ausfüllst).
   Darunter steht dieselbe Struktur als Liste.
 - **Dein Name** (oben rechts) öffnet ein Menü: deine Seite,
   Einstellungen, "API-Tokens", "Tactical Meeting einberufen",

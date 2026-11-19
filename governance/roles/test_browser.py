@@ -79,6 +79,9 @@ class CircleBrowserTest(TestCase):
         self.assertEqual(nodes["Cook"]["filled_by"], ["Ada"])
         self.assertEqual(nodes["Circle Lead"]["filled_by"], ["Ada"])
         self.assertEqual(nodes["Circle Rep"]["filled_by"], [])
+        # Hers, like on her page
+        self.assertTrue(nodes["Cook"]["mine"])
+        self.assertFalse(nodes["Circle Rep"]["mine"])
 
         response = self.client.get("/circles/")
         self.assertContains(response, "As Circle Lead")
