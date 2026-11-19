@@ -995,7 +995,6 @@ Deliberately not modelled:
     other one first, then the Circle Leads), also the circle's settings
     (only an assigned Secretary may change them now) and the pages,
     which name the Circle Leads (decided 2026-11-19).
-  - The history misses changes of who reports a metric or checklist item.
   - "Conflicting" only for proposals without problems before the
     adoption, not those with problems from the start (decided 2026-11-19).
   - Ad hoc tactical meetings: the Circle Leads filling an invited role

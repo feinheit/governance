@@ -585,6 +585,59 @@ class OperationalItemsTest(TestCase):
             ],
         )
 
+    def test_reported_by(self):
+        """Another role reporting a metric or checklist item, or the whole
+        circle: in the history of the role before and after"""
+        import time_machine
+        from django.db import connection
+
+        from governance.accounts.models import User
+        from governance.roles.models import ChecklistItem
+
+        self.client.force_login(User.objects.create_user("ada@example.com"))
+        history()
+
+        def on(day):
+            # The audit log has the database's time, not time_machine's
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE audit_logged_actions SET created_at = %s"
+                    " WHERE created_at > %s",
+                    [
+                        dt.datetime(*day, 12, tzinfo=dt.UTC),
+                        dt.datetime(2026, 6, 1, tzinfo=dt.UTC),
+                    ],
+                )
+
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        baker = Role.objects.create(name="Baker", circle=kitchen)
+        item = ChecklistItem.objects.create(role=cook, description="Fridge cleaned")
+        on((2026, 1, 1))
+        item.role = baker
+        item.save()
+        on((2026, 1, 2))
+        item.role, item.whole_circle = kitchen, True
+        item.save()
+        on((2026, 1, 3))
+        with time_machine.travel(dt.datetime(2026, 1, 3, 14), tick=False):
+            update_changes()
+        self.assertEqual(
+            list(
+                Change.objects
+                .filter(action="moved")
+                .order_by("date")
+                .values_list("subject", "role")
+            ),
+            [("checklist", baker.pk), ("checklist", kitchen.pk)],
+        )
+        for role in [cook, baker]:
+            response = self.client.get(f"/history/?role={role.pk}&operational=1")
+            self.assertContains(response, "Checklist item moved")
+            self.assertContains(response, "Fridge cleaned")
+        response = self.client.get(f"/history/?role={kitchen.pk}&operational=1")
+        self.assertContains(response, "Kitchen (whole circle)")
+
     def test_shown_on_request(self):
         """Links, metrics and checklist items added in the app are changes,
         the history shows them when asked for"""

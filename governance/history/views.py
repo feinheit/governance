@@ -59,9 +59,11 @@ LABELS = {
     ("metric", "added"): _("Metric added"),
     ("metric", "changed"): _("Metric changed"),
     ("metric", "removed"): _("Metric removed"),
+    ("metric", "moved"): _("Metric moved"),
     ("checklist", "added"): _("Checklist item added"),
     ("checklist", "changed"): _("Checklist item changed"),
     ("checklist", "removed"): _("Checklist item removed"),
+    ("checklist", "moved"): _("Checklist item moved"),
 }
 # Of the role itself
 ASSIGNMENT_ACTIONS = {"assigned", "unassigned", "reelected", "focus"}
@@ -109,7 +111,8 @@ def without_following(changes):
         change
         for change in changes
         if not (
-            change.role
+            change.action in {"assigned", "unassigned"}
+            and change.role
             and change.role.is_circle
             and (change.date, change.action, user_of(change), change.role_id) in core
         )
@@ -172,6 +175,19 @@ def merge_lists(changes):
     return merged
 
 
+def moved_role(value):
+    """The role of a move: roles and policies have its ID, metrics and
+    checklist items who reports them (``diff_items()``)"""
+    return value["role"] if isinstance(value, dict) else value
+
+
+def reporter(roles, value):
+    role = roles.get(value["role"])
+    if role and value["whole_circle"]:
+        return _("%(circle)s (whole circle)") % {"circle": role}
+    return role
+
+
 def present(changes):
     """Readable labels, users and roles for the template"""
     changes = without_following(list(changes))
@@ -180,7 +196,9 @@ def present(changes):
         if change.action in ASSIGNMENT_ACTIONS:
             user_ids.add(user_of(change))
         elif change.action == "moved":
-            role_ids.update(value for value in [change.old, change.new] if value)
+            role_ids.update(
+                value for value in map(moved_role, [change.old, change.new]) if value
+            )
     users = User.objects.in_bulk(user_ids)
     roles = Role.objects.in_bulk(role_ids)
     for change in changes:
@@ -205,7 +223,14 @@ def present(changes):
         if change.action == "reelected":
             # ``new`` is the end of the term, not a text
             change.term, change.new_text = dt.date.fromisoformat(change.new), ""
-        if change.action == "moved":
+        if change.action == "moved" and change.is_item:
+            # Reported by another role or the whole circle
+            change.old_role, change.new_role = (
+                reporter(roles, change.old),
+                reporter(roles, change.new),
+            )
+            change.new_text = change.new["text"]
+        elif change.action == "moved":
             change.old_role, change.new_role = (
                 roles.get(change.old),
                 roles.get(change.new),
@@ -264,6 +289,7 @@ def history(request):
             Q(role=role)
             | Q(role__circle=role, subject="", action__in=["added", "removed"])
             | Q(subject="", action="moved", old=role.pk)
+            | Q(subject__in=ITEM_SUBJECTS, action="moved", old__role=role.pk)
         )
         adopted = adopted.filter(pk__in=role.changed_by_proposals.values("pk"))
     elif subject:
@@ -277,6 +303,11 @@ def history(request):
             Q(role__in=circles)
             | Q(role__circle__in=circles)
             | Q(subject="", action="moved", old__in=[c.pk for c in circles])
+            | Q(
+                subject__in=ITEM_SUBJECTS,
+                action="moved",
+                old__role__in=[c.pk for c in circles],
+            )
         )
         adopted = adopted.filter(circle__in=circles)
     all_days = sorted(

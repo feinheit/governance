@@ -87,3 +87,18 @@ def diff_items(old, new):
         a, b = old_items[key], new_items[key]
         if a["text"] != b["text"]:
             yield b["role"], b["kind"], "changed", a["text"], b["text"]
+        # Reported by another role or the whole circle (not recorded before
+        # there were whole circles)
+        whole = {a.get("whole_circle"), b.get("whole_circle")} - {None}
+        if a["role"] != b["role"] or len(whole) > 1:
+            yield (
+                b["role"],
+                b["kind"],
+                "moved",
+                {"role": a["role"], "whole_circle": a.get("whole_circle", False)},
+                {
+                    "role": b["role"],
+                    "whole_circle": b.get("whole_circle", False),
+                    "text": b["text"],
+                },
+            )

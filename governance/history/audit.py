@@ -125,6 +125,12 @@ def items(rows):
             "role": _int(data["role_id"]),
             "text": item_text(kind, data),
         }
+        # Metrics and checklist items: reported by the role or its whole circle
+        | (
+            {"whole_circle": data["whole_circle"] in {True, "t"}}
+            if "whole_circle" in data
+            else {}
+        )
         for kind in ITEMS
         for pk, data in rows.get(kind, {}).items()
     }

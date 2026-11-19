@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 10:06+0100\n"
+"POT-Creation-Date: 2026-11-19 21:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -390,6 +390,10 @@ msgid "Metric removed"
 msgstr "Metrik entfernt"
 
 #: governance/history/views.py
+msgid "Metric moved"
+msgstr "Metrik verschoben"
+
+#: governance/history/views.py
 msgid "Checklist item added"
 msgstr "Checklisten-Punkt hinzugefügt"
 
@@ -400,6 +404,10 @@ msgstr "Checklisten-Punkt geändert"
 #: governance/history/views.py
 msgid "Checklist item removed"
 msgstr "Checklisten-Punkt entfernt"
+
+#: governance/history/views.py
+msgid "Checklist item moved"
+msgstr "Checklisten-Punkt verschoben"
 
 #: governance/history/views.py
 msgid "Accountabilities changed"
@@ -424,6 +432,11 @@ msgstr "Domains hinzugefügt"
 #: governance/history/views.py
 msgid "Domains removed"
 msgstr "Domains entfernt"
+
+#: governance/history/views.py governance/roles/editing.py
+#, python-format
+msgid "%(circle)s (whole circle)"
+msgstr "%(circle)s (ganzer Kreis)"
 
 #: governance/history/views.py
 msgid "Circle or role"
@@ -1729,11 +1742,6 @@ msgstr "Strategie von %(circle)s"
 #: governance/roles/editing.py
 msgid "The Circle Leads set the strategy outside governance. The members of the circle and its sub-circles get a mail."
 msgstr "Die Circle Leads legen die Strategie ausserhalb der Governance fest. Die Mitglieder des Kreises und seiner Sub-Kreise erhalten eine Mail."
-
-#: governance/roles/editing.py
-#, python-format
-msgid "%(circle)s (whole circle)"
-msgstr "%(circle)s (ganzer Kreis)"
 
 #: governance/roles/editing.py
 #, python-format
