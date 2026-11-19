@@ -122,7 +122,7 @@ Einstellungen kannst du Mails zu allem in allen Kreisen wählen.
 
 Für Skripte und andere Tools: unter "API-Tokens" (im Menü deines Namens) erstellst du ein Token (nur
 lesen oder lesen und schreiben, gültig bis 30 Tage nach der letzten
-Verwendung). Die API liest die
+Verwendung); "Löschen" dort widerruft es sofort. Die API liest die
 Struktur, Vorschläge und Meetings, legt Entwürfe an und verwaltet die Links und Notizen von Rollen und Kreisen; ihre Dokumentation steht
 unter `/api/docs`.
 
@@ -130,3 +130,6 @@ Das Kommandozeilen-Tool `gov` nutzt die API und holt sich sein Token
 selbst (`gov login`, im Browser bestätigen). Es zeigt Kreise, Rollen,
 Vorschläge und Meetings, sucht, bereitet Entwürfe vor und verwaltet Links, Notizen, Metriken und Checklisten-Punkte (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); wie du es und die mitgelieferten
 Claude-Code-Skills installierst, steht auf der Seite "API-Tokens".
+`gov logout` widerruft das Token, das `gov` auf diesem Computer
+verwendet, `gov tokens` listet deine Tokens auf und
+`gov tokens delete ID` widerruft sie.

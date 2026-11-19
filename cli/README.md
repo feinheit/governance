@@ -28,6 +28,10 @@ itself. On
 computers without a browser, create a token on the "API tokens" page and
 use `gov login URL --token`.
 
+`gov logout` revokes the token `gov` uses and forgets the installation.
+`gov tokens` lists your tokens, `gov tokens delete ID` revokes them, e.g.
+the token of a computer you don't use anymore or one which leaked.
+
 Several installations work like in Workbench's `wb`: `gov auth list`,
 `gov auth switch NAME`, `GOVERNANCE_URL` for one terminal and
 `gov -i NAME` for one command.

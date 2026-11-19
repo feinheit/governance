@@ -1,4 +1,4 @@
-"""Logging in, installations, shell completion and who you are"""
+"""Logging in and out, installations, shell completion and who you are"""
 
 import click
 from click.shell_completion import (
@@ -15,11 +15,13 @@ from gov.core import (
     cli,
     complete_installations,
     console,
+    current_installation,
     echo_fields,
     echo_json,
     find_installation,
     installation_url,
     link,
+    logout as revoke_and_forget,
     make_table,
     read_config,
     request,
@@ -67,6 +69,27 @@ def login(url, paste_token, access):
         terminate("Choose the access: `gov login --read` or `gov login --write`.")
     else:
         browser_login(url, access)
+
+
+@cli.command()
+def logout():
+    """Revoke gov's token for the current installation and forget it
+
+    Use `gov -i NAME logout` for other installations, `gov tokens` lists and
+    revokes your other tokens."""
+    if not (url := current_installation()):
+        terminate("Not configured yet, nothing to log out from.")
+    if url not in read_config()["installations"]:
+        terminate(f"Not logged in to {url}.")
+    if revoke_and_forget(url):
+        click.echo(f"Logged out from {url}.")
+    else:
+        click.secho(
+            f"Forgot {url}, but couldn't revoke the token. Delete it on the API"
+            " tokens page.",
+            fg="yellow",
+            err=True,
+        )
 
 
 class _CompleteOptions:

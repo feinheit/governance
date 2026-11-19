@@ -119,10 +119,13 @@ to whom.
 ## API
 
 For scripts and other tools: under "API tokens" (in the menu of your name) you create a token (read only,
-or read and write, valid until 30 days after its last use). The API reads the structure,
+or read and write, valid until 30 days after its last use); "Delete" there
+revokes it immediately. The API reads the structure,
 proposals and meetings, creates drafts and manages the links and notes of roles and circles; its documentation is at `/api/docs`.
 
 The command line tool `gov` uses the API and gets its token by itself
 (`gov login`, confirmed in the browser). It shows circles, roles,
 proposals and meetings, searches, prepares drafts and manages links, notes, metrics and checklist items (`gov links`, `gov notes`, `gov metrics`, `gov checklist`); how to install it, and the Claude Code skills
-coming with it, is on the "API tokens" page.
+coming with it, is on the "API tokens" page. `gov logout` revokes the
+token `gov` uses on this computer, `gov tokens` lists your tokens and
+`gov tokens delete ID` revokes them.

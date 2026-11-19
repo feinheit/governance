@@ -69,6 +69,53 @@ class APITest(TestCase):
         token.refresh_from_db()
         self.assertIsNotNone(token.last_used_at)
 
+    def test_list_and_revoke_tokens(self):
+        """Users list and revoke their own tokens through the API, read only
+        tokens may only revoke themselves"""
+        write = APIToken.objects.get(title="Script")
+        read = APIToken.objects.get(title="Reader")
+        expired, _secret = APIToken.create_for(
+            user=self.ada, title="Old", access="read"
+        )
+        APIToken.objects.filter(pk=expired.pk).update(expires_at=timezone.now())
+        other, _secret = APIToken.create_for(
+            user=self.bob, title="Bob's", access="write"
+        )
+
+        response = self.api("get", "/api/tokens/", secret=self.read_secret)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            [(token["title"], token["current"]) for token in response.json()],
+            [("Reader", True), ("Script", False)],
+        )
+
+        # Read only tokens may not revoke others
+        response = self.api(
+            "delete", f"/api/tokens/{write.pk}/", secret=self.read_secret
+        )
+        self.assertEqual(response.status_code, 403)
+        # Tokens of other users aren't found
+        self.assertEqual(
+            self.api("delete", f"/api/tokens/{other.pk}/").status_code, 404
+        )
+
+        response = self.api("delete", "/api/tokens/current/", secret=self.read_secret)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["title"], "Reader")
+        self.assertTrue(response.json()["current"])
+        self.assertFalse(APIToken.objects.filter(pk=read.pk).exists())
+        response = self.api("get", "/api/tokens/", secret=self.read_secret)
+        self.assertEqual(response.status_code, 401)
+
+        response = self.api("delete", f"/api/tokens/{write.pk}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.api("get", "/api/tokens/").status_code, 401)
+
+        # Sessions have no current token
+        self.client.force_login(self.ada)
+        self.assertEqual(self.client.delete("/api/tokens/current/").status_code, 400)
+        self.assertEqual(self.client.get("/api/tokens/").json(), [])
+
     def test_tokens_page(self):
         self.assertRedirects(
             self.client.get("/accounts/api-tokens/"),

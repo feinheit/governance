@@ -85,8 +85,11 @@ class CLITest(TestCase):
             )
         return Response(response)
 
-    def gov(self, *args, access="write", input=None):
-        _token, token = APIToken.create_for(user=self.ada, title="Tests", access=access)
+    def gov(self, *args, access="write", input=None, token=None):
+        if not token:
+            _token, token = APIToken.create_for(
+                user=self.ada, title="Tests", access=access
+            )
         config = gov.core.read_config()
         config["installations"]["http://testserver"] = {"token": token}
         gov.core.write_config(config)
@@ -691,6 +694,42 @@ class CLITest(TestCase):
         self.assertFalse((directory / "roles" / "999.json").exists())
         self.assertFalse((directory / "people.json").exists())
         self.assertNotIn("Ada", (directory / "governance.md").read_text())
+
+    def test_tokens_and_logout(self):
+        """gov tokens lists and revokes tokens, gov logout revokes gov's own"""
+        laptop, _secret = APIToken.create_for(
+            user=self.ada, title="Laptop", access="write"
+        )
+        result = self.gov("tokens")
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Laptop", result.output)
+        self.assertRegex(result.output, r"\*\d+ +Tests")
+
+        current, secret = APIToken.create_for(
+            user=self.ada, title="Current", access="write"
+        )
+        result = self.gov("tokens", "delete", current.pk, laptop.pk, token=secret)
+        self.assertEqual(result.exit_code, 0, result.output)
+        # The token gov uses goes last
+        self.assertEqual(
+            result.output,
+            f"Revoked Laptop ({laptop.pk}).\n"
+            f"Revoked Current ({current.pk}). Logged out from http://testserver.\n",
+        )
+        self.assertFalse(
+            APIToken.objects.filter(pk__in=[laptop.pk, current.pk]).exists()
+        )
+        self.assertNotIn("testserver", gov.core.CONFIG.read_text())
+
+        # Read only tokens log out too
+        _token, secret = APIToken.create_for(
+            user=self.ada, title="Agent", access="read"
+        )
+        result = self.gov("logout", token=secret)
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertIn("Logged out from http://testserver.", result.output)
+        self.assertFalse(APIToken.objects.filter(title="Agent").exists())
+        self.assertNotIn("testserver", gov.core.CONFIG.read_text())
 
     def test_token_from_the_environment(self):
         """GOVERNANCE_URL and GOVERNANCE_TOKEN need no login, e.g. for the

@@ -831,7 +831,10 @@ circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
 the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
-(the user, the token's access and their roles); objects come with the URL
+(the user, the token's access and their roles), `GET tokens/` (the user's
+unexpired tokens, `current` marking the one authenticating the request),
+`DELETE tokens/{id}/` and `DELETE tokens/current/` (revoking one's own
+tokens; read only tokens may revoke themselves, but no others); objects come with the URL
 of their page, times in local time (their first ten characters are the
 day the pages show), proposals with `adopted_on`. Clients send instructions only (e.g. written by an LLM from
 a tension); the server fills in names and returns `problems` with every
@@ -870,7 +873,8 @@ from `gov search --json` and `gov roles show --json`.
 
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
-write), `gov me`, `gov circles`, `gov roles show`, `gov policies`,
+write), `gov logout` revokes its token and forgets the installation,
+`gov tokens` (list, delete) the user's tokens, `gov me`, `gov circles`, `gov roles show`, `gov policies`,
 `gov roles context`, `gov domains`, `gov export`, `gov backup`, `gov constitution`, `gov search`, `gov links`, `gov notes`, `gov metrics` and `gov checklist`
 (list, add, update, remove), `gov meetings` (list, show) and `gov proposals` (list, show,
 create, update, publish; open, consent, request-meeting, comment). The Claude Code skill `governance-proposal`

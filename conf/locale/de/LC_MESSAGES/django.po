@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 08:19+0100\n"
+"POT-Creation-Date: 2026-11-19 10:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: governance/accounts/api_auth.py
+#: governance/accounts/api.py
+msgid "This request wasn't authenticated with a token."
+msgstr "Diese Anfrage wurde nicht mit einem Token authentifiziert."
+
+#: governance/accounts/api.py governance/accounts/api_auth.py
 msgid "This API token only allows reading, not changes."
 msgstr "Dieses API-Token erlaubt nur Lesen, keine Änderungen."
 
