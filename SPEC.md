@@ -975,8 +975,9 @@ Deliberately not modelled:
   holding the role; today its members are only its Role Leads (`members()`).
   Then revisit `can_add_items` (`meetings/access.py`): whoever holds an
   invited role adds items to an ad hoc tactical meeting, also when the
-  caller unchecked them; fine while holding the role is what counts
-  (decided 2026-11-08).
+  caller unchecked them and when filling it without being assigned
+  (1.4.2, 5.3.6, `filling()`); fine while holding the role is what counts
+  (decided 2026-11-08, 2026-11-19).
 - **First real meetings** in the app: check the mails in real clients
   (several role mails at a meeting's end since elections are announced
   then).
@@ -996,8 +997,6 @@ Deliberately not modelled:
     skills (`governance-proposal`, `governance-tactical`) with it.
   - "Conflicting" only for proposals without problems before the
     adoption, not those with problems from the start (decided 2026-11-19).
-  - Ad hoc tactical meetings: the Circle Leads filling an invited role
-    add items and own "– Name" like those assigned (decided 2026-11-19).
   - Risks: `role_leads()` of a sub-circle without Circle Lead names only
     its Circle Rep, not the super-circle's Circle Leads leading it;
     `held_as_circle_lead()` ignores inactive users' current assignments,

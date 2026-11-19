@@ -1,7 +1,12 @@
 """Who runs a meeting and who adds agenda items"""
 
-from governance.roles.models import Assignment
-from governance.roles.permissions import ALLOWED, NOT_ALLOWED, as_admin, is_member
+from governance.roles.permissions import (
+    ALLOWED,
+    NOT_ALLOWED,
+    as_admin,
+    filling,
+    is_member,
+)
 
 
 def can_run(user, meeting):
@@ -29,14 +34,12 @@ def can_add_items(user, meeting):
     5.4.4)"""
     if not meeting.is_running:
         return False
-    # The members (can_take_over()), attendees and invited roles add items
+    # The members (can_take_over()), attendees and those filling the
+    # invited roles (also without being assigned, 1.4.2) add items
     return (
         can_take_over(user, meeting)
         or meeting.attendees.filter(pk=user.pk).exists()
-        or Assignment.objects
-        .current()
-        .filter(user=user, role__in=meeting.invited_roles.all())
-        .exists()
+        or user.pk in filling(meeting.invited_roles.all())
     )
 
 

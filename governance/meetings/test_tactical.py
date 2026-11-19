@@ -526,6 +526,24 @@ class TacticalTest(TestCase):
         response = self.client.get(f"/meetings/tactical/new/?role={rep.pk}")
         self.assertContains(response, "You don&#x27;t hold any of these roles.")
 
+    def test_ad_hoc_filling_invited_roles(self):
+        """Who fills an invited role without being assigned (1.4.2) adds
+        items and owns them like the Role Leads, also when not checked"""
+        from governance.meetings.access import can_add_items
+        from governance.meetings.views import owner_from_label
+
+        zoe = User.objects.create_user("zoe@example.com", full_name="Zoe")
+        Assignment.objects.create(
+            role=self.kitchen.roles.get(core_role="lead"), user=zoe
+        )
+        waiter = Role.objects.create(name="Waiter", circle=self.kitchen)
+        meeting = Meeting.objects.create(
+            kind=Meeting.TACTICAL, called_by=self.bob, started_at=timezone.now()
+        )
+        meeting.invited_roles.add(waiter)
+        self.assertTrue(can_add_items(zoe, meeting))
+        self.assertEqual(owner_from_label(meeting, "Trays – Zoe"), ("Trays", zoe))
+
     def test_ad_hoc_named(self):
         """Ad hoc tactical meetings are named so, e.g. in the outputs mail
         and the running meetings"""

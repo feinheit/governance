@@ -50,6 +50,7 @@ from governance.roles.permissions import (
     asks_before_starting,
     can_start_meeting,
     filled_by,
+    filling,
     members,
     role_leads,
     stand_ins,
@@ -690,12 +691,7 @@ def owner_from_label(meeting, label):
         .active()
         .filter(
             Q(pk__in=meeting.attendees.values("pk"))
-            | Q(
-                pk__in=Assignment.objects
-                .current()
-                .filter(role__in=meeting.invited_roles.all())
-                .values("user")
-            )
+            | Q(pk__in=filling(meeting.invited_roles.all()))
             | (
                 Q(pk__in=members(meeting.circle).values("pk"))
                 if meeting.circle

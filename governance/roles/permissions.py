@@ -88,6 +88,14 @@ def role_leads(role):
     return stand_ins(role.circle, OTHER_ELECTED.get(role.core_role, []))
 
 
+def filling(roles):
+    """The IDs of the users filling the roles, assigned or not
+    (``role_leads()``)"""
+    return {
+        pk for role in roles for pk in role_leads(role).values_list("pk", flat=True)
+    }
+
+
 class FilledBy(UserList):
     """The users filling a role without anybody assigned, ``label`` says as
     what ("As Circle Lead")"""
