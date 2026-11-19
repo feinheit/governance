@@ -760,6 +760,16 @@ class ConflictTest(TestCase):
         waiting.refresh_from_db()
         self.assertFalse(waiting.conflicting)
 
+    def test_problems_from_the_start(self):
+        """A draft which had problems before isn't conflicting after an
+        adoption (decided 2026-11-19): its problems are its own"""
+        from governance.proposals.instructions import adopt
+
+        draft = self.rename("Butcher", original="Kok")
+        adopt(self.rename("Chef"))
+        draft.refresh_from_db()
+        self.assertFalse(draft.is_conflicting)
+
     def test_daily(self):
         """The daily task also finds conflicts with changes outside
         proposals"""

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 21:30+0100\n"
+"POT-Creation-Date: 2026-11-19 21:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1370,6 +1370,14 @@ msgstr "im Konflikt"
 #: governance/proposals/models.py
 msgid "A change adopted meanwhile conflicts with it: it can't be adopted like this."
 msgstr "Eine inzwischen angenommene Änderung steht im Konflikt damit: so kann er nicht angenommen werden."
+
+#: governance/proposals/models.py
+msgid "had problems"
+msgstr "hatte Probleme"
+
+#: governance/proposals/models.py
+msgid "It couldn't be adopted when its changes were last saved: its problems aren't conflicts."
+msgstr "Er konnte nicht angenommen werden, als seine Änderungen zuletzt gespeichert wurden: seine Probleme sind keine Konflikte."
 
 #: governance/proposals/models.py
 msgid "waiting since"

@@ -276,7 +276,7 @@ def retract(proposal):
 def recheck_conflicts(adopted=None):
     """After adopting a proposal (and daily, also for changes outside
     proposals, e.g. a role's policies for its domains): the open proposals which can't be adopted
-    like this anymore are marked as conflicting (lists and pages show it,
+    like this anymore, but could when last saved (``had_problems``), are marked as conflicting (lists and pages show it,
     decided 2026-11-13), published ones go back to their proposer's draft
     right away (their consents were to a proposal which can't pass) and
     the circle learns why; saving them merged with the current structure
@@ -305,8 +305,14 @@ def recheck_conflicts(adopted=None):
                 transaction.on_commit(
                     partial(mails.proposal_conflicting, proposal, found, adopted)
                 )
-        elif bool(found) != proposal.conflicting:
-            Proposal.objects.filter(pk=proposal.pk).update(conflicting=bool(found))
+        else:
+            # Not its own problems, those it had when last saved (decided
+            # 2026-11-19)
+            conflicting = bool(found) and (
+                proposal.conflicting or not proposal.had_problems
+            )
+            if conflicting != proposal.conflicting:
+                Proposal.objects.filter(pk=proposal.pk).update(conflicting=conflicting)
 
 
 # How long a proposal waits for a meeting before going back to its

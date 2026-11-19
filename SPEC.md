@@ -307,7 +307,10 @@ meeting) rechecks the open ones (`process.recheck_conflicts()`, also
 nightly for changes outside proposals such as domain policies, decided
 2026-11-13): those it conflicts with are marked (`Proposal.conflicting`,
 a red "conflict" badge in the lists, the problems on the page and in the
-API, cleared when saving them merged), published ones go back to their
+API, cleared when saving them merged; not those which had problems
+when their changes were last saved, `Proposal.had_problems`, e.g.
+unfinished drafts: their problems are their own, decided 2026-11-19;
+proposals open before that keep their mark until saved), published ones go back to their
 proposer's draft at once with a mail to the circle (the consents were to
 a proposal which can't pass; no new state). One still failing at its
 deadline or last consent (e.g. its role left) goes to the meeting.
@@ -995,8 +998,6 @@ Deliberately not modelled:
   - The API (`/api/me/`, the `role_leads` of roles and meetings) ignores
     the Circle Leads filling roles nobody is assigned to; `gov` and the
     skills (`governance-proposal`, `governance-tactical`) with it.
-  - "Conflicting" only for proposals without problems before the
-    adoption, not those with problems from the start (decided 2026-11-19).
   - Risks: `role_leads()` of a sub-circle without Circle Lead names only
     its Circle Rep, not the super-circle's Circle Leads leading it;
     `held_as_circle_lead()` ignores inactive users' current assignments,

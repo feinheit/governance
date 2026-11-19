@@ -1,3 +1,4 @@
+import copy
 import datetime as dt
 
 from django.conf import settings
@@ -116,6 +117,14 @@ class Proposal(models.Model):
             " adopted like this."
         ),
     )
+    had_problems = models.BooleanField(
+        _("had problems"),
+        default=False,
+        help_text=_(
+            "It couldn't be adopted when its changes were last saved: its"
+            " problems aren't conflicts."
+        ),
+    )
     waiting_since = models.DateTimeField(
         _("waiting since"),
         null=True,
@@ -215,18 +224,29 @@ class Proposal(models.Model):
         update_fields = kwargs.get("update_fields")
         if self.waiting_since != waiting and update_fields:
             kwargs["update_fields"] = {*kwargs["update_fields"], "waiting_since"}
+        changed = self._state.adding or self.instructions != getattr(
+            self, "_saved_instructions", None
+        )
         if (
-            self.conflicting
+            (changed or self.conflicting)
             and self.status in {self.DRAFT, self.PUBLISHED, self.IN_MEETING}
             and (update_fields is None or "instructions" in update_fields)
         ):
-            # Changed, e.g. merged with the current structure: still?
+            # Changed, e.g. merged with the current structure: still? Its
+            # own problems aren't conflicts (recheck_conflicts())
             from governance.proposals.instructions import problems
 
-            self.conflicting = bool(problems(self))
+            found = bool(self.instructions) and bool(problems(self))
+            self.had_problems = found
+            self.conflicting = self.conflicting and found
             if update_fields:
-                kwargs["update_fields"] = {*kwargs["update_fields"], "conflicting"}
+                kwargs["update_fields"] = {
+                    *kwargs["update_fields"],
+                    "conflicting",
+                    "had_problems",
+                }
         super().save(*args, **kwargs)
+        self._saved_instructions = copy.deepcopy(self.instructions)
         if self.status in {self.DRAFT, self.PUBLISHED, self.IN_MEETING}:
             # Pending: the roles and policies it changes now (the pages of
             # roles and policies list it), also when brought into a meeting
@@ -240,6 +260,15 @@ class Proposal(models.Model):
 
     def get_absolute_url(self):
         return reverse("proposal", kwargs={"pk": self.pk})
+
+    @classmethod
+    def from_db(cls, *args, **kwargs):
+        instance = super().from_db(*args, **kwargs)
+        # To recheck its problems when they change (save())
+        instance._saved_instructions = copy.deepcopy(
+            instance.__dict__.get("instructions")
+        )
+        return instance
 
     @property
     def adopted_on(self):
