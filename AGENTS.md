@@ -278,7 +278,8 @@ commits the app's JSON backup daily to a git repository instead.
   `governance-proposal`, a draft from a tension, `governance-review`),
   in the package: `gov skills install` links them into Claude Code's
   skills, to the checkout for editable installs, else to uv's environment
-  of the tool, so upgrading `gov` updates them;
+  of the tool, so upgrading `gov` updates them (bump the version when
+  changing a skill too, else only editable installs get it);
   `governance/test_skills.py` checks that their examples of instructions
   are what the server takes and that the `gov` commands they use exist.
 - Model methods changing data without required arguments get
