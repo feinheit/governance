@@ -882,7 +882,9 @@ without being assigned (1.4.2, 5.3.6) are in `/api/me/` and in the
 
 The **`gov` CLI** (`cli/`, like Workbench's `wb`) is a thin client of the
 API: `gov login` authorizes it in the browser (`/cli-login/`, read or
-write), `gov logout` revokes its token and forgets the installation,
+write; an expired token is replaced there too, installations redirecting
+the API permanently to another host over HTTPS move in the configuration,
+following the redirect would drop the token), `gov logout` revokes its token and forgets the installation,
 `gov tokens` (list, delete) the user's tokens, `gov me`, `gov circles`, `gov roles show`, `gov policies`,
 `gov roles context`, `gov domains`, `gov export`, `gov backup`, `gov constitution`, `gov search`, `gov links`, `gov notes`, `gov metrics` and `gov checklist`
 (list, add, update, remove), `gov meetings` (list, show) and `gov proposals` (list, show,

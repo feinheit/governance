@@ -8,6 +8,7 @@ from unittest.mock import patch
 import gov
 from click.shell_completion import ShellComplete, get_completion_class
 from click.testing import CliRunner
+from django.http import HttpResponsePermanentRedirect
 from django.test import Client, TestCase
 from django.utils import timezone
 from django.utils.translation import deactivate_all
@@ -75,7 +76,9 @@ class CLITest(TestCase):
     def tearDown(self):
         deactivate_all()
 
-    def request(self, method, url, *, headers, timeout, params=None, json=None):
+    def request(
+        self, method, url, *, headers, timeout, params=None, json=None, **kwargs
+    ):
         path = urllib.parse.urlsplit(url).path
         if method == "GET":
             response = self.api_client.get(path, params, headers=headers)
@@ -803,6 +806,43 @@ class CLITest(TestCase):
         )
         self.assertEqual(result.exit_code, 0, result.output)
         self.assertIn("Cook", result.output)
+
+    def test_moved_installation(self):
+        """Installations redirecting permanently to another host over HTTPS
+        move in the configuration: following the redirect would drop the
+        token (requests does for other hosts), each request a 401"""
+        _token, token = APIToken.create_for(
+            user=self.ada, title="Tests", access="write"
+        )
+        gov.core.write_config({
+            "current": "https://old.example",
+            "installations": {"https://old.example": {"token": token}},
+        })
+        moved = {"https://old.example": "https://new.example"}
+
+        def request(method, url, **kwargs):
+            parts = urllib.parse.urlsplit(url)
+            if new := moved.get(f"{parts.scheme}://{parts.netloc}"):
+                response = HttpResponsePermanentRedirect(f"{new}{parts.path}")
+                return Response(response)
+            return self.request(method, url, **kwargs)
+
+        with patch.object(gov.core.requests, "request", request):
+            result = CliRunner().invoke(gov.cli, ["me"], env={"GOV_DEBUG": "1"})
+            self.assertEqual(result.exit_code, 0, result.output)
+            self.assertIn("Ada", result.output)
+            self.assertIn("moved to https://new.example", result.output)
+            config = gov.core.read_config()
+            self.assertEqual(config["current"], "https://new.example")
+            self.assertEqual(
+                config["installations"], {"https://new.example": {"token": token}}
+            )
+
+            # Not to HTTP
+            moved["https://new.example"] = "http://insecure.example"
+            result = CliRunner().invoke(gov.cli, ["me"], env={"GOV_DEBUG": "1"})
+            self.assertEqual(result.exit_code, 1)
+            self.assertEqual(gov.core.read_config()["current"], "https://new.example")
 
     def complete(self, args, incomplete):
         self.gov("me")  # Stores a token
