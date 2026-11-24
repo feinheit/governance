@@ -844,6 +844,18 @@ class CLITest(TestCase):
             self.assertEqual(result.exit_code, 1)
             self.assertEqual(gov.core.read_config()["current"], "https://new.example")
 
+            # Logging out too, from the new URL
+            del moved["https://new.example"]
+            gov.core.write_config({
+                "current": "https://old.example",
+                "installations": {"https://old.example": {"token": token}},
+            })
+            result = CliRunner().invoke(gov.cli, ["logout"], env={"GOV_DEBUG": "1"})
+            self.assertEqual(result.exit_code, 0, result.output)
+            self.assertIn("Logged out from https://new.example.", result.output)
+            self.assertFalse(APIToken.objects.filter(title="Tests").exists())
+            self.assertEqual(gov.core.read_config()["installations"], {})
+
     def complete(self, args, incomplete):
         self.gov("me")  # Stores a token
         with patch.dict("os.environ", {"GOVERNANCE_URL": "http://testserver"}):
