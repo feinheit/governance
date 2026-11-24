@@ -241,7 +241,7 @@ class TacticalTest(TestCase):
         self.assertContains(response, f'hx-get="{url}?earlier=10"')
 
     def test_followers_look_at_other_reviews(self):
-        """Following, people look at another review on their own screen; the
+        """Following, people look at another step on their own screen; the
         meeting stays where it is"""
         meeting = Meeting.objects.create(
             circle=self.kitchen,
@@ -254,7 +254,9 @@ class TacticalTest(TestCase):
         self.client.force_login(self.bob)  # Following
         response = self.client.get(url)
         self.assertContains(response, 'href="?step=metrics"')
-        self.assertNotContains(response, 'href="?step=agenda"')  # No review
+        # Steps without a review of their own too, the meeting's goes back
+        self.assertContains(response, 'href="?step=closing"')
+        self.assertContains(response, 'href="?"')
         self.assertNotContains(response, "Meals served")
         response = self.client.get(f"{url}?step=metrics")
         self.assertContains(response, "Meals served")
@@ -262,9 +264,11 @@ class TacticalTest(TestCase):
         self.assertContains(response, f'hx-get="{url}?step=metrics"')
         meeting.refresh_from_db()
         self.assertEqual(meeting.step, "agenda")
-        # Only reviews
-        self.assertNotContains(
-            self.client.get(f"{url}?step=closing"), "the meeting is at"
+        response = self.client.get(f"{url}?step=closing")
+        self.assertContains(response, "the meeting is at")
+        self.assertNotContains(response, "Meals served")
+        self.assertNotContains(  # Not a step of tactical meetings
+            self.client.get(f"{url}?step=nonsense"), "the meeting is at"
         )
 
     def test_outcome_autosaved(self):

@@ -17,9 +17,9 @@ eine Person im Meeting hat).
   des Kreises handelt, bestätigt das zuerst.
 - **Folgen**: Die anderen sehen den aktuellen Schritt und Agendapunkt
   hervorgehoben, eine Übersicht, was der Vorschlag ändert (aktualisiert, während er angepasst wird), und öffnen ihn mit "Vorschlag
-  öffnen". In Tactical Meetings schauen sie sich mit einem Klick eine
-  andere Übersicht (Checklisten, Metriken, Updates) auf dem eigenen
-  Bildschirm an, "Zurück zum Meeting" kehrt zurück. Solange du tippst oder etwas offen hast, aktualisiert sich die
+  öffnen". In Tactical Meetings schauen sie sich mit einem Klick einen
+  anderen Schritt auf dem eigenen Bildschirm an (Checklisten, Metriken und
+  Updates zeigen ihre Übersicht, die anderen Schritte nichts Eigenes), "Zurück zum Meeting" kehrt zurück. Solange du tippst oder etwas offen hast, aktualisiert sich die
   Seite nicht; ein Hinweis oben sagt es (nicht beim Ändern des Vorschlags im Meeting).
 - **Notizen** unten: was zu keinem Agendapunkt gehört, z.B. die Absicht
   eines speziellen Meetings. Wer Secretary ist, schreibt sie, sie speichern

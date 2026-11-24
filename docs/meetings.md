@@ -20,9 +20,9 @@ meeting has it).
 - **Following**: the others see the current step and agenda item
   highlighted, a summary of what the proposal changes (updated while the
   secretary amends it), and open it with "Open the proposal".
-  In tactical meetings they look at another review (checklists, metrics,
-  updates) on their own screen by clicking it, "Back to the meeting"
-  returns.
+  In tactical meetings they look at another step on their own screen by
+  clicking it (the checklists, metrics and updates show their reviews, the
+  other steps nothing of their own), "Back to the meeting" returns.
   While you type or have something open, the page doesn't update; a
   notice at the top says so (not while the secretary amends the proposal).
 - **Notes** at the bottom: what doesn't belong to an agenda item, e.g. a

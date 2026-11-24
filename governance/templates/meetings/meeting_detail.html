@@ -45,10 +45,10 @@
                       {{ forloop.counter }}. {{ label }}
                     </button>
                   </form>
-                {% elif key in review_steps %}
-                  {# Following: where the meeting is, the reviews to look at on one's own screen #}
+                {% elif meeting.kind == meeting.TACTICAL %}
+                  {# Following: where the meeting is, the steps to look at on one's own screen #}
                   <a
-                    href="?step={{ key }}"
+                    href="?{% if key != meeting.step %}step={{ key }}{% endif %}"
                     class="badge {% if key == meeting.step %}wb-step-current{% elif key == shown_step %}wb-tone-primary{% else %}wb-tone-neutral{% endif %}"
                     {% if key == meeting.step %}aria-current="step"{% endif %}
                   >{{ forloop.counter }}. {{ label }}</a>

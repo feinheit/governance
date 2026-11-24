@@ -412,7 +412,8 @@ their own screens: the current step and agenda item are highlighted, the
 item's proposal links to its page and summarizes what it proposes now,
 updated while the secretary amends it (roles and policies added,
 changed, removed, roles moved, `describe.summarize()`); in tactical meetings they look at
-another review on their own screen (`?step=`, `REVIEW_STEPS`). The app doesn't record who
+another step on their own screen (`?step=`; all steps are clickable,
+only the reviews show something of their own). The app doesn't record who
 facilitates. The secretary is whoever starts it (also an ad-hoc
 tactical meeting): those who aren't acting as the circle's Secretary
 (`acting_secretaries()`: the Secretary, else the stand-ins of 5.3.6, the

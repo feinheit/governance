@@ -104,13 +104,15 @@ def meeting_detail(request, pk):
     meeting = get_object_or_404(
         Meeting.objects.select_related("circle", "secretary"), pk=pk
     )
-    # Following, people look at another review on their own screen
-    # (?step=, which the page's updates keep), the meeting stays there
+    # Following, people look at another step on their own screen (?step=,
+    # which the page's updates keep), the meeting stays there; only the
+    # reviews show something of their own, the others are clickable all the
+    # same, a step that isn't would look broken
     shown_step = meeting.step
     if (
         meeting.is_running
         and meeting.kind == Meeting.TACTICAL
-        and request.GET.get("step") in REVIEW_STEPS
+        and request.GET.get("step") in dict(meeting.steps)
     ):
         shown_step = request.GET["step"]
     return render(
@@ -134,7 +136,6 @@ def meeting_detail(request, pk):
             "is_acting_secretary": not meeting.circle
             or acting_secretaries(meeting.circle).filter(pk=request.user.pk).exists(),
             "shown_step": shown_step,
-            "review_steps": REVIEW_STEPS,
             "election_form": ElectionForm(meeting=meeting)
             if meeting.kind == Meeting.GOVERNANCE
             and meeting.is_running
@@ -153,10 +154,6 @@ def meeting_detail(request, pk):
 EARLIER_MEETINGS = 3
 MORE_EARLIER_MEETINGS = 10
 MAX_EARLIER_MEETINGS = 200
-
-
-# The tactical steps with something to show, which followers look at
-REVIEW_STEPS = {"checklists", "metrics", "progress"}
 
 
 def tactical_context(meeting, *, step, earlier=None):
