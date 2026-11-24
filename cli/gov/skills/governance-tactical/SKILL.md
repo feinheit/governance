@@ -74,6 +74,13 @@ others. Per task, in this order:
 1. A link whose name (more or less) matches the outcome's subject: use
    that list.
 2. Otherwise the circle's general list for everyone, if there is one.
+   Such a list may be divided into groups (sections) named after
+   individual people: put each task into its assignee's group (in
+   Basecamp, a group takes to-dos like a list, by its own ID). A task for
+   several people goes into each one's group when each of them has to do
+   it (one task per person); when it's done once for all of them, ask
+   which group. A group named like nobody assigned: ask, don't create
+   groups.
 3. Otherwise ask; don't create new lists, and never guess a project or
    list. Ask too when several links match equally well.
 
