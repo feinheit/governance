@@ -25,7 +25,7 @@ argument:
 ./runtests.sh governance.roles.test_roles
 ```
 
-The tests need the local PostgreSQL container: `podman start local_postgres_1`.
+The tests need the local PostgreSQL container: `podman start local-postgres-1`.
 
 End-to-end tests (tagged `e2e`, e.g. `governance/meetings/test_e2e.py`) run
 the real server and Chromium through Playwright: `uv run playwright install
