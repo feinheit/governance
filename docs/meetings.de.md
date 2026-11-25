@@ -39,12 +39,13 @@ Die Seite jedes Kreises hat eine "Inbox für Spannungen" für sein nächstes
 Meeting, Tactical oder Governance: welches es braucht, zeigt sich oft erst
 im Meeting. Die Mitglieder des Kreises sehen sie und tragen mit
 "Spannung hinzufügen" ein (ein paar Wörter wie auf der Agenda, bei Bedarf
-eine Beschreibung), auch auf der eigenen Personenseite mit "Spannung für
-den Kreis" neben jedem ihrer Kreise. Die neusten stehen zuoberst, mit dem
+eine Beschreibung). Die neusten stehen zuoberst, mit dem
 Tag, an dem sie eingetragen wurden, die über drei Monate alten sind
-zugeklappt ("Noch … anzeigen"). Deine Personenseite zeigt deine aus allen Kreisen. Eine **private** siehst nur du, auch im
+zugeklappt ("Noch … anzeigen"). Deine Personenseite zeigt deine aus allen Kreisen
+unter "Deine Spannungen", wo "Spannung hinzufügen" nach dem Kreis fragt. Eine **private** siehst nur du, auch im
 Meeting: du setzt sie selbst auf die Agenda. Nur du änderst oder löschst deine,
-solange sie in der Inbox sind; bist du nicht mehr Mitglied des Kreises,
+solange sie in der Inbox sind, und verschiebst sie in die Inbox eines anderen
+deiner Kreise, indem du den Kreis änderst; bist du nicht mehr Mitglied des Kreises,
 darf auch wer Secretary ist sie löschen (nicht private). Dann entweder:
 
 - **Auf das Meeting warten**: "Aus der Inbox" unter dem Feld der Agenda

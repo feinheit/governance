@@ -87,6 +87,12 @@ def add(circle, title, description, file, private, as_json):
 
 @tensions.command("update")
 @click.argument("id", type=int)
+@click.option(
+    "--circle",
+    type=int,
+    shell_complete=complete_circles,
+    help="Into the inbox of another of your circles (its ID).",
+)
 @click.option("--title")
 @click.option("--description", help="What it's about, in Markdown.")
 @click.option(
@@ -100,10 +106,11 @@ def add(circle, title, description, file, private, as_json):
     help="Only you see it, or the circle's members.",
 )
 @click.option("--json", "as_json", is_flag=True)
-def update(id, title, description, file, private, as_json):
+def update(id, circle, title, description, file, private, as_json):
     """Change your tension ID while it's in the inbox, only the given
     fields"""
     changes = {
+        "circle_id": circle,
         "title": title,
         "description": _description(description, file),
         "is_private": private,
@@ -111,7 +118,7 @@ def update(id, title, description, file, private, as_json):
     changes = {key: value for key, value in changes.items() if value is not None}
     if not changes:
         raise click.UsageError(
-            "Nothing to change: --title, --description, --file or --private."
+            "Nothing to change: --circle, --title, --description, --file or --private."
         )
     data = request("PATCH", f"tensions/{id}/", json=changes)
     if as_json:

@@ -13,6 +13,7 @@ from governance.meetings.tensions import (
     can_change as can_change_tension,
     can_delete as can_delete_tension,
     can_use_inbox,
+    circles_for,
     split_older,
 )
 from governance.proposals.models import Proposal
@@ -444,12 +445,8 @@ def person_detail(request, pk):
             .select_related("circle")
             .order_by("-created_at"),
             "waiting": waiting_for(user),
-            # A tension for one of the circles' inboxes, one button each
-            "inbox_circles": {
-                circle.pk
-                for circle in by_circle
-                if circle and can_use_inbox(user, circle)
-            },
+            # Into one of the circles' inboxes, chosen in the form
+            "can_add_tension": bool(circles_for(Tension(owner=user))),
         }
         context["drafts"], context["drafts_more"] = split_more(context["drafts"], 5)
         # One's tensions in all circles' inboxes, the private ones too

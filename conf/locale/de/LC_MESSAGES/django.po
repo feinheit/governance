@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 13:58+0100\n"
+"POT-Creation-Date: 2026-11-25 14:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -754,6 +754,10 @@ msgstr "Der Link muss mit https:// beginnen."
 #, python-format
 msgid "Tension for %(circle)s"
 msgstr "Spannung für %(circle)s"
+
+#: governance/meetings/tensions.py
+msgid "New tension"
+msgstr "Neue Spannung"
 
 #: governance/meetings/tensions.py
 msgid "In the circle's inbox, its members see it. You or the secretary put it on the agenda of a meeting, or you draft a proposal from it, private until published."
@@ -3412,14 +3416,6 @@ msgid "inactive"
 msgstr "inaktiv"
 
 #: governance/templates/roles/person_detail.html
-msgid "Into the circle's tension inbox, its members see it"
-msgstr "In die Inbox für Spannungen des Kreises, seine Mitglieder sehen sie"
-
-#: governance/templates/roles/person_detail.html
-msgid "Tension for the circle"
-msgstr "Spannung für den Kreis"
-
-#: governance/templates/roles/person_detail.html
 msgid "No roles at the moment."
 msgstr "Zurzeit keine Rollen."
 
@@ -3438,6 +3434,15 @@ msgstr "Deine Entwürfe"
 #: governance/templates/roles/person_detail.html
 msgid "Your tensions"
 msgstr "Deine Spannungen"
+
+#: governance/templates/roles/person_detail.html
+#: governance/templates/roles/role_detail.html
+msgid "Add a tension"
+msgstr "Spannung hinzufügen"
+
+#: governance/templates/roles/person_detail.html
+msgid "Tensions for your circles' next meetings, in their inboxes."
+msgstr "Spannungen für die nächsten Meetings deiner Kreise, in ihren Inboxen."
 
 #: governance/templates/roles/person_detail.html
 msgid "Earlier roles"
@@ -3520,10 +3525,6 @@ msgstr "Inbox für Spannungen"
 #: governance/templates/roles/role_detail.html
 msgid "Tensions for the circle's next meeting, tactical or governance. Its members see them; their owners or the secretary put them on the agenda."
 msgstr "Spannungen für das nächste Meeting des Kreises, Tactical oder Governance. Seine Mitglieder sehen sie; wer sie eingetragen hat oder Secretary ist, setzt sie auf die Agenda."
-
-#: governance/templates/roles/role_detail.html
-msgid "Add a tension"
-msgstr "Spannung hinzufügen"
 
 #: governance/templates/roles/role_detail.html
 msgid "Checklists"

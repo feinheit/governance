@@ -42,12 +42,13 @@ meeting has it).
 Each circle's page has a "Tension inbox" for its next meeting, tactical or
 governance: which one it needs often shows only in the meeting. The
 circle's members see it and add to it with "Add a tension" (a few words
-like on the agenda, a description if needed), also on their own page
-with "Tension for the circle" next to each of their circles. The newest
+like on the agenda, a description if needed). The newest
 come first with the day they were added, those older than three months
-are collapsed ("Show … more"). Your page lists yours from all circles. A **private** one only you see, also in
+are collapsed ("Show … more"). Your page lists yours from all circles
+under "Your tensions", where "Add a tension" asks for the circle. A **private** one only you see, also in
 the meeting: you put it on the agenda yourself. Only you change or delete yours, while
-they're in the inbox; once you're no longer a member of the circle, its
+they're in the inbox, and move them into another of your circles' inboxes
+by changing the circle; once you're no longer a member of the circle, its
 Secretary may delete them too (not private ones). Then either:
 
 - **Wait for the meeting**: "From the inbox" below the agenda's field

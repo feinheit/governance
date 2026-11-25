@@ -25,6 +25,7 @@ urlpatterns = [
         tensions.tension_form,
         name="tension_create",
     ),
+    path("tensions/new/", tensions.tension_form, name="tension_new"),
     path("tensions/<int:pk>/", tensions.tension_form, name="tension_update"),
     path("tensions/<int:pk>/delete/", tensions.tension_delete, name="tension_delete"),
     path("agenda/<int:pk>/remove/", views.agenda_remove, name="agenda_remove"),

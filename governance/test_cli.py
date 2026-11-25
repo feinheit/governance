@@ -514,13 +514,25 @@ class CLITest(TestCase):
             "Knives dull – Ada", self.gov("tensions", "list", self.kitchen.pk).output
         )
         self.assertIn("private", self.gov("tensions", "list", self.kitchen.pk).output)
+        # Into another inbox of hers, not into others'
+        bar = Role.objects.create(name="Bar", is_circle=True, circle=self.kitchen)
+        sales = Role.objects.create(name="Sales", is_circle=True)
+        result = self.gov("tensions", "update", tension["id"], "--circle", bar.pk)
+        self.assertIn("403", result.output)
+        Assignment.objects.create(
+            role=Role.objects.create(name="Barista", circle=bar), user=self.ada
+        )
+        self.gov("tensions", "update", tension["id"], "--circle", bar.pk)
+        self.assertIn("Knives dull", self.gov("tensions", "list", bar.pk).output)
+        result = self.gov("tensions", "update", tension["id"], "--circle", sales.pk)
+        self.assertIn("403", result.output)
+        self.gov("tensions", "update", tension["id"], "--circle", self.kitchen.pk)
         self.assertIn(
             "Removed Knives dull", self.gov("tensions", "remove", tension["id"]).output
         )
         self.assertIn(
             "The inbox is empty.", self.gov("tensions", "list", self.kitchen.pk).output
         )
-        sales = Role.objects.create(name="Sales", is_circle=True)
         result = self.gov("tensions", "add", sales.pk, "Prices")
         self.assertEqual(result.exit_code, 1)
         self.assertIn("403", result.output)

@@ -45,7 +45,11 @@ class TensionInboxTest(TestCase):
         self.client.force_login(self.bob)
         response = self.client.post(
             f"/roles/{self.kitchen.pk}/tensions/new/",
-            {"title": "Knives dull", "description": "Since **May**"},
+            {
+                "circle": self.kitchen.pk,
+                "title": "Knives dull",
+                "description": "Since **May**",
+            },
         )
         self.assertRedirects(response, self.kitchen.get_absolute_url())
         tension = Tension.objects.get()
@@ -60,7 +64,8 @@ class TensionInboxTest(TestCase):
             self.client.get(self.kitchen.get_absolute_url()), "Knives dull"
         )
         response = self.client.post(
-            f"/roles/{self.kitchen.pk}/tensions/new/", {"title": "Mine"}
+            f"/roles/{self.kitchen.pk}/tensions/new/",
+            {"circle": self.kitchen.pk, "title": "Mine"},
         )
         self.assertEqual(response.status_code, 403)
 
@@ -71,7 +76,10 @@ class TensionInboxTest(TestCase):
         for url in [f"/tensions/{tension.pk}/", f"/tensions/{tension.pk}/delete/"]:
             self.assertEqual(self.client.get(url).status_code, 403)
         self.client.force_login(self.bob)
-        self.client.post(f"/tensions/{tension.pk}/", {"title": "Knives blunt"})
+        self.client.post(
+            f"/tensions/{tension.pk}/",
+            {"circle": self.kitchen.pk, "title": "Knives blunt"},
+        )
         tension.refresh_from_db()
         self.assertEqual(tension.title, "Knives blunt")
         self.client.post(f"/tensions/{tension.pk}/delete/")
@@ -257,15 +265,60 @@ class TensionInboxTest(TestCase):
         self.assertNotContains(self.client.get(draft_url), "Since May")
 
     def test_person_page(self):
-        """One's own page adds tensions to the circles' inboxes, one button
-        per circle"""
+        """One's own page adds tensions to the inbox of one of one's
+        circles, chosen in the form"""
         self.client.force_login(self.bob)
-        response = self.client.get(self.bob.get_absolute_url())
-        self.assertContains(response, f"/roles/{self.kitchen.pk}/tensions/new/", 1)
-        self.assertNotContains(response, f"/roles/{self.sales.pk}/tensions/new/")
-        # Not on others' pages
+        page = self.bob.get_absolute_url()
+        response = self.client.get(page)
+        self.assertContains(response, f"/tensions/new/?next={page}")
+        self.assertNotContains(response, f"/roles/{self.kitchen.pk}/tensions/new/")
+        response = self.client.get("/tensions/new/")
+        self.assertContains(response, f'<option value="{self.kitchen.pk}">')
+        self.assertNotContains(response, f'<option value="{self.sales.pk}">')
+        self.client.post("/tensions/new/", {"circle": self.sales.pk, "title": "x"})
+        self.assertFalse(Tension.objects.exists())
+        response = self.client.post(
+            f"/tensions/new/?next={page}",
+            {"circle": self.kitchen.pk, "title": "Knives dull"},
+        )
+        self.assertRedirects(response, page, fetch_redirect_response=False)
+        tension = Tension.objects.get()
+        self.assertEqual(
+            (tension.circle, tension.owner, tension.title),
+            (self.kitchen, self.bob, "Knives dull"),
+        )
+        # Not on others' pages, not for people without circles
         response = self.client.get(self.ada.get_absolute_url())
         self.assertNotContains(response, "/tensions/new/")
+        nobody = User.objects.create_user("nobody@example.com", full_name="Nobody")
+        self.client.force_login(nobody)
+        self.assertNotContains(
+            self.client.get(nobody.get_absolute_url()), "/tensions/new/"
+        )
+        self.assertEqual(self.client.get("/tensions/new/").status_code, 403)
+
+    def test_move(self):
+        """Its owner moves it into another of their circles' inboxes while
+        it's in one, not into others'"""
+        tension = self.tension(self.eve, "Prices", description="Too low")
+        tension.circle = self.sales
+        tension.save()
+        Assignment.objects.create(role=self.cook, user=self.eve)
+        self.client.force_login(self.eve)
+        url = f"/tensions/{tension.pk}/"
+        response = self.client.get(url)
+        self.assertContains(response, f'<option value="{self.kitchen.pk}">')
+        bar = Role.objects.create(name="Bar", is_circle=True)
+        data = {"title": "Prices", "description": "Too low"}
+        self.client.post(url, data | {"circle": bar.pk})
+        tension.refresh_from_db()
+        self.assertEqual(tension.circle, self.sales)
+        response = self.client.post(url, data | {"circle": self.kitchen.pk})
+        self.assertRedirects(
+            response, self.kitchen.get_absolute_url(), fetch_redirect_response=False
+        )
+        tension.refresh_from_db()
+        self.assertEqual(tension.circle, self.kitchen)
 
     def test_own_on_person_page(self):
         """One's own tensions are on one's page too, private ones included,
@@ -295,9 +348,12 @@ class TensionInboxTest(TestCase):
         self.assertRedirects(
             self.client.post(delete_url), page, fetch_redirect_response=False
         )
-        self.assertContains(self.client.get(page), "Your tensions")
+        self.assertContains(self.client.get(page), "Ovens hot")
+        # Without any, the card stays for adding one
         Tension.objects.filter(title="Ovens hot").delete()
-        self.assertNotContains(self.client.get(page), "Your tensions")
+        self.assertContains(
+            self.client.get(page), "Tensions for your circles' next meetings"
+        )
         # Not on others' pages
         self.client.force_login(self.ada)
         self.assertNotContains(

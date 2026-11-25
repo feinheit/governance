@@ -20,6 +20,7 @@ from governance.meetings.tensions import (
     can_change as can_change_tension,
     can_delete as can_delete_tension,
     can_use_inbox,
+    circles_for,
 )
 from governance.roles.mentions import MENTION, plain_mentions
 from governance.roles.models import Assignment, Role
@@ -324,6 +325,8 @@ class TensionIn(Schema):
 
 
 class TensionPatch(Schema):
+    # Into another of its owner's circles' inboxes
+    circle_id: int | None = None
     title: str | None = None
     description: str | None = None
     is_private: bool | None = None
@@ -382,7 +385,13 @@ def tension_create(request, pk: int, data: TensionIn):
 
 @router.patch("tensions/{int:pk}/", response=TensionOut)
 def tension_update(request, pk: int, data: TensionPatch):
-    return _save_tension(_own_tension(request, pk), data.dict(exclude_none=True))
+    tension = _own_tension(request, pk)
+    changes = data.dict(exclude_none=True)
+    if "circle_id" in changes and changes["circle_id"] not in {
+        circle.pk for circle in circles_for(tension)
+    }:
+        raise HttpError(403, "Only into the inbox of one of its owner's circles.")
+    return _save_tension(tension, changes)
 
 
 @router.delete("tensions/{int:pk}/", response=TensionOut)

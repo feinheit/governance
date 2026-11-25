@@ -22,15 +22,6 @@
                   href="{{ circle.get_absolute_url }}"
                 >{{ circle }}</a>{% else %}{% translate "Organization" %}{% endif %}
             </h2>
-            {% if circle.pk in inbox_circles %}
-              {# Into the circle's inbox (meetings/tensions.py), its members see it #}
-              <a
-                class="btn btn-sm btn-quiet py-0"
-                href="{% url 'tension_create' circle.pk %}?next={{ request.path|urlencode }}"
-                title="{% translate "Into the circle's tension inbox, its members see it" %}"
-                data-modal
-              >{% icon "inbox" %} {% translate "Tension for the circle" %}</a>
-            {% endif %}
           </div>
           <ul class="list-group list-group-flush">
             {% for entry in entries %}
@@ -96,13 +87,24 @@
           </ul>
         </section>
       {% endif %}
-      {% if tensions %}
+      {% if tensions or can_add_tension %}
         {# In the circles' inboxes, the private ones only their owner sees #}
         <section class="card mb-4">
-          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your tensions" %}</h2></div>
+          <div class="card-header d-flex align-items-center gap-2">
+            <h2 class="h6 mb-0 me-auto">{% translate "Your tensions" %}</h2>
+            {% if can_add_tension %}<a
+                class="btn btn-sm btn-quiet py-0"
+                href="{% url 'tension_new' %}?next={{ request.path|urlencode }}"
+                data-modal
+              >{% icon "plus-lg" %} {% translate "Add a tension" %}</a>{% endif %}
+          </div>
           <ul class="list-group list-group-flush">
             {% for tension in tensions %}
               {% include "meetings/_tension_row.html" with show_circle=True can_propose=tension.can_propose %}
+            {% empty %}
+              <li class="list-group-item text-body-secondary">
+                {% translate "Tensions for your circles' next meetings, in their inboxes." %}
+              </li>
             {% endfor %}
             {% include "_show_more.html" with more=tensions_more %}
             {% for tension in tensions_more %}

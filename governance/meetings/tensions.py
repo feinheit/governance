@@ -70,6 +70,17 @@ def can_delete(user, tension):
     return ""
 
 
+def circles_for(tension):
+    """The circles whose inboxes the tension goes into, or moves to while
+    it's in one: those of its owner (members, not admins: they'd get all),
+    in the organization's order, and its own"""
+    return [
+        circle
+        for circle in Role.objects.depth_first()
+        if circle.pk == tension.circle_id or is_member(tension.owner, circle)
+    ]
+
+
 def split_older(tensions):
     """The inbox's tensions, newest first, and those older than three
     months (collapsed)"""
@@ -127,7 +138,17 @@ def return_to_inbox(meeting):
 class TensionForm(ModelForm):
     class Meta:
         model = Tension
-        fields = ["title", "description", "is_private"]
+        fields = ["circle", "title", "description", "is_private"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Also into the right circle's inbox instead of deleting and adding
+        # it again (in the inbox, nothing hangs on it)
+        circles = circles_for(self.instance)
+        field = self.fields["circle"]
+        field.queryset = Role.objects.filter(pk__in=[c.pk for c in circles])
+        empty = [] if self.instance.circle_id else [("", "---------")]
+        field.choices = empty + [(c.pk, f"{'– ' * c.depth}{c}") for c in circles]
 
 
 def _done(request, circle):
@@ -141,21 +162,28 @@ def tension_form(request, pk=None, circle_pk=None):
         tension = get_object_or_404(Tension.objects.select_related("circle"), pk=pk)
         circle = tension.circle
         right = can_change(request.user, tension)
-    else:
+    elif circle_pk:
         circle = get_object_or_404(Role, pk=circle_pk)
         tension = Tension(circle=circle, owner=request.user)
         right = can_use_inbox(request.user, circle)
+    else:
+        # From one's own page, into one of one's circles
+        circle = None
+        tension = Tension(owner=request.user)
+        right = ALLOWED if circles_for(tension) else ""
     if not right:
         raise PermissionDenied
     form = TensionForm(request.POST or None, instance=tension)
     if form.is_valid():
-        form.save()
-        return _done(request, circle)
+        tension = form.save()
+        return _done(request, tension.circle)
     return render(
         request,
         "generic/object_form.html",
         {
-            "title": gettext("Tension for %(circle)s") % {"circle": circle},
+            "title": gettext("Tension for %(circle)s") % {"circle": circle}
+            if circle
+            else gettext("New tension"),
             "help": gettext(
                 "In the circle's inbox, its members see it. You or the"
                 " secretary put it on the agenda of a meeting, or you draft a"
@@ -163,7 +191,8 @@ def tension_form(request, pk=None, circle_pk=None):
             ),
             "form": form,
             "right": right,
-            "cancel_url": next_url(request) or circle.get_absolute_url(),
+            "cancel_url": next_url(request)
+            or (circle or request.user).get_absolute_url(),
         },
     )
 

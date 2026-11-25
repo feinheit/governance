@@ -486,14 +486,17 @@ needs): a title of a few words like the agenda's, a description, the
 owner, private or not (`is_private`: only its owner sees it, also in
 the meeting, adding it themselves; decided 2026-11-25). Owners see
 their open tensions of all circles on their own page too, with the circle
-(decided 2026-11-25, where drafts without changes used to be).. Only tensions,
+(decided 2026-11-25, where drafts without changes used to be). Only tensions,
 no proposals and no role: a role makes it a proposal. The members see
 the inbox on the circle's page (newest first
 with their day, those older than three months collapsed; deleting or
 expiring them waits until they really pile up) and add to it there, on
-their own page ("Tension for the circle", one button per circle of
-theirs) and through the API (`gov tensions`). The owner changes and
-deletes theirs while in the inbox, the circle's acting Secretary deletes
+their own page ("Add a tension" in "Your tensions", choosing one of their
+circles; it replaced a button per circle, decided 2026-11-25) and through
+the API (`gov tensions`). The owner changes and
+deletes theirs while in the inbox, also moving them into another of
+their circles' inboxes (`circles_for()`: nothing hangs on a tension in the
+inbox, instead of deleting and adding it again; decided 2026-11-25), the circle's acting Secretary deletes
 those of former members (`can_delete()`, not private ones). The agenda is built in the
 meeting by its participants (5.4.4, "not beforehand"; tactical 3.x):
 the inbox prepares nothing, "From the inbox" beside the agenda's field
@@ -876,7 +879,7 @@ roles/{id}/context/` (the role's page's context, `roles/context.py`), `GET const
 circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
-the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET roles/{id}/tensions/` (the circle's tension inbox, its members), `POST roles/{id}/tensions/`, `PATCH tensions/{id}/` and `DELETE tensions/{id}/` (the owner's, while in the inbox), `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
+the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET roles/{id}/tensions/` (the circle's tension inbox, its members), `POST roles/{id}/tensions/`, `PATCH tensions/{id}/` (also `circle_id`, one of the owner's circles) and `DELETE tensions/{id}/` (the owner's, while in the inbox), `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
 (the user, the token's access and their roles), `GET tokens/` (the user's
 unexpired tokens, `current` marking the one authenticating the request),
 `DELETE tokens/{id}/` and `DELETE tokens/current/` (revoking one's own
