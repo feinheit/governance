@@ -42,8 +42,8 @@ im Meeting. Die Mitglieder des Kreises sehen sie und tragen mit
 eine Beschreibung), auch auf der eigenen Personenseite mit "Spannung für
 den Kreis" neben jedem ihrer Kreise. Die neusten stehen zuoberst, mit dem
 Tag, an dem sie eingetragen wurden, die über drei Monate alten sind
-zugeklappt ("Noch … anzeigen"). Eine **private** siehst nur du, auch im
-Meeting: du setzt sie selbst auf die Agenda. Deine Personenseite zeigt deine privaten auch. Nur du änderst oder löschst deine,
+zugeklappt ("Noch … anzeigen"). Deine Personenseite zeigt deine aus allen Kreisen. Eine **private** siehst nur du, auch im
+Meeting: du setzt sie selbst auf die Agenda. Nur du änderst oder löschst deine,
 solange sie in der Inbox sind; bist du nicht mehr Mitglied des Kreises,
 darf auch wer Secretary ist sie löschen (nicht private). Dann entweder:
 

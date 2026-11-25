@@ -452,23 +452,21 @@ def person_detail(request, pk):
             },
         }
         context["drafts"], context["drafts_more"] = split_more(context["drafts"], 5)
-        # Nobody else sees them: here too, not only in the circles' inboxes
-        private = list(
+        # One's tensions in all circles' inboxes, the private ones too
+        tensions = list(
             Tension.objects
             .open()
-            .filter(owner=user, is_private=True)
+            .filter(owner=user)
             .select_related("circle", "owner")
             .order_by("-created_at", "-pk")
         )
-        for tension in private:
+        for tension in tensions:
             tension.can_change = can_change_tension(user, tension)
             tension.can_delete = can_delete_tension(user, tension)
             tension.can_propose = (
                 not tension.circle.archived_on
                 and proposer_roles(user, tension.circle).exists()
             )
-        context["private_tensions"], context["private_tensions_more"] = split_more(
-            private, 5
-        )
+        context["tensions"], context["tensions_more"] = split_more(tensions, 5)
         context["waiting"], context["waiting_more"] = split_more(context["waiting"], 5)
     return render(request, "roles/person_detail.html", context)
