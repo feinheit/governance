@@ -160,7 +160,8 @@ those in use in `styles/icons.css`, `{% icon "pencil" %}`, icon-only
 buttons with a title and a visually hidden label; `test_icons.py`), the
 drag handles of the agenda and of accountabilities (`sortable.js`,
 SortableJS, a chunk of its own),
-textareas growing with their text (`autogrow.js`), parts of forms
+textareas growing with their text (`autogrow.js`; three rows to start
+unless a form sets them, `forms.BootstrapMixin`), parts of forms
 shown for some choices only (`shown_for.js`, `data-shown-for`), "Select
 all" buttons (`select_all.js`, `data-select-all`), menus of what
 isn't needed often (`details.wb-menu` with Bootstrap's `.dropdown-menu`,

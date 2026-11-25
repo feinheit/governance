@@ -46,6 +46,10 @@ class BootstrapMixin:
         if isinstance(widget, forms.Textarea):
             # Autocompleting @mentions of roles, see mentions.js
             widget.attrs.setdefault("data-mentions", "")
+            # They grow with their text (autogrow.js), never below their
+            # rows: small instead of Django's ten, unless a form sets them
+            if widget.attrs.get("rows") == "10":
+                widget.attrs["rows"] = 3
         return super().__getitem__(name)
 
 
