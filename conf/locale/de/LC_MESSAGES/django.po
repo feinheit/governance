@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 21:37+0100\n"
+"POT-Creation-Date: 2026-11-25 12:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -78,8 +78,8 @@ msgstr "nur lesen"
 msgid "read and write"
 msgstr "lesen und schreiben"
 
-#: governance/accounts/models.py governance/roles/models.py
-#: governance/templates/accounts/api_tokens.html
+#: governance/accounts/models.py governance/meetings/models.py
+#: governance/roles/models.py governance/templates/accounts/api_tokens.html
 msgid "title"
 msgstr "Titel"
 
@@ -145,8 +145,9 @@ msgstr "API-Token %(title)s löschen?"
 msgid "Scripts and gov using it lose their access."
 msgstr "Skripte und gov, die es verwenden, verlieren ihren Zugriff."
 
-#: governance/accounts/views.py governance/roles/editing.py
-#: governance/templates/accounts/api_tokens.html
+#: governance/accounts/views.py governance/meetings/tensions.py
+#: governance/roles/editing.py governance/templates/accounts/api_tokens.html
+#: governance/templates/meetings/_tension_row.html
 #: governance/templates/roles/_role_item.html
 #: governance/templates/roles/role_detail.html
 msgid "Delete"
@@ -660,6 +661,10 @@ msgid "is completed"
 msgstr "ist erledigt"
 
 #: governance/meetings/models.py
+msgid "is election"
+msgstr "ist eine Wahl"
+
+#: governance/meetings/models.py
 msgid "outcome"
 msgstr "Ergebnis"
 
@@ -702,6 +707,36 @@ msgstr "Wahl"
 msgid "elections"
 msgstr "Wahlen"
 
+#: governance/meetings/models.py
+msgid "In a few words, like on the agenda."
+msgstr "In wenigen Worten, wie auf der Agenda."
+
+#: governance/meetings/models.py governance/roles/models.py
+msgid "description"
+msgstr "Beschreibung"
+
+#: governance/meetings/models.py
+msgid "Optional: what it's about, e.g. an example."
+msgstr "Optional: worum es geht, z.B. ein Beispiel."
+
+#: governance/meetings/models.py
+#: governance/templates/meetings/_tension_row.html
+#: governance/templates/meetings/agenda_tensions.html
+msgid "private"
+msgstr "privat"
+
+#: governance/meetings/models.py
+msgid "Only you see it, also in the meeting: you put it on the agenda yourself."
+msgstr "Nur du siehst sie, auch im Meeting: du setzt sie selbst auf die Agenda."
+
+#: governance/meetings/models.py governance/proposals/models.py
+msgid "tension"
+msgstr "Spannung"
+
+#: governance/meetings/models.py
+msgid "tensions"
+msgstr "Spannungen"
+
 #: governance/meetings/processing.py
 msgid "The proposal is adopted."
 msgstr "Der Vorschlag ist angenommen."
@@ -714,6 +749,23 @@ msgstr "Der Vorschlag wurde zurückgezogen."
 #: governance/meetings/processing.py
 msgid "The link has to start with https://."
 msgstr "Der Link muss mit https:// beginnen."
+
+#: governance/meetings/tensions.py
+#, python-format
+msgid "Tension for %(circle)s"
+msgstr "Spannung für %(circle)s"
+
+#: governance/meetings/tensions.py
+msgid "In the circle's inbox, its members see it. You or the secretary put it on the agenda of a meeting, or you draft a proposal from it, private until published."
+msgstr "In der Inbox des Kreises, seine Mitglieder sehen sie. Du oder wer Secretary ist, setzt sie auf die Agenda eines Meetings, oder du entwirfst daraus einen Vorschlag, privat bis zur Veröffentlichung."
+
+#: governance/meetings/tensions.py
+msgid "Delete this tension?"
+msgstr "Diese Spannung löschen?"
+
+#: governance/meetings/tensions.py
+msgid "From the inbox"
+msgstr "Aus der Inbox"
 
 #: governance/meetings/views.py
 msgid "Kind"
@@ -773,10 +825,10 @@ msgstr "Meeting beenden?"
 
 #: governance/meetings/views.py
 #, python-format
-msgid "%(count)s agenda item hasn't been processed yet, its proposal waits for the next meeting."
-msgid_plural "%(count)s agenda items haven't been processed yet, their proposals wait for the next meeting."
-msgstr[0] "%(count)s Agendapunkt ist noch nicht bearbeitet, sein Vorschlag wartet auf das nächste Meeting."
-msgstr[1] "%(count)s Agendapunkte sind noch nicht bearbeitet, ihre Vorschläge warten auf das nächste Meeting."
+msgid "%(count)s agenda item hasn't been processed yet: a proposal waits for the next meeting, a tension goes into the circle's inbox."
+msgid_plural "%(count)s agenda items haven't been processed yet: proposals wait for the next meeting, tensions go into the circle's inbox."
+msgstr[0] "%(count)s Agendapunkt ist noch nicht bearbeitet: ein Vorschlag wartet auf das nächste Meeting, eine Spannung kommt in die Inbox des Kreises."
+msgstr[1] "%(count)s Agendapunkte sind noch nicht bearbeitet: Vorschläge warten auf das nächste Meeting, Spannungen kommen in die Inbox des Kreises."
 
 #: governance/meetings/views.py governance/templates/meetings/_end_button.html
 msgid "End the meeting"
@@ -1337,10 +1389,6 @@ msgstr "Rolle der vorschlagenden Person"
 #: governance/proposals/models.py
 msgid "The proposal addresses a tension of one of the proposer's roles. Unknown for proposals imported from GlassFrog."
 msgstr "Der Vorschlag verarbeitet eine Spannung einer Rolle der vorschlagenden Person. Bei aus GlassFrog importierten Vorschlägen unbekannt."
-
-#: governance/proposals/models.py
-msgid "tension"
-msgstr "Spannung"
 
 #: governance/proposals/models.py
 msgid "instructions"
@@ -1927,10 +1975,6 @@ msgid "without frequency"
 msgstr "ohne Häufigkeit"
 
 #: governance/roles/models.py
-msgid "description"
-msgstr "Beschreibung"
-
-#: governance/roles/models.py
 msgid "frequency"
 msgstr "Häufigkeit"
 
@@ -2218,6 +2262,7 @@ msgstr "Du kannst das als Secretary tun, stellvertretend für die Circle Leads: 
 #: governance/templates/generic/confirm.html
 #: governance/templates/generic/object_form.html
 #: governance/templates/meetings/_confirm_cancel.html
+#: governance/templates/meetings/agenda_tensions.html
 #: governance/templates/meetings/tactical_call.html
 #: governance/templates/roles/assignment_end.html
 #: governance/templates/roles/assignments.html
@@ -2466,6 +2511,7 @@ msgid "When a role or policy has been changed in the meantime, the secretary edi
 msgstr "Wurde eine Rolle oder Policy inzwischen geändert, bearbeitet, wer Secretary ist, sie im Vorschlag, wo das Formular den aktuellen Text zeigt, und speichert sie."
 
 #: governance/templates/meetings/_current.html
+#: governance/templates/meetings/_tension_row.html
 #: governance/templates/proposals/proposal_detail.html
 #: governance/templates/roles/_role_item.html
 #: governance/templates/roles/role_detail.html
@@ -2606,6 +2652,22 @@ msgstr "Governance Meeting starten"
 msgid "Start a tactical meeting"
 msgstr "Tactical Meeting starten"
 
+#: governance/templates/meetings/_tension_row.html
+msgid "Draft a proposal"
+msgstr "Vorschlag entwerfen"
+
+#: governance/templates/meetings/agenda_tensions.html
+msgid "Select all"
+msgstr "Alle auswählen"
+
+#: governance/templates/meetings/agenda_tensions.html
+msgid "The inbox is empty."
+msgstr "Die Inbox ist leer."
+
+#: governance/templates/meetings/agenda_tensions.html
+msgid "Add to the agenda"
+msgstr "Auf die Agenda setzen"
+
 #: governance/templates/meetings/attendees.html
 msgid "Attendees"
 msgstr "Teilnehmende"
@@ -2714,6 +2776,13 @@ msgstr "Spannung"
 #: governance/templates/meetings/meeting_detail.html
 msgid "Add"
 msgstr "Hinzufügen"
+
+#: governance/templates/meetings/meeting_detail.html
+#, python-format
+msgid "From the inbox (%(count)s)"
+msgid_plural "From the inbox (%(count)s)"
+msgstr[0] "Aus der Inbox (%(count)s)"
+msgstr[1] "Aus der Inbox (%(count)s)"
 
 #: governance/templates/meetings/meeting_detail.html
 msgid "Your proposals"
@@ -3343,6 +3412,14 @@ msgid "inactive"
 msgstr "inaktiv"
 
 #: governance/templates/roles/person_detail.html
+msgid "Into the circle's tension inbox, its members see it"
+msgstr "In die Inbox für Spannungen des Kreises, seine Mitglieder sehen sie"
+
+#: governance/templates/roles/person_detail.html
+msgid "Tension for the circle"
+msgstr "Spannung für den Kreis"
+
+#: governance/templates/roles/person_detail.html
 msgid "No roles at the moment."
 msgstr "Zurzeit keine Rollen."
 
@@ -3431,6 +3508,18 @@ msgstr "Hält den Purpose des Kreises und seine Accountabilities, soweit keine R
 #: governance/templates/roles/role_detail.html
 msgid "None"
 msgstr "Keine"
+
+#: governance/templates/roles/role_detail.html
+msgid "Tension inbox"
+msgstr "Inbox für Spannungen"
+
+#: governance/templates/roles/role_detail.html
+msgid "Tensions for the circle's next meeting, tactical or governance. Its members see them; their owners or the secretary put them on the agenda."
+msgstr "Spannungen für das nächste Meeting des Kreises, Tactical oder Governance. Seine Mitglieder sehen sie; wer sie eingetragen hat oder Secretary ist, setzt sie auf die Agenda."
+
+#: governance/templates/roles/role_detail.html
+msgid "Add a tension"
+msgstr "Spannung hinzufügen"
 
 #: governance/templates/roles/role_detail.html
 msgid "Checklists"

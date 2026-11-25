@@ -276,6 +276,34 @@
         </section>
       {% endif %}
 
+      {% if inbox_right %}
+        {# meetings/tensions.py: noted before a meeting, put on its agenda there #}
+        <section class="card mb-4" id="tensions">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Tension inbox" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for tension in tensions %}
+              {% include "meetings/_tension_row.html" %}
+            {% empty %}
+              <li class="list-group-item text-body-secondary">
+                {% translate "Tensions for the circle's next meeting, tactical or governance. Its members see them; their owners or the secretary put them on the agenda." %}
+              </li>
+            {% endfor %}
+            {# Older than three months, collapsed #}
+            {% include "_show_more.html" with more=older_tensions %}
+            {% for tension in older_tensions %}
+              {% include "meetings/_tension_row.html" with more=True %}
+            {% endfor %}
+            <li class="list-group-item">
+              <a
+                {% button_class inbox_right %}
+                href="{% url 'tension_create' role.pk %}"
+                data-modal
+              >{% icon "plus-lg" %} {% translate "Add a tension" %}</a>
+            </li>
+          </ul>
+        </section>
+      {% endif %}
+
       {% if pending %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Proposed" %}</h2></div>

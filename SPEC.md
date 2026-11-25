@@ -230,8 +230,8 @@ can't withdraw other people's proposals. Open proposals imported from
 GlassFrog are processed like the app's own since the switchover, adopted
 async at their GlassFrog deadline: nobody resubmits a proposal nobody
 objected to (decided 2026-11-08; GlassFrog's responses weren't imported). Drafts are private to the proposer until published
-or brought into a meeting; a draft without changes is a tension (`Proposal.has_changes`: a `test` alone only checks that a role or policy exists; the API drops tests of subjects it doesn't change, like the forms, `drafting.normalize()`) (the
-tension inbox; GlassFrog's open tensions were imported as such). New
+or brought into a meeting; a draft without changes is a tension (`Proposal.has_changes`: a `test` alone only checks that a role or policy exists; the API drops tests of subjects it doesn't change, like the forms, `drafting.normalize()`) (private,
+unlike the circle's tension inbox below; GlassFrog's open tensions were imported as such). New
 proposals ask for the tension, an example and how the proposal helps
 (5.3.1).
 
@@ -471,6 +471,36 @@ Workbench's logbook, without the confetti for reduced motion). An ended
 meeting shows its outputs like its mail (`meetings/outputs.py`) and
 doesn't change anymore (`runnable_meeting()`).
 `meetings/test_e2e.py` covers it in a browser.
+
+**Tension inbox** (`Tension`, `meetings/tensions.py`, decided
+2026-11-25): a circle's members note tensions for its next meeting,
+tactical or governance (often only the meeting shows which one it
+needs): a title of a few words like the agenda's, a description, the
+owner, private or not (`is_private`: only its owner sees it, also in
+the meeting, adding it themselves; decided 2026-11-25). Only tensions,
+no proposals and no role: a role makes it a proposal. The members see
+the inbox on the circle's page (newest first
+with their day, those older than three months collapsed; deleting or
+expiring them waits until they really pile up) and add to it there, on
+their own page ("Tension for the circle", one button per circle of
+theirs) and through the API (`gov tensions`). The owner changes and
+deletes theirs while in the inbox, the circle's acting Secretary deletes
+those of former members (`can_delete()`, not private ones). The agenda is built in the
+meeting by its participants (5.4.4, "not beforehand"; tactical 3.x):
+the inbox prepares nothing, "From the inbox" beside the agenda's field
+(a modal with checkboxes) puts the user's own tensions on it, the
+secretary's those of the attendees (not private ones), grouped by owner with "Select all"
+per person: attendees are rather who was invited than who is there, the
+secretary adds a person's when they name them, those of absent people
+stay. The item belongs to the tension's owner, its description
+shows while it's processed, capturing the proposal in a governance
+meeting starts from title and description. Or its owner drafts a
+proposal from it ("Draft a proposal": "New proposal" filled in,
+`Tension.proposal`), private until published; deleting the draft puts
+it back. Removing the item puts it back, ending the meeting too, and
+turns the other unprocessed items without a proposal into tensions of
+their owners (`return_to_inbox()`; not elections, `AgendaItem.is_election`,
+added again while due; ad hoc tactical meetings have no inbox).
 
 **Governance meetings**: check-in, agenda, closing (5.4.3). Members and
 attendees add items while it runs (5.4.4): a tension in a few words (the
@@ -837,7 +867,7 @@ roles/{id}/context/` (the role's page's context, `roles/context.py`), `GET const
 circles, nearest deadline first; each with `my_response`) and
 `proposals/{id}/`, `POST proposals/` (a draft), `PATCH proposals/{id}/`,
 `POST proposals/{id}/publish/`, `POST proposals/{id}/responses/` (like
-the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
+the page's form: consent, meeting with the concern, comment), `GET policies/` and `policies/{id}/`, `GET domains/`, `GET roles/{id}/tensions/` (the circle's tension inbox, its members), `POST roles/{id}/tensions/`, `PATCH tensions/{id}/` and `DELETE tensions/{id}/` (the owner's, while in the inbox), `GET meetings/` (the newest 20, `?circle_id=` like the role's list of meetings, `?kind=` governance, tactical or ad_hoc) and `meetings/{id}/` (the agenda items with outcome and link, the roles an outcome mentions with their Role Leads and their email addresses, the links like the progress updates, the outputs; everybody, like the pages), `GET export/`, `GET me/`
 (the user, the token's access and their roles), `GET tokens/` (the user's
 unexpired tokens, `current` marking the one authenticating the request),
 `DELETE tokens/{id}/` and `DELETE tokens/current/` (revoking one's own
@@ -1020,3 +1050,7 @@ Deliberately not modelled:
   ending a meeting when its inactivity runs out (instead of the hourly
   `end_inactive_meetings`), sending mails outside the request.
 - **Modals** for more forms where they help.
+- **Tensions piling up** in the inboxes: only collapsed after three
+  months for now; expiring them (e.g. into their owners' drafts, like
+  proposals waiting for a meeting) or deleting them when it becomes a
+  problem (decided 2026-11-25).

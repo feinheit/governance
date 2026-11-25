@@ -17,7 +17,9 @@ too.
 "New proposal" on the circle's page. Choose the role the tension comes
 from and describe it: what's missing, an example, how the proposal helps.
 Without changes the draft stays a **tension** only you see (on your
-page). You can work it out later or bring it to a meeting.
+page). You can work it out later or bring it to a meeting. A tension of
+yours in the circle's inbox (see [meetings](meetings.md)) becomes a draft
+with "Draft a proposal".
 
 Under "Propose changes" you add, change or remove roles and policies,
 move them into a sub-circle (also deeper down) or out of one into the

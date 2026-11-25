@@ -15,6 +15,7 @@ import "./filter_rows.js"
 import "./menus.js"
 import "./autogrow.js"
 import "./shown_for.js"
+import "./select_all.js"
 import "./more_fields.js"
 import "./shortcuts.js"
 // meeting.js first: it decides which links htmx boosts

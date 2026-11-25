@@ -9,6 +9,12 @@ from governance.history.views import ASSIGNMENT_ACTIONS, timeline, without_items
 from governance.meetings.elections import mark_due_elections
 from governance.meetings.models import Meeting
 from governance.meetings.teasers import with_teasers
+from governance.meetings.tensions import (
+    can_change as can_change_tension,
+    can_delete as can_delete_tension,
+    can_use_inbox,
+    split_older,
+)
 from governance.proposals.models import Proposal
 from governance.proposals.process import waiting_for
 from governance.roles.constitution import REP
@@ -222,6 +228,23 @@ def role_detail(request, pk):
         context["roles"] = [r for r in roles if not r.core_role]
         mark_reps(context["roles"])
         mark_due_elections(roles)
+        # The tension inbox, its members see it
+        if right := can_use_inbox(request.user, role):
+            tensions = list(
+                role.tensions
+                .open()
+                .visible_to(request.user)
+                .select_related("circle", "owner")
+            )
+            for tension in tensions:
+                tension.can_change = can_change_tension(request.user, tension)
+                tension.can_delete = can_delete_tension(request.user, tension)
+            tensions, older = split_older(tensions)
+            context |= {
+                "inbox_right": right,
+                "tensions": tensions,
+                "older_tensions": older,
+            }
     if not role.core_role and not role.archived_on:
         # Circles, and roles whose Role Leads break them down in their inner
         # circle (1.3.1, governance meetings only)
@@ -421,6 +444,12 @@ def person_detail(request, pk):
             .select_related("circle")
             .order_by("-created_at"),
             "waiting": waiting_for(user),
+            # A tension for one of the circles' inboxes, one button each
+            "inbox_circles": {
+                circle.pk
+                for circle in by_circle
+                if circle and can_use_inbox(user, circle)
+            },
         }
         context["drafts"], context["drafts_more"] = split_more(context["drafts"], 5)
         context["waiting"], context["waiting_more"] = split_more(context["waiting"], 5)

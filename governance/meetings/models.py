@@ -255,6 +255,8 @@ class AgendaItem(models.Model):
     # Removing the item puts a draft or an async proposal back
     proposal_status = models.CharField(_("proposal status"), max_length=20, blank=True)
     is_completed = models.BooleanField(_("is completed"), default=False)
+    # Due when the meeting started (meeting_create()), not a tension
+    is_election = models.BooleanField(_("is election"), default=False)
     step = models.CharField(_("step"), max_length=20, choices=STEP_CHOICES, blank=True)
     outcome = models.TextField(
         _("outcome"),
@@ -333,3 +335,85 @@ class Election(models.Model):
 
     def __str__(self):
         return f"{self.role}: {self.user or '-'}"
+
+
+class TensionQuerySet(models.QuerySet):
+    def open(self):
+        """In the inbox: not on an agenda (removing the item or ending the
+        meeting without processing it puts it back), not drafted as a
+        proposal (deleting the draft puts it back)"""
+        return self.filter(agenda_item=None, proposal=None)
+
+    def visible_to(self, user):
+        """Private ones only to their owner"""
+        return self.filter(models.Q(is_private=False) | models.Q(owner=user))
+
+
+class Tension(models.Model):
+    """A tension in a circle's inbox, for one of its meetings (tactical or
+    governance, the meeting triages it)
+
+    The circle's members see the inbox (private ones only their owner);
+    its owner or the meeting's secretary puts it on the agenda
+    (``meetings/tensions.py``). Not a
+    proposal: those prepared by their proposers are drafts (also without
+    changes, private).
+    """
+
+    circle = models.ForeignKey(
+        "roles.Role",
+        on_delete=models.PROTECT,
+        related_name="tensions",
+        verbose_name=_("circle"),
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="+",
+        verbose_name=_("owner"),
+    )
+    title = models.CharField(
+        _("title"), max_length=200, help_text=_("In a few words, like on the agenda.")
+    )
+    description = models.TextField(
+        _("description"),
+        blank=True,
+        help_text=_("Optional: what it's about, e.g. an example."),
+    )
+    is_private = models.BooleanField(
+        _("private"),
+        default=False,
+        help_text=_(
+            "Only you see it, also in the meeting: you put it on the agenda yourself."
+        ),
+    )
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    # On an agenda; processed once the item is completed
+    agenda_item = models.OneToOneField(
+        AgendaItem,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="tension",
+        verbose_name=_("agenda item"),
+    )
+
+    # Its owner drafted a proposal from it (private until published)
+    proposal = models.ForeignKey(
+        "proposals.Proposal",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="+",
+        verbose_name=_("proposal"),
+    )
+
+    objects = TensionQuerySet.as_manager()
+
+    class Meta:
+        ordering = ["created_at", "pk"]
+        verbose_name = _("tension")
+        verbose_name_plural = _("tensions")
+
+    def __str__(self):
+        return self.title

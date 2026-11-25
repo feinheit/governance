@@ -1,0 +1,84 @@
+{% extends modal|yesno:"modal.html,base.html" %}
+{% load governance i18n %}
+{% comment %}
+  Putting tensions of the circle's inbox on the agenda (meetings/tensions.py),
+  in a modal opened beside the agenda: the secretary sees those of the
+  attendees, the others their own
+{% endcomment %}
+{% block title %}{{ title }} – {{ meeting }} – {{ block.super }}{% endblock %}
+
+{% block content %}
+  <div class="wb-form-page">
+    <div class="wb-page-header">
+      <div class="min-w-0">
+        <h1 class="mb-0" {% if modal %}id="modal-title"{% endif %}>{{ title }}</h1>
+        <div class="wb-meta"><span>{{ meeting.circle }}</span></div>
+      </div>
+    </div>
+    <form
+      method="post"
+      action="{{ request.path }}"
+      {% if modal %}hx-post="{{ request.path }}" hx-target="#modal" hx-headers='{"HX-Modal": "true"}'{% endif %}
+    >
+      {% csrf_token %}
+      {# By owner: the facilitator asks each participant, the secretary adds theirs (5.4.4); not everybody invited is there #}
+      {% regroup tensions by owner as groups %}
+      {% for group in groups %}
+        <section class="card mb-3" data-select-scope>
+          <div class="card-header d-flex align-items-center gap-2">
+            <h2 class="h6 mb-0 me-auto">{{ group.grouper }}</h2>
+            {% if group.list|length > 1 %}<button
+                type="button"
+                class="btn btn-sm btn-quiet py-0"
+                data-select-all
+              >
+                {% translate "Select all" %}
+              </button>{% endif %}
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for tension in group.list %}
+              <li class="list-group-item">
+                <div class="form-check mb-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="tensions"
+                    value="{{ tension.pk }}"
+                    id="tension-{{ tension.pk }}"
+                  >
+                  <label class="form-check-label" for="tension-{{ tension.pk }}">
+                    {{ tension }}
+                    <span class="small text-body-secondary">{{ tension.created_at|timestamp }}</span>
+                    {% if tension.is_private %}<span
+                        class="badge wb-tone-neutral"
+                      >{% translate "private" %}</span>{% endif %}
+                  </label>
+                  {% if tension.description %}<div class="small text-body-secondary">
+                      {{ tension.description|plain|truncatechars:160 }}
+                    </div>{% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% empty %}
+        <p class="text-body-secondary">{% translate "The inbox is empty." %}</p>
+      {% endfor %}
+      <div class="wb-form-actions">
+        {% if tensions %}
+          <button type="submit" class="btn btn-primary">{% translate "Add to the agenda" %}</button>
+        {% endif %}
+        {% if modal %}<button
+            type="button"
+            class="btn btn-quiet"
+            data-modal-close
+          >
+            {% translate "Cancel" %}
+          </button>{% else %}<a
+            class="btn btn-quiet"
+            href="{{ meeting.get_absolute_url }}"
+          >{% translate "Cancel" %}</a>{% endif %}
+      </div>
+    </form>
+  </div>
+{% endblock content %}

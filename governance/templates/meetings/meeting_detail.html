@@ -136,6 +136,15 @@
                 >
                 <button type="submit" class="btn btn-sm btn-primary text-nowrap">{% translate "Add" %}</button>
               </form>
+              {% if inbox_count %}
+                {# The circle's tension inbox: the secretary's all, the others' their own #}
+                <a
+                  class="btn btn-sm btn-quiet mt-2"
+                  href="{% url 'agenda_tensions' meeting.pk %}"
+                  data-modal
+                >{% icon "inbox" %}
+                  {% blocktranslate count count=inbox_count %}From the inbox ({{ count }}){% plural %}From the inbox ({{ count }}){% endblocktranslate %}</a>
+              {% endif %}
               {% if own_proposals or others_proposals %}
                 {# One's own proposals; the secretary also sees others', set apart #}
                 <form method="post" action="{% url 'agenda_add' meeting.pk %}" class="d-flex gap-1 mt-2">

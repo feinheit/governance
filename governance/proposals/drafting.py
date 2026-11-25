@@ -21,6 +21,7 @@ from django.utils.translation import gettext, gettext_lazy as _, ngettext
 from django.views.decorators.http import require_POST
 
 from governance.forms import Form, ModelForm, next_url
+from governance.meetings.models import Tension
 from governance.proposals.describe import describe
 from governance.proposals.instructions import MARKERS, NEW_KEY, new_key, subject_of
 from governance.proposals.models import Proposal
@@ -206,16 +207,18 @@ def proposed_values(proposal, key, obj, fields):
 # Forms #######################################################################
 
 
-def tension_template():
-    """What a valid proposal needs (constitution 5.3.1)"""
+def tension_template(text=""):
+    """What a valid proposal needs (constitution 5.3.1), ``text`` (e.g. of a
+    tension in the inbox) under the first heading"""
+    headings = [
+        gettext("The tension from the point of view of the role"),
+        gettext("An example of a past or current situation"),
+        gettext("How the proposal addresses the tension in the example"),
+    ]
+    texts = [text.strip(), "", ""]
     return (
         "\n\n".join(
-            f"## {heading}\n\n"
-            for heading in [
-                gettext("The tension from the point of view of the role"),
-                gettext("An example of a past or current situation"),
-                gettext("How the proposal addresses the tension in the example"),
-            ]
+            f"## {heading}\n\n{body}" for heading, body in zip(headings, texts)
         ).strip()
         + "\n"
     )
@@ -470,14 +473,29 @@ def proposal_create(request, pk):
     if not roles.exists():
         # Proposals address tensions of the proposer's roles in the circle
         raise PermissionDenied
+    # Drafted from the owner's tension in the circle's inbox, which leaves it
+    source = None
+    if (pk := request.GET.get("tension", "")).isdigit():
+        source = (
+            Tension.objects
+            .open()
+            .filter(circle=circle, owner=request.user, pk=pk)
+            .first()
+        )
+    text = (
+        "\n\n".join(filter(None, [source.title, source.description])) if source else ""
+    )
     form = TensionForm(
-        request.POST or None, roles=roles, initial={"tension": tension_template()}
+        request.POST or None, roles=roles, initial={"tension": tension_template(text)}
     )
     if form.is_valid():
         form.instance.circle = circle
         form.instance.proposer = request.user
         form.instance.created_at = timezone.now()
         proposal = form.save()
+        if source:
+            source.proposal = proposal
+            source.save(update_fields=["proposal"])
         return redirect(proposal)
     return render(
         request,

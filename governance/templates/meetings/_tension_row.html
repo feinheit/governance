@@ -1,0 +1,41 @@
+{% load governance i18n %}
+{# A tension in the circle's inbox (role_detail.html), its age beside the owner; ``more``: collapsed (older than three months) #}
+<li class="list-group-item wb-row wb-row-compact{% if more %} wb-more{% endif %}" id="tension-{{ tension.pk }}">
+  {% if tension.description %}
+    <details class="wb-row-main wb-details">
+      <summary>
+        <span class="wb-row-title d-inline">{{ tension }}</span>
+        <span class="wb-agenda-owner" title="{{ tension.owner }}">– {{ tension.owner.get_short_name }}</span>
+        <span class="wb-row-meta d-inline ms-1">{{ tension.created_at|timestamp }}</span>{% if tension.is_private %}
+          <span class="badge wb-tone-neutral">{% translate "private" %}</span>{% endif %}
+      </summary>
+      <div class="wb-markdown wb-description mt-2">{{ tension.description|markdown }}</div>
+    </details>
+  {% else %}
+    <div class="wb-row-main">
+      <span class="wb-row-title">{{ tension }}</span>
+      <span class="wb-agenda-owner" title="{{ tension.owner }}">– {{ tension.owner.get_short_name }}</span>
+      <span class="wb-row-meta d-inline ms-1">{{ tension.created_at|timestamp }}</span>{% if tension.is_private %}
+        <span class="badge wb-tone-neutral">{% translate "private" %}</span>{% endif %}
+    </div>
+  {% endif %}
+  {% if tension.can_change or tension.can_delete %}
+    <div class="d-flex gap-1 flex-shrink-0">
+      {# The next step: waiting for the meeting, or a draft of one's own #}
+      {% if can_propose and tension.owner_id == request.user.pk %}<a
+          class="btn btn-sm btn-quiet"
+          href="{% url 'proposal_create' role.pk %}?tension={{ tension.pk }}"
+        >{% translate "Draft a proposal" %}</a>{% endif %}
+      {% if tension.can_change %}<a
+          {% button_class tension.can_change title=_("Edit") %}
+          href="{% url 'tension_update' tension.pk %}"
+          data-modal
+        >{% icon "pencil" %}<span class="visually-hidden">{% translate "Edit" %}</span></a>{% endif %}
+      {% if tension.can_delete %}<a
+          {% button_class tension.can_delete "btn-destructive" title=_("Delete") %}
+          href="{% url 'tension_delete' tension.pk %}"
+          data-modal
+        >{% icon "trash" %}<span class="visually-hidden">{% translate "Delete" %}</span></a>{% endif %}
+    </div>
+  {% endif %}
+</li>

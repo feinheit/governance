@@ -65,6 +65,17 @@ day, your roles for an hour, proposals for five minutes.
     gov proposals --circle 12 --status published
     gov proposals show 56       # tension, changes, problems
 
+## Tensions for a meeting
+
+A circle's tension inbox, its members see it; you or the secretary put
+your tension on the agenda of the circle's next meeting:
+
+    gov tensions list 12
+    gov tensions add 12 "Knives dull" --description "Since May, see the cook's notes"
+    gov tensions add 12 "Pots" --private   # only you see it
+    gov tensions update 90 --title "Knives blunt"
+    gov tensions remove 90
+
 ## Preparing proposals
 
 A draft needs the circle, one of your roles in it (see `gov me`) and the

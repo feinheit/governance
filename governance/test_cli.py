@@ -483,6 +483,48 @@ class CLITest(TestCase):
         self.assertIn("Removed Pots", self.gov("notes", "remove", note["id"]).output)
         self.assertIn("No notes.", self.gov("notes", "list", self.kitchen.pk).output)
 
+    def test_tensions(self):
+        """Adding (the description from stdin), changing, listing and removing
+        tensions of a circle's inbox; only its members use it"""
+        result = self.gov(
+            "tensions",
+            "add",
+            self.kitchen.pk,
+            "Knives",
+            "--file",
+            "-",
+            input="*Dull*\n",
+        )
+        tension = json.loads(
+            self.gov("tensions", "list", self.kitchen.pk, "--json").output
+        )[0]
+        self.assertEqual(result.output, f"Added tension {tension['id']} Knives.\n")
+        self.assertEqual(tension["description"], "*Dull*")
+        self.assertEqual(tension["owner"]["email"], "ada@example.com")
+        result = self.gov("tensions", "update", tension["id"], "--title", "Knives dull")
+        self.assertEqual(
+            result.output, f"Changed tension {tension['id']} Knives dull.\n"
+        )
+        result = self.gov("tensions", "list", self.kitchen.pk)
+        self.assertIn("Knives dull – Ada", result.output)
+        result = self.gov("tensions", "update", tension["id"])
+        self.assertIn("Nothing to change", result.output)
+        self.gov("tensions", "update", tension["id"], "--private")
+        self.assertIn(
+            "Knives dull – Ada", self.gov("tensions", "list", self.kitchen.pk).output
+        )
+        self.assertIn("private", self.gov("tensions", "list", self.kitchen.pk).output)
+        self.assertIn(
+            "Removed Knives dull", self.gov("tensions", "remove", tension["id"]).output
+        )
+        self.assertIn(
+            "The inbox is empty.", self.gov("tensions", "list", self.kitchen.pk).output
+        )
+        sales = Role.objects.create(name="Sales", is_circle=True)
+        result = self.gov("tensions", "add", sales.pk, "Prices")
+        self.assertEqual(result.exit_code, 1)
+        self.assertIn("403", result.output)
+
     def test_links(self):
         """Adding, changing, listing and removing a circle's links"""
         result = self.gov(

@@ -161,7 +161,8 @@ buttons with a title and a visually hidden label; `test_icons.py`), the
 drag handles of the agenda and of accountabilities (`sortable.js`,
 SortableJS, a chunk of its own),
 textareas growing with their text (`autogrow.js`), parts of forms
-shown for some choices only (`shown_for.js`, `data-shown-for`), menus of what
+shown for some choices only (`shown_for.js`, `data-shown-for`), "Select
+all" buttons (`select_all.js`, `data-select-all`), menus of what
 isn't needed often (`details.wb-menu` with Bootstrap's `.dropdown-menu`,
 `menus.js` closes them) and the circle browser (a Preact island, `circles/`, which `main.js` imports
 only on its page: Preact and d3 are a chunk of their own). No core-js:

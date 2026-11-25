@@ -33,6 +33,40 @@ eine Person im Meeting hat).
   letzten Änderung. Dann erhalten Mitglieder und Teilnehmende die
   Ergebnisse per Mail.
 
+## Inbox für Spannungen
+
+Die Seite jedes Kreises hat eine "Inbox für Spannungen" für sein nächstes
+Meeting, Tactical oder Governance: welches es braucht, zeigt sich oft erst
+im Meeting. Die Mitglieder des Kreises sehen sie und tragen mit
+"Spannung hinzufügen" ein (ein paar Wörter wie auf der Agenda, bei Bedarf
+eine Beschreibung), auch auf der eigenen Personenseite mit "Spannung für
+den Kreis" neben jedem ihrer Kreise. Die neusten stehen zuoberst, mit dem
+Tag, an dem sie eingetragen wurden, die über drei Monate alten sind
+zugeklappt ("Noch … anzeigen"). Eine **private** siehst nur du, auch im
+Meeting: du setzt sie selbst auf die Agenda. Nur du änderst oder löschst deine,
+solange sie in der Inbox sind; bist du nicht mehr Mitglied des Kreises,
+darf auch wer Secretary ist sie löschen (nicht private). Dann entweder:
+
+- **Auf das Meeting warten**: "Aus der Inbox" unter dem Feld der Agenda
+  setzt Spannungen auf die Agenda, die eigenen, wer Secretary ist, die
+  der Teilnehmenden, nach Person ("Alle auswählen" wählt alle einer
+  Person aus): die Agenda entsteht im Meeting durch die Anwesenden
+  (Verfassung 5.4.4), die Inbox hält Spannungen nur fest. Wer Secretary
+  ist, setzt die einer Person auf die Agenda, wenn sie sie nennt, die
+  von Abwesenden bleiben in der Inbox. Der Punkt gehört der Person, die die
+  Spannung eingetragen hat, ihre Beschreibung erscheint, während er
+  behandelt wird; im Governance Meeting hält, wer Secretary ist, daraus
+  den Vorschlag fest, wie aus jeder Spannung.
+- **Vorschlag entwerfen**: "Vorschlag entwerfen" neben deiner Spannung
+  öffnet "Neuer Vorschlag" mit ihrem Text. Der Entwurf ist privat, bis du
+  ihn veröffentlichst; die Spannung verlässt die Inbox (löschst du den
+  Entwurf, kommt sie zurück).
+
+Entfernen des Punkts von der Agenda legt die Spannung zurück. Endet das
+Meeting, kommen die unbearbeiteten Punkte in die Inbox, auch die im
+Meeting hinzugefügten; nicht Vorschläge (sie warten auf das nächste
+Meeting) und Wahlen.
+
 ## Governance Meeting
 
 "Governance Meeting starten" auf der Seite des Kreises (bei seinen Meetings und im Menü "…", mit "Alle Meetings"), das darf jedes Mitglied. Ablauf: Check-in, Agenda, Check-out. Wer eine Rolle hat,

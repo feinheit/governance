@@ -37,6 +37,37 @@ meeting has it).
 - **End**: "End the meeting", or by itself three hours after the last
   change. Then the members and attendees get the outputs by mail.
 
+## Tension inbox
+
+Each circle's page has a "Tension inbox" for its next meeting, tactical or
+governance: which one it needs often shows only in the meeting. The
+circle's members see it and add to it with "Add a tension" (a few words
+like on the agenda, a description if needed), also on their own page
+with "Tension for the circle" next to each of their circles. The newest
+come first with the day they were added, those older than three months
+are collapsed ("Show … more"). A **private** one only you see, also in
+the meeting: you put it on the agenda yourself. Only you change or delete yours, while
+they're in the inbox; once you're no longer a member of the circle, its
+Secretary may delete them too (not private ones). Then either:
+
+- **Wait for the meeting**: "From the inbox" below the agenda's field
+  puts tensions on the agenda, your own, the secretary's those of the
+  attendees, by person ("Select all" checks all of a person's): the
+  agenda is built in the meeting by those there (constitution 5.4.4),
+  the inbox only notes tensions. The secretary adds somebody's when
+  they name them, those of people who aren't there stay in the inbox. The item belongs to whoever wrote
+  the tension, its description shows while it's processed; in a
+  governance meeting the secretary captures the proposal from it like
+  from any tension.
+- **Draft a proposal**: "Draft a proposal" next to your tension opens
+  "New proposal" with its text. The draft is private until you publish
+  it; the tension leaves the inbox (deleting the draft puts it back).
+
+Removing the item from the agenda puts the tension back. When the
+meeting ends, the items left unprocessed go into the inbox, also those
+added in the meeting; not proposals (they wait for the next meeting) or
+elections.
+
 ## Governance meeting
 
 "Start a governance meeting" on the circle's page (in its Meetings and in the menu "…", with "All meetings"), every member may do that. Steps: check-in, agenda, closing. The Role Leads of a role start one

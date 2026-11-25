@@ -16,12 +16,21 @@
     <div class="col-lg-7">
       {% for circle, entries in by_circle.items %}
         <section class="card mb-4">
-          <div class="card-header">
-            <h2 class="h6 mb-0">
+          <div class="card-header d-flex align-items-center gap-2">
+            <h2 class="h6 mb-0 me-auto">
               {% if circle %}<a
                   href="{{ circle.get_absolute_url }}"
                 >{{ circle }}</a>{% else %}{% translate "Organization" %}{% endif %}
             </h2>
+            {% if circle.pk in inbox_circles %}
+              {# Into the circle's inbox (meetings/tensions.py), its members see it #}
+              <a
+                class="btn btn-sm btn-quiet py-0"
+                href="{% url 'tension_create' circle.pk %}?next={{ request.path|urlencode }}"
+                title="{% translate "Into the circle's tension inbox, its members see it" %}"
+                data-modal
+              >{% icon "inbox" %} {% translate "Tension for the circle" %}</a>
+            {% endif %}
           </div>
           <ul class="list-group list-group-flush">
             {% for entry in entries %}

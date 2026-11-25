@@ -16,6 +16,10 @@
       </form>
     {% endif %}
   </div>
+  {% if current_tension.description and not current.proposal %}
+    {# From the circle's inbox, what it's about #}
+    <div class="card-body border-bottom wb-markdown">{{ current_tension.description|markdown }}</div>
+  {% endif %}
   {% if meeting.kind == "tactical" %}
     <div class="card-body">
       {% if can_run %}

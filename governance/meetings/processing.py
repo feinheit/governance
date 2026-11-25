@@ -17,7 +17,7 @@ from django.utils.translation import gettext
 from django.views.decorators.http import require_POST
 
 from governance.meetings.access import autosaving, can_run
-from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting
+from governance.meetings.models import STEP_CHOICES, AgendaItem, Meeting, Tension
 from governance.proposals.instructions import ProposalError, adopt
 from governance.proposals.models import Proposal
 from governance.proposals.process import check_role, withdraw
@@ -91,6 +91,7 @@ def item_to_proposal(request, pk):
     item = running_item(request, pk, governance=True)
     if item.proposal:
         return redirect(item.meeting)
+    tension = Tension.objects.filter(agenda_item=item).first()
     with transaction.atomic():
         proposer = item.owner or request.user
         item.proposal = Proposal.objects.create(
@@ -98,7 +99,10 @@ def item_to_proposal(request, pk):
             proposer=proposer,
             # The secretary changes it in the tension form if needed
             role=proposer_roles(proposer, item.meeting.circle).first(),
-            tension=item.label,
+            # With the description of a tension from the inbox
+            tension="\n\n".join(
+                filter(None, [item.label, getattr(tension, "description", "")])
+            ),
             status=Proposal.IN_MEETING,
             meeting=item.meeting,
             created_at=timezone.now(),

@@ -29,9 +29,11 @@ from governance.meetings.models import (
     TACTICAL_STEP_CHOICES,
     AgendaItem,
     Meeting,
+    Tension,
 )
 from governance.meetings.outputs import meeting_outputs
 from governance.meetings.teasers import with_teasers
+from governance.meetings.tensions import inbox
 from governance.modals import is_modal
 from governance.proposals.describe import summarize
 from governance.proposals.drafting import can_edit
@@ -136,6 +138,8 @@ def meeting_detail(request, pk):
             "is_acting_secretary": not meeting.circle
             or acting_secretaries(meeting.circle).filter(pk=request.user.pk).exists(),
             "shown_step": shown_step,
+            # The circle's tension inbox, beside adding items
+            "inbox_count": inbox(request.user, meeting).count(),
             "election_form": ElectionForm(meeting=meeting)
             if meeting.kind == Meeting.GOVERNANCE
             and meeting.is_running
@@ -221,7 +225,12 @@ def current_context(request, meeting):
     if meeting.active_item_id is None:
         return {}
     item = meeting.current_item
-    context = {"current": item, "steps": STEP_CHOICES}
+    context = {
+        "current": item,
+        "steps": STEP_CHOICES,
+        # From the circle's inbox, with what it's about
+        "current_tension": Tension.objects.filter(agenda_item=item).first(),
+    }
     if proposal := item.proposal:
         changes = annotate_changes(proposal)
         context |= {
@@ -321,6 +330,7 @@ def meeting_create(request, pk):
                 position=position,
                 owner=owner,
                 label=gettext("Election: %(role)s") % {"role": role.name},
+                is_election=True,
             )
     return redirect(meeting)
 
@@ -541,10 +551,12 @@ def meeting_end(request, pk):
             {
                 "question": gettext("End the meeting?"),
                 "help": ngettext(
-                    "%(count)s agenda item hasn't been processed yet, its"
-                    " proposal waits for the next meeting.",
-                    "%(count)s agenda items haven't been processed yet, their"
-                    " proposals wait for the next meeting.",
+                    "%(count)s agenda item hasn't been processed yet: a"
+                    " proposal waits for the next meeting, a tension goes into"
+                    " the circle's inbox.",
+                    "%(count)s agenda items haven't been processed yet:"
+                    " proposals wait for the next meeting, tensions go into"
+                    " the circle's inbox.",
                     count,
                 )
                 % {"count": count},

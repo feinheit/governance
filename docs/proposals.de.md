@@ -19,7 +19,9 @@ Entwürfe.
 Spannung kommt, und beschreibe sie: was fehlt, ein Beispiel, wie der
 Vorschlag hilft. Ohne Änderungen bleibt der Entwurf eine **Spannung**, die
 nur du siehst (auf deiner Personenseite). Du kannst sie später ausarbeiten
-oder in einem Meeting einbringen.
+oder in einem Meeting einbringen. Eine deiner Spannungen in der Inbox des
+Kreises (siehe [Meetings](meetings.de.md)) wird mit "Vorschlag entwerfen"
+zum Entwurf.
 
 Unter "Änderungen vorschlagen" fügst du Rollen und Policies hinzu, änderst
 oder entfernst sie, verschiebst sie in einen Sub-Kreis (auch tiefer

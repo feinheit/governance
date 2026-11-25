@@ -1,6 +1,6 @@
 from django.urls import path
 
-from governance.meetings import elections, processing, views
+from governance.meetings import elections, processing, tensions, views
 
 
 urlpatterns = [
@@ -15,6 +15,18 @@ urlpatterns = [
     path("meetings/<int:pk>/step/", views.meeting_step, name="meeting_step"),
     path("agenda/<int:pk>/outcome/", processing.item_outcome, name="item_outcome"),
     path("meetings/<int:pk>/agenda/add/", views.agenda_add, name="agenda_add"),
+    path(
+        "meetings/<int:pk>/agenda/tensions/",
+        tensions.agenda_tensions,
+        name="agenda_tensions",
+    ),
+    path(
+        "roles/<int:circle_pk>/tensions/new/",
+        tensions.tension_form,
+        name="tension_create",
+    ),
+    path("tensions/<int:pk>/", tensions.tension_form, name="tension_update"),
+    path("tensions/<int:pk>/delete/", tensions.tension_delete, name="tension_delete"),
     path("agenda/<int:pk>/remove/", views.agenda_remove, name="agenda_remove"),
     path("agenda/<int:pk>/move/", views.agenda_move, name="agenda_move"),
     path("meetings/<int:pk>/agenda/order/", views.agenda_order, name="agenda_order"),

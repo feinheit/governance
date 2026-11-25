@@ -16,6 +16,7 @@ from gov import (  # noqa: F401 Register the commands
     roles,
     search,
     skills,
+    tensions,
     tokens,
 )
 from gov.core import cli

@@ -2,15 +2,25 @@
 in the task management tool (the ``governance-tactical`` skill)
 
 Everybody sees all meetings, like on the pages; the API doesn't run them.
+The members of a circle use its tension inbox.
 """
 
+import copy
+
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from ninja import Router, Schema
+from ninja.errors import HttpError
 
-from governance.meetings.models import AgendaItem, Meeting
+from governance.meetings.models import AgendaItem, Meeting, Tension
 from governance.meetings.outputs import meeting_outputs
+from governance.meetings.tensions import (
+    can_change as can_change_tension,
+    can_delete as can_delete_tension,
+    can_use_inbox,
+)
 from governance.roles.mentions import MENTION, plain_mentions
 from governance.roles.models import Assignment, Role
 from governance.roles.permissions import filling_unassigned
@@ -276,3 +286,114 @@ def meeting(request, pk: int):
         ],
         "minutes": meeting.minutes,
     }
+
+
+# The circles' tension inboxes (meetings/tensions.py) ########################
+
+
+class TensionOut(Schema):
+    id: int
+    circle_id: int
+    title: str
+    # Markdown, mentions as @[Name](role:ID)
+    description: str
+    owner: PersonOut
+    # Only its owner sees it
+    is_private: bool
+    created_at: str
+    # Opens it in the circle's inbox
+    url: str
+
+    @staticmethod
+    def resolve_owner(obj):
+        return person(obj.owner)
+
+    @staticmethod
+    def resolve_created_at(obj):
+        return _iso(obj.created_at)
+
+    @staticmethod
+    def resolve_url(obj):
+        return f"{absolute(obj.circle)}#tension-{obj.pk}"
+
+
+class TensionIn(Schema):
+    title: str
+    description: str = ""
+    is_private: bool = False
+
+
+class TensionPatch(Schema):
+    title: str | None = None
+    description: str | None = None
+    is_private: bool | None = None
+
+
+def _inbox_circle(request, pk):
+    circle = get_object_or_404(Role, pk=pk)
+    if not can_use_inbox(request.user, circle):
+        raise HttpError(403, "Only the circle's members use its tension inbox.")
+    return circle
+
+
+def _save_tension(tension, data):
+    for field, value in data.items():
+        setattr(tension, field, value.strip() if isinstance(value, str) else value)
+    try:
+        tension.full_clean()
+    except ValidationError as exc:
+        raise HttpError(
+            400, " ".join(f"{f}: {' '.join(e)}" for f, e in exc.message_dict.items())
+        ) from exc
+    tension.save()
+    return tension
+
+
+def _own_tension(request, pk):
+    tension = get_object_or_404(
+        Tension.objects.select_related("circle", "owner"), pk=pk
+    )
+    if not can_change_tension(request.user, tension):
+        raise HttpError(
+            403, "Only its owner changes a tension, while it's in the inbox."
+        )
+    return tension
+
+
+@router.get("roles/{int:pk}/tensions/", response=list[TensionOut])
+def tensions(request, pk: int):
+    """The circle's tension inbox: not on an agenda, not drafted as a
+    proposal; private ones only the owner's"""
+    circle = _inbox_circle(request, pk)
+    return (
+        circle.tensions
+        .open()
+        .visible_to(request.user)
+        .select_related("circle", "owner")
+    )
+
+
+@router.post("roles/{int:pk}/tensions/", response=TensionOut)
+def tension_create(request, pk: int, data: TensionIn):
+    """A tension of the user's in the circle's inbox"""
+    circle = _inbox_circle(request, pk)
+    return _save_tension(Tension(circle=circle, owner=request.user), data.dict())
+
+
+@router.patch("tensions/{int:pk}/", response=TensionOut)
+def tension_update(request, pk: int, data: TensionPatch):
+    return _save_tension(_own_tension(request, pk), data.dict(exclude_none=True))
+
+
+@router.delete("tensions/{int:pk}/", response=TensionOut)
+def tension_delete(request, pk: int):
+    """Returns the deleted tension; the circle's acting Secretary deletes
+    those of former members"""
+    tension = get_object_or_404(
+        Tension.objects.select_related("circle", "owner"), pk=pk
+    )
+    if not can_delete_tension(request.user, tension):
+        raise HttpError(403, "Only its owner deletes a tension in the inbox.")
+    out = copy.copy(tension)
+    tension.delete()
+    return out

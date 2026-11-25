@@ -55,6 +55,7 @@ def end_meeting(meeting, at=None):
     """Ends the meeting, its outputs go out by mail; a circle which lost its
     last roles in it turns back into a role now"""
     from governance.meetings.elections import announce_elections
+    from governance.meetings.tensions import return_to_inbox
     from governance.proposals.instructions import revert_after_meeting
 
     meeting.ended_at = at or timezone.now()
@@ -64,6 +65,8 @@ def end_meeting(meeting, at=None):
     meeting.proposals.filter(status=Proposal.IN_MEETING).update(
         waiting_since=meeting.ended_at
     )
+    # Unprocessed tensions go (back) into the circle's inbox
+    return_to_inbox(meeting)
     # Not the elections of core roles archived by turning back
     revert_after_meeting(meeting)
     announce_elections(meeting)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from governance.meetings.models import AgendaItem, Election, Meeting
+from governance.meetings.models import AgendaItem, Election, Meeting, Tension
 
 
 class AgendaItemInline(admin.TabularInline):
@@ -46,3 +46,10 @@ class ElectionAdmin(admin.ModelAdmin):
     list_display = ["role", "user", "term_ends_on", "meeting"]
     search_fields = ["role__name", "user__full_name"]
     raw_id_fields = ["meeting", "role", "user"]
+
+
+@admin.register(Tension)
+class TensionAdmin(admin.ModelAdmin):
+    list_display = ["title", "circle", "owner", "created_at", "agenda_item"]
+    search_fields = ["title", "description", "circle__name"]
+    raw_id_fields = ["circle", "owner", "agenda_item"]

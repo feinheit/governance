@@ -71,6 +71,9 @@
 .bi-grip-vertical::before {
   content: "\f3fe";
 }
+.bi-inbox::before {
+  content: "\f42d";
+}
 .bi-three-dots::before {
   content: "\f5d4";
 }

@@ -16,7 +16,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from governance.accounts.models import User
-from governance.meetings.models import AgendaItem, Meeting
+from governance.meetings.models import AgendaItem, Meeting, Tension
 from governance.proposals.models import Proposal
 from governance.roles.models import (
     Accountability,
@@ -594,6 +594,36 @@ class MeetingE2ETest(LiveServerTestCase):
         AgendaItem.objects.create(meeting=self.meeting, label="Meanwhile", position=9)
         page.wait_for_selector("#agenda >> text=Meanwhile", timeout=8000)
         self.assertEqual(page.locator("#modal[open]").count(), 1)
+        self.assertEqual(self.errors, [])
+
+    def test_tensions_from_the_inbox(self):
+        """The inbox's tensions go on the agenda from a modal, "Select all"
+        checks them, unchecks them again"""
+        for title in ["Knives dull", "Oven broken"]:
+            Tension.objects.create(circle=self.kitchen, owner=self.ada, title=title)
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.meeting.get_absolute_url()}")
+        page.locator("a[data-modal][href$='/agenda/tensions/']").click()
+        page.wait_for_selector("#modal[open] >> text=Oven broken")
+        select_all = page.locator("#modal [data-select-all]")
+        select_all.click()
+        self.assertEqual(page.locator("#modal input:checked").count(), 2)
+        select_all.click()
+        self.assertEqual(page.locator("#modal input:checked").count(), 0)
+        select_all.click()
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("#agenda >> text=Oven broken")
+        self.assertEqual(page.locator("#modal[open]").count(), 0)
+        self.assertFalse(Tension.objects.open().exists())
+        # By owner, "Select all" checks only theirs
+        bob = User.objects.create_user("bob@example.com", full_name="Bob")
+        self.meeting.attendees.add(bob)
+        for owner in [self.ada, self.ada, bob]:
+            Tension.objects.create(circle=self.kitchen, owner=owner, title="Later")
+        page.locator("a[data-modal][href$='/agenda/tensions/']").click()
+        page.wait_for_selector("#modal[open] >> text=Bob")
+        page.locator("#modal [data-select-all]").click()
+        self.assertEqual(page.locator("#modal input:checked").count(), 2)
         self.assertEqual(self.errors, [])
 
     def test_domain_policies(self):
