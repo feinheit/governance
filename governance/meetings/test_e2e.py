@@ -603,6 +603,32 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertEqual(page.locator("#modal[open]").count(), 1)
         self.assertEqual(self.errors, [])
 
+    def test_tension_form(self):
+        """Saving a tension in the modal closes it and shows the tension"""
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.kitchen.get_absolute_url()}")
+        page.locator("a[data-modal][href$='/tensions/new/']").click()
+        page.fill("#modal input[name=title]", "Knives dull")
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("#modal[open]", state="detached")
+        page.wait_for_selector("#tensions >> text=Knives dull")
+        self.assertEqual(Tension.objects.count(), 1)
+
+        page.locator(
+            f"#tensions a[data-modal][href$='/tensions/{Tension.objects.get().pk}/']"
+        ).click()
+        page.fill("#modal input[name=title]", "Knives blunt")
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("#modal[open]", state="detached")
+        page.wait_for_selector("#tensions >> text=Knives blunt")
+
+        page.locator("#tensions a[data-modal][href$='/delete/']").click()
+        page.locator("#modal button[type=submit]").click()
+        page.wait_for_selector("#modal[open]", state="detached")
+        page.wait_for_selector("#tensions >> text=Knives blunt", state="detached")
+        self.assertFalse(Tension.objects.exists())
+        self.assertEqual(self.errors, [])
+
     def test_tensions_from_the_inbox(self):
         """The inbox's tensions go on the agenda from a modal, "Select all"
         checks them, unchecks them again"""

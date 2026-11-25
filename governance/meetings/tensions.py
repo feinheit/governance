@@ -131,7 +131,9 @@ class TensionForm(ModelForm):
 
 
 def _done(request, circle):
-    return redirect(next_url(request) or f"{circle.get_absolute_url()}#tensions")
+    # Without a fragment: in a modal on the circle's page only changing the
+    # fragment wouldn't reload the page (HX-Redirect), the modal stayed open
+    return redirect(next_url(request) or circle)
 
 
 def tension_form(request, pk=None, circle_pk=None):

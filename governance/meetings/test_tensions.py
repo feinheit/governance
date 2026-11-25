@@ -47,7 +47,7 @@ class TensionInboxTest(TestCase):
             f"/roles/{self.kitchen.pk}/tensions/new/",
             {"title": "Knives dull", "description": "Since **May**"},
         )
-        self.assertRedirects(response, f"{self.kitchen.get_absolute_url()}#tensions")
+        self.assertRedirects(response, self.kitchen.get_absolute_url())
         tension = Tension.objects.get()
         self.assertEqual((tension.owner, tension.circle), (self.bob, self.kitchen))
         response = self.client.get(self.kitchen.get_absolute_url())
