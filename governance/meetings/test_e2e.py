@@ -80,6 +80,13 @@ class MeetingE2ETest(LiveServerTestCase):
         client = Client()
         client.force_login(self.ada)
         self.context = self.browser.new_context()
+        # Shortcuts are Alt elsewhere, Ctrl on Macs (shortcuts.js): the tests
+        # expect Alt also when they run on a Mac, test_shortcuts_on_macs
+        # redefines it
+        self.context.add_init_script(
+            "Object.defineProperty(Navigator.prototype, 'platform',"
+            " {get: () => 'Linux x86_64', configurable: true})"
+        )
         self.context.add_cookies([
             {
                 "name": "sessionid",
