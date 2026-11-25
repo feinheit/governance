@@ -85,7 +85,7 @@ der Kreis-Browser, deine Personenseite, das Zuweisen, das Einberufen eines
 Tactical Meetings, der Markdown-Export).
 
 **Deine Personenseite**, die Startseite, zeigt deine Rollen (auch die ohne Zuweisung, die du
-ausfüllst, markiert "Als Circle Lead" oder ähnlich), deine Entwürfe,
+ausfüllst, markiert "Als Circle Lead" oder ähnlich), deine Entwürfe und privaten Spannungen,
 Vorschläge, die auf deine Antwort warten, deine Meetings und deine
 Einstellungen: Name, Kurzname (im Menü oben), Sprache (Deutsch oder
 Englisch) und Mails. "Einstellungen" im Menü mit deinem Namen ändert sie

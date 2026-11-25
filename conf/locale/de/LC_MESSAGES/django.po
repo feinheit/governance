@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 13:53+0100\n"
+"POT-Creation-Date: 2026-11-25 13:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -3434,6 +3434,10 @@ msgstr "Warten auf deine Antwort"
 #: governance/templates/roles/person_detail.html
 msgid "Your drafts"
 msgstr "Deine Entwürfe"
+
+#: governance/templates/roles/person_detail.html
+msgid "Your private tensions"
+msgstr "Deine privaten Spannungen"
 
 #: governance/templates/roles/person_detail.html
 msgid "Earlier roles"

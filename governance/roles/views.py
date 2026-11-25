@@ -7,7 +7,7 @@ from django.utils.translation import gettext
 from governance.accounts.models import User
 from governance.history.views import ASSIGNMENT_ACTIONS, timeline, without_items
 from governance.meetings.elections import mark_due_elections
-from governance.meetings.models import Meeting
+from governance.meetings.models import Meeting, Tension
 from governance.meetings.teasers import with_teasers
 from governance.meetings.tensions import (
     can_change as can_change_tension,
@@ -452,5 +452,23 @@ def person_detail(request, pk):
             },
         }
         context["drafts"], context["drafts_more"] = split_more(context["drafts"], 5)
+        # Nobody else sees them: here too, not only in the circles' inboxes
+        private = list(
+            Tension.objects
+            .open()
+            .filter(owner=user, is_private=True)
+            .select_related("circle", "owner")
+            .order_by("-created_at", "-pk")
+        )
+        for tension in private:
+            tension.can_change = can_change_tension(user, tension)
+            tension.can_delete = can_delete_tension(user, tension)
+            tension.can_propose = (
+                not tension.circle.archived_on
+                and proposer_roles(user, tension.circle).exists()
+            )
+        context["private_tensions"], context["private_tensions_more"] = split_more(
+            private, 5
+        )
         context["waiting"], context["waiting_more"] = split_more(context["waiting"], 5)
     return render(request, "roles/person_detail.html", context)

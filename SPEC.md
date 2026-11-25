@@ -484,7 +484,8 @@ doesn't change anymore (`runnable_meeting()`).
 tactical or governance (often only the meeting shows which one it
 needs): a title of a few words like the agenda's, a description, the
 owner, private or not (`is_private`: only its owner sees it, also in
-the meeting, adding it themselves; decided 2026-11-25). Only tensions,
+the meeting, adding it themselves, and on their own page with its circle,
+where drafts without changes used to be; decided 2026-11-25). Only tensions,
 no proposals and no role: a role makes it a proposal. The members see
 the inbox on the circle's page (newest first
 with their day, those older than three months collapsed; deleting or

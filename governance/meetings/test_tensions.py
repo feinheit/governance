@@ -267,6 +267,39 @@ class TensionInboxTest(TestCase):
         response = self.client.get(self.ada.get_absolute_url())
         self.assertNotContains(response, "/tensions/new/")
 
+    def test_private_on_person_page(self):
+        """One's own private tensions are on one's page too, open ones only,
+        with their circle; edited and deleted from there, back there"""
+        private = self.tension(self.bob, "Knives dull", is_private=True)
+        self.tension(self.bob, "Ovens hot")
+        self.tension(self.ada, "Plates chipped", is_private=True)
+        drafted = Proposal.objects.create(
+            circle=self.kitchen, proposer=self.bob, created_at=timezone.now()
+        )
+        self.tension(self.bob, "Soup cold", is_private=True, proposal=drafted)
+        self.client.force_login(self.bob)
+        page = self.bob.get_absolute_url()
+        response = self.client.get(page)
+        self.assertContains(response, "Your private tensions")
+        self.assertContains(response, "Knives dull")
+        self.assertContains(response, "– Kitchen")
+        self.assertContains(
+            response, f"/roles/{self.kitchen.pk}/proposals/new/?tension={private.pk}"
+        )
+        for title in ["Ovens hot", "Plates chipped", "Soup cold"]:
+            self.assertNotContains(response, title)
+        delete_url = f"/tensions/{private.pk}/delete/?next={page}"
+        self.assertContains(response, delete_url)
+        self.assertRedirects(
+            self.client.post(delete_url), page, fetch_redirect_response=False
+        )
+        self.assertNotContains(self.client.get(page), "Your private tensions")
+        # Not on others' pages
+        self.client.force_login(self.ada)
+        self.assertNotContains(
+            self.client.get(self.bob.get_absolute_url()), "Your private tensions"
+        )
+
 
 class DraftsIntoInboxesTest(TestCase):
     def test_migration(self):

@@ -96,6 +96,21 @@
           </ul>
         </section>
       {% endif %}
+      {% if private_tensions %}
+        {# Only their owner sees them, in the circles' inboxes too #}
+        <section class="card mb-4">
+          <div class="card-header"><h2 class="h6 mb-0">{% translate "Your private tensions" %}</h2></div>
+          <ul class="list-group list-group-flush">
+            {% for tension in private_tensions %}
+              {% include "meetings/_tension_row.html" with show_circle=True can_propose=tension.can_propose %}
+            {% endfor %}
+            {% include "_show_more.html" with more=private_tensions_more %}
+            {% for tension in private_tensions_more %}
+              {% include "meetings/_tension_row.html" with show_circle=True can_propose=tension.can_propose more=True %}
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
       {% if past %}
         <section class="card mb-4">
           <div class="card-header"><h2 class="h6 mb-0">{% translate "Earlier roles" %}</h2></div>

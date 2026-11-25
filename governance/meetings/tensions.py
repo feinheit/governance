@@ -186,7 +186,7 @@ def tension_delete(request, pk):
             "text": tension,
             "submit_label": gettext("Delete"),
             "right": right,
-            "cancel_url": tension.circle.get_absolute_url(),
+            "cancel_url": next_url(request) or tension.circle.get_absolute_url(),
         },
     )
 

@@ -84,7 +84,7 @@ the circle browser, your page, assigning, calling a tactical meeting,
 the Markdown export).
 
 **Your page**, the start page, shows your roles (also those without anybody assigned, which
-you fill, marked "As Circle Lead" or the like), your drafts, proposals
+you fill, marked "As Circle Lead" or the like), your drafts and private tensions, proposals
 waiting for your response, your meetings and your settings: name, short
 name (in the menu at the top), language (German or English) and mails.
 "Settings" in the menu with your name changes them in one form; the
