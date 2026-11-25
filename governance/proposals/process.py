@@ -68,7 +68,7 @@ def check_role(proposal):
 
 @transaction.atomic
 def publish(proposal):
-    if proposal.status != Proposal.DRAFT or proposal.is_tension:
+    if proposal.status != Proposal.DRAFT or not proposal.has_changes:
         raise ProposalError([_("Only drafts with changes can be published.")])
     # Also drafts imported from GlassFrog, which have no role
     check_role(proposal)

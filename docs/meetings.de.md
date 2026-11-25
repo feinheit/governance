@@ -157,8 +157,9 @@ Agenda streicht sie durch; ein Klick darauf zeigt das Ergebnis, "Wieder
   und auch die Person, wenn mehrere die Rolle haben und nur eine es
   übernimmt ("@Sales (Ada) schickt die Offerte"); sonst gilt es für alle.
 - **Eine Governance-Spannung** gehört in ein Governance Meeting: wer sie
-  hat, notiert sie als Spannung ("Neuer Vorschlag" auf der Seite des Kreises, siehe [Vorschläge](proposals.de.md))
-  oder bringt sie in die Agenda des nächsten Governance Meetings. Das
+  hat, notiert sie in der Inbox des Kreises, entwirft einen Vorschlag
+  ("Neuer Vorschlag" auf der Seite des Kreises, siehe
+  [Vorschläge](proposals.de.md)) oder bringt sie in die Agenda des nächsten Governance Meetings. Das
   Tool kann keine Spannungen für andere erfassen; ein To-do erinnert sie
   wenn nötig.
 

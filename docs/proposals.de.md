@@ -17,11 +17,11 @@ Entwürfe.
 
 "Neuer Vorschlag" auf der Seite des Kreises. Wähle die Rolle, aus der die
 Spannung kommt, und beschreibe sie: was fehlt, ein Beispiel, wie der
-Vorschlag hilft. Ohne Änderungen bleibt der Entwurf eine **Spannung**, die
-nur du siehst (auf deiner Personenseite). Du kannst sie später ausarbeiten
-oder in einem Meeting einbringen. Eine deiner Spannungen in der Inbox des
-Kreises (siehe [Meetings](meetings.de.md)) wird mit "Vorschlag entwerfen"
-zum Entwurf.
+Vorschlag hilft. Dann fügst du die Änderungen hinzu; der Entwurf wartet auf
+deiner Personenseite, bis du ihn veröffentlichst. Eine Spannung, die du nur
+festhalten willst, noch ohne Vorschlag, gehört in die Inbox des Kreises,
+privat, wenn nur du sie sehen sollst (siehe [Meetings](meetings.de.md));
+"Vorschlag entwerfen" macht daraus einen Entwurf.
 
 Unter "Änderungen vorschlagen" fügst du Rollen und Policies hinzu, änderst
 oder entfernst sie, verschiebst sie in einen Sub-Kreis (auch tiefer

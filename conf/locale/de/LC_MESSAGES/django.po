@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-25 12:11+0100\n"
+"POT-Creation-Date: 2026-11-25 13:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1083,8 +1083,8 @@ msgid "From my role"
 msgstr "Aus meiner Rolle"
 
 #: governance/proposals/drafting.py
-msgid "What is the gap between what is and what could be? Without changes the draft stays a tension, visible only to you."
-msgstr "Was fehlt zwischen dem, was ist, und dem, was sein könnte? Ohne Änderungen bleibt der Entwurf eine Spannung, die nur du siehst."
+msgid "What is the gap between what is and what could be? Only you see the draft until you publish it or bring it to a meeting; a tension only to note goes into the circle's inbox."
+msgstr "Was fehlt zwischen dem, was ist, und dem, was sein könnte? Nur du siehst den Entwurf, bis du ihn veröffentlichst oder in ein Meeting bringst; eine Spannung, die du nur festhalten willst, gehört in die Inbox des Kreises."
 
 #: governance/proposals/drafting.py
 msgid "Changed in the meantime: merge the current text and the proposal's, and remove the lines with <<<<<<<, ======= and >>>>>>>."
@@ -1333,8 +1333,8 @@ msgid "The proposal has already been adopted."
 msgstr "Der Vorschlag wurde bereits angenommen."
 
 #: governance/proposals/instructions.py
-msgid "A tension without changes isn't adopted."
-msgstr "Eine Spannung ohne Änderungen wird nicht angenommen."
+msgid "A proposal without changes isn't adopted."
+msgstr "Ein Vorschlag ohne Änderungen wird nicht angenommen."
 
 #: governance/proposals/instructions.py
 msgid "The instructions have to be a list."
@@ -3432,8 +3432,8 @@ msgid "Waiting for your response"
 msgstr "Warten auf deine Antwort"
 
 #: governance/templates/roles/person_detail.html
-msgid "Your drafts and tensions"
-msgstr "Deine Entwürfe und Spannungen"
+msgid "Your drafts"
+msgstr "Deine Entwürfe"
 
 #: governance/templates/roles/person_detail.html
 msgid "Earlier roles"

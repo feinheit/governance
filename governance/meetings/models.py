@@ -356,8 +356,8 @@ class Tension(models.Model):
     The circle's members see the inbox (private ones only their owner);
     its owner or the meeting's secretary puts it on the agenda
     (``meetings/tensions.py``). Not a
-    proposal: those prepared by their proposers are drafts (also without
-    changes, private).
+    proposal: its owner drafts one from it (``proposal``). Drafts without
+    changes are proposals being written, not tensions.
     """
 
     circle = models.ForeignKey(

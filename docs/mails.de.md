@@ -51,7 +51,7 @@ der letzten Aktivität), nicht einzeln.
 
 ## Keine Mails
 
-- Entwürfe und Spannungen, bis sie veröffentlicht sind.
+- Entwürfe, bis sie veröffentlicht sind, und Spannungen.
 - Wer nicht mehr in der Firma ist (inaktiv), erhält nichts, auch nicht
   als vorschlagende Person.
 

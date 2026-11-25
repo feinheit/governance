@@ -266,3 +266,73 @@ class TensionInboxTest(TestCase):
         # Not on others' pages
         response = self.client.get(self.ada.get_absolute_url())
         self.assertNotContains(response, "/tensions/new/")
+
+
+class DraftsIntoInboxesTest(TestCase):
+    def test_migration(self):
+        """Drafts without changes become private tensions in their circle's
+        inbox, or go back to the tension they came from; not drafts with
+        changes, on an agenda or in a role's inner circle"""
+        from importlib import import_module
+
+        from django.apps import apps
+
+        migration = import_module(
+            "governance.meetings.migrations.0009_drafts_into_inboxes"
+        )
+        ada = User.objects.create_user("ada@example.com", full_name="Ada")
+        kitchen = Role.objects.create(name="Kitchen", is_circle=True)
+        cook = Role.objects.create(name="Cook", circle=kitchen)
+        long_ago = timezone.now() - dt.timedelta(days=400)
+        test = {"op": "test", "path": f"/roles/{cook.pk}"}
+
+        def draft(tension, *instructions, circle=kitchen):
+            return Proposal.objects.create(
+                circle=circle,
+                proposer=ada,
+                created_at=long_ago,
+                tension=tension,
+                instructions=list(instructions),
+            )
+
+        noted = draft(
+            f"## The tension\n\nNo bread for @[Cook](role:{cook.pk})\n\n"
+            "## An example\n\nToday",
+            test,
+        )
+        one_line = draft("Soup")
+        drafted = draft("## The tension\n\nKnives")
+        source = Tension.objects.create(
+            circle=kitchen, owner=ada, title="Knives", proposal=drafted
+        )
+        kept = [
+            draft("Ovens", {"op": "add", "path": "/roles/n1"}),
+            draft("Inside the cook", circle=cook),
+        ]
+        on_agenda = draft("Plates")
+        meeting = Meeting.objects.create(
+            circle=kitchen, kind=Meeting.GOVERNANCE, started_at=long_ago
+        )
+        AgendaItem.objects.create(meeting=meeting, proposal=on_agenda)
+        kept.append(on_agenda)
+
+        migration.drafts_into_inboxes(apps, None)
+
+        self.assertEqual(
+            set(Proposal.objects.values_list("pk", flat=True)),
+            {p.pk for p in kept},
+        )
+        self.assertFalse(Proposal.objects.filter(pk__in=[noted.pk, one_line.pk]))
+        source.refresh_from_db()
+        self.assertIsNone(source.proposal)
+        tensions = Tension.objects.exclude(pk=source.pk).order_by("title")
+        self.assertEqual(
+            [(t.title, t.is_private, t.owner, t.circle) for t in tensions],
+            [
+                ("No bread for @Cook", True, ada, kitchen),
+                ("Soup", True, ada, kitchen),
+            ],
+        )
+        self.assertEqual(tensions[0].description, noted.tension)
+        self.assertEqual(tensions[0].created_at, long_ago)
+        self.assertEqual(tensions[1].description, "")

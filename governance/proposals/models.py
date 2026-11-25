@@ -16,7 +16,7 @@ HOURLY_RUN_MINUTE = 15
 
 class ProposalQuerySet(models.QuerySet):
     def visible_to(self, user):
-        """Drafts (also tensions) are private to their proposer"""
+        """Drafts are private to their proposer"""
         return self.filter(~models.Q(status=Proposal.DRAFT) | models.Q(proposer=user))
 
 
@@ -56,7 +56,7 @@ class Proposal(models.Model):
     ``original_value`` and ``from``), see ``SPEC.md``. ``names`` maps the
     paths' objects (``roles/123``) to their names at the time of the
     proposal, so that proposals can be rendered after the objects are gone.
-    A draft without instructions is a tension. A role's policies for its
+    Tensions are ``meetings.Tension``, also private ones. A role's policies for its
     domains (constitution 1.3.2) are recorded as adopted proposals too,
     without the process (``governance/roles/domain_policies.py``).
     """
@@ -308,10 +308,6 @@ class Proposal(models.Model):
     def has_changes(self):
         """Not only ``test``s, which check that what it changes exists"""
         return any(i.get("op") != "test" for i in self.instructions)
-
-    @property
-    def is_tension(self):
-        return self.status == self.DRAFT and not self.has_changes
 
 
 class Response(models.Model):

@@ -668,7 +668,7 @@ def adopt(proposal):
     if proposal.status == Proposal.WITHDRAWN:
         raise ProposalError([_("The proposal has been withdrawn.")])
     if not proposal.has_changes:
-        raise ProposalError([_("A tension without changes isn't adopted.")])
+        raise ProposalError([_("A proposal without changes isn't adopted.")])
     # Who is affected, before roles are removed or moved away
     before = list(members(proposal.circle).values_list("pk", flat=True))
     applier = Applier(proposal)

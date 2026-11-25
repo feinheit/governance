@@ -137,7 +137,7 @@ class ProposalsTest(TestCase):
         draft = Proposal.objects.create(
             circle=circle, proposer=ada, tension="Secret idea", created_at=now
         )
-        self.assertTrue(draft.is_tension)
+        self.assertFalse(draft.has_changes)
         draft.tension = "x" * 120 + "\nSecond line"
         self.assertEqual(str(draft), "x" * 99 + "…")
         draft.tension = "## The tension\n\nNo bread\n\n## An example\n\nToday"

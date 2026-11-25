@@ -245,8 +245,9 @@ class TensionForm(ModelForm):
         self.fields["role"].label = _("From my role")
         self.fields["tension"].required = True
         self.fields["tension"].help_text = _(
-            "What is the gap between what is and what could be? Without"
-            " changes the draft stays a tension, visible only to you."
+            "What is the gap between what is and what could be? Only you"
+            " see the draft until you publish it or bring it to a meeting; a"
+            " tension only to note goes into the circle's inbox."
         )
 
 

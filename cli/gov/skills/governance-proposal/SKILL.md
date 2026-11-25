@@ -165,8 +165,11 @@ adopting it. Fix them with
     gov proposals update <id> --instructions <scratchpad>/instructions.yaml
     gov proposals update <id> --tension - < <scratchpad>/tension.md
 
-until there are none. A draft without instructions stays a tension, which is
-fine if the user only wants to note it.
+until there are none. If the user only wants to note the tension for now,
+it goes into the circle's inbox instead of a draft (`--private` if only
+they should see it):
+
+    gov tensions add <circle> "<a few words>" --file - --private < <scratchpad>/tension.md
 
 ## 5. Let the user decide
 

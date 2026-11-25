@@ -169,7 +169,7 @@ def _instructions(path):
 )
 @click.option("--json", "as_json", is_flag=True)
 def create(circle, role, tension, instructions, as_json):
-    """Create a draft (without instructions it's a tension)"""
+    """Create a draft (its changes may follow with update)"""
     proposal = request(
         "POST",
         "proposals/",

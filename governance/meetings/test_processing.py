@@ -210,7 +210,7 @@ class ProcessingTest(TestCase):
         )
         item = AgendaItem.objects.create(meeting=self.meeting, proposal=tension)
         response = self.client.post(f"/agenda/{item.pk}/adopt/", follow=True)
-        self.assertContains(response, "A tension without changes isn&#x27;t adopted.")
+        self.assertContains(response, "A proposal without changes isn&#x27;t adopted.")
         tension.refresh_from_db()
         self.assertEqual(tension.status, Proposal.IN_MEETING)
 

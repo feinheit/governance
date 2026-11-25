@@ -51,7 +51,7 @@ activity), not one by one.
 
 ## No mails
 
-- Drafts and tensions, until published.
+- Drafts, until published, and tensions.
 - People who left the company (inactive) get nothing, also as proposers.
 
 ## How

@@ -159,8 +159,8 @@ one there shows its result, "Reopen" goes back to it to correct it:
   the person too when several fill the role and only one of them takes
   it on ("@Sales (Ada) sends the offer"); without, it's all of them.
 - **A governance tension** goes into a governance meeting: its owner
-  writes it down in a tension ("New proposal" on the circle's page, see [proposals](proposals.md))
-  or brings it to the next governance meeting's agenda. The tool can't
+  notes it in the circle's inbox, drafts a proposal ("New proposal" on
+  the circle's page, see [proposals](proposals.md)) or brings it to the next governance meeting's agenda. The tool can't
   add tensions for somebody else; a to-do reminds them if needed.
 
 The outputs mail at the end lists the items with an outcome or a link.

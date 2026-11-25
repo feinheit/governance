@@ -225,8 +225,9 @@ commits the app's JSON backup daily to a git repository instead.
   data (`governance/roles/constitution.py`).
 - Metrics and checklist items belong to a role (a circle for its own),
   tactical meetings may be called for any roles.
-- Drafts of proposals (also tensions) are private to their proposer
-  (`Proposal.objects.visible_to(user)`).
+- Drafts of proposals are private to their proposer
+  (`Proposal.objects.visible_to(user)`). Tensions are `meetings.Tension`
+  (the circles' inboxes, also private), not drafts without changes.
 - Texts mention roles as `@[Name](role:ID)` (`governance/roles/mentions.py`),
   rendered with the current name by the `markdown` filter; use the `plain`
   filter for snippets. Textareas of the forms get `data-mentions` (the

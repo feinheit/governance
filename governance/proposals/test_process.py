@@ -298,11 +298,11 @@ class ProcessTest(TestCase):
 
     def test_only_tests_are_no_changes(self):
         """A draft only checking that a role exists (``test``, e.g. one
-        started in GlassFrog) changes nothing: a tension, not published"""
+        started in GlassFrog) changes nothing: not published"""
         draft = self.proposal()
         draft.instructions = draft.instructions[:1]
         draft.save()
-        self.assertTrue(draft.is_tension)
+        self.assertFalse(draft.has_changes)
         with self.assertRaises(ProposalError):
             publish(draft)
 
