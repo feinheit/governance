@@ -258,6 +258,11 @@ commits the app's JSON backup daily to a git repository instead.
 - Actions and projects stay in the task management tool; don't build
   them here. No
   integration with Workbench either (see the decisions in `SPEC.md`).
+- The admin is read only (`governance/admin.py`, like Workbench's
+  `workbench.tools.admin`: `from governance import admin`), model admins
+  opt in to editing with `admin.ReadWriteModelAdmin` or single
+  permissions: admins add and deactivate people and delete API tokens
+  there, the rest changes through the app's pages (`test_admin.py`).
 - Page layout, styles (light and dark mode), templates, the audit log and
   the API follow Workbench. The API (django-ninja, `governance/api.py`,
   one router per app) authenticates with personal tokens before the

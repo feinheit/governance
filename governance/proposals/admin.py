@@ -1,5 +1,4 @@
-from django.contrib import admin
-
+from governance import admin
 from governance.proposals.models import Proposal, Response
 
 

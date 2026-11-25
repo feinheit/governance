@@ -68,6 +68,47 @@ class AdminTest(TestCase):
         ours = {m for m in apps.get_models() if m.__module__.startswith("governance.")}
         self.assertEqual(ours - set(admin.site._registry), set())
 
+    def test_read_only_unless_opted_in(self):
+        """Only people are added and changed in the admin, API tokens deleted;
+        the rest changes through the app's pages"""
+        ada = User.objects.create_superuser("ada@example.com", full_name="Ada")
+        request = self.client.request().wsgi_request
+        request.user = ada
+        rights = {
+            model._meta.label: {
+                right
+                for right in ["add", "change", "delete"]
+                if getattr(model_admin, f"has_{right}_permission")(request)
+            }
+            | {
+                f"inline:{inline.model._meta.label}"
+                for inline in model_admin.get_inline_instances(request)
+                if inline.has_change_permission(request)
+            }
+            for model, model_admin in admin.site._registry.items()
+        }
+        self.assertEqual(
+            {label: r for label, r in rights.items() if r},
+            {
+                "accounts.User": {"add", "change"},
+                "accounts.APIToken": {"delete"},
+            },
+        )
+
+        token, _key = APIToken.create_for(user=ada, title="gov", access="read")
+        self.client.force_login(ada)
+        role = Role.objects.create(name="Kitchen", is_circle=True)
+        response = self.client.post(
+            reverse("admin:roles_role_change", args=[role.pk]), {"name": "Pantry"}
+        )
+        self.assertEqual(response.status_code, 403)
+        response = self.client.post(
+            reverse("admin:accounts_apitoken_delete", args=[token.pk]),
+            {"post": "yes"},
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(APIToken.objects.exists())
+
 
 class DeactivateTest(TestCase):
     def test_deactivating_ends_the_assignments(self):
