@@ -27,12 +27,17 @@ class MentionsTest(TestCase):
         head_cook = Role.objects.create(name="Head Cook", circle=kitchen)
         Role.objects.create(name="Facilitator", circle=kitchen)
         bar = Role.objects.create(name="Bar", is_circle=True)
-        Role.objects.create(name="Facilitator", circle=bar)
+        bar_facilitator = Role.objects.create(name="Facilitator", circle=bar)
         Role.objects.create(name="Waiter", circle=bar, archived_on="2026-01-01")
         self.assertEqual(
             link_mentions("Ask @cook, @Head Cook or @Cooks."),
             f"Ask @[Cook](role:{cook.pk}), @[Head Cook](role:{head_cook.pk})"
             " or @Cooks.",
+        )
+        # Names several roles have: the circle's
+        self.assertEqual(
+            link_mentions("@Facilitator", bar.pk),
+            f"@[Facilitator](role:{bar_facilitator.pk})",
         )
         # Ambiguous or archived, mail addresses and existing mentions
         for text in [

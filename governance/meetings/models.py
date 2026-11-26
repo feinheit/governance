@@ -159,7 +159,7 @@ class Meeting(models.Model):
     def save(self, *args, **kwargs):
         from governance.roles.mentions import link_mentions_of
 
-        link_mentions_of(self, ["minutes"], kwargs)
+        link_mentions_of(self, ["minutes"], kwargs, self.circle_id)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -288,7 +288,7 @@ class AgendaItem(models.Model):
     def save(self, *args, **kwargs):
         from governance.roles.mentions import link_mentions_of
 
-        link_mentions_of(self, ["outcome"], kwargs)
+        link_mentions_of(self, ["outcome"], kwargs, self.meeting.circle_id)
         super().save(*args, **kwargs)
 
     def complete(self):
@@ -433,5 +433,5 @@ class Tension(models.Model):
     def save(self, *args, **kwargs):
         from governance.roles.mentions import link_mentions_of
 
-        link_mentions_of(self, ["description"], kwargs)
+        link_mentions_of(self, ["description"], kwargs, self.circle_id)
         super().save(*args, **kwargs)

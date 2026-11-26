@@ -53,12 +53,14 @@ class DomainPolicyForm(ModelForm):
 
     def __init__(self, *args, role, **kwargs):
         super().__init__(*args, **kwargs)
+        self.role = role
         self.fields["domain"].queryset = Domain.objects.filter(role=role)
         self.fields["domain"].required = True
         self.fields["domain"].empty_label = None
 
     def clean_body(self):
-        return link_mentions(self.cleaned_data["body"])
+        # "@Facilitator" is the role's circle's
+        return link_mentions(self.cleaned_data["body"], self.role.circle_id)
 
 
 def record_as_proposal(user, role, policy, instructions):

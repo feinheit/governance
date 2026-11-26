@@ -229,9 +229,11 @@ class Proposal(models.Model):
                 link_mentions_of,
             )
 
-            link_mentions_of(self, ["tension"], kwargs)
+            link_mentions_of(self, ["tension"], kwargs, self.circle_id)
             if update_fields is None or "instructions" in update_fields:
-                self.instructions = link_mentions_in_instructions(self.instructions)
+                self.instructions = link_mentions_in_instructions(
+                    self.instructions, self.circle_id
+                )
         if self.waiting_since != waiting and update_fields:
             kwargs["update_fields"] = {*kwargs["update_fields"], "waiting_since"}
         changed = self._state.adding or self.instructions != getattr(
@@ -370,5 +372,5 @@ class Response(models.Model):
     def save(self, *args, **kwargs):
         from governance.roles.mentions import link_mentions_of
 
-        link_mentions_of(self, ["text"], kwargs)
+        link_mentions_of(self, ["text"], kwargs, self.proposal.circle_id)
         super().save(*args, **kwargs)

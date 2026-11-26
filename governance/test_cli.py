@@ -219,6 +219,8 @@ class CLITest(TestCase):
     def test_plain_mentions(self):
         """ "@Name" without the autocomplete becomes a mention, in the tension
         and in the texts of the changes, not in names"""
+        # Names other circles' roles have too are the circle's
+        Role.objects.create(name="Bar", is_circle=True).create_core_roles()
         instructions = self.directory / "instructions.yaml"
         instructions.write_text(
             "- op: add\n"
@@ -238,13 +240,17 @@ class CLITest(TestCase):
             "--role",
             self.cook.pk,
             "--tension",
-            "Ask @Cook, not @Baker",
+            "Ask @Cook and @facilitator, not @Baker",
             "--instructions",
             instructions,
         )
         proposal = Proposal.objects.get()
         mention = f"@[Cook](role:{self.cook.pk})"
-        self.assertEqual(proposal.tension, f"Ask {mention}, not @Baker")
+        facilitator = self.kitchen.roles.get(core_role="facilitator")
+        self.assertEqual(
+            proposal.tension,
+            f"Ask {mention} and @[Facilitator](role:{facilitator.pk}), not @Baker",
+        )
         self.assertEqual(
             [i.get("value") for i in proposal.instructions],
             [None, "@Cook", f"Bread for {mention}"],
