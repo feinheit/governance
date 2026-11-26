@@ -107,7 +107,9 @@ Struktur an einem früheren Tag, zurück bis 2018.
 
 Texte sind einfaches Markdown (`**fett**`, Listen mit `-`, Links). Mit
 `@` erwähnst du eine Rolle: das Feld schlägt Namen vor, der Link zeigt
-immer den aktuellen Namen der Rolle.
+immer den aktuellen Namen der Rolle. Der ganze Name einer Rolle nach `@`
+wird auch beim Speichern zum Link, ausser mehrere Rollen heissen so (wie
+Facilitator).
 
 Kurze Formulare (Strategie, Metriken, Checklisten-Punkte, Links, Notizen, Policies
 einer Domain, Einstellungen, Zuweisen, Fokus und Entfernen, die Spannung

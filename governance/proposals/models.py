@@ -222,6 +222,16 @@ class Proposal(models.Model):
         elif self.waiting_since is None:
             self.waiting_since = timezone.now()
         update_fields = kwargs.get("update_fields")
+        if self.status in {self.DRAFT, self.PUBLISHED, self.IN_MEETING}:
+            # "@Name" written without the autocomplete as a mention
+            from governance.roles.mentions import (
+                link_mentions_in_instructions,
+                link_mentions_of,
+            )
+
+            link_mentions_of(self, ["tension"], kwargs)
+            if update_fields is None or "instructions" in update_fields:
+                self.instructions = link_mentions_in_instructions(self.instructions)
         if self.waiting_since != waiting and update_fields:
             kwargs["update_fields"] = {*kwargs["update_fields"], "waiting_since"}
         changed = self._state.adding or self.instructions != getattr(
@@ -356,3 +366,9 @@ class Response(models.Model):
 
     def __str__(self):
         return f"{self.get_kind_display()}: {self.user}"
+
+    def save(self, *args, **kwargs):
+        from governance.roles.mentions import link_mentions_of
+
+        link_mentions_of(self, ["text"], kwargs)
+        super().save(*args, **kwargs)

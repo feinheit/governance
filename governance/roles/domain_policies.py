@@ -23,6 +23,7 @@ from governance.history.update import update_today
 from governance.locking import locking_structure
 from governance.notifications import mails
 from governance.proposals.models import Proposal
+from governance.roles.mentions import link_mentions
 from governance.roles.models import Assignment, Domain, Policy, Role
 from governance.roles.permissions import (
     ALLOWED,
@@ -55,6 +56,9 @@ class DomainPolicyForm(ModelForm):
         self.fields["domain"].queryset = Domain.objects.filter(role=role)
         self.fields["domain"].required = True
         self.fields["domain"].empty_label = None
+
+    def clean_body(self):
+        return link_mentions(self.cleaned_data["body"])
 
 
 def record_as_proposal(user, role, policy, instructions):

@@ -156,6 +156,12 @@ class Meeting(models.Model):
         )
         return " ".join(filter(None, [str(kind), str(self.circle or "")]))
 
+    def save(self, *args, **kwargs):
+        from governance.roles.mentions import link_mentions_of
+
+        link_mentions_of(self, ["minutes"], kwargs)
+        super().save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse("meeting", kwargs={"pk": self.pk})
 
@@ -278,6 +284,12 @@ class AgendaItem(models.Model):
 
     def __str__(self):
         return self.label or str(self.proposal or "")
+
+    def save(self, *args, **kwargs):
+        from governance.roles.mentions import link_mentions_of
+
+        link_mentions_of(self, ["outcome"], kwargs)
+        super().save(*args, **kwargs)
 
     def complete(self):
         """Processed; no longer the meeting's current item"""
@@ -417,3 +429,9 @@ class Tension(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        from governance.roles.mentions import link_mentions_of
+
+        link_mentions_of(self, ["description"], kwargs)
+        super().save(*args, **kwargs)

@@ -175,6 +175,12 @@ accountability texts are known where proposals or `roles.json` have them.
 
 **Mentions**: texts store `@[Name](role:ID)` and render the current name
 as a link; textareas autocomplete "@" (`mentions.js`, `GET /api/roles/`).
+"@Name" typed without picking it (or through the API) becomes a mention
+when saved (`link_mentions()`: the tension and the texts of pending
+proposals' changes, tensions, outcomes, minutes, responses, the policies
+of domains) if exactly one active role has the name, ignoring case and
+the longest name first; ambiguous ones (the core roles) stay plain
+(decided 2026-11-26).
 
 **Text** is light Markdown in plain textareas, no rich text editor.
 

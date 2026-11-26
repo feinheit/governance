@@ -216,6 +216,40 @@ class CLITest(TestCase):
             "No proposals.", self.gov("proposals", "--status", "adopted").output
         )
 
+    def test_plain_mentions(self):
+        """ "@Name" without the autocomplete becomes a mention, in the tension
+        and in the texts of the changes, not in names"""
+        instructions = self.directory / "instructions.yaml"
+        instructions.write_text(
+            "- op: add\n"
+            "  path: /roles/n1\n"
+            "- op: add\n"
+            "  path: /roles/n1/name\n"
+            "  value: '@Cook'\n"
+            "- op: add\n"
+            "  path: /roles/n1/accountabilities/n2/description\n"
+            "  value: Bread for @cook\n"
+        )
+        self.gov(
+            "proposals",
+            "create",
+            "--circle",
+            self.kitchen.pk,
+            "--role",
+            self.cook.pk,
+            "--tension",
+            "Ask @Cook, not @Baker",
+            "--instructions",
+            instructions,
+        )
+        proposal = Proposal.objects.get()
+        mention = f"@[Cook](role:{self.cook.pk})"
+        self.assertEqual(proposal.tension, f"Ask {mention}, not @Baker")
+        self.assertEqual(
+            [i.get("value") for i in proposal.instructions],
+            [None, "@Cook", f"Bread for {mention}"],
+        )
+
     def test_publish(self):
         proposal = Proposal.objects.create(
             circle=self.kitchen,

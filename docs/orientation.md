@@ -105,7 +105,8 @@ earlier day, back to 2018.
 
 Texts are simple Markdown (`**bold**`, lists with `-`, links). With `@`
 you mention a role: the field suggests names, the link always shows the
-role's current name.
+role's current name. A role's whole name typed after `@` becomes a link
+when saving too, unless several roles have the name (like Facilitator).
 
 Short forms (strategy, metrics, checklist items, links, notes, policies of a
 domain, settings, assigning, a Role Lead's focus and removing them, the
