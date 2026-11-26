@@ -435,7 +435,12 @@ html:not(.js) .wb-show-more,
   column-gap: 1rem;
 }
 
-.wb-columns > .list-group-item {
+/* Firefox breaks inside the rows' flex boxes anyway when balancing the
+   columns, leaving a gap between two lines of the Role Leads */
+.wb-columns > .list-group-item,
+.wb-columns .wb-row-main,
+.wb-columns .wb-row-meta,
+.wb-columns .wb-row-meta > span {
   break-inside: avoid;
 }
 
