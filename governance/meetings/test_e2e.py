@@ -629,6 +629,31 @@ class MeetingE2ETest(LiveServerTestCase):
         self.assertFalse(Tension.objects.exists())
         self.assertEqual(self.errors, [])
 
+    def test_textarea_fits_its_text_in_a_modal(self):
+        """A textarea in a modal fits its text when the form opens, not only
+        once it has the focus"""
+        tension = Tension.objects.create(
+            circle=self.kitchen,
+            owner=self.ada,
+            title="Knives dull",
+            description="Line\n" * 12,
+        )
+        page = self.page
+        page.goto(f"{self.live_server_url}{self.kitchen.get_absolute_url()}")
+        page.locator(
+            f"#tensions a[data-modal][href$='/tensions/{tension.pk}/']"
+        ).click()
+        page.wait_for_selector("#modal[open] textarea[name=description]")
+        # Another field has the focus, not the textarea
+        self.assertNotEqual(page.evaluate("document.activeElement.name"), "description")
+        description = page.locator("#modal textarea[name=description]")
+        page.wait_for_function(
+            "textarea => textarea.scrollHeight <= textarea.clientHeight",
+            arg=description.element_handle(),
+            timeout=2000,
+        )
+        self.assertEqual(self.errors, [])
+
     def test_tensions_from_the_inbox(self):
         """The inbox's tensions go on the agenda from a modal, "Select all"
         checks them, unchecks them again"""
