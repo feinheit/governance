@@ -27,6 +27,7 @@ dependencies = [
 dev = [
   "governance-cli",
   "playwright>=1.64.1",
+  "tblib>=3.2.2",
 ]
 
 [tool.uv]
@@ -102,6 +103,10 @@ run.omit = [
   "*venv*",
 ]
 run.branch = true
+# Parallel test runs (./runtests.sh): a file per process, combined after
+run.concurrency = [ "multiprocessing", "thread" ]
+run.parallel = true
+run.sigterm = true
 report.skip_covered = true
 report.show_missing = true
 
